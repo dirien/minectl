@@ -1,0 +1,124 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$ref": "#/definitions/Welcome9",
+  "definitions": {
+    "Welcome9": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "metadata": {
+          "$ref": "#/definitions/Metadata"
+        },
+        "spec": {
+          "$ref": "#/definitions/Spec"
+        }
+      },
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata",
+        "spec"
+      ],
+      "title": "Welcome9"
+    },
+    "Metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "Metadata"
+    },
+    "Spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "server": {
+          "$ref": "#/definitions/Server"
+        },
+        "minecraft": {
+          "$ref": "#/definitions/Minecraft"
+        }
+      },
+      "required": [
+        "minecraft",
+        "server"
+      ],
+      "title": "Spec"
+    },
+    "Minecraft": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "java": {
+          "$ref": "#/definitions/Java"
+        },
+        "properties": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "java",
+        "properties"
+      ],
+      "title": "Minecraft"
+    },
+    "Java": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "xmx": {
+          "type": "string"
+        },
+        "xms": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "xms",
+        "xmx"
+      ],
+      "title": "Java"
+    },
+    "Server": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cloud": {
+          "type": "string"
+        },
+        "region": {
+          "type": "string"
+        },
+        "size": {
+          "type": "string"
+        },
+        "volumeSize": {
+          "type": "integer"
+        },
+        "ssh": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "cloud",
+        "region",
+        "size",
+        "ssh",
+        "volumeSize"
+      ],
+      "title": "Server"
+    }
+  }
+}
