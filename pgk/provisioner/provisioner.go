@@ -4,6 +4,7 @@ import (
 	"github.com/minectl/pgk/automation"
 	"github.com/minectl/pgk/cloud/civo"
 	"github.com/minectl/pgk/cloud/do"
+	"github.com/minectl/pgk/cloud/scaleway"
 	"github.com/minectl/pgk/common"
 	"github.com/minectl/pgk/manifest"
 	"os"
@@ -65,6 +66,12 @@ func newProvisioner(manifestPath, id string) (*PulumiProvisioner, error) {
 	} else if manifest.GetCloud() == "civo" {
 		common.PrintMixedGreen("Using cloud provider %s\n", "Civo")
 		cloudProvider, err = civo.NewCivo(os.Getenv("CIVO_TOKEN"), args.Region)
+		if err != nil {
+			return nil, err
+		}
+	} else if manifest.GetCloud() == "scaleway" {
+		common.PrintMixedGreen("Using cloud provider %s\n", "Scaleway")
+		cloudProvider, err = scaleway.NewScaleway(os.Getenv("ACCESS_KEY"), os.Getenv("SECRET_KEY"), os.Getenv("ORGANISATION_ID"), args.Region)
 		if err != nil {
 			return nil, err
 		}
