@@ -7,12 +7,12 @@ import (
 )
 
 var (
-	version   string
-	gitCommit string
+	version string
+	commit  string
 )
 
 func main() {
-	if err := minectl.Execute(version, gitCommit); err != nil {
+	if err := minectl.Execute(version, commit); err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", err.Error())
 		os.Exit(1)
 	}
