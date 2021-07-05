@@ -2,6 +2,7 @@ package provisioner
 
 import (
 	"github.com/minectl/pgk/automation"
+	"github.com/minectl/pgk/cloud/civo"
 	"github.com/minectl/pgk/cloud/do"
 	"github.com/minectl/pgk/common"
 	"github.com/minectl/pgk/manifest"
