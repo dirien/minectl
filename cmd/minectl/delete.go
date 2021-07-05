@@ -18,7 +18,7 @@ func init() {
 var deleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "Delete an Minecraft Server.",
-	Example: `  mincetl delete  \
+	Example: `mincetl delete  \
     --filename server-do.yaml
     --id xxx-xxx-xxx-xxx
 	`,
