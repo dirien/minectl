@@ -76,6 +76,7 @@ func (c *Civo) CreateServer(args automation.ServerArgs) (*automation.RessourceRe
 		if instance.Status == "ACTIVE" {
 			stillCreating = false
 			s.Stop()
+			time.Sleep(2 * time.Second)
 		} else {
 			time.Sleep(2 * time.Second)
 		}

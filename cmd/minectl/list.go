@@ -14,7 +14,7 @@ func init() {
 var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List all Minecraft Server.",
-	Example: `  mincetl list  \
+	Example: `mincetl list  \
     --region LON1`,
 	RunE:          runList,
 	SilenceUsage:  true,

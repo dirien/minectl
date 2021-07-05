@@ -18,11 +18,8 @@ func init() {
 
 var minectlCmd = &cobra.Command{
 	Use:   "minectl",
-	Short: "Create Minecraft Server on differet cloud providern.",
-	Long: `
-minectl automates the task of creating..
-`,
-	Run: runMineCtl,
+	Short: "Create Minecraft Server on different cloud provider.",
+	Run:   runMineCtl,
 }
 
 var versionCmd = &cobra.Command{
