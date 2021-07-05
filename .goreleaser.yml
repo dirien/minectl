@@ -1,0 +1,32 @@
+project_name: minectl
+before:
+  hooks:
+    - go mod tidy
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+brews:
+  - tap:
+      owner: dirien
+      name: homebrew-dirien
+
+    commit_author:
+      name: dirien
+      email: engin.diri@mail.schwarz
+
+    folder: Formula
+
+    homepage: "https://github.com/dirien/minectl"
+    description: "minectl️️ 🗺️ is a cli for creating Minecraft (Java-Version) server on different cloud provider."
+    license: "Apache License 2.0"
+
+archives:
+  - format_overrides:
+      - goos: windows
+        format: zip
