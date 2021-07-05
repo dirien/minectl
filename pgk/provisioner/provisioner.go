@@ -61,6 +61,12 @@ func newProvisioner(manifestPath, id string) (*PulumiProvisioner, error) {
 		if err != nil {
 			return nil, err
 		}
+	} else if manifest.GetCloud() == "civo" {
+		common.PrintMixedGreen("Using cloud provider %s\n", "Civo")
+		cloudProvider, err = civo.NewCivo(os.Getenv("CIVO_TOKEN"), args.Region)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	p := &PulumiProvisioner{
