@@ -6,14 +6,13 @@ import (
 	"os"
 )
 
-// These values will be injected into these variables at the build time.
 var (
-	Version   string
-	GitCommit string
+	version   string
+	gitCommit string
 )
 
 func main() {
-	if err := minectl.Execute(Version, GitCommit); err != nil {
+	if err := minectl.Execute(version, gitCommit); err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", err.Error())
 		os.Exit(1)
 	}
