@@ -70,7 +70,7 @@ func newProvisioner(manifestPath, id string) (*PulumiProvisioner, error) {
 			return nil, err
 		}
 	} else if manifest.GetCloud() == "scaleway" {
-		common.PrintMixedGreen("Using cloud provider %s\n", "Civo")
+		common.PrintMixedGreen("Using cloud provider %s\n", "Scaleway")
 		cloudProvider, err = scaleway.NewScaleway(os.Getenv("ACCESS_KEY"), os.Getenv("SECRET_KEY"), os.Getenv("ORGANISATION_ID"), args.Region)
 		if err != nil {
 			return nil, err
