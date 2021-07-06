@@ -139,7 +139,7 @@ runcmd:
   - echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
   - sudo systemctl restart fail2ban
   {{if eq .Edition "java"}}
-  - curl -sLSf https://launcher.mojang.com/v1/objects/0a269b5f2c5b93b1712d0f5dc43b6182b9ab254e/server.jar > /minecraft/server.jar
+  - curl -sLSf https://launcher.mojang.com/v1/objects/a16d67e5807f57fc4e550299cf20226194497dc2/server.jar > /minecraft/server.jar
   {{else if eq .Edition "bedrock"}}
   - curl -sLSf https://minecraft.azureedge.net/bin-linux/bedrock-server-1.17.2.01.zip > /tmp/bedrock-server.zip
   - unzip -o /tmp/bedrock-server.zip -d /minecraft
