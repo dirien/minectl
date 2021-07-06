@@ -32,6 +32,7 @@ spec:
     java:
       xmx: 2G
       xms: 2G
+    edition: java
     properties: |
       level-seed=randomseed
       broadcast-rcon-to-ops=true
@@ -88,11 +89,16 @@ spec:
 ```bash
 minectl create --filename config/server-civo.yaml 
 
-Using cloud provider Civo
-Creating instance (minecraft-server)... ⣟ 
-Instance (minecraft-server) created
-Minecraft Server IP: 74.220.20.145
-Minecraft Server ID: a7ad735a-d1e9-4951-9f9b-83221efd945e
+🛎 Using cloud provider Civo
+🗺 Minecraft java edition
+🏗 Creating instance (minecraft-server)... ⣷ 
+✅ Instance (minecraft-server) created
+Minecraft Server IP: 74.220.17.7
+Minecraft Server ID: 7b9ed37c-fb35-49de-a996-a5f8ae7b7fc1
+
+To delete the server type:
+
+ minectl delete -f config/java/server-civo.yaml --id 7b9ed37c-fb35-49de-a996-a5f8ae7b7fc1
 ```
 
 ![instance](img/instance.png)
@@ -124,8 +130,10 @@ Feed up with your server? Deleting is as easy as creating the server
 
 ```bash
 minectl delete --filename config/server-civo.yaml --id a7ad735a-d1e9-4951-9f9b-83221efd945e
-Using cloud provider Civo
-Delete instance (a7ad735a-d1e9-4951-9f9b-83221efd945e)...
+
+🛎 Using cloud provider Civo
+🗺 Minecraft java edition
+🗑 Delete instance (7b9ed37c-fb35-49de-a996-a5f8ae7b7fc1)... 
 ```
 
 ### Legal Disclaimer 👮

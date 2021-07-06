@@ -7,13 +7,10 @@ import (
 	"github.com/civo/civogo"
 	"github.com/minectl/pgk/automation"
 	"github.com/minectl/pgk/common"
+	minctlTemplate "github.com/minectl/pgk/template"
 	"io/ioutil"
-	"strings"
 	"time"
 )
-
-//go:embed civo.sh
-var bash string
 
 type Civo struct {
 	client *civogo.Client
@@ -40,6 +37,11 @@ func (c *Civo) CreateServer(args automation.ServerArgs) (*automation.RessourceRe
 		return nil, err
 	}
 
+	network, err := c.client.GetDefaultNetwork()
+	if err != nil {
+		return nil, err
+	}
+
 	template, err := c.client.FindDiskImage("ubuntu-focal")
 	if err != nil {
 		return nil, err
@@ -55,17 +57,50 @@ func (c *Civo) CreateServer(args automation.ServerArgs) (*automation.RessourceRe
 	config.SSHKeyID = sshPubKey.ID
 	config.PublicIPRequired = "create"
 	config.InitialUser = "root"
-	config.Script = strings.Replace(bash, "<properties>", args.Properties, -1)
+
+	tmpl, err := minctlTemplate.NewTemplateCivo(args.Properties, args.Edition)
+	if err != nil {
+		return nil, err
+	}
+	script, err := tmpl.GetTemplate()
+	if err != nil {
+		return nil, err
+	}
+	config.Script = script
 
 	instance, err := c.client.CreateInstance(config)
 	if err != nil {
 		return nil, err
 	}
 
+	if args.Edition == "bedrock" {
+		firewall, err := c.client.NewFirewall(fmt.Sprintf("%s-fw", args.StackName), network.ID)
+		if err != nil {
+			return nil, err
+		}
+		_, err = c.client.NewFirewallRule(&civogo.FirewallRuleConfig{
+			FirewallID: firewall.ID,
+			Protocol:   "udp",
+			StartPort:  "19132",
+			EndPort:    "19133",
+			Cidr: []string{
+				"0.0.0.0/0",
+			},
+			Label: "Minecraft Bedrock UDP",
+		})
+		if err != nil {
+			return nil, err
+		}
+		_, err = c.client.SetInstanceFirewall(instance.ID, firewall.ID)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	stillCreating := true
 	s := spinner.New(spinner.CharSets[11], 100*time.Millisecond)
-	s.Prefix = fmt.Sprintf("Creating instance (%s)... ", common.Green(instance.Hostname))
-	s.FinalMSG = fmt.Sprintf("\nInstance (%s) created\n", common.Green(instance.Hostname))
+	s.Prefix = fmt.Sprintf("🏗 Creating instance (%s)... ", common.Green(instance.Hostname))
+	s.FinalMSG = fmt.Sprintf("\n✅ Instance (%s) created\n", common.Green(instance.Hostname))
 	s.Start()
 
 	for stillCreating {
@@ -81,7 +116,10 @@ func (c *Civo) CreateServer(args automation.ServerArgs) (*automation.RessourceRe
 			time.Sleep(2 * time.Second)
 		}
 	}
-
+	instance, err = c.client.FindInstance(instance.ID)
+	if err != nil {
+		return nil, err
+	}
 	return &automation.RessourceResults{
 		ID:       instance.ID,
 		PublicIP: instance.PublicIP,
@@ -89,7 +127,7 @@ func (c *Civo) CreateServer(args automation.ServerArgs) (*automation.RessourceRe
 }
 
 func (c *Civo) DeleteServer(id string, args automation.ServerArgs) error {
-	common.PrintMixedGreen("Delete instance (%s)... ", id)
+	common.PrintMixedGreen("🗑 Delete instance (%s)... ", id)
 
 	_, err := c.client.DeleteInstance(id)
 	if err != nil {
@@ -102,6 +140,16 @@ func (c *Civo) DeleteServer(id string, args automation.ServerArgs) error {
 	_, err = c.client.DeleteSSHKey(pubKeyFile.ID)
 	if err != nil {
 		return err
+	}
+	if args.Edition == "bedrock" {
+		firewall, err := c.client.FindFirewall(fmt.Sprintf("%s-fw", args.StackName))
+		if err != nil {
+			return err
+		}
+		_, err = c.client.DeleteFirewall(firewall.ID)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }

@@ -30,6 +30,7 @@ type Server struct {
 type Minecraft struct {
 	Java       Java   `yaml:"java"`
 	Properties string `yaml:"properties"`
+	Edition    string `yaml:"edition"`
 }
 
 // Java
@@ -52,14 +53,13 @@ type MinecraftServer struct {
 }
 
 type MinecraftServerManifester interface {
-	UpdateManifest(filename string)
-	SetID(id string)
-	GetID() string
 	GetName() string
 	GetCloud() string
 	GetSSH() string
 	GetRegion() string
 	GetSize() string
+	GetEdition() string
+	GetProperties() string
 }
 
 func (m *MinecraftServer) GetName() string {
@@ -80,6 +80,10 @@ func (m *MinecraftServer) GetRegion() string {
 
 func (m *MinecraftServer) GetSize() string {
 	return m.Spec.Server.Size
+}
+
+func (m *MinecraftServer) GetEdition() string {
+	return m.Spec.Minecraft.Edition
 }
 
 func (m *MinecraftServer) GetProperties() string {

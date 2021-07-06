@@ -2,6 +2,7 @@ package provisioner
 
 import (
 	"github.com/minectl/pgk/automation"
+	"github.com/minectl/pgk/cloud"
 	"github.com/minectl/pgk/cloud/civo"
 	"github.com/minectl/pgk/cloud/do"
 	"github.com/minectl/pgk/cloud/scaleway"
@@ -55,27 +56,27 @@ func newProvisioner(manifestPath, id string) (*PulumiProvisioner, error) {
 		Properties: manifest.GetProperties(),
 		VolumeSize: manifest.GetVolumeSize(),
 		ID:         id,
+		Edition:    manifest.GetEdition(),
 	}
 	var cloudProvider automation.Automation
+	common.PrintMixedGreen("🛎 Using cloud provider %s\n", cloud.GetCloudProviderFullName(manifest.GetCloud()))
 	if manifest.GetCloud() == "do" {
-		common.PrintMixedGreen("Using cloud provider %s\n", "DigitalOcean")
 		cloudProvider, err = do.NewDigitalOcean(os.Getenv("DIGITALOCEAN_TOKEN"))
 		if err != nil {
 			return nil, err
 		}
 	} else if manifest.GetCloud() == "civo" {
-		common.PrintMixedGreen("Using cloud provider %s\n", "Civo")
 		cloudProvider, err = civo.NewCivo(os.Getenv("CIVO_TOKEN"), args.Region)
 		if err != nil {
 			return nil, err
 		}
 	} else if manifest.GetCloud() == "scaleway" {
-		common.PrintMixedGreen("Using cloud provider %s\n", "Scaleway")
 		cloudProvider, err = scaleway.NewScaleway(os.Getenv("ACCESS_KEY"), os.Getenv("SECRET_KEY"), os.Getenv("ORGANISATION_ID"), args.Region)
 		if err != nil {
 			return nil, err
 		}
 	}
+	common.PrintMixedGreen("🗺 Minecraft %s edition\n", args.Edition)
 
 	p := &PulumiProvisioner{
 		auto:     cloudProvider,

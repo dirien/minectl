@@ -1,7 +1,7 @@
 #!/bin/bash
 
 tee /tmp/server.properties <<EOF
-<properties>
+{{ .Properties }}
 EOF
 
 tee /tmp/prometheus.yml <<EOF
@@ -54,20 +54,24 @@ WantedBy=multi-user.target
 EOF
 tee /etc/systemd/system/minecraft.service <<EOF
 [Unit]
-Description=STACKIT Minecraft Server
+Description=Minecraft Server
 Documentation=https://www.minecraft.net/en-us/download/server
 
 [Service]
 WorkingDirectory=/minecraft
 Type=simple
+{{if eq .Edition "java"}}
 ExecStart=/usr/bin/java -Xmx2G -Xms2G -jar server.jar nogui
+{{else if eq .Edition "bedrock"}}
+ExecStart=/bin/sh -c "LD_LIBRARY_PATH=. ./bedrock_server"
+{{end}}
 Restart=on-failure
 RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
 EOF
-apt-get install -y apt-transport-https ca-certificates curl openjdk-16-jre-headless fail2ban
+apt-get install -y apt-transport-https ca-certificates curl {{if eq .Edition "java"}} openjdk-16-jre-headless {{else if eq .Edition "bedrock"}} unzip {{end}} fail2ban
 
 useradd prometheus -s /bin/false
 useradd node_exporter -s /bin/false
@@ -100,14 +104,25 @@ systemctl enable node_exporter
 
 ufw allow ssh
 ufw allow 5201
+{{if eq .Edition "java"}}
 ufw allow proto udp to 0.0.0.0/0 port 25565
+{{else if eq .Edition "bedrock"}}
+ufw allow proto udp to 0.0.0.0/0 port 19132
+{{end}}
+
 echo [DEFAULT] | sudo tee -a /etc/fail2ban/jail.local
 echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
 echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
 echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
 sudo systemctl restart fail2ban
 mkdir /minecraft
+{{if eq .Edition "java"}}
 curl -sLSf https://launcher.mojang.com/v1/objects/0a269b5f2c5b93b1712d0f5dc43b6182b9ab254e/server.jar > /minecraft/server.jar
+{{else if eq .Edition "bedrock"}}
+curl -sLSf https://minecraft.azureedge.net/bin-linux/bedrock-server-1.17.2.01.zip > /tmp/bedrock-server.zip
+unzip -o /tmp/bedrock-server.zip -d /minecraft
+chmod +x /minecraft/bedrock_server
+{{end}}
 echo "eula=true" > /minecraft/eula.txt
 mv /tmp/server.properties /minecraft/server.properties
 systemctl restart minecraft.service
