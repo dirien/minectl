@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/briandowns/spinner"
 	"github.com/minectl/pgk/automation"
-	"github.com/minectl/pgk/cloud"
 	"github.com/minectl/pgk/common"
+	minctlTemplate "github.com/minectl/pgk/template"
 	"github.com/scaleway/scaleway-sdk-go/api/account/v2alpha1"
 	"github.com/scaleway/scaleway-sdk-go/api/instance/v1"
 	"github.com/scaleway/scaleway-sdk-go/scw"
@@ -63,13 +63,16 @@ func (s Scaleway) CreateServer(args automation.ServerArgs) (*automation.Ressourc
 		return nil, err
 	}
 
-	cloud.CloudConfig = strings.Replace(cloud.CloudConfig, "vdc", "sda", -1)
-	cloud.CloudConfig = cloud.ReplaceServerProperties(cloud.CloudConfig, args.Properties)
+	tmpl, err := minctlTemplate.NewTemplateCloudConfig(args.Properties, args.Edition, "sda")
+	if err != nil {
+		return nil, err
+	}
+	userData, err := tmpl.GetTemplate()
 
 	err = s.instanceAPI.SetServerUserData(&instance.SetServerUserDataRequest{
 		ServerID: server.Server.ID,
 		Key:      "cloud-init",
-		Content:  strings.NewReader(cloud.CloudConfig),
+		Content:  strings.NewReader(userData),
 	})
 
 	if err != nil {
@@ -93,8 +96,8 @@ func (s Scaleway) CreateServer(args automation.ServerArgs) (*automation.Ressourc
 	}
 
 	spinner := spinner.New(spinner.CharSets[11], 100*time.Millisecond)
-	spinner.Prefix = fmt.Sprintf("Creating instance (%s)... ", common.Green(server.Server.Name))
-	spinner.FinalMSG = fmt.Sprintf("\nInstance (%s) created\n", common.Green(server.Server.Name))
+	spinner.Prefix = fmt.Sprintf("🏗 Creating instance (%s)... ", common.Green(server.Server.Name))
+	spinner.FinalMSG = fmt.Sprintf("\n✅ Instance (%s) created\n", common.Green(server.Server.Name))
 	spinner.Start()
 	duration := 2 * time.Second
 	err = s.instanceAPI.ServerActionAndWait(&instance.ServerActionAndWaitRequest{
@@ -120,7 +123,7 @@ func (s Scaleway) CreateServer(args automation.ServerArgs) (*automation.Ressourc
 }
 
 func (s Scaleway) DeleteServer(id string, args automation.ServerArgs) error {
-	common.PrintMixedGreen("Delete instance (%s)... ", id)
+	common.PrintMixedGreen("🗑 Delete instance (%s)... ", id)
 	getServer, err := s.instanceAPI.GetServer(&instance.GetServerRequest{
 		ServerID: id,
 	})

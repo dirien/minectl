@@ -1,6 +1,6 @@
 # minectl 🗺
 
-`minectl`️️ is a cli for creating Minecraft (Java-Version) server on different cloud provider.
+`minectl`️️ is a cli for creating Minecraft (java or bedrock) server on different cloud provider.
 
 It is a private side project of me, to learn more about Go, CLI and multi cloud.
 
@@ -60,13 +60,14 @@ spec:
     java:
       xmx: 2G
       xms: 2G
+    edition: "java|bedrock"
     properties: |
       level-seed=stackitminecraftrocks
       broadcast-rcon-to-ops=true
       ...
 ```
 
-I created some example configs in the [config](config) folder for currently supported cloud provider.
+I created some example configs in the [config](config) folder for currently supported cloud provider and Minecraft editions.
 
 #### Create Minecraft Server 🏗
 
@@ -136,6 +137,7 @@ Apache License, Version 2.0
 
 ### Roadmap 🛣️
 
+- [x] Support Bedrock edition [#10](https://github.com/dirien/minectl/issues/10)
 - [ ] List Minecraft Server
 - [ ] Update Minecraft Server
 - [ ] Support Mods and Plugins

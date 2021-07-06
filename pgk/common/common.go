@@ -5,7 +5,7 @@ import (
 	"github.com/fatih/color"
 )
 
-func PrintMixedGreen(format, value string) {
+func PrintMixedGreen(format string, value string) {
 	green := color.New(color.FgGreen).SprintFunc()
 	fmt.Printf(format, green(value))
 }

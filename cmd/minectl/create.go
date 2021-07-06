@@ -1,6 +1,7 @@
 package minectl
 
 import (
+	"fmt"
 	"github.com/minectl/pgk/common"
 	"github.com/minectl/pgk/provisioner"
 	"log"
@@ -42,5 +43,7 @@ func runCreate(cmd *cobra.Command, _ []string) error {
 	}
 	common.PrintMixedGreen("Minecraft Server IP: %s\n", res.PublicIP)
 	common.PrintMixedGreen("Minecraft Server ID: %s\n", res.ID)
+
+	common.PrintMixedGreen("\nTo delete the server type:\n\n %s", fmt.Sprintf("minectl delete -f %s --id %s\n", filename, res.ID))
 	return err
 }

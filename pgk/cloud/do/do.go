@@ -7,12 +7,11 @@ import (
 	"github.com/briandowns/spinner"
 	"github.com/digitalocean/godo"
 	"github.com/minectl/pgk/automation"
-	"github.com/minectl/pgk/cloud"
 	"github.com/minectl/pgk/common"
+	minctlTemplate "github.com/minectl/pgk/template"
 	"golang.org/x/oauth2"
 	"io/ioutil"
 	"strconv"
-	"strings"
 	"time"
 )
 
@@ -81,8 +80,15 @@ func (d *DigitalOcean) CreateServer(args automation.ServerArgs) (*automation.Res
 		return nil, err
 	}
 
-	cloud.CloudConfig = strings.Replace(cloud.CloudConfig, "vdc", "sda", -1)
-	cloud.CloudConfig = cloud.ReplaceServerProperties(cloud.CloudConfig, args.Properties)
+	tmpl, err := minctlTemplate.NewTemplateCloudConfig(args.Properties, args.Edition, "sda")
+	if err != nil {
+		return nil, err
+	}
+	userData, err := tmpl.GetTemplate()
+	if err != nil {
+		return nil, err
+	}
+
 	createRequest := &godo.DropletCreateRequest{
 		Name: args.StackName,
 		SSHKeys: []godo.DropletCreateSSHKey{
@@ -95,7 +101,7 @@ func (d *DigitalOcean) CreateServer(args automation.ServerArgs) (*automation.Res
 		Image: godo.DropletCreateImage{
 			Slug: "ubuntu-20-04-x64",
 		},
-		UserData: cloud.CloudConfig,
+		UserData: userData,
 		Volumes: []godo.DropletCreateVolume{
 			{
 				ID: volume.ID,
@@ -109,8 +115,8 @@ func (d *DigitalOcean) CreateServer(args automation.ServerArgs) (*automation.Res
 
 	stillCreating := true
 	s := spinner.New(spinner.CharSets[11], 100*time.Millisecond)
-	s.Prefix = fmt.Sprintf("Creating droplet (%s)... ", common.Green(droplet.Name))
-	s.FinalMSG = fmt.Sprintf("\nDroplet (%s) created\n", common.Green(droplet.Name))
+	s.Prefix = fmt.Sprintf("🏗 Creating droplet (%s)... ", common.Green(droplet.Name))
+	s.FinalMSG = fmt.Sprintf("\n✅ Droplet (%s) created\n", common.Green(droplet.Name))
 	s.Start()
 
 	for stillCreating {
@@ -134,7 +140,7 @@ func (d *DigitalOcean) CreateServer(args automation.ServerArgs) (*automation.Res
 }
 
 func (d *DigitalOcean) DeleteServer(id string, args automation.ServerArgs) error {
-	common.PrintMixedGreen("Delete droplet (%s)... ", id)
+	common.PrintMixedGreen("🗑 Delete droplet (%s)... ", id)
 	list, _, err := d.client.Keys.List(context.Background(), nil)
 	if err != nil {
 		return err
@@ -158,7 +164,7 @@ func (d *DigitalOcean) DeleteServer(id string, args automation.ServerArgs) error
 		_, _, err := d.client.Droplets.Get(context.Background(), intID)
 		if err != nil {
 			stillDeleting = false
-			time.Sleep(5 * time.Second)
+			time.Sleep(15 * time.Second)
 		} else {
 			time.Sleep(2 * time.Second)
 		}
@@ -167,6 +173,7 @@ func (d *DigitalOcean) DeleteServer(id string, args automation.ServerArgs) error
 	volumes, _, err := d.client.Storage.ListVolumes(context.Background(), &godo.ListVolumeParams{
 		Name: fmt.Sprintf("%s-vol", args.StackName),
 	})
+
 	if err != nil {
 		return err
 	}

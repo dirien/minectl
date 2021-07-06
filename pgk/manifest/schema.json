@@ -66,11 +66,14 @@
         },
         "properties": {
           "type": "string"
+        },
+        "edition": {
+          "type": "string"
         }
       },
       "required": [
-        "java",
-        "properties"
+        "properties",
+        "edition"
       ],
       "title": "Minecraft"
     },
@@ -79,6 +82,9 @@
       "additionalProperties": false,
       "properties": {
         "xmx": {
+          "type": "string"
+        },
+        "xms": {
           "type": "string"
         },
         "xms": {

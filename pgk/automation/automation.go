@@ -15,6 +15,7 @@ type ServerArgs struct {
 	SSH        string
 	VolumeSize int
 	Properties string
+	Edition    string
 }
 
 type RessourceResults struct {
