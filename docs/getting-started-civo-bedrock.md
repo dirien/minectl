@@ -5,7 +5,7 @@
 Bedrock Edition (also known as the Bedrock editions, Bedrock versions, or just Bedrock) refers to the multi-platform
 versions of Minecraft developed by Mojang Studios, Xbox Game Studios, and SkyBox Labs and based on the Bedrock codebase.
 
-To setup a bedrock server, just follow [getting started with civi](getting-started-civo.md) except of following changes:
+To setup a bedrock server, just follow [getting started with Civo](getting-started-civo.md) except of following changes:
 
 ###### Attention: The server.properties of the bedrock edition is different to the java edition
 

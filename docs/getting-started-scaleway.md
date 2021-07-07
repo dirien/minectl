@@ -1,18 +1,26 @@
-![Civo](img/civo.png)
+![Civo](img/scaleway.png)
 
-# Getting Started - Civo edition
+# Getting Started - Scaleway edition
 
-## API Key
+## Access and Secret Key
 
-Get your API Key via https://www.civo.com/account/security 
+Generate a new access and secret key (https://console.scaleway.com/project/credentials)
 
-![key](img/civo_key.png)
+![img.png](img/scaleway_key.png)
 
-Export the key as ENV variable:
+Get the generated API keys.
+
+![img.png](img/scaleway_key_2.png)
+
+Export the keys as ENV variables:
 
 ```
-export CIVO_TOKEN=xx
+export ACCESS_KEY=xxx
+export SECRET_KEY=yyy
+export ORGANISATION_ID=zzz
 ```
+
+See https://www.scaleway.com/en/docs/generate-api-keys/ for even more details on Scaleway Credentials
 
 ## Create SSH Keys
 
@@ -29,9 +37,9 @@ metadata:
   name: minecraft-server
 spec:
   server:
-    cloud: civo
-    region: LON1
-    size: g3.large
+    cloud: scaleway
+    region: fr-par-1
+    size: GP1-XS
     volumeSize: 100
     ssh: "xxx/ssh/minecraft.pub"
   minecraft:
@@ -40,7 +48,7 @@ spec:
       xms: 2G
     edition: java
     properties: |
-      level-seed=randomseed
+      level-seed=stackitminecraftrocks
       broadcast-rcon-to-ops=true
       view-distance=10
       enable-jmx-monitoring=false
@@ -61,7 +69,7 @@ spec:
       level-name=world
       rcon.password=
       player-idle-timeout=0
-      motd=Civo Minecraft
+      motd=Scaleway Minecraft
       query.port=25565
       force-gamemode=false
       rate-limit=0
@@ -93,25 +101,26 @@ spec:
 ## minectl 🗺
 
 ```bash
-minectl create --filename config/java/server-civo.yaml 
+minectl create --filename config/server-scaleway.yaml 
 
-🛎 Using cloud provider Civo
+🛎 Using cloud provider Scaleway
 🗺 Minecraft java edition
-🏗 Creating instance (minecraft-server)... ⣷ 
+🏗 Creating instance (minecraft-server)... ⢿ 
 ✅ Instance (minecraft-server) created
-Minecraft Server IP: 74.220.17.7
-Minecraft Server ID: 7b9ed37c-fb35-49de-a996-a5f8ae7b7fc1
+Minecraft Server IP: 51.15.132.219
+Minecraft Server ID: 30a219f1-dff2-487f-a3cd-0b03d712de81
 
 To delete the server type:
 
- minectl delete -f config/java/server-civo.yaml --id 7b9ed37c-fb35-49de-a996-a5f8ae7b7fc1
+ minectl delete -f config/java/server-scaleway.yaml --id 30a219f1-dff2-487f-a3cd-0b03d712de81
 ```
 
-![instance](img/civo_instance.png)
+![img.png](img/scaleway_instance.png)
 
 ## Minecraft Client
 
 ### Download
+
 Download a Minecraft Client (Java Edition) under https://www.minecraft.net/en-us/get-minecraft
 
 Start your Minecraft Client
@@ -120,26 +129,26 @@ Start your Minecraft Client
 
 Add your server
 
-![img.png](img/civo_add_server.png)
+![img.png](img/scaleway_add_server.png)
 
 Join the server
 
-![img.png](img/civo_join.png)
+![img.png](img/scaleway_join.png)
 
 Play the game
 
-![game.png](img/civo_game.png)
+![img.png](img/scaleway_game.png)
 
-## minectl 🗺 
+## minectl 🗺
 
 Feed up with your server? Deleting is as easy as creating the server
 
 ```bash
-minectl delete --filename config/java/server-civo.yaml --id a7ad735a-d1e9-4951-9f9b-83221efd945e
+minectl delete -f config/java/server-scaleway.yaml --id 30a219f1-dff2-487f-a3cd-0b03d712de81
 
-🛎 Using cloud provider Civo
+🛎 Using cloud provider Scaleway
 🗺 Minecraft java edition
-🗑 Delete instance (7b9ed37c-fb35-49de-a996-a5f8ae7b7fc1)... 
+🗑 Delete instance (30a219f1-dff2-487f-a3cd-0b03d712de81)... 
 ```
 
 ### Legal Disclaimer 👮

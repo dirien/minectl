@@ -112,7 +112,9 @@ Flags:
 
 #### Getting Started
 
-- [Civo](docs/getting-started-civo.md)
+- [Civo Java Edition](docs/getting-started-civo.md)
+- [Civo Bedrock Edition](docs/getting-started-civo-bedrock.md)
+- [Scaleway Java Edition](docs/getting-started-scaleway.md)
 
 ### Supported cloud provider ☁
 
