@@ -1,4 +1,12 @@
-# minectl 🗺
+# minectl 🗺 
+
+![Minecraft](https://img.shields.io/badge/Minecraft-62B47A?style=for-the-badge&logo=Minecraft&logoColor=white)
+![Go](https://img.shields.io/badge/go-00ADD8?style=for-the-badge&logo=go&logoColor=white)
+![Scaleway](https://img.shields.io/badge/scaleway-4F0599?style=for-the-badge&logo=scaleway&logoColor=white)
+![DigitalOcean](https://img.shields.io/badge/DigitalOcean-0080FF?style=for-the-badge&logo=DigitalOcean&logoColor=white)
+![Civo](https://img.shields.io/badge/Civo-239DFF?style=for-the-badge&logo=Civo&logoColor=white)
+![Prometheus](https://img.shields.io/badge/Prometheus-E6522C?style=for-the-badge&logo=Prometheus&logoColor=white)
+[![Build Binary](https://github.com/dirien/minectl/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/dirien/minectl/actions/workflows/ci.yaml)
 
 `minectl`️️ is a cli for creating Minecraft (java or bedrock) server on different cloud provider.
 
@@ -60,6 +68,11 @@ spec:
     java:
       xmx: 2G
       xms: 2G
+      rcon:
+        password: test
+        port: 25575
+        enabled: true
+        broadcast: true
     edition: "java|bedrock"
     properties: |
       level-seed=stackitminecraftrocks
@@ -110,11 +123,29 @@ Flags:
       --id string         contains the server id
 ```
 
+#### Monitoring 📊
+
+Every instance of minectl 🗺, has following monitoring components included:
+
+- Prometheus (https://github.com/prometheus/prometheus)
+- Node exporter (https://github.com/prometheus/node_exporter)
+
+The `edition:java` has on top following exporter included:  
+
+- Minecraft exporter (https://github.com/dirien/minecraft-prometheus-exporter)
+
+You can acces the `prometheus` via
+
+```bash
+http://<ip>:9090/graph
+```
+
 #### Getting Started
 
 - [Civo Java Edition](docs/getting-started-civo.md)
 - [Civo Bedrock Edition](docs/getting-started-civo-bedrock.md)
 - [Scaleway Java Edition](docs/getting-started-scaleway.md)
+- [How to monitor your multi-cloud minectl 🗺 server?](docs/multi-server-monitoring-civo.md)
 
 ### Supported cloud provider ☁
 
@@ -140,6 +171,7 @@ Apache License, Version 2.0
 ### Roadmap 🛣️
 
 - [x] Support Bedrock edition [#10](https://github.com/dirien/minectl/issues/10)
+- [x] Add monitoring capabilities to minectl server [#21](https://github.com/dirien/minectl/issues/21) 
 - [ ] List Minecraft Server
 - [ ] Update Minecraft Server
 - [ ] Support Mods and Plugins

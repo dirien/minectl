@@ -9,6 +9,7 @@ require (
 	github.com/fatih/color v1.12.0
 	github.com/kr/pretty v0.2.1 // indirect
 	github.com/kr/text v0.2.0 // indirect
+	github.com/magiconair/properties v1.8.0
 	github.com/morikuni/aec v1.0.0
 	github.com/pkg/errors v0.9.1
 	github.com/scaleway/scaleway-sdk-go v1.0.0-beta.7

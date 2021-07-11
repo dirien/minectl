@@ -28,11 +28,11 @@ func NewCivo(APIKey, region string) (*Civo, error) {
 }
 
 func (c *Civo) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
-	pubKeyFile, err := ioutil.ReadFile(args.SSH)
+	pubKeyFile, err := ioutil.ReadFile(args.MinecraftServer.GetSSH())
 	if err != nil {
 		return nil, err
 	}
-	sshPubKey, err := c.client.NewSSHKey(fmt.Sprintf("%s-ssh", args.StackName), string(pubKeyFile))
+	sshPubKey, err := c.client.NewSSHKey(fmt.Sprintf("%s-ssh", args.MinecraftServer.GetName()), string(pubKeyFile))
 	if err != nil {
 		return nil, err
 	}
@@ -51,14 +51,14 @@ func (c *Civo) CreateServer(args automation.ServerArgs) (*automation.RessourceRe
 		return nil, err
 	}
 	config.TemplateID = template.ID
-	config.Size = args.Size
-	config.Hostname = args.StackName
-	config.Region = args.Region
+	config.Size = args.MinecraftServer.GetSize()
+	config.Hostname = args.MinecraftServer.GetName()
+	config.Region = args.MinecraftServer.GetRegion()
 	config.SSHKeyID = sshPubKey.ID
 	config.PublicIPRequired = "create"
 	config.InitialUser = "root"
 
-	tmpl, err := minctlTemplate.NewTemplateCivo(args.Properties, args.Edition)
+	tmpl, err := minctlTemplate.NewTemplateCivo(args.MinecraftServer)
 	if err != nil {
 		return nil, err
 	}
@@ -73,8 +73,8 @@ func (c *Civo) CreateServer(args automation.ServerArgs) (*automation.RessourceRe
 		return nil, err
 	}
 
-	if args.Edition == "bedrock" {
-		firewall, err := c.client.NewFirewall(fmt.Sprintf("%s-fw", args.StackName), network.ID)
+	if args.MinecraftServer.GetEdition() == "bedrock" {
+		firewall, err := c.client.NewFirewall(fmt.Sprintf("%s-fw", args.MinecraftServer.GetName()), network.ID)
 		if err != nil {
 			return nil, err
 		}
@@ -133,7 +133,7 @@ func (c *Civo) DeleteServer(id string, args automation.ServerArgs) error {
 	if err != nil {
 		return err
 	}
-	pubKeyFile, err := c.client.FindSSHKey(fmt.Sprintf("%s-ssh", args.StackName))
+	pubKeyFile, err := c.client.FindSSHKey(fmt.Sprintf("%s-ssh", args.MinecraftServer.GetName()))
 	if err != nil {
 		return err
 	}
@@ -141,8 +141,8 @@ func (c *Civo) DeleteServer(id string, args automation.ServerArgs) error {
 	if err != nil {
 		return err
 	}
-	if args.Edition == "bedrock" {
-		firewall, err := c.client.FindFirewall(fmt.Sprintf("%s-fw", args.StackName))
+	if args.MinecraftServer.GetEdition() == "bedrock" {
+		firewall, err := c.client.FindFirewall(fmt.Sprintf("%s-fw", args.MinecraftServer.GetName()))
 		if err != nil {
 			return err
 		}

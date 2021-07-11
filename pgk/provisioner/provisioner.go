@@ -13,7 +13,7 @@ import (
 
 type PulumiProvisioner struct {
 	auto     automation.Automation
-	Manifest *manifest.MinecraftServer
+	Manifest *manifest.MinecraftServerManifest
 	args     automation.ServerArgs
 }
 
@@ -49,34 +49,29 @@ func newProvisioner(manifestPath, id string) (*PulumiProvisioner, error) {
 		return nil, err
 	}
 	args := automation.ServerArgs{
-		StackName:  manifest.GetName(),
-		SSH:        manifest.GetSSH(),
-		Region:     manifest.GetRegion(),
-		Size:       manifest.GetSize(),
-		Properties: manifest.GetProperties(),
-		VolumeSize: manifest.GetVolumeSize(),
-		ID:         id,
-		Edition:    manifest.GetEdition(),
+		MinecraftServer: manifest.MinecraftServer,
+		ID:              id,
 	}
+
 	var cloudProvider automation.Automation
-	common.PrintMixedGreen("🛎 Using cloud provider %s\n", cloud.GetCloudProviderFullName(manifest.GetCloud()))
-	if manifest.GetCloud() == "do" {
+	common.PrintMixedGreen("🛎 Using cloud provider %s\n", cloud.GetCloudProviderFullName(args.MinecraftServer.GetCloud()))
+	if args.MinecraftServer.GetCloud() == "do" {
 		cloudProvider, err = do.NewDigitalOcean(os.Getenv("DIGITALOCEAN_TOKEN"))
 		if err != nil {
 			return nil, err
 		}
-	} else if manifest.GetCloud() == "civo" {
-		cloudProvider, err = civo.NewCivo(os.Getenv("CIVO_TOKEN"), args.Region)
+	} else if args.MinecraftServer.GetCloud() == "civo" {
+		cloudProvider, err = civo.NewCivo(os.Getenv("CIVO_TOKEN"), args.MinecraftServer.GetRegion())
 		if err != nil {
 			return nil, err
 		}
-	} else if manifest.GetCloud() == "scaleway" {
-		cloudProvider, err = scaleway.NewScaleway(os.Getenv("ACCESS_KEY"), os.Getenv("SECRET_KEY"), os.Getenv("ORGANISATION_ID"), args.Region)
+	} else if manifest.MinecraftServer.GetCloud() == "scaleway" {
+		cloudProvider, err = scaleway.NewScaleway(os.Getenv("ACCESS_KEY"), os.Getenv("SECRET_KEY"), os.Getenv("ORGANISATION_ID"), args.MinecraftServer.GetRegion())
 		if err != nil {
 			return nil, err
 		}
 	}
-	common.PrintMixedGreen("🗺 Minecraft %s edition\n", args.Edition)
+	common.PrintMixedGreen("🗺 Minecraft %s edition\n", args.MinecraftServer.GetEdition())
 
 	p := &PulumiProvisioner{
 		auto:     cloudProvider,

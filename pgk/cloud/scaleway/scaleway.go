@@ -42,9 +42,9 @@ func NewScaleway(accessKey, secretKey, organizationID, region string) (*Scaleway
 }
 
 func (s Scaleway) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
-	pubKeyFile, err := ioutil.ReadFile(args.SSH)
+	pubKeyFile, err := ioutil.ReadFile(args.MinecraftServer.GetSSH())
 	_, err = s.accountAPI.CreateSSHKey(&account.CreateSSHKeyRequest{
-		Name:      fmt.Sprintf("%s-ssh", args.StackName),
+		Name:      fmt.Sprintf("%s-ssh", args.MinecraftServer.GetName()),
 		PublicKey: string(pubKeyFile),
 	})
 	if err != nil {
@@ -52,8 +52,8 @@ func (s Scaleway) CreateServer(args automation.ServerArgs) (*automation.Ressourc
 	}
 
 	server, err := s.instanceAPI.CreateServer(&instance.CreateServerRequest{
-		Name:              args.StackName,
-		CommercialType:    args.Size,
+		Name:              args.MinecraftServer.GetName(),
+		CommercialType:    args.MinecraftServer.GetSize(),
 		Image:             "ubuntu_focal",
 		Tags:              []string{"minecraft"},
 		DynamicIPRequired: scw.BoolPtr(true),
@@ -63,7 +63,7 @@ func (s Scaleway) CreateServer(args automation.ServerArgs) (*automation.Ressourc
 		return nil, err
 	}
 
-	tmpl, err := minctlTemplate.NewTemplateCloudConfig(args.Properties, args.Edition, "sda")
+	tmpl, err := minctlTemplate.NewTemplateCloudConfig(args.MinecraftServer, "sda")
 	if err != nil {
 		return nil, err
 	}
@@ -80,9 +80,9 @@ func (s Scaleway) CreateServer(args automation.ServerArgs) (*automation.Ressourc
 	}
 
 	volume, err := s.instanceAPI.CreateVolume(&instance.CreateVolumeRequest{
-		Name:       fmt.Sprintf("%s-vol", args.StackName),
+		Name:       fmt.Sprintf("%s-vol", args.MinecraftServer.GetName()),
 		VolumeType: instance.VolumeVolumeTypeBSSD,
-		Size:       scw.SizePtr(scw.Size(args.VolumeSize) * scw.GB),
+		Size:       scw.SizePtr(scw.Size(args.MinecraftServer.GetVolumeSize()) * scw.GB),
 	})
 	if err != nil {
 		return nil, err
@@ -151,7 +151,7 @@ func (s Scaleway) DeleteServer(id string, args automation.ServerArgs) error {
 		}
 	}
 	keys, err := s.accountAPI.ListSSHKeys(&account.ListSSHKeysRequest{
-		Name: scw.StringPtr(fmt.Sprintf("%s-ssh", args.StackName)),
+		Name: scw.StringPtr(fmt.Sprintf("%s-ssh", args.MinecraftServer.GetName())),
 	})
 	if err != nil {
 		return err

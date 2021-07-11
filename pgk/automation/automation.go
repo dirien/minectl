@@ -1,5 +1,7 @@
 package automation
 
+import "github.com/minectl/pgk/model"
+
 type Automation interface {
 	CreateServer(args ServerArgs) (*RessourceResults, error)
 	DeleteServer(id string, args ServerArgs) error
@@ -7,15 +9,16 @@ type Automation interface {
 	UpdateServer(args ServerArgs) (*RessourceResults, error)
 }
 
+type Rcon struct {
+	Password  string
+	Enabled   bool
+	Port      int
+	Broadcast bool
+}
+
 type ServerArgs struct {
-	ID         string
-	StackName  string
-	Size       string
-	Region     string
-	SSH        string
-	VolumeSize int
-	Properties string
-	Edition    string
+	ID              string
+	MinecraftServer *model.MinecraftServer
 }
 
 type RessourceResults struct {

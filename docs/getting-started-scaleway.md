@@ -1,5 +1,4 @@
-![Civo](img/scaleway.png)
-
+![Scaleway](https://img.shields.io/badge/scaleway-4F0599?style=for-the-badge&logo=scaleway&logoColor=white)
 # Getting Started - Scaleway edition
 
 ## Access and Secret Key
@@ -46,20 +45,22 @@ spec:
     java:
       xmx: 2G
       xms: 2G
+      rcon:
+        password: test
+        port: 25575
+        enabled: true
+        broadcast: true
     edition: java
     properties: |
       level-seed=stackitminecraftrocks
-      broadcast-rcon-to-ops=true
       view-distance=10
       enable-jmx-monitoring=false
       server-ip=
       resource-pack-prompt=
-      rcon.port=25575
       gamemode=survival
       server-port=25565
       allow-nether=true
       enable-command-block=false
-      enable-rcon=false
       sync-chunk-writes=true
       enable-query=false
       op-permission-level=4
@@ -67,7 +68,6 @@ spec:
       resource-pack=
       entity-broadcast-range-percentage=100
       level-name=world
-      rcon.password=
       player-idle-timeout=0
       motd=Scaleway Minecraft
       query.port=25565
