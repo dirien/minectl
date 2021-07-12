@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-06/schema#",
-  "$ref": "#/definitions/Welcome9",
+  "$ref": "#/definitions/Welcome2",
   "definitions": {
-    "Welcome9": {
+    "Welcome2": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -25,7 +25,7 @@
         "metadata",
         "spec"
       ],
-      "title": "Welcome9"
+      "title": "Welcome2"
     },
     "Metadata": {
       "type": "object",
@@ -64,16 +64,16 @@
         "java": {
           "$ref": "#/definitions/Java"
         },
-        "properties": {
+        "edition": {
           "type": "string"
         },
-        "edition": {
+        "properties": {
           "type": "string"
         }
       },
       "required": [
-        "properties",
-        "edition"
+        "edition",
+        "properties"
       ],
       "title": "Minecraft"
     },
@@ -87,8 +87,8 @@
         "xms": {
           "type": "string"
         },
-        "xms": {
-          "type": "string"
+        "rcon": {
+          "$ref": "#/definitions/Rcon"
         }
       },
       "required": [
@@ -96,6 +96,28 @@
         "xmx"
       ],
       "title": "Java"
+    },
+    "Rcon": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "password": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "port": {
+          "type": "integer"
+        },
+        "broadcast": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "enabled"
+      ],
+      "title": "Rcon"
     },
     "Server": {
       "type": "object",

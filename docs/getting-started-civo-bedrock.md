@@ -1,5 +1,4 @@
-![Civo](img/civo.png)
-
+![Civo](https://img.shields.io/badge/Civo-239DFF?style=for-the-badge&logo=Civo&logoColor=white)
 # Getting Started on Civo with the Bedrock edition
 
 Bedrock Edition (also known as the Bedrock editions, Bedrock versions, or just Bedrock) refers to the multi-platform

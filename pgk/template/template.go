@@ -3,6 +3,7 @@ package template
 import (
 	"bytes"
 	_ "embed"
+	"github.com/minectl/pgk/model"
 	"strings"
 	"text/template"
 )
@@ -15,13 +16,13 @@ var cloudConfig string
 
 type Template struct {
 	Template *template.Template
-	Values   templateValues
+	Values   *templateValues
 }
 
 type templateValues struct {
-	Properties string
-	Edition    string
+	*model.MinecraftServer
 	Mount      string
+	Properties []string
 }
 
 type Templater interface {
@@ -37,31 +38,30 @@ func (t Template) GetTemplate() (string, error) {
 	return buff.String(), nil
 }
 
-func NewTemplateCivo(properties, edition string) (*Template, error) {
+func NewTemplateCivo(model *model.MinecraftServer) (*Template, error) {
 	civo, err := template.New("civo").Parse(bash)
 	if err != nil {
 		return nil, err
 	}
 	return &Template{
 		Template: civo,
-		Values: templateValues{
-			Properties: strings.Replace(properties, "\t", "", -1),
-			Edition:    edition,
+		Values: &templateValues{
+			MinecraftServer: model,
 		},
 	}, nil
 }
 
-func NewTemplateCloudConfig(properties, edition, mount string) (*Template, error) {
+func NewTemplateCloudConfig(model *model.MinecraftServer, mount string) (*Template, error) {
 	cloudInit, err := template.New("cloud-init").Parse(cloudConfig)
 	if err != nil {
 		return nil, err
 	}
 	return &Template{
 		Template: cloudInit,
-		Values: templateValues{
-			Properties: strings.Replace(properties, "\t", "      ", -1),
-			Edition:    edition,
-			Mount:      mount,
+		Values: &templateValues{
+			MinecraftServer: model,
+			Properties:      strings.Split(model.GetProperties(), "\n"),
+			Mount:           mount,
 		},
 	}, nil
 }

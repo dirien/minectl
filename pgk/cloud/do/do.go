@@ -55,12 +55,12 @@ func (d *DigitalOcean) UpdateServer(args automation.ServerArgs) (*automation.Res
 }
 
 func (d *DigitalOcean) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
-	pubKeyFile, err := ioutil.ReadFile(args.SSH)
+	pubKeyFile, err := ioutil.ReadFile(args.MinecraftServer.GetSSH())
 	if err != nil {
 		return nil, err
 	}
 	keyRequest := &godo.KeyCreateRequest{
-		Name:      fmt.Sprintf("%s-ssh", args.StackName),
+		Name:      fmt.Sprintf("%s-ssh", args.MinecraftServer.GetName()),
 		PublicKey: string(pubKeyFile),
 	}
 	key, _, err := d.client.Keys.Create(context.Background(), keyRequest)
@@ -69,18 +69,18 @@ func (d *DigitalOcean) CreateServer(args automation.ServerArgs) (*automation.Res
 	}
 
 	volumeRequest := &godo.VolumeCreateRequest{
-		Name:           fmt.Sprintf("%s-vol", args.StackName),
-		Region:         args.Region,
+		Name:           fmt.Sprintf("%s-vol", args.MinecraftServer.GetName()),
+		Region:         args.MinecraftServer.GetRegion(),
 		Description:    "volume for storing the minecraft data",
 		FilesystemType: "ext4",
-		SizeGigaBytes:  int64(args.VolumeSize),
+		SizeGigaBytes:  int64(args.MinecraftServer.GetVolumeSize()),
 	}
 	volume, _, err := d.client.Storage.CreateVolume(context.Background(), volumeRequest)
 	if err != nil {
 		return nil, err
 	}
 
-	tmpl, err := minctlTemplate.NewTemplateCloudConfig(args.Properties, args.Edition, "sda")
+	tmpl, err := minctlTemplate.NewTemplateCloudConfig(args.MinecraftServer, "sda")
 	if err != nil {
 		return nil, err
 	}
@@ -90,14 +90,14 @@ func (d *DigitalOcean) CreateServer(args automation.ServerArgs) (*automation.Res
 	}
 
 	createRequest := &godo.DropletCreateRequest{
-		Name: args.StackName,
+		Name: args.MinecraftServer.GetName(),
 		SSHKeys: []godo.DropletCreateSSHKey{
 			{
 				Fingerprint: key.Fingerprint,
 			},
 		},
-		Region: args.Region,
-		Size:   args.Size,
+		Region: args.MinecraftServer.GetRegion(),
+		Size:   args.MinecraftServer.GetSize(),
 		Image: godo.DropletCreateImage{
 			Slug: "ubuntu-20-04-x64",
 		},
@@ -146,7 +146,7 @@ func (d *DigitalOcean) DeleteServer(id string, args automation.ServerArgs) error
 		return err
 	}
 	for _, key := range list {
-		if key.Name == fmt.Sprintf("%s-ssh", args.StackName) {
+		if key.Name == fmt.Sprintf("%s-ssh", args.MinecraftServer.GetName()) {
 			_, err := d.client.Keys.DeleteByID(context.Background(), key.ID)
 			if err != nil {
 				return err
@@ -171,7 +171,7 @@ func (d *DigitalOcean) DeleteServer(id string, args automation.ServerArgs) error
 	}
 
 	volumes, _, err := d.client.Storage.ListVolumes(context.Background(), &godo.ListVolumeParams{
-		Name: fmt.Sprintf("%s-vol", args.StackName),
+		Name: fmt.Sprintf("%s-vol", args.MinecraftServer.GetName()),
 	})
 
 	if err != nil {
