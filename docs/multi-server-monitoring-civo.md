@@ -5,7 +5,7 @@
 
 # How to monitor your multi-cloud minectl 🗺 server? - Civo edition
 
-minectl 🗺 supports will be installed with following monitoring stack:
+minectl 🗺 will be installed with following monitoring stack:
 
 - Prometheus (https://github.com/prometheus/prometheus)
 - Node exporter (https://github.com/prometheus/node_exporter)
@@ -52,10 +52,12 @@ the base for our monitoring stack.
 We will install the cert-manager directly via the marketplace.
 
 ````bash
-civo k3s create minectl-monitoring --nodes=1 --size=g3.k3s.large --applications=cert-manager,Nginx --remove-applications=Traefik
+civo k3s create minectl-monitoring --nodes=1 --size=g3.k3s.large \
+--applications=cert-manager,Nginx \
+--remove-applications=Traefik
 ````
 
-`The cluster black-dust (b7d9d2da-8947-4dbb-b349-3ed40363c498) has been created`
+`The cluster minectl-monitoring (10142bd2-d34d-4804-941f-1e98e4a577da) has been created`
 
 Wait until the cluster is ready to use.
 
@@ -88,7 +90,7 @@ the [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/
 
 #### cert-manger
 
-Perpare a DNS Alias (I use `grafana-minectl.ediri.online`) and point to the public IP of your ingress controller:
+Prepare a DNS Alias (I use `grafana-minectl.ediri.online`) and point to the public IP of your ingress controller:
 
 ![img.png](img/dns.png)
 
@@ -288,7 +290,7 @@ EOF
 
 ![img.png](img/prometheus_sd_scaleway.png)
 
-Let us add a second minectl 🗺 server. This time on DigitalOcean.
+Let us add a second minectl 🗺 server to the mix. This time we use DigitalOcean.
 
 ```bash
 minectl create -f config/java/server-do.yaml      
@@ -366,10 +368,15 @@ EOF
 
 ![img.png](img/prometheus_sd_do.png)
 
-Finally, we can go on tho configure our Grafana with some nice dashboard. Working with Grafana variables, can help to
-select the specific minectl 🗺 server instance.
+Finally, we can start to use Grafana to create dashboard. The datasource is already configured for you.
+
+Pro Tip: Working with Grafana variables, can help to select the specific minectl 🗺 server instance.
 
 ![img.png](img/dashboard.png)
+
+# Enjoy 🎊
+
+Congratulations, you are done and can start build some fancy dashboards for your minectl 🗺 Minecraft server.
 
 ### Legal Disclaimer 👮
 
