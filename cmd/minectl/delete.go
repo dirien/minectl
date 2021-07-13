@@ -34,7 +34,7 @@ func runDelete(cmd *cobra.Command, _ []string) error {
 		return errors.Wrap(err, "failed to get 'filename' value.")
 	}
 	id, err := cmd.Flags().GetString("id")
-	newProvisioner, err := provisioner.NewDeleteServerProvisioner(id, filename)
+	newProvisioner, err := provisioner.NewProvisioner(filename, id)
 	if err != nil {
 		return err
 	}

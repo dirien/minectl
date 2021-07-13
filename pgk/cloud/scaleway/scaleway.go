@@ -42,6 +42,7 @@ func NewScaleway(accessKey, secretKey, organizationID, region string) (*Scaleway
 }
 
 func (s Scaleway) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
+
 	pubKeyFile, err := ioutil.ReadFile(args.MinecraftServer.GetSSH())
 	_, err = s.accountAPI.CreateSSHKey(&account.CreateSSHKeyRequest{
 		Name:      fmt.Sprintf("%s-ssh", args.MinecraftServer.GetName()),
@@ -50,25 +51,22 @@ func (s Scaleway) CreateServer(args automation.ServerArgs) (*automation.Ressourc
 	if err != nil {
 		return nil, err
 	}
-
 	server, err := s.instanceAPI.CreateServer(&instance.CreateServerRequest{
 		Name:              args.MinecraftServer.GetName(),
 		CommercialType:    args.MinecraftServer.GetSize(),
 		Image:             "ubuntu_focal",
-		Tags:              []string{"minecraft"},
+		Tags:              []string{"minectl"},
 		DynamicIPRequired: scw.BoolPtr(true),
 	})
 
 	if err != nil {
 		return nil, err
 	}
-
 	tmpl, err := minctlTemplate.NewTemplateCloudConfig(args.MinecraftServer, "sda")
 	if err != nil {
 		return nil, err
 	}
 	userData, err := tmpl.GetTemplate()
-
 	err = s.instanceAPI.SetServerUserData(&instance.SetServerUserDataRequest{
 		ServerID: server.Server.ID,
 		Key:      "cloud-init",
@@ -118,7 +116,10 @@ func (s Scaleway) CreateServer(args automation.ServerArgs) (*automation.Ressourc
 
 	return &automation.RessourceResults{
 		ID:       server.Server.ID,
+		Name:     server.Server.Name,
+		Region:   server.Server.Zone.String(),
 		PublicIP: getServer.Server.PublicIP.Address.String(),
+		Tags:     strings.Join(server.Server.Tags, ","),
 	}, err
 }
 
@@ -167,8 +168,24 @@ func (s Scaleway) DeleteServer(id string, args automation.ServerArgs) error {
 	return nil
 }
 
-func (s Scaleway) ListServer(args automation.ServerArgs) (*[]automation.RessourceResults, error) {
-	panic("implement me")
+func (s Scaleway) ListServer() ([]automation.RessourceResults, error) {
+	servers, err := s.instanceAPI.ListServers(&instance.ListServersRequest{
+		Tags: []string{common.InstanceTag},
+	})
+	if err != nil {
+		return nil, err
+	}
+	var result []automation.RessourceResults
+	for _, server := range servers.Servers {
+		result = append(result, automation.RessourceResults{
+			ID:       server.ID,
+			PublicIP: server.PublicIP.Address.String(),
+			Name:     server.Name,
+			Region:   server.Zone.String(),
+			Tags:     strings.Join(server.Tags, ","),
+		})
+	}
+	return result, nil
 }
 
 func (s Scaleway) UpdateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {

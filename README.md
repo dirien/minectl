@@ -1,4 +1,25 @@
-# minectl 🗺 
++ [TL;DR 🚀](#tldr-)
++ [Usage ⚙](#usage-)
+    - [Access Token 🔑](#access-token-)
+        * [Civo](#civo)
+        * [Digital Ocean](#digital-ocean)
+        * [Scaleway](#scaleway)
+    - [Server Config 📋](#server-config-)
+    - [Create Minecraft Server 🏗](#create-minecraft-server-)
+    - [Delete Minecraft Server 🗑](#delete-minecraft-server-)
+    - [List Minecraft Server 📒](#list-minecraft-server-)
+    - [Monitoring 📊](#monitoring-)
+    - [Getting Started 🎫](#getting-started-)
++ [Supported cloud provider ☁](#supported-cloud-provider-)
++ [Known Limitation 😵](#known-limitation-)
++ [Contributing 🤝](#contributing-)
+    - [Contributing via GitHub](#contributing-via-github)
+    - [License](#license)
++ [Roadmap 🛣️](#roadmap-)
++ [Libraries & Tools 🔥](#libraries--tools-)
++ [Legal Disclaimer 👮](#legal-disclaimer-)
+
+# minectl 🗺
 
 ![Minecraft](https://img.shields.io/badge/Minecraft-62B47A?style=for-the-badge&logo=Minecraft&logoColor=white)
 ![Go](https://img.shields.io/badge/go-00ADD8?style=for-the-badge&logo=go&logoColor=white)
@@ -26,7 +47,7 @@ the [release page](https://github.com/dirien/minectl/releases).
 
 ### Usage ⚙
 
-#### Access Token
+#### Access Token 🔑
 
 `minectl` is completely build on zero-trust. It does not save any API Tokens, instead it looks them up in the ENV
 variables.
@@ -123,6 +144,27 @@ Flags:
       --id string         contains the server id
 ```
 
+#### List Minecraft Server 📒
+
+```bash
+minectl list -h
+
+List all Minecraft Server.
+
+Usage:
+  minectl list [flags]
+
+Examples:
+mincetl list  \
+    --provider civo \
+    --region LON1
+
+Flags:
+  -h, --help              help for list
+  -p, --provider string   The cloud provider - do, civo or scaleway
+  -r, --region string     The region for your cloud provider
+```
+
 #### Monitoring 📊
 
 Every instance of minectl 🗺, has following monitoring components included:
@@ -140,7 +182,7 @@ You can acces the `prometheus` via
 http://<ip>:9090/graph
 ```
 
-#### Getting Started
+#### Getting Started 🎫
 
 - [Civo Java Edition](docs/getting-started-civo.md)
 - [Civo Bedrock Edition](docs/getting-started-civo-bedrock.md)
@@ -168,11 +210,11 @@ Feel free to join.
 
 Apache License, Version 2.0
 
-### Roadmap 🛣️
+### Roadmap 🛣
 
 - [x] Support Bedrock edition [#10](https://github.com/dirien/minectl/issues/10)
 - [x] Add monitoring capabilities to minectl server [#21](https://github.com/dirien/minectl/issues/21) 
-- [ ] List Minecraft Server
+- [x] List Minecraft Server [#11](https://github.com/dirien/minectl/issues/11)
 - [ ] Update Minecraft Server
 - [ ] Support Mods and Plugins
 - [ ] Add additional cloud provider
@@ -188,6 +230,7 @@ Apache License, Version 2.0
 - https://github.com/civo/civogo
 - https://github.com/digitalocean/godo
 - https://github.com/scaleway/scaleway-sdk-go
+- https://github.com/olekukonko/tablewriter
 
 ### Legal Disclaimer 👮
 

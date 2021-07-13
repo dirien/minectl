@@ -12,6 +12,7 @@ import (
 	"golang.org/x/oauth2"
 	"io/ioutil"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -45,8 +46,23 @@ func NewDigitalOcean(APIKey string) (*DigitalOcean, error) {
 	return do, nil
 }
 
-func (d *DigitalOcean) ListServer(args automation.ServerArgs) (*[]automation.RessourceResults, error) {
-	panic("implement me")
+func (d *DigitalOcean) ListServer() ([]automation.RessourceResults, error) {
+	droplets, _, err := d.client.Droplets.ListByTag(context.Background(), common.InstanceTag, nil)
+	if err != nil {
+		return nil, err
+	}
+	var result []automation.RessourceResults
+	for _, droplet := range droplets {
+		ipv4, _ := droplet.PublicIPv4()
+		result = append(result, automation.RessourceResults{
+			ID:       strconv.Itoa(droplet.ID),
+			PublicIP: ipv4,
+			Name:     droplet.Name,
+			Region:   droplet.Region.Slug,
+			Tags:     strings.Join(droplet.Tags, ","),
+		})
+	}
+	return result, nil
 }
 
 func (d *DigitalOcean) UpdateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
@@ -102,6 +118,7 @@ func (d *DigitalOcean) CreateServer(args automation.ServerArgs) (*automation.Res
 			Slug: "ubuntu-20-04-x64",
 		},
 		UserData: userData,
+		Tags:     []string{common.InstanceTag, args.MinecraftServer.GetEdition()},
 		Volumes: []godo.DropletCreateVolume{
 			{
 				ID: volume.ID,
@@ -135,7 +152,10 @@ func (d *DigitalOcean) CreateServer(args automation.ServerArgs) (*automation.Res
 
 	return &automation.RessourceResults{
 		ID:       strconv.Itoa(droplet.ID),
+		Name:     droplet.Name,
+		Region:   droplet.Region.Slug,
 		PublicIP: ipv4,
+		Tags:     strings.Join(droplet.Tags, ","),
 	}, err
 }
 

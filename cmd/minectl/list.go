@@ -1,20 +1,26 @@
 package minectl
 
 import (
+	"fmt"
+	"github.com/minectl/pgk/provisioner"
+	"github.com/olekukonko/tablewriter"
+	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
+	"os"
 )
 
 func init() {
 
 	minectlCmd.AddCommand(listCmd)
-	listCmd.Flags().String("region", "", "that contains the configuration for minectl")
-
+	listCmd.Flags().StringP("provider", "p", "", "The cloud provider - do, civo or scaleway")
+	listCmd.Flags().StringP("region", "r", "", "The region for your cloud provider")
 }
 
 var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List all Minecraft Server.",
 	Example: `mincetl list  \
+    --provider civo \
     --region LON1`,
 	RunE:          runList,
 	SilenceUsage:  true,
@@ -23,12 +29,36 @@ var listCmd = &cobra.Command{
 
 func runList(cmd *cobra.Command, _ []string) error {
 
-	//_, err := cmd.Flags().GetString("filename")
-	/*if err != nil {
-		return errors.Wrap(err, "failed to get 'filename' value.")
+	provider, err := cmd.Flags().GetString("provider")
+	if err != nil {
+		return errors.Wrap(err, "failed to get 'provider' value.")
 	}
-	do, _ := provisioner.NewProvisioner(filename)
-	res, err := do.UpdateServer()
-	common.PrintMixedGreen("Minecraft Server IP: %s\n", res.PublicIP)*/
+	region, err := cmd.Flags().GetString("region")
+	if err != nil {
+		return errors.Wrap(err, "failed to get 'region' value.")
+	}
+
+	newProvisioner, err := provisioner.ListProvisioner(provider, region)
+	if err != nil {
+		return err
+	}
+	servers, err := newProvisioner.ListServer()
+	if err != nil {
+		return err
+	}
+
+	if len(servers) > 0 {
+		fmt.Println("")
+		table := tablewriter.NewWriter(os.Stdout)
+		table.SetHeader([]string{"ID", "NAME", "REGION", "TAGS", "IP"})
+
+		for _, server := range servers {
+			table.Append([]string{server.ID, server.Name, server.Region, server.Tags, server.PublicIP})
+		}
+		table.SetBorder(false)
+		table.Render()
+	} else {
+		fmt.Println("🤷 No server found")
+	}
 	return nil
 }

@@ -1,14 +1,14 @@
 apiVersion: ediri.io/minectl/v1alpha1
 kind: MinecraftServer
 metadata:
-  name: minecraft-server
+  name: minecraft-server-be
 spec:
   server:
     cloud: civo
     region: LON1
     size: g3.large
     volumeSize: 100
-    ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft.pub"
+    ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft-be.pub"
   minecraft:
     edition: bedrock
     properties: |
