@@ -1,14 +1,14 @@
 apiVersion: ediri.io/minectl/v1alpha1
 kind: MinecraftServer
 metadata:
-  name: minecraft-server
+  name: minecraft-server-bedrock
 spec:
   server:
     cloud: scaleway
     region: fr-par-1
     size: GP1-XS
     volumeSize: 100
-    ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft.pub"
+    ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft-be.pub"
   minecraft:
     edition: bedrock
     properties: |

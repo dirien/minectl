@@ -9,6 +9,7 @@ import (
 	"github.com/minectl/pgk/common"
 	minctlTemplate "github.com/minectl/pgk/template"
 	"io/ioutil"
+	"strings"
 	"time"
 )
 
@@ -57,6 +58,7 @@ func (c *Civo) CreateServer(args automation.ServerArgs) (*automation.RessourceRe
 	config.SSHKeyID = sshPubKey.ID
 	config.PublicIPRequired = "create"
 	config.InitialUser = "root"
+	config.Tags = []string{common.InstanceTag, args.MinecraftServer.GetEdition()}
 
 	tmpl, err := minctlTemplate.NewTemplateCivo(args.MinecraftServer)
 	if err != nil {
@@ -120,9 +122,16 @@ func (c *Civo) CreateServer(args automation.ServerArgs) (*automation.RessourceRe
 	if err != nil {
 		return nil, err
 	}
+	region := c.client.Region
+	if len(instance.Region) > 0 {
+		region = instance.Region
+	}
 	return &automation.RessourceResults{
 		ID:       instance.ID,
+		Name:     instance.Hostname,
+		Region:   region,
 		PublicIP: instance.PublicIP,
+		Tags:     strings.Join(instance.Tags, ","),
 	}, err
 }
 
@@ -154,8 +163,32 @@ func (c *Civo) DeleteServer(id string, args automation.ServerArgs) error {
 	return nil
 }
 
-func (c *Civo) ListServer(args automation.ServerArgs) (*[]automation.RessourceResults, error) {
-	panic("implement me")
+func (c *Civo) ListServer() ([]automation.RessourceResults, error) {
+	var result []automation.RessourceResults
+	instances, err := c.client.ListAllInstances()
+	if err != nil {
+		return nil, err
+	}
+	for _, instance := range instances {
+		if instance.Tags[0] == common.InstanceTag {
+			for _, tag := range instance.Tags {
+				if tag == common.InstanceTag {
+					region := c.client.Region
+					if len(instance.Region) > 0 {
+						region = instance.Region
+					}
+					result = append(result, automation.RessourceResults{
+						ID:       instance.ID,
+						PublicIP: instance.PublicIP,
+						Name:     instance.Hostname,
+						Region:   region,
+						Tags:     strings.Join(instance.Tags, ","),
+					})
+				}
+			}
+		}
+	}
+	return result, nil
 }
 
 func (c *Civo) UpdateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {

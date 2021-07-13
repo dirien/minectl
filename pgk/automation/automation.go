@@ -5,7 +5,7 @@ import "github.com/minectl/pgk/model"
 type Automation interface {
 	CreateServer(args ServerArgs) (*RessourceResults, error)
 	DeleteServer(id string, args ServerArgs) error
-	ListServer(args ServerArgs) (*[]RessourceResults, error)
+	ListServer() ([]RessourceResults, error)
 	UpdateServer(args ServerArgs) (*RessourceResults, error)
 }
 
@@ -23,5 +23,8 @@ type ServerArgs struct {
 
 type RessourceResults struct {
 	ID       string
+	Name     string
+	Region   string
 	PublicIP string
+	Tags     string
 }
