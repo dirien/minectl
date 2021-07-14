@@ -2,21 +2,25 @@ package provisioner
 
 import (
 	"fmt"
+	"github.com/briandowns/spinner"
 	"github.com/minectl/pgk/automation"
 	"github.com/minectl/pgk/cloud"
 	"github.com/minectl/pgk/cloud/civo"
 	"github.com/minectl/pgk/cloud/do"
+	"github.com/minectl/pgk/cloud/hetzner"
 	"github.com/minectl/pgk/cloud/scaleway"
 	"github.com/minectl/pgk/common"
 	"github.com/minectl/pgk/manifest"
 	"github.com/pkg/errors"
 	"os"
+	"time"
 )
 
 type PulumiProvisioner struct {
 	auto     automation.Automation
 	Manifest *manifest.MinecraftServerManifest
 	args     automation.ServerArgs
+	spinner  *spinner.Spinner
 }
 
 type Provisioner interface {
@@ -26,12 +30,27 @@ type Provisioner interface {
 	ListServer() ([]automation.RessourceResults, error)
 }
 
+func (p PulumiProvisioner) startSpinner(prefix, finalMSG string) {
+	p.spinner.Prefix = prefix
+	p.spinner.FinalMSG = finalMSG
+	p.spinner.Start()
+}
+
+func (p PulumiProvisioner) stopSpinner() {
+	p.spinner.Stop()
+}
+
 func (p PulumiProvisioner) UpdateServer() (*automation.RessourceResults, error) {
 	return p.auto.UpdateServer(p.args)
 }
 
 func (p PulumiProvisioner) CreateServer() (*automation.RessourceResults, error) {
-	return p.auto.CreateServer(p.args)
+	p.startSpinner(
+		fmt.Sprintf("🏗 Creating server (%s)... ", common.Green(p.args.MinecraftServer.GetName())),
+		fmt.Sprintf("\n✅ Server (%s) created\n", common.Green(p.args.MinecraftServer.GetName())))
+	server, err := p.auto.CreateServer(p.args)
+	p.stopSpinner()
+	return server, err
 }
 
 func (p PulumiProvisioner) ListServer() ([]automation.RessourceResults, error) {
@@ -39,7 +58,12 @@ func (p PulumiProvisioner) ListServer() ([]automation.RessourceResults, error) {
 }
 
 func (p PulumiProvisioner) DeleteServer() error {
-	return p.auto.DeleteServer(p.args.ID, p.args)
+	p.startSpinner(
+		fmt.Sprintf("🪓 Deleting server (%s)... ", common.Green(p.args.MinecraftServer.GetName())),
+		fmt.Sprintf("\n🗑 Server (%s) deleted\n", common.Green(p.args.MinecraftServer.GetName())))
+	err := p.auto.DeleteServer(p.args.ID, p.args)
+	p.stopSpinner()
+	return err
 }
 
 // NewProvisioner has variable args: only manifest file or manifest file and the id
@@ -65,6 +89,12 @@ func ListProvisioner(args ...string) (*PulumiProvisioner, error) {
 
 func getProvisioner(provider, region string) (automation.Automation, error) {
 	switch provider {
+	case "hetzner":
+		cloudProvider, err := hetzner.NewHetzner(os.Getenv("HCLOUD_TOKEN"))
+		if err != nil {
+			return nil, err
+		}
+		return cloudProvider, nil
 	case "do":
 		cloudProvider, err := do.NewDigitalOcean(os.Getenv("DIGITALOCEAN_TOKEN"))
 		if err != nil {
@@ -108,6 +138,7 @@ func newProvisioner(manifestPath, id string) (*PulumiProvisioner, error) {
 		auto:     cloudProvider,
 		Manifest: manifest,
 		args:     args,
+		spinner:  spinner.New(spinner.CharSets[11], 100*time.Millisecond),
 	}
 	return p, nil
 }

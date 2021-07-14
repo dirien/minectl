@@ -2,7 +2,6 @@ package scaleway
 
 import (
 	"fmt"
-	"github.com/briandowns/spinner"
 	"github.com/minectl/pgk/automation"
 	"github.com/minectl/pgk/common"
 	minctlTemplate "github.com/minectl/pgk/template"
@@ -42,7 +41,6 @@ func NewScaleway(accessKey, secretKey, organizationID, region string) (*Scaleway
 }
 
 func (s Scaleway) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
-
 	pubKeyFile, err := ioutil.ReadFile(args.MinecraftServer.GetSSH())
 	_, err = s.accountAPI.CreateSSHKey(&account.CreateSSHKeyRequest{
 		Name:      fmt.Sprintf("%s-ssh", args.MinecraftServer.GetName()),
@@ -93,10 +91,6 @@ func (s Scaleway) CreateServer(args automation.ServerArgs) (*automation.Ressourc
 		return nil, err
 	}
 
-	spinner := spinner.New(spinner.CharSets[11], 100*time.Millisecond)
-	spinner.Prefix = fmt.Sprintf("🏗 Creating instance (%s)... ", common.Green(server.Server.Name))
-	spinner.FinalMSG = fmt.Sprintf("\n✅ Instance (%s) created\n", common.Green(server.Server.Name))
-	spinner.Start()
 	duration := 2 * time.Second
 	err = s.instanceAPI.ServerActionAndWait(&instance.ServerActionAndWaitRequest{
 		ServerID:      server.Server.ID,
@@ -112,7 +106,6 @@ func (s Scaleway) CreateServer(args automation.ServerArgs) (*automation.Ressourc
 	if err != nil {
 		return nil, err
 	}
-	spinner.Stop()
 
 	return &automation.RessourceResults{
 		ID:       server.Server.ID,
@@ -124,7 +117,6 @@ func (s Scaleway) CreateServer(args automation.ServerArgs) (*automation.Ressourc
 }
 
 func (s Scaleway) DeleteServer(id string, args automation.ServerArgs) error {
-	common.PrintMixedGreen("🗑 Delete instance (%s)... ", id)
 	getServer, err := s.instanceAPI.GetServer(&instance.GetServerRequest{
 		ServerID: id,
 	})

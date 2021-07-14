@@ -3,7 +3,6 @@ package civo
 import (
 	_ "embed"
 	"fmt"
-	"github.com/briandowns/spinner"
 	"github.com/civo/civogo"
 	"github.com/minectl/pgk/automation"
 	"github.com/minectl/pgk/common"
@@ -100,11 +99,6 @@ func (c *Civo) CreateServer(args automation.ServerArgs) (*automation.RessourceRe
 	}
 
 	stillCreating := true
-	s := spinner.New(spinner.CharSets[11], 100*time.Millisecond)
-	s.Prefix = fmt.Sprintf("🏗 Creating instance (%s)... ", common.Green(instance.Hostname))
-	s.FinalMSG = fmt.Sprintf("\n✅ Instance (%s) created\n", common.Green(instance.Hostname))
-	s.Start()
-
 	for stillCreating {
 		instance, err = c.client.FindInstance(instance.ID)
 		if err != nil {
@@ -112,7 +106,6 @@ func (c *Civo) CreateServer(args automation.ServerArgs) (*automation.RessourceRe
 		}
 		if instance.Status == "ACTIVE" {
 			stillCreating = false
-			s.Stop()
 			time.Sleep(2 * time.Second)
 		} else {
 			time.Sleep(2 * time.Second)
@@ -136,8 +129,6 @@ func (c *Civo) CreateServer(args automation.ServerArgs) (*automation.RessourceRe
 }
 
 func (c *Civo) DeleteServer(id string, args automation.ServerArgs) error {
-	common.PrintMixedGreen("🗑 Delete instance (%s)... ", id)
-
 	_, err := c.client.DeleteInstance(id)
 	if err != nil {
 		return err
