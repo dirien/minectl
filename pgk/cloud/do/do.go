@@ -4,16 +4,16 @@ import (
 	"context"
 	_ "embed"
 	"fmt"
-	"github.com/briandowns/spinner"
+	"io/ioutil"
+	"strconv"
+	"strings"
+	"time"
+
 	"github.com/digitalocean/godo"
 	"github.com/minectl/pgk/automation"
 	"github.com/minectl/pgk/common"
 	minctlTemplate "github.com/minectl/pgk/template"
 	"golang.org/x/oauth2"
-	"io/ioutil"
-	"strconv"
-	"strings"
-	"time"
 )
 
 type DigitalOcean struct {
@@ -131,11 +131,6 @@ func (d *DigitalOcean) CreateServer(args automation.ServerArgs) (*automation.Res
 	}
 
 	stillCreating := true
-	s := spinner.New(spinner.CharSets[11], 100*time.Millisecond)
-	s.Prefix = fmt.Sprintf("🏗 Creating droplet (%s)... ", common.Green(droplet.Name))
-	s.FinalMSG = fmt.Sprintf("\n✅ Droplet (%s) created\n", common.Green(droplet.Name))
-	s.Start()
-
 	for stillCreating {
 		droplet, _, err = d.client.Droplets.Get(context.Background(), droplet.ID)
 		if err != nil {
@@ -143,7 +138,6 @@ func (d *DigitalOcean) CreateServer(args automation.ServerArgs) (*automation.Res
 		}
 		if droplet.Status == "active" {
 			stillCreating = false
-			s.Stop()
 		} else {
 			time.Sleep(2 * time.Second)
 		}
@@ -160,7 +154,6 @@ func (d *DigitalOcean) CreateServer(args automation.ServerArgs) (*automation.Res
 }
 
 func (d *DigitalOcean) DeleteServer(id string, args automation.ServerArgs) error {
-	common.PrintMixedGreen("🗑 Delete droplet (%s)... ", id)
 	list, _, err := d.client.Keys.List(context.Background(), nil)
 	if err != nil {
 		return err

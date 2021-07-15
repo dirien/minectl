@@ -4,6 +4,7 @@
         * [Civo](#civo)
         * [Digital Ocean](#digital-ocean)
         * [Scaleway](#scaleway)
+        * [Hetzner](#hetzner)
     - [Server Config 📋](#server-config-)
     - [Create Minecraft Server 🏗](#create-minecraft-server-)
     - [Delete Minecraft Server 🗑](#delete-minecraft-server-)
@@ -53,20 +54,25 @@ the [release page](https://github.com/dirien/minectl/releases).
 variables.
 
 ##### Civo
-```
+```bash
 export CIVO_TOKEN=xx
 ```
 
 ##### Digital Ocean
-```
+```bash
 export DIGITALOCEAN_TOKEN=xxx
 ```
 
 ##### Scaleway
-```
+```bash
 export ACCESS_KEY=xxx
 export SECRET_KEY=yyy
 export ORGANISATION_ID=zzz
+```
+
+##### Hetzner
+```bash
+export HCLOUD_TOKEN=yyyy
 ```
 
 #### Server Config 📋
@@ -80,7 +86,7 @@ metadata:
   name: minecraft-server
 spec:
   server:
-    cloud: "provider: civo|scaleway|do"
+    cloud: "provider: civo|scaleway|do|hetzner"
     region: "region see cloud provider for details eg. fra1"
     size: "see cloud provider docs for details eg. g3.large"
     volumeSize: 100
