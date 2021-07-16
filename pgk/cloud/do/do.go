@@ -67,7 +67,6 @@ func (d *DigitalOcean) ListServer() ([]automation.RessourceResults, error) {
 
 func (d *DigitalOcean) UpdateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
 	panic("implement me")
-	return nil, nil
 }
 
 func (d *DigitalOcean) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {

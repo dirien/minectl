@@ -3,9 +3,10 @@ package template
 import (
 	"bytes"
 	_ "embed"
-	"github.com/minectl/pgk/model"
 	"strings"
 	"text/template"
+
+	"github.com/minectl/pgk/model"
 )
 
 //go:embed civo.sh.tmpl

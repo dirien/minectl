@@ -2,4 +2,8 @@
 **/passwords
 **/minectl
 **/server.properties
-tmp/
+tmp*/
+bin
+dist
+coverage.out
+revive.log

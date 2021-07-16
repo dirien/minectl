@@ -1,9 +1,10 @@
 package template
 
 import (
+	"testing"
+
 	"github.com/minectl/pgk/model"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 var (
@@ -219,7 +220,7 @@ ExecStart=/usr/local/bin/node_exporter
 [Install]
 WantedBy=multi-user.target
 EOF
-tee /etc/systemd/system/minecraft-prometheus-exporter.service <<EOF
+tee /etc/systemd/system/minecraft-exporter.service <<EOF
 [Unit]
 Description=Minecraft Exporter
 Wants=network-online.target
@@ -228,7 +229,7 @@ After=network-online.target
 User=minecraft_exporter
 Group=minecraft_exporter
 Type=simple
-ExecStart=/usr/local/bin/minecraft-prometheus-exporter \
+ExecStart=/usr/local/bin/minecraft-exporter \
   --mc.rcon-password=test
 [Install]
 WantedBy=multi-user.target
@@ -283,12 +284,12 @@ systemctl daemon-reload
 systemctl start node_exporter
 systemctl enable node_exporter
 
-export MINECRAFT_EXPORTER_VERSION=0.3.1
-curl -sSL https://github.com/dirien/minecraft-prometheus-exporter/releases/download/v$MINECRAFT_EXPORTER_VERSION/minecraft-prometheus-exporter_$MINECRAFT_EXPORTER_VERSION.linux-amd64.tar.gz | tar -xz
-cp minecraft-prometheus-exporter /usr/local/bin
-chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-prometheus-exporter
-systemctl start minecraft-prometheus-exporter.service
-systemctl enable minecraft-prometheus-exporter.service
+export MINECRAFT_EXPORTER_VERSION=0.4.0
+curl -sSL https://github.com/dirien/minecraft-prometheus-exporter/releases/download/v$MINECRAFT_EXPORTER_VERSION/minecraft-exporter_$MINECRAFT_EXPORTER_VERSION.linux-amd64.tar.gz | tar -xz
+cp minecraft-exporter /usr/local/bin
+chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
+systemctl start minecraft-exporter.service
+systemctl enable minecraft-exporter.service
 ufw allow ssh
 ufw allow 5201
 
@@ -538,7 +539,7 @@ write_files:
       ExecStart=/usr/local/bin/node_exporter
       [Install]
       WantedBy=multi-user.target
-  - path: /etc/systemd/system/minecraft-prometheus-exporter.service
+  - path: /etc/systemd/system/minecraft-exporter.service
     content: |
       [Unit]
       Description=Minecraft Exporter
@@ -548,7 +549,7 @@ write_files:
       User=minecraft_exporter
       Group=minecraft_exporter
       Type=simple
-      ExecStart=/usr/local/bin/minecraft-prometheus-exporter \
+      ExecStart=/usr/local/bin/minecraft-exporter \
           --mc.rcon-password=test
       [Install]
       WantedBy=multi-user.target
@@ -595,12 +596,12 @@ runcmd:
   - systemctl start node_exporter
   - systemctl enable node_exporter
 
-  - export MINECRAFT_EXPORTER_VERSION=0.3.1
-  - curl -sSL https://github.com/dirien/minecraft-prometheus-exporter/releases/download/v$MINECRAFT_EXPORTER_VERSION/minecraft-prometheus-exporter_$MINECRAFT_EXPORTER_VERSION.linux-amd64.tar.gz | tar -xz
-  - cp minecraft-prometheus-exporter /usr/local/bin
-  - chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-prometheus-exporter
-  - systemctl start minecraft-prometheus-exporter.service
-  - systemctl enable minecraft-prometheus-exporter.service
+  - export MINECRAFT_EXPORTER_VERSION=0.4.0
+  - curl -sSL https://github.com/dirien/minecraft-prometheus-exporter/releases/download/v$MINECRAFT_EXPORTER_VERSION/minecraft-exporter_$MINECRAFT_EXPORTER_VERSION.linux-amd64.tar.gz | tar -xz
+  - cp minecraft-exporter /usr/local/bin
+  - chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
+  - systemctl start minecraft-exporter.service
+  - systemctl enable minecraft-exporter.service
   - ufw allow ssh
   - ufw allow 5201
   - ufw allow proto udp to 0.0.0.0/0 port 25565

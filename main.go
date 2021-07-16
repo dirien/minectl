@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/minectl/cmd/minectl"
 	"os"
+
+	"github.com/minectl/cmd/minectl"
 )
 
 var (

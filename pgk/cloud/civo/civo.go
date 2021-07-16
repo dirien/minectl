@@ -3,13 +3,14 @@ package civo
 import (
 	_ "embed"
 	"fmt"
+	"io/ioutil"
+	"strings"
+	"time"
+
 	"github.com/civo/civogo"
 	"github.com/minectl/pgk/automation"
 	"github.com/minectl/pgk/common"
 	minctlTemplate "github.com/minectl/pgk/template"
-	"io/ioutil"
-	"strings"
-	"time"
 )
 
 type Civo struct {

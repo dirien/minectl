@@ -2,15 +2,16 @@ package scaleway
 
 import (
 	"fmt"
-	"github.com/minectl/pgk/automation"
-	"github.com/minectl/pgk/common"
-	minctlTemplate "github.com/minectl/pgk/template"
-	"github.com/scaleway/scaleway-sdk-go/api/account/v2alpha1"
-	"github.com/scaleway/scaleway-sdk-go/api/instance/v1"
-	"github.com/scaleway/scaleway-sdk-go/scw"
 	"io/ioutil"
 	"strings"
 	"time"
+
+	"github.com/minectl/pgk/automation"
+	"github.com/minectl/pgk/common"
+	minctlTemplate "github.com/minectl/pgk/template"
+	account "github.com/scaleway/scaleway-sdk-go/api/account/v2alpha1"
+	"github.com/scaleway/scaleway-sdk-go/api/instance/v1"
+	"github.com/scaleway/scaleway-sdk-go/scw"
 )
 
 type Scaleway struct {
@@ -42,6 +43,9 @@ func NewScaleway(accessKey, secretKey, organizationID, region string) (*Scaleway
 
 func (s Scaleway) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
 	pubKeyFile, err := ioutil.ReadFile(args.MinecraftServer.GetSSH())
+	if err != nil {
+		return nil, err
+	}
 	_, err = s.accountAPI.CreateSSHKey(&account.CreateSSHKeyRequest{
 		Name:      fmt.Sprintf("%s-ssh", args.MinecraftServer.GetName()),
 		PublicKey: string(pubKeyFile),
@@ -65,6 +69,9 @@ func (s Scaleway) CreateServer(args automation.ServerArgs) (*automation.Ressourc
 		return nil, err
 	}
 	userData, err := tmpl.GetTemplate()
+	if err != nil {
+		return nil, err
+	}
 	err = s.instanceAPI.SetServerUserData(&instance.SetServerUserDataRequest{
 		ServerID: server.Server.ID,
 		Key:      "cloud-init",
@@ -129,6 +136,9 @@ func (s Scaleway) DeleteServer(id string, args automation.ServerArgs) error {
 		Action:        instance.ServerActionPoweroff,
 		RetryInterval: &duration,
 	})
+	if err != nil {
+		return err
+	}
 	err = s.instanceAPI.DeleteServer(&instance.DeleteServerRequest{
 		ServerID: getServer.Server.ID,
 	})

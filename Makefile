@@ -1,6 +1,9 @@
 NAME          := minectl
 FILES         := $(shell find * -type f ! -path 'vendor/*' -name '*.go')
 .DEFAULT_GOAL := help
+Version := $(shell git describe --tags --dirty)
+GitCommit := $(shell git rev-parse HEAD)
+LDFLAGS := "-s -w -X main.version=$(Version) -X main.commit=$(GitCommit)"
 
 .PHONY: setup
 setup: ## Install required libraries/tools for build tasks
@@ -33,7 +36,7 @@ goimports: setup ## Test code syntax with goimports
 
 .PHONY: ineffassign
 ineffassign: setup ## Test code syntax for ineffassign
-	ineffassign $(FILES)
+	ineffassign ./...
 
 .PHONY: misspell
 misspell: setup ## Test code with misspell
@@ -57,15 +60,11 @@ run-local: ## Run the binaries locals
 
 .PHONY: build
 build: setup ## Build the binaries
-	goreleaser release --snapshot --skip-publish --rm-dist
-
-.PHONY: release
-release: setup ## Build & release the binaries
-	goreleaser release --rm-dist
-
-.PHONY: publish-coveralls
-publish-coveralls: setup ## Publish coverage results on coveralls
-	goveralls -service drone.io -coverprofile=coverage.out
+	rm -rf bin/
+	mkdir -p bin/
+	CGO_ENABLED=0 GOOS=linux go build -ldflags $(LDFLAGS) -a -installsuffix cgo -o bin/$(NAME)
+	CGO_ENABLED=0 GOOS=darwin go build -ldflags $(LDFLAGS) -a -installsuffix cgo -o bin/$(NAME)-darwin
+	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags $(LDFLAGS) -a -installsuffix cgo -o bin/$(NAME).exe
 
 .PHONY: clean
 clean: ## Remove binary if it exists
