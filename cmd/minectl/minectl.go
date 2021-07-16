@@ -2,9 +2,10 @@ package minectl
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/morikuni/aec"
 	"github.com/spf13/cobra"
-	"os"
 )
 
 var (

@@ -4,10 +4,11 @@ import (
 	_ "embed"
 	"errors"
 	"fmt"
-	"github.com/minectl/pgk/model"
-	"github.com/xeipuuv/gojsonschema"
 	"io/ioutil"
 	"log"
+
+	"github.com/minectl/pgk/model"
+	"github.com/xeipuuv/gojsonschema"
 	"sigs.k8s.io/yaml"
 )
 

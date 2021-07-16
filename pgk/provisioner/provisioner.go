@@ -2,6 +2,9 @@ package provisioner
 
 import (
 	"fmt"
+	"os"
+	"time"
+
 	"github.com/briandowns/spinner"
 	"github.com/minectl/pgk/automation"
 	"github.com/minectl/pgk/cloud"
@@ -12,8 +15,6 @@ import (
 	"github.com/minectl/pgk/common"
 	"github.com/minectl/pgk/manifest"
 	"github.com/pkg/errors"
-	"os"
-	"time"
 )
 
 type PulumiProvisioner struct {

@@ -2,11 +2,12 @@ package minectl
 
 import (
 	"fmt"
+	"log"
+	"os"
+
 	"github.com/minectl/pgk/common"
 	"github.com/minectl/pgk/provisioner"
 	"github.com/olekukonko/tablewriter"
-	"log"
-	"os"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
