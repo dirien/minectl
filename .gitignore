@@ -7,3 +7,4 @@ bin
 dist
 coverage.out
 revive.log
+**/.DS_Store

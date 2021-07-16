@@ -8,11 +8,10 @@ import (
 	"strings"
 	"time"
 
-	minctlTemplate "github.com/minectl/pgk/template"
-
 	"github.com/hetznercloud/hcloud-go/hcloud"
 	"github.com/minectl/pgk/automation"
 	"github.com/minectl/pgk/common"
+	minctlTemplate "github.com/minectl/pgk/template"
 )
 
 type Hetzner struct {
@@ -160,7 +159,7 @@ func (h *Hetzner) DeleteServer(id string, args automation.ServerArgs) error {
 
 func hetznerLabelsToTags(label map[string]string) string {
 	var tags []string
-	for key, _ := range label {
+	for key := range label {
 		tags = append(tags, key)
 	}
 	return strings.Join(tags, ",")
@@ -173,7 +172,7 @@ func (h *Hetzner) ListServer() ([]automation.RessourceResults, error) {
 	}
 	var result []automation.RessourceResults
 	for _, server := range servers {
-		for key, _ := range server.Labels {
+		for key := range server.Labels {
 			if key == common.InstanceTag {
 				result = append(result, automation.RessourceResults{
 					ID:       strconv.Itoa(server.ID),
