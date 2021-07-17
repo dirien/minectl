@@ -5,6 +5,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/minectl/pgk/cloud/linode"
+
 	"github.com/briandowns/spinner"
 	"github.com/minectl/pgk/automation"
 	"github.com/minectl/pgk/cloud"
@@ -110,6 +112,12 @@ func getProvisioner(provider, region string) (automation.Automation, error) {
 		return cloudProvider, nil
 	case "scaleway":
 		cloudProvider, err := scaleway.NewScaleway(os.Getenv("ACCESS_KEY"), os.Getenv("SECRET_KEY"), os.Getenv("ORGANISATION_ID"), region)
+		if err != nil {
+			return nil, err
+		}
+		return cloudProvider, nil
+	case "linode":
+		cloudProvider, err := linode.NewLinode(os.Getenv("LINODE_TOKEN"))
 		if err != nil {
 			return nil, err
 		}

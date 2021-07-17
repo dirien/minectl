@@ -34,7 +34,7 @@ var (
 			},
 		},
 	}
-	bedrockCivoWant = `#!/bin/bash
+	bedrockBashWant = `#!/bin/bash
 
 tee /tmp/server.properties <<EOF
 level-seed=stackitminecraftrocks
@@ -106,6 +106,7 @@ RestartSec=5
 [Install]
 WantedBy=multi-user.target
 EOF
+apt update
 apt-get install -y apt-transport-https ca-certificates curl unzip fail2ban
 
 useradd prometheus -s /bin/false
@@ -156,7 +157,7 @@ mv /tmp/server.properties /minecraft/server.properties
 systemctl restart minecraft.service
 systemctl enable minecraft.service`
 
-	javaCivoWant = `#!/bin/bash
+	javaBashWant = `#!/bin/bash
 
 tee /tmp/server.properties <<EOF
 level-seed=stackitminecraftrocks
@@ -251,6 +252,7 @@ RestartSec=5
 [Install]
 WantedBy=multi-user.target
 EOF
+apt update
 apt-get install -y apt-transport-https ca-certificates curl openjdk-16-jre-headless fail2ban
 
 useradd prometheus -s /bin/false
@@ -620,7 +622,7 @@ runcmd:
 
 func TestCivoBedrockTemplate(t *testing.T) {
 	t.Run("Test Template Bedrock for Civo bash", func(t *testing.T) {
-		civo, err := NewTemplateCivo(&bedrock)
+		civo, err := NewTemplateBash(&bedrock)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -629,13 +631,13 @@ func TestCivoBedrockTemplate(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		assert.Equal(t, bedrockCivoWant, got)
+		assert.Equal(t, bedrockBashWant, got)
 	})
 }
 
 func TestCivoJavaTemplate(t *testing.T) {
 	t.Run("Test Template Java for Civo bash", func(t *testing.T) {
-		civo, err := NewTemplateCivo(&java)
+		civo, err := NewTemplateBash(&java)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -644,7 +646,7 @@ func TestCivoJavaTemplate(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		assert.Equal(t, javaCivoWant, got)
+		assert.Equal(t, javaBashWant, got)
 	})
 }
 

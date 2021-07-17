@@ -6,6 +6,7 @@ var cloudProvider = map[string]string{
 	"civo":     "Civo",
 	"scaleway": "Scaleway",
 	"hetzner":  "Hetzner",
+	"linode":   "Linode",
 }
 
 func GetCloudProviderFullName(cloud string) string {

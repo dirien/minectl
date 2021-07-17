@@ -9,7 +9,7 @@ import (
 	"github.com/minectl/pgk/model"
 )
 
-//go:embed civo.sh.tmpl
+//go:embed bash.tmpl
 var bash string
 
 //go:embed cloud-config.yaml.tmpl
@@ -39,13 +39,13 @@ func (t Template) GetTemplate() (string, error) {
 	return buff.String(), nil
 }
 
-func NewTemplateCivo(model *model.MinecraftServer) (*Template, error) {
-	civo, err := template.New("civo").Parse(bash)
+func NewTemplateBash(model *model.MinecraftServer) (*Template, error) {
+	bash, err := template.New("bash").Parse(bash)
 	if err != nil {
 		return nil, err
 	}
 	return &Template{
-		Template: civo,
+		Template: bash,
 		Values: &templateValues{
 			MinecraftServer: model,
 		},

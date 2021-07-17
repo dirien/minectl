@@ -99,6 +99,7 @@ RestartSec=5
 [Install]
 WantedBy=multi-user.target
 EOF
+apt update
 apt-get install -y apt-transport-https ca-certificates curl {{if eq .Spec.Minecraft.Edition "java"}}openjdk-16-jre-headless{{else if eq .Spec.Minecraft.Edition "bedrock"}}unzip{{end}} fail2ban
 
 useradd prometheus -s /bin/false
