@@ -255,7 +255,7 @@ Apache License, Version 2.0
 - https://github.com/digitalocean/godo
 - https://github.com/scaleway/scaleway-sdk-go
 - https://github.com/olekukonko/tablewriter
-- github.com/sethvargo/go-password/password
+- https://github.com/sethvargo/go-password
 
 ### Legal Disclaimer 👮
 
