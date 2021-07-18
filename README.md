@@ -1,3 +1,4 @@
++ [Supported cloud provider ☁](#supported-cloud-provider-)
 + [TL;DR 🚀](#tldr-)
 + [Usage ⚙](#usage-)
     - [Access Token 🔑](#access-token-)
@@ -11,7 +12,6 @@
     - [List Minecraft Server 📒](#list-minecraft-server-)
     - [Monitoring 📊](#monitoring-)
     - [Getting Started 🎫](#getting-started-)
-+ [Supported cloud provider ☁](#supported-cloud-provider-)
 + [Known Limitation 😵](#known-limitation-)
 + [Contributing 🤝](#contributing-)
     - [Contributing via GitHub](#contributing-via-github)
@@ -24,15 +24,28 @@
 
 ![Minecraft](https://img.shields.io/badge/Minecraft-62B47A?style=for-the-badge&logo=Minecraft&logoColor=white)
 ![Go](https://img.shields.io/badge/go-00ADD8?style=for-the-badge&logo=go&logoColor=white)
+![Prometheus](https://img.shields.io/badge/Prometheus-E6522C?style=for-the-badge&logo=Prometheus&logoColor=white)
 ![Scaleway](https://img.shields.io/badge/scaleway-4F0599?style=for-the-badge&logo=scaleway&logoColor=white)
 ![DigitalOcean](https://img.shields.io/badge/DigitalOcean-0080FF?style=for-the-badge&logo=DigitalOcean&logoColor=white)
 ![Civo](https://img.shields.io/badge/Civo-239DFF?style=for-the-badge&logo=Civo&logoColor=white)
-![Prometheus](https://img.shields.io/badge/Prometheus-E6522C?style=for-the-badge&logo=Prometheus&logoColor=white)
+![Linode](https://img.shields.io/badge/linode-00A95C?style=for-the-badge&logo=linode&logoColor=white)
+![Hetzner](https://img.shields.io/badge/hetzner-d50c2d?style=for-the-badge&logo=hetzner&logoColor=white)
+
+
 [![Build Binary](https://github.com/dirien/minectl/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/dirien/minectl/actions/workflows/ci.yaml)
+
 
 `minectl`️️ is a cli for creating Minecraft (java or bedrock) server on different cloud provider.
 
 It is a private side project of me, to learn more about Go, CLI and multi cloud.
+
+### Supported cloud provider ☁
+
++ Civo (https://www.civo.com/)
++ Scaleway (https://www.scaleway.com)
++ DigitalOcean (https://www.digitalocean.com/)
++ Hetzner (https://www.hetzner.com/)
++ Linode (https://www.linode.com/)
 
 ### TL;DR 🚀
 
@@ -54,16 +67,19 @@ the [release page](https://github.com/dirien/minectl/releases).
 variables.
 
 ##### Civo
+
 ```bash
 export CIVO_TOKEN=xx
 ```
 
 ##### Digital Ocean
+
 ```bash
 export DIGITALOCEAN_TOKEN=xxx
 ```
 
 ##### Scaleway
+
 ```bash
 export ACCESS_KEY=xxx
 export SECRET_KEY=yyy
@@ -71,8 +87,15 @@ export ORGANISATION_ID=zzz
 ```
 
 ##### Hetzner
+
 ```bash
 export HCLOUD_TOKEN=yyyy
+```
+
+##### Linode
+
+```bash
+export LINODE_TOKEN=xxxx
 ```
 
 #### Server Config 📋
@@ -107,7 +130,8 @@ spec:
       ...
 ```
 
-I created some example configs in the [config](config) folder for currently supported cloud provider and Minecraft editions.
+I created some example configs in the [config](config) folder for currently supported cloud provider and Minecraft
+editions.
 
 #### Create Minecraft Server 🏗
 
@@ -178,7 +202,7 @@ Every instance of minectl 🗺, has following monitoring components included:
 - Prometheus (https://github.com/prometheus/prometheus)
 - Node exporter (https://github.com/prometheus/node_exporter)
 
-The `edition:java` has on top following exporter included:  
+The `edition:java` has on top following exporter included:
 
 - Minecraft exporter (https://github.com/dirien/minecraft-prometheus-exporter)
 
@@ -194,12 +218,6 @@ http://<ip>:9090/graph
 - [Civo Bedrock Edition](docs/getting-started-civo-bedrock.md)
 - [Scaleway Java Edition](docs/getting-started-scaleway.md)
 - [How to monitor your multi-cloud minectl 🗺 server?](docs/multi-server-monitoring-civo.md)
-
-### Supported cloud provider ☁
-
-+ Civo (https://www.civo.com/)
-+ Scaleway (https://www.scaleway.com)
-+ DigitalOcean (https://www.digitalocean.com/)
 
 ### Known Limitation 😵
 
@@ -219,7 +237,7 @@ Apache License, Version 2.0
 ### Roadmap 🛣
 
 - [x] Support Bedrock edition [#10](https://github.com/dirien/minectl/issues/10)
-- [x] Add monitoring capabilities to minectl server [#21](https://github.com/dirien/minectl/issues/21) 
+- [x] Add monitoring capabilities to minectl server [#21](https://github.com/dirien/minectl/issues/21)
 - [x] List Minecraft Server [#11](https://github.com/dirien/minectl/issues/11)
 - [ ] Update Minecraft Server
 - [ ] Support Mods and Plugins
@@ -237,6 +255,7 @@ Apache License, Version 2.0
 - https://github.com/digitalocean/godo
 - https://github.com/scaleway/scaleway-sdk-go
 - https://github.com/olekukonko/tablewriter
+- github.com/sethvargo/go-password/password
 
 ### Legal Disclaimer 👮
 
