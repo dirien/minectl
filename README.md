@@ -109,7 +109,7 @@ metadata:
   name: minecraft-server
 spec:
   server:
-    cloud: "provider: civo|scaleway|do|hetzner"
+    cloud: "provider: civo|scaleway|do|hetzner|linode"
     region: "region see cloud provider for details eg. fra1"
     size: "see cloud provider docs for details eg. g3.large"
     volumeSize: 100
