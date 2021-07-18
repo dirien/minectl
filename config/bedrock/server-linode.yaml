@@ -12,7 +12,7 @@ spec:
   minecraft:
     edition: bedrock
     properties: |
-      server-name=Hetzner Minecraft
+      server-name=Linode Minecraft
       gamemode=survival
       force-gamemode=false
       difficulty=normal

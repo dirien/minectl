@@ -37,7 +37,7 @@ spec:
       entity-broadcast-range-percentage=100
       level-name=world
       player-idle-timeout=0
-      motd=Civo Minecraft
+      motd=Linode Minecraft
       query.port=25565
       force-gamemode=false
       rate-limit=0

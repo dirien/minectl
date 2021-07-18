@@ -152,7 +152,7 @@ mkdir /minecraft
 
 
 
-curl -sLSf https://minecraft.azureedge.net/bin-linux/bedrock-server-1.17.2.01.zip > /tmp/bedrock-server.zip
+curl -sLSf https://minecraft.azureedge.net/bin-linux/bedrock-server-1.17.10.04.zip > /tmp/bedrock-server.zip
 unzip -o /tmp/bedrock-server.zip -d /minecraft
 chmod +x /minecraft/bedrock_server
 echo "eula=true" > /minecraft/eula.txt
@@ -449,7 +449,7 @@ runcmd:
   - echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
   - echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
   - sudo systemctl restart fail2ban
-  - curl -sLSf https://minecraft.azureedge.net/bin-linux/bedrock-server-1.17.2.01.zip > /tmp/bedrock-server.zip
+  - curl -sLSf https://minecraft.azureedge.net/bin-linux/bedrock-server-1.17.10.04.zip > /tmp/bedrock-server.zip
   - unzip -o /tmp/bedrock-server.zip -d /minecraft
   - chmod +x /minecraft/bedrock_server
   - echo "eula=true" > /minecraft/eula.txt
@@ -745,7 +745,7 @@ mkfs.ext4  /dev/sdc
 mount /dev/sdc /minecraft
 echo "/dev/sdc /minecraft ext4 defaults,noatime,nofail 0 2" >> /etc/fstab
 
-curl -sLSf https://minecraft.azureedge.net/bin-linux/bedrock-server-1.17.2.01.zip > /tmp/bedrock-server.zip
+curl -sLSf https://minecraft.azureedge.net/bin-linux/bedrock-server-1.17.10.04.zip > /tmp/bedrock-server.zip
 unzip -o /tmp/bedrock-server.zip -d /minecraft
 chmod +x /minecraft/bedrock_server
 echo "eula=true" > /minecraft/eula.txt
