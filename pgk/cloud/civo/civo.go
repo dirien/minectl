@@ -60,7 +60,7 @@ func (c *Civo) CreateServer(args automation.ServerArgs) (*automation.RessourceRe
 	config.InitialUser = "root"
 	config.Tags = []string{common.InstanceTag, args.MinecraftServer.GetEdition()}
 
-	tmpl, err := minctlTemplate.NewTemplateBash(args.MinecraftServer)
+	tmpl, err := minctlTemplate.NewTemplateBash(args.MinecraftServer, "")
 	if err != nil {
 		return nil, err
 	}

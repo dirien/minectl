@@ -60,7 +60,7 @@ func (l *Linode) CreateServer(args automation.ServerArgs) (*automation.Ressource
 	if err != nil {
 		return nil, err
 	}
-	tmpl, err := minctlTemplate.NewTemplateBash(args.MinecraftServer)
+	tmpl, err := minctlTemplate.NewTemplateBash(args.MinecraftServer, "sdc")
 	if err != nil {
 		return nil, err
 	}
@@ -138,7 +138,7 @@ func (l *Linode) DeleteServer(id string, args automation.ServerArgs) error {
 				return err
 			}
 			//wait 5 secs for detach volume
-			time.Sleep(10 * time.Second)
+			time.Sleep(15 * time.Second)
 			err = l.client.DeleteVolume(context.Background(), volume.ID)
 			if err != nil {
 				return err

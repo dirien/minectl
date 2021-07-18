@@ -158,6 +158,13 @@ echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
 echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
 sudo systemctl restart fail2ban
 mkdir /minecraft
+
+{{ if .Mount -}}
+mkfs.ext4  /dev/{{ .Mount }}
+mount /dev/{{ .Mount }} /minecraft
+echo "/dev/{{ .Mount }} /minecraft ext4 defaults,noatime,nofail 0 2" >> /etc/fstab
+{{- end }}
+
 {{ if eq .Spec.Minecraft.Edition "java" -}}
 curl -sLSf https://launcher.mojang.com/v1/objects/a16d67e5807f57fc4e550299cf20226194497dc2/server.jar > /minecraft/server.jar
 {{ else if eq .Spec.Minecraft.Edition "bedrock" -}}

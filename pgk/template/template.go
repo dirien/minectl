@@ -39,7 +39,7 @@ func (t Template) GetTemplate() (string, error) {
 	return buff.String(), nil
 }
 
-func NewTemplateBash(model *model.MinecraftServer) (*Template, error) {
+func NewTemplateBash(model *model.MinecraftServer, mount string) (*Template, error) {
 	bash, err := template.New("bash").Parse(bash)
 	if err != nil {
 		return nil, err
@@ -48,6 +48,7 @@ func NewTemplateBash(model *model.MinecraftServer) (*Template, error) {
 		Template: bash,
 		Values: &templateValues{
 			MinecraftServer: model,
+			Mount:           mount,
 		},
 	}, nil
 }

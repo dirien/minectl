@@ -1,10 +1,10 @@
 .idea
 **/passwords
-**/minectl
+./minectl
 **/server.properties
 tmp*/
-bin
-dist
+bin/
+dist/
 coverage.out
 revive.log
 **/.DS_Store
