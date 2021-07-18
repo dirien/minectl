@@ -168,7 +168,7 @@ echo "/dev/{{ .Mount }} /minecraft ext4 defaults,noatime,nofail 0 2" >> /etc/fst
 {{ if eq .Spec.Minecraft.Edition "java" -}}
 curl -sLSf https://launcher.mojang.com/v1/objects/a16d67e5807f57fc4e550299cf20226194497dc2/server.jar > /minecraft/server.jar
 {{ else if eq .Spec.Minecraft.Edition "bedrock" -}}
-curl -sLSf https://minecraft.azureedge.net/bin-linux/bedrock-server-1.17.2.01.zip > /tmp/bedrock-server.zip
+curl -sLSf https://minecraft.azureedge.net/bin-linux/bedrock-server-1.17.10.04.zip > /tmp/bedrock-server.zip
 unzip -o /tmp/bedrock-server.zip -d /minecraft
 chmod +x /minecraft/bedrock_server
 {{- end }}
