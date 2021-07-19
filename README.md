@@ -6,6 +6,7 @@
         * [Digital Ocean](#digital-ocean)
         * [Scaleway](#scaleway)
         * [Hetzner](#hetzner)
+        * [Linode](#linode)
     - [Server Config 📋](#server-config-)
     - [Create Minecraft Server 🏗](#create-minecraft-server-)
     - [Delete Minecraft Server 🗑](#delete-minecraft-server-)
@@ -254,6 +255,8 @@ Apache License, Version 2.0
 - https://github.com/civo/civogo
 - https://github.com/digitalocean/godo
 - https://github.com/scaleway/scaleway-sdk-go
+- https://github.com/linode/linodego
+- https://github.com/hetznercloud/hcloud-go
 - https://github.com/olekukonko/tablewriter
 - https://github.com/sethvargo/go-password
 
