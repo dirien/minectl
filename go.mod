@@ -16,6 +16,7 @@ require (
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/morikuni/aec v1.0.0
 	github.com/olekukonko/tablewriter v0.0.5
+	github.com/ovh/go-ovh v1.1.0 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/scaleway/scaleway-sdk-go v1.0.0-beta.7
 	github.com/sethvargo/go-password v0.2.0 // indirect
