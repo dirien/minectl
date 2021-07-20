@@ -7,6 +7,7 @@
         * [Scaleway](#scaleway)
         * [Hetzner](#hetzner)
         * [Linode](#linode)
+        * [OVHCloud](#ovhcloud)
     - [Server Config 📋](#server-config-)
     - [Create Minecraft Server 🏗](#create-minecraft-server-)
     - [Delete Minecraft Server 🗑](#delete-minecraft-server-)
@@ -32,9 +33,7 @@
 ![Linode](https://img.shields.io/badge/linode-00A95C?style=for-the-badge&logo=linode&logoColor=white)
 ![Hetzner](https://img.shields.io/badge/hetzner-d50c2d?style=for-the-badge&logo=hetzner&logoColor=white)
 
-
 [![Build Binary](https://github.com/dirien/minectl/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/dirien/minectl/actions/workflows/ci.yaml)
-
 
 `minectl`️️ is a cli for creating Minecraft (java or bedrock) server on different cloud provider.
 
@@ -47,6 +46,7 @@ It is a private side project of me, to learn more about Go, CLI and multi cloud.
 + DigitalOcean (https://www.digitalocean.com/)
 + Hetzner (https://www.hetzner.com/)
 + Linode (https://www.linode.com/)
++ OVHCloud (https://www.ovh.com/)
 
 ### TL;DR 🚀
 
@@ -99,9 +99,27 @@ export HCLOUD_TOKEN=yyyy
 export LINODE_TOKEN=xxxx
 ```
 
+#### OVHCloud
+
+You need to create API keys per endpoint. For an overview of available endpoint
+check [supported-apis](https://github.com/ovh/go-ovh#supported-apis) documentation
+
+For, example, Europe visit https://eu.api.ovh.com/createToken to create your API keys for minectl 🗺
+
+![img.png](docs/img/ovh_create_token.png)
+
+For the proper `rights` choose all HTTP Verbs (GET,PUT,DELETE, POST), and we need only the `/cloud/` API.
+
+```bash
+export OVH_ENDPOINT=ovh-eu
+export APPLICATION_KEY=xxx
+export APPLICATION_SECRET=yyy
+export CONSUMER_KEY=zzz
+```
+
 #### Server Config 📋
 
-You need a MinecraftServer manifest file, to define some informations regarding the VM and the Minecraft Server:
+You need a MinecraftServer manifest file, to describe your VM and the Minecraft Server:
 
 ```yaml
 apiVersion: ediri.io/minectl/v1alpha1
@@ -259,6 +277,7 @@ Apache License, Version 2.0
 - https://github.com/hetznercloud/hcloud-go
 - https://github.com/olekukonko/tablewriter
 - https://github.com/sethvargo/go-password
+- https://github.com/ovh/go-ovh
 
 ### Legal Disclaimer 👮
 
