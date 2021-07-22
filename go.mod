@@ -4,7 +4,7 @@ go 1.16
 
 require (
 	github.com/briandowns/spinner v1.16.0
-	github.com/civo/civogo v0.2.48
+	github.com/civo/civogo v0.2.49
 	github.com/digitalocean/godo v1.63.0
 	github.com/dirien/ovh-go-sdk v0.1.1
 	github.com/fatih/color v1.12.0
