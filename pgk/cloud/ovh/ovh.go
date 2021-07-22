@@ -7,27 +7,24 @@ import (
 	"strings"
 	"time"
 
+	ovhsdk "github.com/dirien/ovh-go-sdk/pkg/sdk"
+
 	"github.com/minectl/pgk/automation"
 	"github.com/minectl/pgk/common"
 	minctlTemplate "github.com/minectl/pgk/template"
-	"github.com/ovh/go-ovh/ovh"
 )
 
 type OVHcloud struct {
-	client      *ovh.Client
-	serviceName string
-	region      string
+	client *ovhsdk.OVHcloud
 }
 
-func NewOVHcloud(endpoint, appKey, appSecret, consumerKey, region string) (*OVHcloud, error) {
-	client, err := ovh.NewClient(endpoint, appKey, appSecret, consumerKey)
+func NewOVHcloud(endpoint, appKey, appSecret, consumerKey, serviceName, region string) (*OVHcloud, error) {
+	client, err := ovhsdk.NewOVHClient(endpoint, appKey, appSecret, consumerKey, region, serviceName)
 	if err != nil {
 		return nil, err
 	}
 	return &OVHcloud{
-		client:      client,
-		serviceName: "c3878ba251b5478181eab758e6b34d6a",
-		region:      region,
+		client: client,
 	}, nil
 }
 
@@ -54,7 +51,7 @@ func (o *OVHcloud) CreateServer(args automation.ServerArgs) (*automation.Ressour
 		return nil, err
 	}
 
-	key, err := o.CreateSSHKey(context.Background(), SSHKeyCreateOptions{
+	key, err := o.client.CreateSSHKey(context.Background(), ovhsdk.SSHKeyCreateOptions{
 		Name:      fmt.Sprintf("%s-ssh", args.MinecraftServer.GetName()),
 		PublicKey: string(pubKeyFile),
 	})
@@ -62,12 +59,12 @@ func (o *OVHcloud) CreateServer(args automation.ServerArgs) (*automation.Ressour
 		return nil, err
 	}
 
-	image, err := o.GetImage(context.Background(), "Ubuntu 20.04", args.MinecraftServer.GetRegion())
+	image, err := o.client.GetImage(context.Background(), "Ubuntu 20.04", args.MinecraftServer.GetRegion())
 	if err != nil {
 		return nil, err
 	}
 
-	flavor, err := o.GetFlavor(context.Background(), args.MinecraftServer.GetSize(), args.MinecraftServer.GetRegion())
+	flavor, err := o.client.GetFlavor(context.Background(), args.MinecraftServer.GetSize(), args.MinecraftServer.GetRegion())
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +78,7 @@ func (o *OVHcloud) CreateServer(args automation.ServerArgs) (*automation.Ressour
 		return nil, err
 	}
 
-	instance, err := o.CreateInstance(context.Background(), InstanceCreateOptions{
+	instance, err := o.client.CreateInstance(context.Background(), ovhsdk.InstanceCreateOptions{
 		Name:           createOVHID(args.MinecraftServer.GetName(), strings.Join([]string{common.InstanceTag, args.MinecraftServer.GetEdition()}, "|")),
 		Region:         args.MinecraftServer.GetRegion(),
 		SSHKeyID:       key.ID,
@@ -95,11 +92,11 @@ func (o *OVHcloud) CreateServer(args automation.ServerArgs) (*automation.Ressour
 	}
 	stillCreating := true
 	for stillCreating {
-		instance, err = o.GetInstance(context.Background(), instance.ID)
+		instance, err = o.client.GetInstance(context.Background(), instance.ID)
 		if err != nil {
 			return nil, err
 		}
-		if instance.Status == InstanceActive {
+		if instance.Status == ovhsdk.InstanceActive {
 			stillCreating = false
 			time.Sleep(2 * time.Second)
 		} else {
@@ -107,11 +104,11 @@ func (o *OVHcloud) CreateServer(args automation.ServerArgs) (*automation.Ressour
 		}
 	}
 
-	volume, err := o.CreateVolume(context.Background(), VolumeCreateOptions{
+	volume, err := o.client.CreateVolume(context.Background(), ovhsdk.VolumeCreateOptions{
 		Name:   fmt.Sprintf("%s-vol", args.MinecraftServer.GetName()),
 		Size:   args.MinecraftServer.GetVolumeSize(),
 		Region: args.MinecraftServer.GetRegion(),
-		Type:   VolumeClassic,
+		Type:   ovhsdk.VolumeClassic,
 	})
 	if err != nil {
 		return nil, err
@@ -119,18 +116,18 @@ func (o *OVHcloud) CreateServer(args automation.ServerArgs) (*automation.Ressour
 
 	stillCreating = true
 	for stillCreating {
-		volume, err = o.GetVolume(context.Background(), volume.ID)
+		volume, err = o.client.GetVolume(context.Background(), volume.ID)
 		if err != nil {
 			return nil, err
 		}
-		if volume.Status == VolumeAvailable {
+		if volume.Status == ovhsdk.VolumeAvailable {
 			stillCreating = false
 		} else {
 			time.Sleep(2 * time.Second)
 		}
 	}
 
-	_, err = o.AttachVolume(context.Background(), volume.ID, &VolumeAttachOptions{
+	_, err = o.client.AttachVolume(context.Background(), volume.ID, &ovhsdk.VolumeAttachOptions{
 		InstanceID: instance.ID,
 	})
 	if err != nil {
@@ -138,11 +135,11 @@ func (o *OVHcloud) CreateServer(args automation.ServerArgs) (*automation.Ressour
 	}
 	stillAttaching := true
 	for stillAttaching {
-		volume, err = o.GetVolume(context.Background(), volume.ID)
+		volume, err = o.client.GetVolume(context.Background(), volume.ID)
 		if err != nil {
 			return nil, err
 		}
-		if volume.Status == VolumeInUse {
+		if volume.Status == ovhsdk.VolumeInUse {
 			stillAttaching = false
 		} else {
 			time.Sleep(2 * time.Second)
@@ -153,7 +150,7 @@ func (o *OVHcloud) CreateServer(args automation.ServerArgs) (*automation.Ressour
 	if err != nil {
 		return nil, err
 	}
-	ip4, err := IPv4(instance)
+	ip4, err := ovhsdk.IPv4(instance)
 	if err != nil {
 		return nil, err
 	}
@@ -167,26 +164,26 @@ func (o *OVHcloud) CreateServer(args automation.ServerArgs) (*automation.Ressour
 }
 
 func (o *OVHcloud) DeleteServer(id string, args automation.ServerArgs) error {
-	keys, err := o.ListSSHKeys(context.Background())
+	keys, err := o.client.ListSSHKeys(context.Background())
 	if err != nil {
 		return err
 	}
 	for _, key := range keys {
 		if key.Name == fmt.Sprintf("%s-ssh", args.MinecraftServer.GetName()) {
-			err := o.DeleteSSHKey(context.Background(), key.ID)
+			err := o.client.DeleteSSHKey(context.Background(), key.ID)
 			if err != nil {
 				return err
 			}
 		}
 	}
-	volumes, err := o.ListVolumes(context.Background())
+	volumes, err := o.client.ListVolumes(context.Background())
 	if err != nil {
 		return err
 	}
 	for _, volume := range volumes {
 		for _, attached := range volume.AttachedTo {
 			if attached == id {
-				detachVolume, err := o.DetachVolume(context.Background(), volume.ID, &VolumeDetachOptions{
+				detachVolume, err := o.client.DetachVolume(context.Background(), volume.ID, &ovhsdk.VolumeDetachOptions{
 					InstanceID: id,
 				})
 				if err != nil {
@@ -194,24 +191,24 @@ func (o *OVHcloud) DeleteServer(id string, args automation.ServerArgs) error {
 				}
 				stillDetaching := true
 				for stillDetaching {
-					detachedVolume, err := o.GetVolume(context.Background(), detachVolume.ID)
+					detachedVolume, err := o.client.GetVolume(context.Background(), detachVolume.ID)
 					if err != nil {
 						return err
 					}
-					if detachedVolume.Status == VolumeAvailable {
+					if detachedVolume.Status == ovhsdk.VolumeAvailable {
 						stillDetaching = false
 					} else {
 						time.Sleep(2 * time.Second)
 					}
 				}
-				err = o.DeleteVolume(context.Background(), volume.ID)
+				err = o.client.DeleteVolume(context.Background(), volume.ID)
 				if err != nil {
 					return err
 				}
 			}
 		}
 	}
-	err = o.DeleteInstance(context.Background(), id)
+	err = o.client.DeleteInstance(context.Background(), id)
 	if err != nil {
 		return err
 	}
@@ -219,7 +216,7 @@ func (o *OVHcloud) DeleteServer(id string, args automation.ServerArgs) error {
 }
 
 func (o *OVHcloud) ListServer() ([]automation.RessourceResults, error) {
-	instances, err := o.ListInstance(context.Background())
+	instances, err := o.client.ListInstance(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -228,7 +225,7 @@ func (o *OVHcloud) ListServer() ([]automation.RessourceResults, error) {
 		// no error checking. could be server in the region which don't belong to minectl
 		_, labels, _ := getOVHFieldsFromID(instance.Name)
 		if strings.Contains(labels, common.InstanceTag) {
-			ip4, err := IPv4(&instance)
+			ip4, err := ovhsdk.IPv4(&instance)
 			if err != nil {
 				return nil, err
 			}

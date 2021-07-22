@@ -32,6 +32,7 @@
 ![Civo](https://img.shields.io/badge/Civo-239DFF?style=for-the-badge&logo=Civo&logoColor=white)
 ![Linode](https://img.shields.io/badge/linode-00A95C?style=for-the-badge&logo=linode&logoColor=white)
 ![Hetzner](https://img.shields.io/badge/hetzner-d50c2d?style=for-the-badge&logo=hetzner&logoColor=white)
+![OVH](https://img.shields.io/badge/ovh-123F6D?style=for-the-badge&logo=ovh&logoColor=white)
 
 [![Build Binary](https://github.com/dirien/minectl/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/dirien/minectl/actions/workflows/ci.yaml)
 
@@ -115,6 +116,7 @@ export OVH_ENDPOINT=ovh-eu
 export APPLICATION_KEY=xxx
 export APPLICATION_SECRET=yyy
 export CONSUMER_KEY=zzz
+export SERVICENAME=<projectid>
 ```
 
 #### Server Config 📋
@@ -278,6 +280,7 @@ Apache License, Version 2.0
 - https://github.com/olekukonko/tablewriter
 - https://github.com/sethvargo/go-password
 - https://github.com/ovh/go-ovh
+- https://github.com/dirien/ovh-go-sdk
 
 ### Legal Disclaimer 👮
 
