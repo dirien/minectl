@@ -125,7 +125,7 @@ func getProvisioner(provider, region string) (automation.Automation, error) {
 		}
 		return cloudProvider, nil
 	case "ovh":
-		cloudProvider, err := ovh.NewOVHcloud(os.Getenv("OVH_ENDPOINT"), os.Getenv("APPLICATION_KEY"), os.Getenv("APPLICATION_SECRET"), os.Getenv("CONSUMER_KEY"), region)
+		cloudProvider, err := ovh.NewOVHcloud(os.Getenv("OVH_ENDPOINT"), os.Getenv("APPLICATION_KEY"), os.Getenv("APPLICATION_SECRET"), os.Getenv("CONSUMER_KEY"), os.Getenv("SERVICENAME"), region)
 		if err != nil {
 			return nil, err
 		}
