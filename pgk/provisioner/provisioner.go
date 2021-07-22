@@ -5,6 +5,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/minectl/pgk/cloud/equinix"
+
 	"github.com/minectl/pgk/cloud/ovh"
 
 	"github.com/minectl/pgk/cloud/linode"
@@ -126,6 +128,12 @@ func getProvisioner(provider, region string) (automation.Automation, error) {
 		return cloudProvider, nil
 	case "ovh":
 		cloudProvider, err := ovh.NewOVHcloud(os.Getenv("OVH_ENDPOINT"), os.Getenv("APPLICATION_KEY"), os.Getenv("APPLICATION_SECRET"), os.Getenv("CONSUMER_KEY"), os.Getenv("SERVICENAME"), region)
+		if err != nil {
+			return nil, err
+		}
+		return cloudProvider, nil
+	case "equinix":
+		cloudProvider, err := equinix.NewEquinix(os.Getenv("PACKET_AUTH_TOKEN"), os.Getenv("EQUINIX_PROJECT"))
 		if err != nil {
 			return nil, err
 		}

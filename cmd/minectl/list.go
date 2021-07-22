@@ -13,7 +13,7 @@ import (
 func init() {
 
 	minectlCmd.AddCommand(listCmd)
-	listCmd.Flags().StringP("provider", "p", "", "The cloud provider - hetzner, do, civo, scaleway or linode")
+	listCmd.Flags().StringP("provider", "p", "", "The cloud provider - civo|scaleway|do|hetzner|linode|ovh|equinix")
 	listCmd.Flags().StringP("region", "r", "", "The region for your cloud provider")
 }
 

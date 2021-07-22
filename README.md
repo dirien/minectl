@@ -8,6 +8,7 @@
         * [Hetzner](#hetzner)
         * [Linode](#linode)
         * [OVHCloud](#ovhcloud)
+        * [Equinix Metal](#equinix-metal)
     - [Server Config 📋](#server-config-)
     - [Create Minecraft Server 🏗](#create-minecraft-server-)
     - [Delete Minecraft Server 🗑](#delete-minecraft-server-)
@@ -33,6 +34,8 @@
 ![Linode](https://img.shields.io/badge/linode-00A95C?style=for-the-badge&logo=linode&logoColor=white)
 ![Hetzner](https://img.shields.io/badge/hetzner-d50c2d?style=for-the-badge&logo=hetzner&logoColor=white)
 ![OVH](https://img.shields.io/badge/ovh-123F6D?style=for-the-badge&logo=ovh&logoColor=white)
+![Equinix Metal](https://img.shields.io/badge/equinix--metal-d10810?style=for-the-badge&logo=equinix-metal&logoColor=white)
+
 
 [![Build Binary](https://github.com/dirien/minectl/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/dirien/minectl/actions/workflows/ci.yaml)
 
@@ -48,6 +51,7 @@ It is a private side project of me, to learn more about Go, CLI and multi cloud.
 + Hetzner (https://www.hetzner.com/)
 + Linode (https://www.linode.com/)
 + OVHCloud (https://www.ovh.com/)
++ Equinix Metal (https://metal.equinix.com/)
 
 ### TL;DR 🚀
 
@@ -119,6 +123,13 @@ export CONSUMER_KEY=zzz
 export SERVICENAME=<projectid>
 ```
 
+#### Equinix Metal
+
+```bash
+export PACKET_AUTH_TOKEN=xxx
+export EQUINIX_PROJECT=yyy
+```
+
 #### Server Config 📋
 
 You need a MinecraftServer manifest file, to describe your VM and the Minecraft Server:
@@ -130,7 +141,7 @@ metadata:
   name: minecraft-server
 spec:
   server:
-    cloud: "provider: civo|scaleway|do|hetzner|linode"
+    cloud: "provider: civo|scaleway|do|hetzner|linode|ovh|equinix"
     region: "region see cloud provider for details eg. fra1"
     size: "see cloud provider docs for details eg. g3.large"
     volumeSize: 100
@@ -212,7 +223,7 @@ mincetl list  \
 
 Flags:
   -h, --help              help for list
-  -p, --provider string   The cloud provider - do, civo or scaleway
+  -p, --provider string   The cloud provider - civo|scaleway|do|hetzner|linode|ovh|equinix
   -r, --region string     The region for your cloud provider
 ```
 
@@ -281,6 +292,8 @@ Apache License, Version 2.0
 - https://github.com/sethvargo/go-password
 - https://github.com/ovh/go-ovh
 - https://github.com/dirien/ovh-go-sdk
+- https://github.com/packethost/packngo
+- https://github.com/hashicorp/go-retryablehttp
 
 ### Legal Disclaimer 👮
 
