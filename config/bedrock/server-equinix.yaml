@@ -4,15 +4,15 @@ metadata:
   name: minecraft-server-be
 spec:
   server:
-    cloud: ovh
-    region: DE1
-    size: b2-7
+    cloud: equinix
+    region: fr
+    size: c3.small.x86
     volumeSize: 100
     ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft-be.pub"
   minecraft:
     edition: bedrock
     properties: |
-      server-name=OVHcloud Minecraft
+      server-name=Equinix Minecraft
       gamemode=survival
       force-gamemode=false
       difficulty=normal

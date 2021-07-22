@@ -1,0 +1,156 @@
+package equinix
+
+import (
+	"fmt"
+	"io/ioutil"
+	"strings"
+	"time"
+
+	"github.com/hashicorp/go-retryablehttp"
+	"github.com/minectl/pgk/automation"
+	"github.com/minectl/pgk/common"
+	minctlTemplate "github.com/minectl/pgk/template"
+	"github.com/packethost/packngo"
+)
+
+type Equinix struct {
+	client  *packngo.Client
+	project string
+}
+
+func NewEquinix(APIKey, project string) (*Equinix, error) {
+
+	httpClient := retryablehttp.NewClient().HTTPClient
+
+	return &Equinix{
+		client:  packngo.NewClientWithAuth("", APIKey, httpClient),
+		project: project,
+	}, nil
+}
+
+func (e *Equinix) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
+	pubKeyFile, err := ioutil.ReadFile(args.MinecraftServer.GetSSH())
+	if err != nil {
+		return nil, err
+	}
+	key, _, err := e.client.SSHKeys.Create(&packngo.SSHKeyCreateRequest{
+		Label:     fmt.Sprintf("%s-ssh", args.MinecraftServer.GetName()),
+		ProjectID: e.project,
+		Key:       string(pubKeyFile),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	tmpl, err := minctlTemplate.NewTemplateBash(args.MinecraftServer, "")
+	if err != nil {
+		return nil, err
+	}
+	userData, err := tmpl.GetTemplate()
+	if err != nil {
+		return nil, err
+	}
+
+	server, _, err := e.client.Devices.Create(&packngo.DeviceCreateRequest{
+		Hostname:       args.MinecraftServer.GetName(),
+		ProjectID:      e.project,
+		OS:             "ubuntu_20_04",
+		Plan:           args.MinecraftServer.GetSize(),
+		Tags:           []string{common.InstanceTag, args.MinecraftServer.GetEdition()},
+		ProjectSSHKeys: []string{key.ID},
+		UserData:       userData,
+		BillingCycle:   "hourly",
+		Metro:          args.MinecraftServer.GetRegion(),
+		SpotInstance:   false,
+	})
+	if err != nil {
+		return nil, err
+	}
+	stillCreating := true
+	for stillCreating {
+		server, _, err = e.client.Devices.Get(server.ID, nil)
+		if err != nil {
+			return nil, err
+		}
+
+		if server.State == "active" {
+			stillCreating = false
+		} else {
+			time.Sleep(2 * time.Second)
+		}
+	}
+
+	return &automation.RessourceResults{
+		ID:       server.ID,
+		Name:     server.Hostname,
+		Region:   server.Metro.Code,
+		PublicIP: getIP4(server),
+		Tags:     strings.Join(server.Tags, ","),
+	}, err
+}
+
+func (e *Equinix) DeleteServer(id string, args automation.ServerArgs) error {
+	keys, _, err := e.client.SSHKeys.ProjectList(e.project)
+	if err != nil {
+		return err
+	}
+	for _, key := range keys {
+		if key.Label == fmt.Sprintf("%s-ssh", args.MinecraftServer.GetName()) {
+			_, err := e.client.SSHKeys.Delete(key.ID)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	instances, _, err := e.client.Devices.List(e.project, &packngo.ListOptions{
+		Search: args.MinecraftServer.GetName(),
+	})
+	if err != nil {
+		return err
+	}
+	for _, instance := range instances {
+		if instance.Hostname == args.MinecraftServer.GetName() {
+			_, err = e.client.Devices.Delete(instance.ID, true)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
+}
+
+func (e *Equinix) ListServer() ([]automation.RessourceResults, error) {
+	list, _, err := e.client.Devices.List(e.project, &packngo.ListOptions{
+		Search: common.InstanceTag,
+	})
+	if err != nil {
+		return nil, err
+	}
+	var result []automation.RessourceResults
+	for _, server := range list {
+		result = append(result, automation.RessourceResults{
+			ID:       server.ID,
+			Name:     server.Hostname,
+			Region:   server.Metro.Code,
+			PublicIP: getIP4(&server),
+			Tags:     strings.Join(server.Tags, ","),
+		})
+	}
+	return result, nil
+}
+
+func (e *Equinix) UpdateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
+	panic("implement me")
+}
+
+func getIP4(server *packngo.Device) string {
+	ip4 := ""
+	for _, network := range server.Network {
+		if network.Public {
+			ip4 = network.IpAddressCommon.Address
+			break
+		}
+	}
+	return ip4
+}
