@@ -5,11 +5,11 @@ go 1.16
 require (
 	github.com/briandowns/spinner v1.16.0
 	github.com/civo/civogo v0.2.49
-	github.com/digitalocean/godo v1.64.1
+	github.com/digitalocean/godo v1.64.2
 	github.com/dirien/ovh-go-sdk v0.1.1
 	github.com/fatih/color v1.12.0
 	github.com/google/go-querystring v1.1.0 // indirect
-	github.com/hashicorp/go-retryablehttp v0.7.0 // indirect
+	github.com/hashicorp/go-retryablehttp v0.7.0
 	github.com/hetznercloud/hcloud-go v1.28.0
 	github.com/kr/pretty v0.2.1 // indirect
 	github.com/kr/text v0.2.0 // indirect
@@ -18,7 +18,7 @@ require (
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/morikuni/aec v1.0.0
 	github.com/olekukonko/tablewriter v0.0.5
-	github.com/packethost/packngo v0.17.0 // indirect
+	github.com/packethost/packngo v0.17.0
 	github.com/pkg/errors v0.9.1
 	github.com/scaleway/scaleway-sdk-go v1.0.0-beta.7
 	github.com/sethvargo/go-password v0.2.0
