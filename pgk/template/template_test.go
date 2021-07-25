@@ -13,6 +13,7 @@ var (
 			Minecraft: model.Minecraft{
 				Edition:    "bedrock",
 				Properties: "level-seed=stackitminecraftrocks\nview-distance=10\nenable-jmx-monitoring=false\n",
+				Version:    "1.17.10.04",
 			},
 		},
 	}
@@ -31,6 +32,7 @@ var (
 				},
 				Edition:    "java",
 				Properties: "level-seed=stackitminecraftrocks\nview-distance=10\nenable-jmx-monitoring=false\n",
+				Version:    "1.17",
 			},
 		},
 	}
@@ -152,7 +154,8 @@ mkdir /minecraft
 
 
 
-curl -sLSf https://minecraft.azureedge.net/bin-linux/bedrock-server-1.17.10.04.zip > /tmp/bedrock-server.zip
+URL=$(curl -s https://bedrock-version.minectl.ediri.online/binary/1.17.10.04)
+curl -sLSf $URL > /tmp/bedrock-server.zip
 unzip -o /tmp/bedrock-server.zip -d /minecraft
 chmod +x /minecraft/bedrock_server
 echo "eula=true" > /minecraft/eula.txt
@@ -310,7 +313,8 @@ mkdir /minecraft
 
 
 
-curl -sLSf https://launcher.mojang.com/v1/objects/a16d67e5807f57fc4e550299cf20226194497dc2/server.jar > /minecraft/server.jar
+URL=$(curl -s https://java-version.minectl.ediri.online/binary/1.17)
+curl -sLSf $URL > /minecraft/server.jar
 
 echo "eula=true" > /minecraft/eula.txt
 mv /tmp/server.properties /minecraft/server.properties
@@ -449,7 +453,8 @@ runcmd:
   - echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
   - echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
   - sudo systemctl restart fail2ban
-  - curl -sLSf https://minecraft.azureedge.net/bin-linux/bedrock-server-1.17.10.04.zip > /tmp/bedrock-server.zip
+  - URL=$(curl -s https://bedrock-version.minectl.ediri.online/binary/1.17.10.04)
+  - curl -sLSf $URL > /tmp/bedrock-server.zip
   - unzip -o /tmp/bedrock-server.zip -d /minecraft
   - chmod +x /minecraft/bedrock_server
   - echo "eula=true" > /minecraft/eula.txt
@@ -618,7 +623,8 @@ runcmd:
   - echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
   - echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
   - sudo systemctl restart fail2ban
-  - curl -sLSf https://launcher.mojang.com/v1/objects/a16d67e5807f57fc4e550299cf20226194497dc2/server.jar > /minecraft/server.jar
+  - URL=$(curl -s https://java-version.minectl.ediri.online/binary/1.17)
+  - curl -sLSf $URL > /minecraft/server.jar
   
   - echo "eula=true" > /minecraft/eula.txt
   - mv /tmp/server.properties /minecraft/server.properties
@@ -745,7 +751,8 @@ mkfs.ext4  /dev/sdc
 mount /dev/sdc /minecraft
 echo "/dev/sdc /minecraft ext4 defaults,noatime,nofail 0 2" >> /etc/fstab
 
-curl -sLSf https://minecraft.azureedge.net/bin-linux/bedrock-server-1.17.10.04.zip > /tmp/bedrock-server.zip
+URL=$(curl -s https://bedrock-version.minectl.ediri.online/binary/1.17.10.04)
+curl -sLSf $URL > /tmp/bedrock-server.zip
 unzip -o /tmp/bedrock-server.zip -d /minecraft
 chmod +x /minecraft/bedrock_server
 echo "eula=true" > /minecraft/eula.txt
@@ -905,7 +912,8 @@ mkfs.ext4  /dev/sdc
 mount /dev/sdc /minecraft
 echo "/dev/sdc /minecraft ext4 defaults,noatime,nofail 0 2" >> /etc/fstab
 
-curl -sLSf https://launcher.mojang.com/v1/objects/a16d67e5807f57fc4e550299cf20226194497dc2/server.jar > /minecraft/server.jar
+URL=$(curl -s https://java-version.minectl.ediri.online/binary/1.17)
+curl -sLSf $URL > /minecraft/server.jar
 
 echo "eula=true" > /minecraft/eula.txt
 mv /tmp/server.properties /minecraft/server.properties

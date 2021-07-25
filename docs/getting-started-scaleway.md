@@ -40,7 +40,7 @@ spec:
     region: fr-par-1
     size: GP1-XS
     volumeSize: 100
-    ssh: "xxx/ssh/minecraft.pub"
+    ssh: "xxx/ssh/minecraft"
   minecraft:
     java:
       xmx: 2G
@@ -51,6 +51,7 @@ spec:
         enabled: true
         broadcast: true
     edition: java
+    version: 1.17.1
     properties: |
       level-seed=stackitminecraftrocks
       view-distance=10

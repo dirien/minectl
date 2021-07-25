@@ -20,6 +20,7 @@ type Minecraft struct {
 	Java       Java   `yaml:"java"`
 	Properties string `yaml:"properties"`
 	Edition    string `yaml:"edition"`
+	Version    string `yaml:"version"`
 }
 
 // Java
@@ -80,4 +81,8 @@ func (m *MinecraftServer) GetEdition() string {
 
 func (m *MinecraftServer) GetVolumeSize() int {
 	return m.Spec.Server.VolumeSize
+}
+
+func (m *MinecraftServer) GetVersion() string {
+	return m.Spec.Minecraft.Version
 }

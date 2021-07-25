@@ -21,9 +21,10 @@ spec:
     region: LON1
     size: g3.large
     volumeSize: 100
-    ssh: "xxx/ssh/minecraft.pub"
+    ssh: "xxx/ssh/minecraft"
   minecraft:
     edition: bedrock
+    version: 1.17.10.04
     properties: |
       server-name=Civo Minecraft
       gamemode=survival

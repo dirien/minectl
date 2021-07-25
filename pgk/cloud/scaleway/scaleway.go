@@ -6,6 +6,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/minectl/pgk/update"
+
 	"github.com/minectl/pgk/automation"
 	"github.com/minectl/pgk/common"
 	minctlTemplate "github.com/minectl/pgk/template"
@@ -42,7 +44,7 @@ func NewScaleway(accessKey, secretKey, organizationID, region string) (*Scaleway
 }
 
 func (s Scaleway) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
-	pubKeyFile, err := ioutil.ReadFile(args.MinecraftServer.GetSSH())
+	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftServer.GetSSH()))
 	if err != nil {
 		return nil, err
 	}
@@ -190,6 +192,18 @@ func (s Scaleway) ListServer() ([]automation.RessourceResults, error) {
 	return result, nil
 }
 
-func (s Scaleway) UpdateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
-	panic("implement me")
+func (s Scaleway) UpdateServer(id string, args automation.ServerArgs) error {
+	instance, err := s.instanceAPI.GetServer(&instance.GetServerRequest{
+		ServerID: id,
+	})
+	if err != nil {
+		return err
+	}
+
+	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), instance.Server.PublicIP.Address.String(), "root")
+	err = remoteCommand.UpdateServer(args.MinecraftServer)
+	if err != nil {
+		return err
+	}
+	return nil
 }

@@ -9,6 +9,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/minectl/pgk/update"
+
 	"github.com/digitalocean/godo"
 	"github.com/minectl/pgk/automation"
 	"github.com/minectl/pgk/common"
@@ -65,12 +67,27 @@ func (d *DigitalOcean) ListServer() ([]automation.RessourceResults, error) {
 	return result, nil
 }
 
-func (d *DigitalOcean) UpdateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
-	panic("implement me")
+func (d *DigitalOcean) UpdateServer(id string, args automation.ServerArgs) error {
+	intID, err := strconv.Atoi(id)
+	if err != nil {
+		return err
+	}
+	droplet, _, err := d.client.Droplets.Get(context.Background(), intID)
+	if err != nil {
+		return err
+	}
+	ipv4, _ := droplet.PublicIPv4()
+	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), ipv4, "root")
+	err = remoteCommand.UpdateServer(args.MinecraftServer)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (d *DigitalOcean) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
-	pubKeyFile, err := ioutil.ReadFile(args.MinecraftServer.GetSSH())
+	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftServer.GetSSH()))
 	if err != nil {
 		return nil, err
 	}

@@ -9,6 +9,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/minectl/pgk/update"
+
 	"github.com/linode/linodego"
 	"github.com/minectl/pgk/automation"
 	"github.com/minectl/pgk/common"
@@ -41,7 +43,7 @@ func NewLinode(APItoken string) (*Linode, error) {
 
 func (l *Linode) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
 	os := "linode/ubuntu20.04"
-	pubKeyFile, err := ioutil.ReadFile(args.MinecraftServer.GetSSH())
+	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftServer.GetSSH()))
 	if err != nil {
 		return nil, err
 	}
@@ -187,6 +189,17 @@ func (l *Linode) ListServer() ([]automation.RessourceResults, error) {
 	return result, nil
 }
 
-func (l *Linode) UpdateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
-	panic("implement me")
+func (l *Linode) UpdateServer(id string, args automation.ServerArgs) error {
+	intID, _ := strconv.Atoi(id)
+	instance, err := l.client.GetInstance(context.Background(), intID)
+	if err != nil {
+		return err
+	}
+
+	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), instance.IPv4[0].String(), "root")
+	err = remoteCommand.UpdateServer(args.MinecraftServer)
+	if err != nil {
+		return err
+	}
+	return nil
 }

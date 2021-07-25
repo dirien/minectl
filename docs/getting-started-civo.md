@@ -32,7 +32,7 @@ spec:
     region: LON1
     size: g3.large
     volumeSize: 100
-    ssh: "xxx/ssh/minecraft.pub"
+    ssh: "xxx/ssh/minecraft"
   minecraft:
     java:
       xmx: 2G
@@ -43,6 +43,7 @@ spec:
         enabled: true
         broadcast: true
     edition: java
+    version: 1.17.1
     properties: |
       level-seed=randomseed
       view-distance=10

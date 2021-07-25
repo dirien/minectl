@@ -8,6 +8,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/minectl/pgk/update"
+
 	"github.com/hetznercloud/hcloud-go/hcloud"
 	"github.com/minectl/pgk/automation"
 	"github.com/minectl/pgk/common"
@@ -29,7 +31,7 @@ func NewHetzner(APIKey string) (*Hetzner, error) {
 }
 
 func (h *Hetzner) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
-	pubKeyFile, err := ioutil.ReadFile(args.MinecraftServer.GetSSH())
+	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftServer.GetSSH()))
 	if err != nil {
 		return nil, err
 	}
@@ -187,6 +189,17 @@ func (h *Hetzner) ListServer() ([]automation.RessourceResults, error) {
 	return result, nil
 }
 
-func (h *Hetzner) UpdateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
-	panic("implement me")
+func (h *Hetzner) UpdateServer(id string, args automation.ServerArgs) error {
+	intID, _ := strconv.Atoi(id)
+	instance, _, err := h.client.Server.GetByID(context.Background(), intID)
+	if err != nil {
+		return err
+	}
+
+	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), instance.PublicNet.IPv4.IP.String(), "root")
+	err = remoteCommand.UpdateServer(args.MinecraftServer)
+	if err != nil {
+		return err
+	}
+	return nil
 }

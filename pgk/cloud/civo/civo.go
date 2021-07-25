@@ -7,6 +7,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/minectl/pgk/update"
+
 	"github.com/civo/civogo"
 	"github.com/minectl/pgk/automation"
 	"github.com/minectl/pgk/common"
@@ -29,7 +31,7 @@ func NewCivo(APIKey, region string) (*Civo, error) {
 }
 
 func (c *Civo) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
-	pubKeyFile, err := ioutil.ReadFile(args.MinecraftServer.GetSSH())
+	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftServer.GetSSH()))
 	if err != nil {
 		return nil, err
 	}
@@ -183,6 +185,16 @@ func (c *Civo) ListServer() ([]automation.RessourceResults, error) {
 	return result, nil
 }
 
-func (c *Civo) UpdateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
-	panic("implement me")
+func (c *Civo) UpdateServer(id string, args automation.ServerArgs) error {
+	instance, err := c.client.GetInstance(id)
+	if err != nil {
+		return err
+	}
+
+	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), instance.PublicIP, "root")
+	err = remoteCommand.UpdateServer(args.MinecraftServer)
+	if err != nil {
+		return err
+	}
+	return nil
 }

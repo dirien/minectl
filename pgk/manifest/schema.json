@@ -67,13 +67,17 @@
         "edition": {
           "type": "string"
         },
+        "version": {
+          "type": "string"
+        },
         "properties": {
           "type": "string"
         }
       },
       "required": [
         "edition",
-        "properties"
+        "properties",
+        "version"
       ],
       "title": "Minecraft"
     },

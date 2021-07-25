@@ -33,25 +33,31 @@ type PulumiProvisioner struct {
 type Provisioner interface {
 	CreateServer() (*automation.RessourceResults, error)
 	DeleteServer() error
-	UpdateServer() (*automation.RessourceResults, error)
+	UpdateServer() error
 	ListServer() ([]automation.RessourceResults, error)
 }
 
-func (p PulumiProvisioner) startSpinner(prefix, finalMSG string) {
+func (p *PulumiProvisioner) startSpinner(prefix, finalMSG string) {
 	p.spinner.Prefix = prefix
 	p.spinner.FinalMSG = finalMSG
+	p.spinner.HideCursor = true
 	p.spinner.Start()
 }
 
-func (p PulumiProvisioner) stopSpinner() {
+func (p *PulumiProvisioner) stopSpinner() {
 	p.spinner.Stop()
 }
 
-func (p PulumiProvisioner) UpdateServer() (*automation.RessourceResults, error) {
-	return p.auto.UpdateServer(p.args)
+func (p *PulumiProvisioner) UpdateServer() error {
+	p.startSpinner(
+		fmt.Sprintf("🆙 Update server (%s)... ", common.Green(p.args.MinecraftServer.GetName())),
+		fmt.Sprintf("\n✅ Server (%s) updated\n", common.Green(p.args.MinecraftServer.GetName())))
+	err := p.auto.UpdateServer(p.args.ID, p.args)
+	p.stopSpinner()
+	return err
 }
 
-func (p PulumiProvisioner) CreateServer() (*automation.RessourceResults, error) {
+func (p *PulumiProvisioner) CreateServer() (*automation.RessourceResults, error) {
 	p.startSpinner(
 		fmt.Sprintf("🏗 Creating server (%s)... ", common.Green(p.args.MinecraftServer.GetName())),
 		fmt.Sprintf("\n✅ Server (%s) created\n", common.Green(p.args.MinecraftServer.GetName())))
@@ -60,11 +66,11 @@ func (p PulumiProvisioner) CreateServer() (*automation.RessourceResults, error) 
 	return server, err
 }
 
-func (p PulumiProvisioner) ListServer() ([]automation.RessourceResults, error) {
+func (p *PulumiProvisioner) ListServer() ([]automation.RessourceResults, error) {
 	return p.auto.ListServer()
 }
 
-func (p PulumiProvisioner) DeleteServer() error {
+func (p *PulumiProvisioner) DeleteServer() error {
 	p.startSpinner(
 		fmt.Sprintf("🪓 Deleting server (%s)... ", common.Green(p.args.MinecraftServer.GetName())),
 		fmt.Sprintf("\n🗑 Server (%s) deleted\n", common.Green(p.args.MinecraftServer.GetName())))
