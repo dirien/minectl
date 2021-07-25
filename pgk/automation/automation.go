@@ -6,7 +6,7 @@ type Automation interface {
 	CreateServer(args ServerArgs) (*RessourceResults, error)
 	DeleteServer(id string, args ServerArgs) error
 	ListServer() ([]RessourceResults, error)
-	UpdateServer(args ServerArgs) (*RessourceResults, error)
+	UpdateServer(id string, args ServerArgs) error
 }
 
 type Rcon struct {

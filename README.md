@@ -13,6 +13,7 @@
     - [Create Minecraft Server 🏗](#create-minecraft-server-)
     - [Delete Minecraft Server 🗑](#delete-minecraft-server-)
     - [List Minecraft Server 📒](#list-minecraft-server-)
+    - [Update Minecraft Server 🆙](#update-minecraft-server-)
     - [Monitoring 📊](#monitoring-)
     - [Getting Started 🎫](#getting-started-)
 + [Known Limitation 😵](#known-limitation-)
@@ -35,7 +36,6 @@
 ![Hetzner](https://img.shields.io/badge/hetzner-d50c2d?style=for-the-badge&logo=hetzner&logoColor=white)
 ![OVH](https://img.shields.io/badge/ovh-123F6D?style=for-the-badge&logo=ovh&logoColor=white)
 ![Equinix Metal](https://img.shields.io/badge/equinix--metal-d10810?style=for-the-badge&logo=equinix-metal&logoColor=white)
-
 
 [![Build Binary](https://github.com/dirien/minectl/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/dirien/minectl/actions/workflows/ci.yaml)
 
@@ -145,7 +145,7 @@ spec:
     region: "region see cloud provider for details eg. fra1"
     size: "see cloud provider docs for details eg. g3.large"
     volumeSize: 100
-    ssh: "<path to>/ssh.pub"
+    ssh: "<path to ssh public and private key>/ssh"
   minecraft:
     java:
       xmx: 2G
@@ -156,6 +156,7 @@ spec:
         enabled: true
         broadcast: true
     edition: "java|bedrock"
+    version: "<version>"
     properties: |
       level-seed=stackitminecraftrocks
       broadcast-rcon-to-ops=true
@@ -227,6 +228,26 @@ Flags:
   -r, --region string     The region for your cloud provider
 ```
 
+#### Update Minecraft Server 🆙
+
+```bash
+minectl update -h
+Update an Minecraft Server.
+
+Usage:
+  minectl update [flags]
+
+Examples:
+mincetl update  \
+    --filename server-do.yaml
+    --id xxx-xxx-xxx-xxx
+
+Flags:
+  -f, --filename string   Contains the configuration for minectl
+  -h, --help              help for update
+      --id string         contains the server id
+```
+
 #### Monitoring 📊
 
 Every instance of minectl 🗺, has following monitoring components included:
@@ -253,8 +274,7 @@ http://<ip>:9090/graph
 
 ### Known Limitation 😵
 
-`minectl` is still under development and supports only creation and deletion of server. There is no mod or plugin
-functionality for the Minecraft servers.
+`minectl` is still under development. There is no mod or plugin support for the moment.
 
 ### Contributing 🤝
 
@@ -271,9 +291,12 @@ Apache License, Version 2.0
 - [x] Support Bedrock edition [#10](https://github.com/dirien/minectl/issues/10)
 - [x] Add monitoring capabilities to minectl server [#21](https://github.com/dirien/minectl/issues/21)
 - [x] List Minecraft Server [#11](https://github.com/dirien/minectl/issues/11)
-- [ ] Update Minecraft Server
+- [x] New Command - Update Minecraft Server [#12](https://github.com/dirien/minectl/issues/12)
+- [x] New cloud provider - Hetzner [#26](https://github.com/dirien/minectl/issues/26)
+- [x] New cloud provider - Linode [#31](https://github.com/dirien/minectl/issues/31)
+- [x] New cloud provider - OVHCloud [#43](https://github.com/dirien/minectl/issues/43)
+- [x] New Cloud Provider Equinix Metal [#49](https://github.com/dirien/minectl/issues/49)
 - [ ] Support Mods and Plugins
-- [ ] Add additional cloud provider
 - [ ] ...
 
 ### Libraries & Tools 🔥
@@ -294,6 +317,7 @@ Apache License, Version 2.0
 - https://github.com/dirien/ovh-go-sdk
 - https://github.com/packethost/packngo
 - https://github.com/hashicorp/go-retryablehttp
+- https://github.com/melbahja/goph
 
 ### Legal Disclaimer 👮
 

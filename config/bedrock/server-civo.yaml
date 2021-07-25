@@ -8,9 +8,10 @@ spec:
     region: LON1
     size: g3.large
     volumeSize: 100
-    ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft-be.pub"
+    ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft-be"
   minecraft:
     edition: bedrock
+    version: 1.17.10.04
     properties: |
       server-name=Civo Minecraft
       gamemode=survival

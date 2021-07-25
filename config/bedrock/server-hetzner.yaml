@@ -8,9 +8,10 @@ spec:
     region: nbg1
     size: cpx31
     volumeSize: 100
-    ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft-be.pub"
+    ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft-be"
   minecraft:
     edition: bedrock
+    version: 1.17.10.04
     properties: |
       server-name=Hetzner Minecraft
       gamemode=survival

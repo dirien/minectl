@@ -8,9 +8,10 @@ spec:
     region: DE1
     size: b2-7
     volumeSize: 100
-    ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft-be.pub"
+    ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft-be"
   minecraft:
     edition: bedrock
+    version: 1.17.10.04
     properties: |
       server-name=OVHcloud Minecraft
       gamemode=survival

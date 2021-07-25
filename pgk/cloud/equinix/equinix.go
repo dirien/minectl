@@ -6,6 +6,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/minectl/pgk/update"
+
 	"github.com/hashicorp/go-retryablehttp"
 	"github.com/minectl/pgk/automation"
 	"github.com/minectl/pgk/common"
@@ -29,7 +31,7 @@ func NewEquinix(APIKey, project string) (*Equinix, error) {
 }
 
 func (e *Equinix) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
-	pubKeyFile, err := ioutil.ReadFile(args.MinecraftServer.GetSSH())
+	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftServer.GetSSH()))
 	if err != nil {
 		return nil, err
 	}
@@ -140,8 +142,18 @@ func (e *Equinix) ListServer() ([]automation.RessourceResults, error) {
 	return result, nil
 }
 
-func (e *Equinix) UpdateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
-	panic("implement me")
+func (e *Equinix) UpdateServer(id string, args automation.ServerArgs) error {
+	instance, _, err := e.client.Devices.Get(id, nil)
+	if err != nil {
+		return err
+	}
+
+	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), getIP4(instance), "root")
+	err = remoteCommand.UpdateServer(args.MinecraftServer)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func getIP4(server *packngo.Device) string {
