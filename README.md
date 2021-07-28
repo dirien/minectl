@@ -9,6 +9,7 @@
         * [Linode](#linode)
         * [OVHCloud](#ovhcloud)
         * [Equinix Metal](#equinix-metal)
+        * [Google Compute Engine (GCE)](#google-compute-engine-gce)
     - [Server Config 📋](#server-config-)
     - [Create Minecraft Server 🏗](#create-minecraft-server-)
     - [Delete Minecraft Server 🗑](#delete-minecraft-server-)
@@ -36,6 +37,7 @@
 ![Hetzner](https://img.shields.io/badge/hetzner-d50c2d?style=for-the-badge&logo=hetzner&logoColor=white)
 ![OVH](https://img.shields.io/badge/ovh-123F6D?style=for-the-badge&logo=ovh&logoColor=white)
 ![Equinix Metal](https://img.shields.io/badge/equinix--metal-d10810?style=for-the-badge&logo=equinix-metal&logoColor=white)
+![Google Cloud](https://img.shields.io/badge/google--cloud-4285F4?style=for-the-badge&logo=google-cloud&logoColor=white)
 
 [![Build Binary](https://github.com/dirien/minectl/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/dirien/minectl/actions/workflows/ci.yaml)
 
@@ -52,6 +54,7 @@ It is a private side project of me, to learn more about Go, CLI and multi cloud.
 + Linode (https://www.linode.com/)
 + OVHCloud (https://www.ovh.com/)
 + Equinix Metal (https://metal.equinix.com/)
++ Google Compute Engine (GCE) (https://cloud.google.com/compute)
 
 ### TL;DR 🚀
 
@@ -130,6 +133,39 @@ export PACKET_AUTH_TOKEN=xxx
 export EQUINIX_PROJECT=yyy
 ```
 
+#### Google Compute Engine (GCE)
+
+```bash
+# Get current projectID
+export PROJECTID=$(gcloud config get-value core/project 2>/dev/null)
+
+# Create a service account
+gcloud iam service-accounts create minctl \
+--description "minectl-sa service account" \
+--display-name "minctl"
+
+# Get service account email
+export SERVICEACCOUNT=$(gcloud iam service-accounts list | grep minctl | awk '{print $2}')
+
+# Assign appropriate roles to minctl service account
+gcloud projects add-iam-policy-binding $PROJECTID \
+--member serviceAccount:$SERVICEACCOUNT \
+--role roles/compute.admin
+gcloud projects add-iam-policy-binding $PROJECTID \
+--member serviceAccount:$SERVICEACCOUNT \
+--role roles/iam.serviceAccountUser
+
+gcloud projects add-iam-policy-binding $PROJECTID \
+--member serviceAccount:$SERVICEACCOUNT \
+--role roles/compute.osAdminLogin
+
+# Create inlets service account key file
+gcloud iam service-accounts keys create key.json \
+--iam-account $SERVICEACCOUNT
+
+export GCE_KEY=<pathto>/key.json
+```
+
 #### Server Config 📋
 
 You need a MinecraftServer manifest file, to describe your VM and the Minecraft Server:
@@ -141,7 +177,7 @@ metadata:
   name: minecraft-server
 spec:
   server:
-    cloud: "provider: civo|scaleway|do|hetzner|linode|ovh|equinix"
+    cloud: "provider: civo|scaleway|do|hetzner|linode|ovh|equinix|gce"
     region: "region see cloud provider for details eg. fra1"
     size: "see cloud provider docs for details eg. g3.large"
     volumeSize: 100
@@ -224,7 +260,7 @@ mincetl list  \
 
 Flags:
   -h, --help              help for list
-  -p, --provider string   The cloud provider - civo|scaleway|do|hetzner|linode|ovh|equinix
+  -p, --provider string   The cloud provider - civo|scaleway|do|hetzner|linode|ovh|equinix|gce
   -r, --region string     The region for your cloud provider
 ```
 
@@ -296,6 +332,7 @@ Apache License, Version 2.0
 - [x] New cloud provider - Linode [#31](https://github.com/dirien/minectl/issues/31)
 - [x] New cloud provider - OVHCloud [#43](https://github.com/dirien/minectl/issues/43)
 - [x] New Cloud Provider Equinix Metal [#49](https://github.com/dirien/minectl/issues/49)
+- [x] New cloud provider - GCE [#55](https://github.com/dirien/minectl/issues/55)
 - [ ] Support Mods and Plugins
 - [ ] ...
 
@@ -318,6 +355,7 @@ Apache License, Version 2.0
 - https://github.com/packethost/packngo
 - https://github.com/hashicorp/go-retryablehttp
 - https://github.com/melbahja/goph
+- https://github.com/googleapis/google-api-go-client
 
 ### Legal Disclaimer 👮
 
