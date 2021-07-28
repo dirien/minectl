@@ -136,35 +136,11 @@ export EQUINIX_PROJECT=yyy
 #### Google Compute Engine (GCE)
 
 ```bash
-# Get current projectID
-export PROJECTID=$(gcloud config get-value core/project 2>/dev/null)
-
-# Create a service account
-gcloud iam service-accounts create minctl \
---description "minectl-sa service account" \
---display-name "minctl"
-
-# Get service account email
-export SERVICEACCOUNT=$(gcloud iam service-accounts list | grep minctl | awk '{print $2}')
-
-# Assign appropriate roles to minctl service account
-gcloud projects add-iam-policy-binding $PROJECTID \
---member serviceAccount:$SERVICEACCOUNT \
---role roles/compute.admin
-gcloud projects add-iam-policy-binding $PROJECTID \
---member serviceAccount:$SERVICEACCOUNT \
---role roles/iam.serviceAccountUser
-
-gcloud projects add-iam-policy-binding $PROJECTID \
---member serviceAccount:$SERVICEACCOUNT \
---role roles/compute.osAdminLogin
-
-# Create inlets service account key file
-gcloud iam service-accounts keys create key.json \
---iam-account $SERVICEACCOUNT
-
 export GCE_KEY=<pathto>/key.json
 ```
+
+See [Getting Started - GCE edition](docs/getting-started-gce.md) for details on how to create a GCP service account for
+minectl 🗺
 
 #### Server Config 📋
 
