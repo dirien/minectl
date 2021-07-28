@@ -8,3 +8,4 @@ dist/
 coverage.out
 revive.log
 **/.DS_Store
+**/key.json

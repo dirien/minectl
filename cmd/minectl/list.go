@@ -13,8 +13,8 @@ import (
 func init() {
 
 	minectlCmd.AddCommand(listCmd)
-	listCmd.Flags().StringP("provider", "p", "", "The cloud provider - civo|scaleway|do|hetzner|linode|ovh|equinix")
-	listCmd.Flags().StringP("region", "r", "", "The region for your cloud provider")
+	listCmd.Flags().StringP("provider", "p", "", "The cloud provider - civo|scaleway|do|hetzner|linode|ovh|equinix|gce")
+	listCmd.Flags().StringP("region", "r", "", "The region (gce: zone) for your cloud provider - civo|gce")
 }
 
 var listCmd = &cobra.Command{

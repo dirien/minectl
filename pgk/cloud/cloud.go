@@ -9,6 +9,7 @@ var cloudProvider = map[string]string{
 	"linode":   "Linode",
 	"ovh":      "OVHcloud",
 	"equinix":  "Equinix Metal",
+	"gce":      "Google Compute Engine",
 }
 
 func GetCloudProviderFullName(cloud string) string {
