@@ -20,6 +20,7 @@ spec:
         broadcast: true
     edition: java
     version: 1.17.1
+    eula: true
     properties: |
       level-seed=stackitminecraftrocks
       view-distance=10

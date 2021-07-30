@@ -21,6 +21,7 @@ type Minecraft struct {
 	Properties string `yaml:"properties"`
 	Edition    string `yaml:"edition"`
 	Version    string `yaml:"version"`
+	Eula       bool   `yaml:"eula"`
 }
 
 // Java

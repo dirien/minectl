@@ -67,6 +67,9 @@
         "edition": {
           "type": "string"
         },
+        "eula": {
+          "type": "boolean"
+        },
         "version": {
           "type": "string"
         },
@@ -77,7 +80,8 @@
       "required": [
         "edition",
         "properties",
-        "version"
+        "version",
+        "eula"
       ],
       "title": "Minecraft"
     },

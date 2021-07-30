@@ -11,6 +11,7 @@
         * [Equinix Metal](#equinix-metal)
         * [Google Compute Engine (GCE)](#google-compute-engine-gce)
     - [Server Config 📋](#server-config-)
+    - [EULA ⚖️️](#eula-)  
     - [Create Minecraft Server 🏗](#create-minecraft-server-)
     - [Delete Minecraft Server 🗑](#delete-minecraft-server-)
     - [List Minecraft Server 📒](#list-minecraft-server-)
@@ -169,6 +170,7 @@ spec:
         broadcast: true
     edition: "java|bedrock"
     version: "<version>"
+    eula: true
     properties: |
       level-seed=stackitminecraftrocks
       broadcast-rcon-to-ops=true
@@ -177,6 +179,11 @@ spec:
 
 I created some example configs in the [config](config) folder for currently supported cloud provider and Minecraft
 editions.
+
+#### EULA ⚖
+
+You need to set explicitly the EULA as new property in the MinecraftServer manifest to indicate your agreement with the
+Minecraft End User License. See -> https://minecraft.net/terms for the details.
 
 #### Create Minecraft Server 🏗
 

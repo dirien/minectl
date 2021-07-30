@@ -25,6 +25,7 @@ spec:
   minecraft:
     edition: bedrock
     version: 1.17.10.04
+    eula: true
     properties: |
       server-name=Civo Minecraft
       gamemode=survival
