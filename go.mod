@@ -3,7 +3,6 @@ module github.com/minectl
 go 1.16
 
 require (
-	cloud.google.com/go v0.88.0 // indirect
 	github.com/briandowns/spinner v1.16.0
 	github.com/civo/civogo v0.2.49
 	github.com/digitalocean/godo v1.64.2

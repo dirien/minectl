@@ -14,6 +14,7 @@ var (
 				Edition:    "bedrock",
 				Properties: "level-seed=stackitminecraftrocks\nview-distance=10\nenable-jmx-monitoring=false\n",
 				Version:    "1.17.10.04",
+				Eula:       false,
 			},
 		},
 	}
@@ -33,6 +34,7 @@ var (
 				Edition:    "java",
 				Properties: "level-seed=stackitminecraftrocks\nview-distance=10\nenable-jmx-monitoring=false\n",
 				Version:    "1.17",
+				Eula:       true,
 			},
 		},
 	}
@@ -158,7 +160,7 @@ URL=$(curl -s https://bedrock-version.minectl.ediri.online/binary/1.17.10.04)
 curl -sLSf $URL > /tmp/bedrock-server.zip
 unzip -o /tmp/bedrock-server.zip -d /minecraft
 chmod +x /minecraft/bedrock_server
-echo "eula=true" > /minecraft/eula.txt
+echo "eula=false" > /minecraft/eula.txt
 mv /tmp/server.properties /minecraft/server.properties
 systemctl restart minecraft.service
 systemctl enable minecraft.service`
@@ -457,7 +459,7 @@ runcmd:
   - curl -sLSf $URL > /tmp/bedrock-server.zip
   - unzip -o /tmp/bedrock-server.zip -d /minecraft
   - chmod +x /minecraft/bedrock_server
-  - echo "eula=true" > /minecraft/eula.txt
+  - echo "eula=false" > /minecraft/eula.txt
   - mv /tmp/server.properties /minecraft/server.properties
   - systemctl restart minecraft.service
   - systemctl enable minecraft.service`
@@ -755,7 +757,7 @@ URL=$(curl -s https://bedrock-version.minectl.ediri.online/binary/1.17.10.04)
 curl -sLSf $URL > /tmp/bedrock-server.zip
 unzip -o /tmp/bedrock-server.zip -d /minecraft
 chmod +x /minecraft/bedrock_server
-echo "eula=true" > /minecraft/eula.txt
+echo "eula=false" > /minecraft/eula.txt
 mv /tmp/server.properties /minecraft/server.properties
 systemctl restart minecraft.service
 systemctl enable minecraft.service`

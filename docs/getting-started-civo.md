@@ -44,6 +44,7 @@ spec:
         broadcast: true
     edition: java
     version: 1.17.1
+    eula: true
     properties: |
       level-seed=randomseed
       view-distance=10

@@ -186,7 +186,7 @@ runcmd:
   - unzip -o /tmp/bedrock-server.zip -d /minecraft
   - chmod +x /minecraft/bedrock_server
   {{- end }}
-  - echo "eula=true" > /minecraft/eula.txt
+  - echo "eula={{ .Spec.Minecraft.Eula }}" > /minecraft/eula.txt
   - mv /tmp/server.properties /minecraft/server.properties
   - systemctl restart minecraft.service
   - systemctl enable minecraft.service
