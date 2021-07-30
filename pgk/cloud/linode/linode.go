@@ -21,6 +21,7 @@ import (
 
 type Linode struct {
 	client linodego.Client
+	tmpl   *minctlTemplate.Template
 }
 
 func NewLinode(APItoken string) (*Linode, error) {
@@ -34,9 +35,13 @@ func NewLinode(APItoken string) (*Linode, error) {
 	}
 
 	linodeClient := linodego.NewClient(oauth2Client)
-
+	tmpl, err := minctlTemplate.NewTemplateBash("sdc")
+	if err != nil {
+		return nil, err
+	}
 	linode := &Linode{
 		client: linodeClient,
+		tmpl:   tmpl,
 	}
 	return linode, nil
 }
@@ -62,11 +67,8 @@ func (l *Linode) CreateServer(args automation.ServerArgs) (*automation.Ressource
 	if err != nil {
 		return nil, err
 	}
-	tmpl, err := minctlTemplate.NewTemplateBash(args.MinecraftServer, "sdc")
-	if err != nil {
-		return nil, err
-	}
-	userData, err := tmpl.GetTemplate()
+
+	userData, err := l.tmpl.GetTemplate(args.MinecraftServer, minctlTemplate.TemplateBash)
 	if err != nil {
 		return nil, err
 	}
@@ -139,8 +141,8 @@ func (l *Linode) DeleteServer(id string, args automation.ServerArgs) error {
 			if err != nil {
 				return err
 			}
-			//wait 5 secs for detach volume
-			time.Sleep(15 * time.Second)
+			//wait 40 secs for detach volume, to be sure.
+			time.Sleep(40 * time.Second)
 			err = l.client.DeleteVolume(context.Background(), volume.ID)
 			if err != nil {
 				return err
@@ -197,7 +199,7 @@ func (l *Linode) UpdateServer(id string, args automation.ServerArgs) error {
 	}
 
 	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), instance.IPv4[0].String(), "root")
-	err = remoteCommand.UpdateServer(args.MinecraftServer)
+	err = remoteCommand.UpdateServer(args.MinecraftServer, l.tmpl)
 	if err != nil {
 		return err
 	}

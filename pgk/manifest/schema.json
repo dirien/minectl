@@ -89,6 +89,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "openjdk": {
+          "type": "integer"
+        },
         "xmx": {
           "type": "string"
         },
@@ -101,7 +104,8 @@
       },
       "required": [
         "xms",
-        "xmx"
+        "xmx",
+        "openjdk"
       ],
       "title": "Java"
     },
@@ -145,6 +149,9 @@
         },
         "ssh": {
           "type": "string"
+        },
+        "port": {
+          "type": "integer"
         }
       },
       "required": [
@@ -152,7 +159,8 @@
         "region",
         "size",
         "ssh",
-        "volumeSize"
+        "volumeSize",
+        "port"
       ],
       "title": "Server"
     }

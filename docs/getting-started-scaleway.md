@@ -41,8 +41,10 @@ spec:
     size: GP1-XS
     volumeSize: 100
     ssh: "xxx/ssh/minecraft"
+    port: 25565
   minecraft:
     java:
+      openjdk: 16
       xmx: 2G
       xms: 2G
       rcon:
@@ -60,7 +62,6 @@ spec:
       server-ip=
       resource-pack-prompt=
       gamemode=survival
-      server-port=25565
       allow-nether=true
       enable-command-block=false
       sync-chunk-writes=true

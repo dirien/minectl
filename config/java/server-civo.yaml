@@ -9,7 +9,9 @@ spec:
     size: g3.large
     volumeSize: 100
     ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft"
+    port: 25565
   minecraft:
+    openjdk: 16
     java:
       xmx: 2G
       xms: 2G
@@ -27,8 +29,7 @@ spec:
       enable-jmx-monitoring=false
       server-ip=
       resource-pack-prompt=
-      gamemode=survival
-      server-port=25565
+      gamemode=survival25565
       allow-nether=true
       enable-command-block=false
       sync-chunk-writes=true
@@ -39,7 +40,7 @@ spec:
       entity-broadcast-range-percentage=100
       level-name=world
       player-idle-timeout=0
-      motd=Civo Minecraft
+      motd=\u00A7bCivo \u00A7rMinecraft --- \u00A76Java \u00A7redition
       query.port=25565
       force-gamemode=false
       rate-limit=0

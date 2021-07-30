@@ -20,6 +20,7 @@ import (
 
 type DigitalOcean struct {
 	client *godo.Client
+	tmpl   *minctlTemplate.Template
 }
 
 // TokenSource contains an access token
@@ -41,9 +42,13 @@ func NewDigitalOcean(APIKey string) (*DigitalOcean, error) {
 	}
 	oauthClient := oauth2.NewClient(context.Background(), tokenSource)
 	client := godo.NewClient(oauthClient)
-
+	tmpl, err := minctlTemplate.NewTemplateCloudConfig("sda")
+	if err != nil {
+		return nil, err
+	}
 	do := &DigitalOcean{
 		client: client,
+		tmpl:   tmpl,
 	}
 	return do, nil
 }
@@ -78,7 +83,7 @@ func (d *DigitalOcean) UpdateServer(id string, args automation.ServerArgs) error
 	}
 	ipv4, _ := droplet.PublicIPv4()
 	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), ipv4, "root")
-	err = remoteCommand.UpdateServer(args.MinecraftServer)
+	err = remoteCommand.UpdateServer(args.MinecraftServer, d.tmpl)
 	if err != nil {
 		return err
 	}
@@ -112,11 +117,7 @@ func (d *DigitalOcean) CreateServer(args automation.ServerArgs) (*automation.Res
 		return nil, err
 	}
 
-	tmpl, err := minctlTemplate.NewTemplateCloudConfig(args.MinecraftServer, "sda")
-	if err != nil {
-		return nil, err
-	}
-	userData, err := tmpl.GetTemplate()
+	userData, err := d.tmpl.GetTemplate(args.MinecraftServer, minctlTemplate.TemplateCloudConfig)
 	if err != nil {
 		return nil, err
 	}

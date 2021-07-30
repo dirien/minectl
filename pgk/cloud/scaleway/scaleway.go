@@ -19,6 +19,7 @@ import (
 type Scaleway struct {
 	instanceAPI *instance.API
 	accountAPI  *account.API
+	tmpl        *minctlTemplate.Template
 }
 
 func NewScaleway(accessKey, secretKey, organizationID, region string) (*Scaleway, error) {
@@ -36,14 +37,18 @@ func NewScaleway(accessKey, secretKey, organizationID, region string) (*Scaleway
 	if err != nil {
 		return nil, err
 	}
-
+	tmpl, err := minctlTemplate.NewTemplateCloudConfig("sda")
+	if err != nil {
+		return nil, err
+	}
 	return &Scaleway{
 		instanceAPI: instance.NewAPI(client),
 		accountAPI:  account.NewAPI(client),
+		tmpl:        tmpl,
 	}, nil
 }
 
-func (s Scaleway) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
+func (s *Scaleway) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
 	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftServer.GetSSH()))
 	if err != nil {
 		return nil, err
@@ -66,11 +71,8 @@ func (s Scaleway) CreateServer(args automation.ServerArgs) (*automation.Ressourc
 	if err != nil {
 		return nil, err
 	}
-	tmpl, err := minctlTemplate.NewTemplateCloudConfig(args.MinecraftServer, "sda")
-	if err != nil {
-		return nil, err
-	}
-	userData, err := tmpl.GetTemplate()
+
+	userData, err := s.tmpl.GetTemplate(args.MinecraftServer, minctlTemplate.TemplateCloudConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -125,7 +127,7 @@ func (s Scaleway) CreateServer(args automation.ServerArgs) (*automation.Ressourc
 	}, err
 }
 
-func (s Scaleway) DeleteServer(id string, args automation.ServerArgs) error {
+func (s *Scaleway) DeleteServer(id string, args automation.ServerArgs) error {
 	getServer, err := s.instanceAPI.GetServer(&instance.GetServerRequest{
 		ServerID: id,
 	})
@@ -172,7 +174,7 @@ func (s Scaleway) DeleteServer(id string, args automation.ServerArgs) error {
 	return nil
 }
 
-func (s Scaleway) ListServer() ([]automation.RessourceResults, error) {
+func (s *Scaleway) ListServer() ([]automation.RessourceResults, error) {
 	servers, err := s.instanceAPI.ListServers(&instance.ListServersRequest{
 		Tags: []string{common.InstanceTag},
 	})
@@ -192,7 +194,7 @@ func (s Scaleway) ListServer() ([]automation.RessourceResults, error) {
 	return result, nil
 }
 
-func (s Scaleway) UpdateServer(id string, args automation.ServerArgs) error {
+func (s *Scaleway) UpdateServer(id string, args automation.ServerArgs) error {
 	instance, err := s.instanceAPI.GetServer(&instance.GetServerRequest{
 		ServerID: id,
 	})
@@ -201,7 +203,7 @@ func (s Scaleway) UpdateServer(id string, args automation.ServerArgs) error {
 	}
 
 	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), instance.Server.PublicIP.Address.String(), "root")
-	err = remoteCommand.UpdateServer(args.MinecraftServer)
+	err = remoteCommand.UpdateServer(args.MinecraftServer, s.tmpl)
 	if err != nil {
 		return err
 	}

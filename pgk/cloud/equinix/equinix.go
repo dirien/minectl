@@ -18,15 +18,20 @@ import (
 type Equinix struct {
 	client  *packngo.Client
 	project string
+	tmpl    *minctlTemplate.Template
 }
 
 func NewEquinix(APIKey, project string) (*Equinix, error) {
 
 	httpClient := retryablehttp.NewClient().HTTPClient
-
+	tmpl, err := minctlTemplate.NewTemplateBash("")
+	if err != nil {
+		return nil, err
+	}
 	return &Equinix{
 		client:  packngo.NewClientWithAuth("", APIKey, httpClient),
 		project: project,
+		tmpl:    tmpl,
 	}, nil
 }
 
@@ -44,11 +49,7 @@ func (e *Equinix) CreateServer(args automation.ServerArgs) (*automation.Ressourc
 		return nil, err
 	}
 
-	tmpl, err := minctlTemplate.NewTemplateBash(args.MinecraftServer, "")
-	if err != nil {
-		return nil, err
-	}
-	userData, err := tmpl.GetTemplate()
+	userData, err := e.tmpl.GetTemplate(args.MinecraftServer, minctlTemplate.TemplateBash)
 	if err != nil {
 		return nil, err
 	}
@@ -149,7 +150,7 @@ func (e *Equinix) UpdateServer(id string, args automation.ServerArgs) error {
 	}
 
 	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), getIP4(instance), "root")
-	err = remoteCommand.UpdateServer(args.MinecraftServer)
+	err = remoteCommand.UpdateServer(args.MinecraftServer, e.tmpl)
 	if err != nil {
 		return err
 	}

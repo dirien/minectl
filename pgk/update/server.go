@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	minctlTemplate "github.com/minectl/pgk/template"
+
 	"github.com/melbahja/goph"
 	"github.com/minectl/pgk/model"
 	"golang.org/x/crypto/ssh"
@@ -28,24 +30,40 @@ func NewRemoteServer(privateKey, ip, user string) *RemoteServer {
 	return ssh
 }
 
-func (r *RemoteServer) UpdateServer(args *model.MinecraftServer) error {
-	var url string
+func (r *RemoteServer) UpdateServer(args *model.MinecraftServer, tmpl *minctlTemplate.Template) error {
+	var update string
+	var err error
+
 	if args.GetEdition() == "java" {
-		url = fmt.Sprintf("URL=$(curl -s https://java-version.minectl.ediri.online/binary/%s)", args.GetVersion())
-		url = fmt.Sprintf("%s\nsudo rm -rf server.jar\nsudo curl -sLSf $URL > /tmp/server.jar\nsudo mv /tmp/server.jar /minecraft/", url)
+		update, err = tmpl.GetTemplate(args, minctlTemplate.TemplateJavaBinary)
 	} else if args.GetEdition() == "bedrock" {
-		url = fmt.Sprintf("URL=$(curl -s https://bedrock-version.minectl.ediri.online/binary/%s)", args.GetVersion())
-		url = fmt.Sprintf("%s\nsudo rm -rf bedrock_server\nsudo curl -sLSf $URL > /tmp/bedrock-server.zip\nsudo unzip -o /tmp/bedrock-server.zip -d /minecraft\nsudo chmod +x /minecraft/bedrock_server\n", url)
+		update, err = tmpl.GetTemplate(args, minctlTemplate.TemplateBedrockBinary)
+	} else if args.GetEdition() == "craftbukkit" || args.GetEdition() == "spigot" {
+		update, err = tmpl.GetTemplate(args, minctlTemplate.TemplatesSigotbukkitBinary)
+	} else if args.GetEdition() == "fabric" {
+		update, err = tmpl.GetTemplate(args, minctlTemplate.TemplatesFabricBinary)
+		update = fmt.Sprintf("rm -rf /minecraft/minecraft-server.jar\n%s", update)
+	} else if args.GetEdition() == "forge" {
+		update, err = tmpl.GetTemplate(args, minctlTemplate.TemplatesForgeBinary)
+	} else if args.GetEdition() == "papermc" {
+		update, err = tmpl.GetTemplate(args, minctlTemplate.TemplatesPaperMCBinary)
+	}
+	if args.GetEdition() != "bedrock" {
+		update = fmt.Sprintf("\n%s\napt-get install -y openjdk-%d-jre-headless\n", update, args.GetJDKVersion())
+	}
+	if err != nil {
+		return err
 	}
 
 	cmd := `
 	cd /minecraft
     sudo systemctl stop minecraft.service
-	` + url + `
+	` + update + `
 	ls -la
 	sudo systemctl start minecraft.service
 	`
-	_, err := r.executeCommand(strings.TrimSpace(cmd))
+
+	_, err = r.executeCommand(strings.TrimSpace(cmd))
 	if err != nil {
 		return err
 	}

@@ -1,8 +1,10 @@
+{{- define "bash" -}}
 #!/bin/bash
 
 tee /tmp/server.properties <<EOF
+server-port={{.Spec.Server.Port}}
 {{ .Spec.Minecraft.Properties }}
-{{- if .Spec.Minecraft.Java.Rcon.Enabled -}}
+{{- if .Spec.Minecraft.Java.Rcon.Enabled }}
 broadcast-rcon-to-ops={{.Spec.Minecraft.Java.Rcon.Broadcast}}
 rcon.port={{.Spec.Minecraft.Java.Rcon.Port}}
 enable-rcon={{.Spec.Minecraft.Java.Rcon.Enabled}}
@@ -23,7 +25,7 @@ scrape_configs:
     scrape_interval: 5s
     static_configs:
       - targets: ['localhost:9100']
-  {{- if eq .Spec.Minecraft.Edition "java" }}
+  {{- if ne .Spec.Minecraft.Edition "bedrock" }}
   - job_name: 'minecraft_exporter'
     scrape_interval: 1m
     static_configs:
@@ -64,7 +66,7 @@ ExecStart=/usr/local/bin/node_exporter
 [Install]
 WantedBy=multi-user.target
 EOF
-{{- if eq .Spec.Minecraft.Edition "java" }}
+{{- if ne .Spec.Minecraft.Edition "bedrock" }}
 tee /etc/systemd/system/minecraft-exporter.service <<EOF
 [Unit]
 Description=Minecraft Exporter
@@ -88,7 +90,7 @@ Documentation=https://www.minecraft.net/en-us/download/server
 [Service]
 WorkingDirectory=/minecraft
 Type=simple
-{{- if eq .Spec.Minecraft.Edition "java" }}
+{{- if ne .Spec.Minecraft.Edition "bedrock" }}
 ExecStart=/usr/bin/java -Xmx{{.Spec.Minecraft.Java.Xmx}} -Xms{{.Spec.Minecraft.Java.Xms}} -jar server.jar nogui
 {{ else if eq .Spec.Minecraft.Edition "bedrock" }}
 ExecStart=/bin/sh -c "LD_LIBRARY_PATH=. ./bedrock_server"
@@ -100,11 +102,11 @@ RestartSec=5
 WantedBy=multi-user.target
 EOF
 apt update
-apt-get install -y apt-transport-https ca-certificates curl {{if eq .Spec.Minecraft.Edition "java"}}openjdk-16-jre-headless{{else if eq .Spec.Minecraft.Edition "bedrock"}}unzip{{end}} fail2ban
+apt-get install -y apt-transport-https ca-certificates curl {{if ne .Spec.Minecraft.Edition "bedrock"}}openjdk-{{.Spec.Minecraft.Java.OpenJDK}}-jre-headless{{else if eq .Spec.Minecraft.Edition "bedrock"}}unzip{{end}} fail2ban
 
 useradd prometheus -s /bin/false
 useradd node_exporter -s /bin/false
-{{- if eq .Spec.Minecraft.Edition "java" }}
+{{- if ne .Spec.Minecraft.Edition "bedrock" }}
 useradd minecraft_exporter -s /bin/false
 {{- end }}
 
@@ -135,7 +137,7 @@ systemctl daemon-reload
 systemctl start node_exporter
 systemctl enable node_exporter
 
-{{ if eq .Spec.Minecraft.Edition "java" -}}
+{{ if ne .Spec.Minecraft.Edition "bedrock" -}}
 export MINECRAFT_EXPORTER_VERSION=0.4.0
 curl -sSL https://github.com/dirien/minecraft-prometheus-exporter/releases/download/v$MINECRAFT_EXPORTER_VERSION/minecraft-exporter_$MINECRAFT_EXPORTER_VERSION.linux-amd64.tar.gz | tar -xz
 cp minecraft-exporter /usr/local/bin
@@ -146,10 +148,10 @@ systemctl enable minecraft-exporter.service
 
 ufw allow ssh
 ufw allow 5201
-{{ if eq .Spec.Minecraft.Edition "java" }}
-ufw allow proto udp to 0.0.0.0/0 port 25565
+{{ if ne .Spec.Minecraft.Edition "bedrock" }}
+ufw allow proto udp to 0.0.0.0/0 port {{.Spec.Server.Port}}
 {{ else if eq .Spec.Minecraft.Edition "bedrock" -}}
-ufw allow proto udp to 0.0.0.0/0 port 19132
+ufw allow proto udp to 0.0.0.0/0 port {{.Spec.Server.Port}}
 {{- end }}
 
 echo [DEFAULT] | sudo tee -a /etc/fail2ban/jail.local
@@ -159,22 +161,26 @@ echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
 sudo systemctl restart fail2ban
 mkdir /minecraft
 
-{{ if .Mount -}}
+{{- if .Mount }}
 mkfs.ext4  /dev/{{ .Mount }}
 mount /dev/{{ .Mount }} /minecraft
 echo "/dev/{{ .Mount }} /minecraft ext4 defaults,noatime,nofail 0 2" >> /etc/fstab
 {{- end }}
-
-{{ if eq .Spec.Minecraft.Edition "java" -}}
-URL=$(curl -s https://java-version.minectl.ediri.online/binary/{{ .Spec.Minecraft.Version }})
-curl -sLSf $URL > /minecraft/server.jar
-{{ else if eq .Spec.Minecraft.Edition "bedrock" -}}
-URL=$(curl -s https://bedrock-version.minectl.ediri.online/binary/{{ .Spec.Minecraft.Version }})
-curl -sLSf $URL > /tmp/bedrock-server.zip
-unzip -o /tmp/bedrock-server.zip -d /minecraft
-chmod +x /minecraft/bedrock_server
+{{- if eq .Spec.Minecraft.Edition "java" }}
+{{- template "java-binary" . }}
+{{- else if eq .Spec.Minecraft.Edition "bedrock" }}
+{{- template "bedrock-binary" . }}
+{{- else if eq .Spec.Minecraft.Edition "papermc" }}
+{{- template "papermc-binary" . }}
+{{- else if or (eq .Spec.Minecraft.Edition "spigot") (eq .Spec.Minecraft.Edition "craftbukkit") }}
+{{- template "spigotbukkit-binary" . }}
+{{- else if eq .Spec.Minecraft.Edition "fabric" }}
+{{- template "fabric-binary" . }}
+{{- else if eq .Spec.Minecraft.Edition "forge" }}
+{{- template "forge-binary" . }}
 {{- end }}
 echo "eula={{ .Spec.Minecraft.Eula }}" > /minecraft/eula.txt
 mv /tmp/server.properties /minecraft/server.properties
 systemctl restart minecraft.service
 systemctl enable minecraft.service
+{{- end -}}

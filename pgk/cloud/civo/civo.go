@@ -17,6 +17,7 @@ import (
 
 type Civo struct {
 	client *civogo.Client
+	tmpl   *minctlTemplate.Template
 }
 
 func NewCivo(APIKey, region string) (*Civo, error) {
@@ -24,8 +25,13 @@ func NewCivo(APIKey, region string) (*Civo, error) {
 	if err != nil {
 		return nil, err
 	}
+	tmpl, err := minctlTemplate.NewTemplateBash("")
+	if err != nil {
+		return nil, err
+	}
 	do := &Civo{
 		client: client,
+		tmpl:   tmpl,
 	}
 	return do, nil
 }
@@ -62,11 +68,7 @@ func (c *Civo) CreateServer(args automation.ServerArgs) (*automation.RessourceRe
 	config.InitialUser = "root"
 	config.Tags = []string{common.InstanceTag, args.MinecraftServer.GetEdition()}
 
-	tmpl, err := minctlTemplate.NewTemplateBash(args.MinecraftServer, "")
-	if err != nil {
-		return nil, err
-	}
-	script, err := tmpl.GetTemplate()
+	script, err := c.tmpl.GetTemplate(args.MinecraftServer, minctlTemplate.TemplateBash)
 	if err != nil {
 		return nil, err
 	}
@@ -192,7 +194,7 @@ func (c *Civo) UpdateServer(id string, args automation.ServerArgs) error {
 	}
 
 	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), instance.PublicIP, "root")
-	err = remoteCommand.UpdateServer(args.MinecraftServer)
+	err = remoteCommand.UpdateServer(args.MinecraftServer, c.tmpl)
 	if err != nil {
 		return err
 	}

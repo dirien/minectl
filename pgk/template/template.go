@@ -2,18 +2,13 @@ package template
 
 import (
 	"bytes"
+	"embed"
 	_ "embed"
 	"strings"
 	"text/template"
 
 	"github.com/minectl/pgk/model"
 )
-
-//go:embed bash.tmpl
-var bash string
-
-//go:embed cloud-config.yaml.tmpl
-var cloudConfig string
 
 type Template struct {
 	Template *template.Template
@@ -26,44 +21,58 @@ type templateValues struct {
 	Properties []string
 }
 
-type Templater interface {
-	GetTemplate() string
+type TemplateName string
+
+const (
+	TemplateBash               TemplateName = "bash"
+	TemplateCloudConfig        TemplateName = "cloud-config"
+	TemplateJavaBinary         TemplateName = "java-binary"
+	TemplateBedrockBinary      TemplateName = "bedrock-binary"
+	TemplatesSigotbukkitBinary TemplateName = "spigotbukkit-binary"
+	TemplatesFabricBinary      TemplateName = "fabric-binary"
+	TemplatesForgeBinary       TemplateName = "forge-binary"
+	TemplatesPaperMCBinary     TemplateName = "papermc-binary"
+)
+
+func (t Template) GetUpdateTemplate(model *model.MinecraftServer, name TemplateName) (string, error) {
+	return "", nil
 }
 
-func (t Template) GetTemplate() (string, error) {
+func (t Template) GetTemplate(model *model.MinecraftServer, name TemplateName) (string, error) {
 	var buff bytes.Buffer
-	err := t.Template.Execute(&buff, t.Values)
+
+	t.Values.MinecraftServer = model
+	t.Values.Properties = strings.Split(model.GetProperties(), "\n")
+
+	err := t.Template.ExecuteTemplate(&buff, string(name), t.Values)
 	if err != nil {
 		return "", err
 	}
 	return buff.String(), nil
 }
 
-func NewTemplateBash(model *model.MinecraftServer, mount string) (*Template, error) {
-	bash, err := template.New("bash").Parse(bash)
-	if err != nil {
-		return nil, err
-	}
+//go:embed templates
+var templateBash embed.FS
+
+func NewTemplateBash(mount string) (*Template, error) {
+	bash := template.Must(template.ParseFS(templateBash, "templates/bash/*"))
 	return &Template{
 		Template: bash,
 		Values: &templateValues{
-			MinecraftServer: model,
-			Mount:           mount,
+			Mount: mount,
 		},
 	}, nil
 }
 
-func NewTemplateCloudConfig(model *model.MinecraftServer, mount string) (*Template, error) {
-	cloudInit, err := template.New("cloud-init").Parse(cloudConfig)
-	if err != nil {
-		return nil, err
-	}
+//go:embed templates
+var templateCloudConfig embed.FS
+
+func NewTemplateCloudConfig(mount string) (*Template, error) {
+	cloudInit := template.Must(template.ParseFS(templateCloudConfig, "templates/cloud-init/*"))
 	return &Template{
 		Template: cloudInit,
 		Values: &templateValues{
-			MinecraftServer: model,
-			Properties:      strings.Split(model.GetProperties(), "\n"),
-			Mount:           mount,
+			Mount: mount,
 		},
 	}, nil
 }

@@ -1,0 +1,14 @@
+{{- define "spigotbukkit-binary" }}
+  - export HOME=/tmp/
+  - apt-get install -y git
+  - git config --global user.email "minectl@github.com"
+  - git config --global user.name "minectl"
+  - URL="https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar"
+  - mkdir /tmp/build
+  - cd /tmp/build
+  - curl -sLSf $URL > BuildTools.jar
+  - git config --global --unset core.autocrlf
+  - java -jar BuildTools.jar --rev {{ .Spec.Minecraft.Version }} {{if eq .Spec.Minecraft.Edition "craftbukkit"}}--compile craftbukkit{{ end }}
+  - cp {{ .Spec.Minecraft.Edition }}-{{ .Spec.Minecraft.Version }}.jar /minecraft/server.jar
+  - rm -rf /tmp/build
+{{- end }}

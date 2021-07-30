@@ -10,8 +10,9 @@
         * [OVHCloud](#ovhcloud)
         * [Equinix Metal](#equinix-metal)
         * [Google Compute Engine (GCE)](#google-compute-engine-gce)
+    - [Minecraft Server Versions 📚](#minecraft-server-versions-)
     - [Server Config 📋](#server-config-)
-    - [EULA ⚖️️](#eula-)  
+    - [EULA ⚖️️](#eula-)
     - [Create Minecraft Server 🏗](#create-minecraft-server-)
     - [Delete Minecraft Server 🗑](#delete-minecraft-server-)
     - [List Minecraft Server 📒](#list-minecraft-server-)
@@ -143,6 +144,45 @@ export GCE_KEY=<pathto>/key.json
 See [Getting Started - GCE edition](docs/getting-started-gce.md) for details on how to create a GCP service account for
 minectl 🗺
 
+#### Minecraft Server Versions 📚
+
+> ⚠️ `minectl 🗺` is not(!) providing any pre-compiled binaries of minecraft or use a page to download a pre-compiled version.
+>
+> Every non-vanilla version will be compiled during the creation phase of the server
+
+Following Minecraft versions is `minectl 🗺` supporting.
+
+##### Vanilla (Mincraft: Java Edition or Bedrock Edition)
+
+The Vanilla software is the original, untouched, unmodified Minecraft server software created and distributed directly
+by Mojang.[2]
+
+##### CraftBukkit
+
+CraftBukkit is lightly modified version of the Vanilla software allowing it to be able to run Bukkit plugins.
+
+##### Spigot
+
+Spigot is the most popular used Minecraft server software in the world. Spigot is a modified version of CraftBukkit with
+hundreds of improvements and optimizations that can only make CraftBukkit shrink in shame.
+
+##### PaperMC
+
+Paper (formerly known as PaperSpigot, distributed via the Paperclip patch utility) is a high performance fork* of
+Spigot.
+
+##### Forge
+
+Forge is well known for being able to use Forge Mods which are direct modifications to the Minecraft program code. In
+doing so, Forge Mods can change the gaming-feel drastically as a result of this.
+
+##### Fabric
+
+Fabric is also an mod loader like Forge is with some improvements. Its lightweight and faster and it may is being the
+best mod loader in the future because its doing very good.
+
+Source: [[1]](#1-httpswwwspigotmcorgwikiwhat-is-spigot-craftbukkit-bukkit-vanilla-forg)
+
 #### Server Config 📋
 
 You need a MinecraftServer manifest file, to describe your VM and the Minecraft Server:
@@ -159,8 +199,10 @@ spec:
     size: "see cloud provider docs for details eg. g3.large"
     volumeSize: 100
     ssh: "<path to ssh public and private key>/ssh"
+    port: "25565|19132 are the defaults for tcp/udp"
   minecraft:
     java:
+      openjdk: "8|16 use jdk 8 for <1.17 java server version"
       xmx: 2G
       xms: 2G
       rcon:
@@ -168,7 +210,7 @@ spec:
         port: 25575
         enabled: true
         broadcast: true
-    edition: "java|bedrock"
+    edition: "java|bedrock|craftbukkit"
     version: "<version>"
     eula: true
     properties: |
@@ -202,6 +244,7 @@ mincetl create  \
 Flags:
   -f, --filename string   Contains the configuration for minectl
   -h, --help              help for create
+  -w, --wait              Wait for Minecraft Server is started (default true)  
 ```
 
 #### Delete Minecraft Server 🗑
@@ -293,7 +336,7 @@ http://<ip>:9090/graph
 
 ### Known Limitation 😵
 
-`minectl` is still under development. There is no mod or plugin support for the moment.
+`minectl` is still under development. There will be the possibility for breaking changes.
 
 ### Contributing 🤝
 
@@ -316,7 +359,7 @@ Apache License, Version 2.0
 - [x] New cloud provider - OVHCloud [#43](https://github.com/dirien/minectl/issues/43)
 - [x] New Cloud Provider Equinix Metal [#49](https://github.com/dirien/minectl/issues/49)
 - [x] New cloud provider - GCE [#55](https://github.com/dirien/minectl/issues/55)
-- [ ] Support Mods and Plugins
+- [x] Add modded versions as new edition [#20](https://github.com/dirien/minectl/issues/20)
 - [ ] ...
 
 ### Libraries & Tools 🔥
@@ -347,3 +390,7 @@ This project is not affiliated with Mojang Studios, XBox Game Studios, Double El
 "Minecraft" is a trademark of Mojang Synergies AB.
 
 Other trademarks referenced herein are property of their respective owners.
+
+Source:
+
+##### [1] https://www.spigotmc.org/wiki/what-is-spigot-craftbukkit-bukkit-vanilla-forg/

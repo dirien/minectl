@@ -1,6 +1,6 @@
 .idea
 **/passwords
-./minectl
+**/minectl
 **/server.properties
 tmp*/
 bin/

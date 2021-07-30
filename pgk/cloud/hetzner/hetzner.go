@@ -18,14 +18,19 @@ import (
 
 type Hetzner struct {
 	client *hcloud.Client
+	tmpl   *minctlTemplate.Template
 }
 
 func NewHetzner(APIKey string) (*Hetzner, error) {
 
 	client := hcloud.NewClient(hcloud.WithToken(APIKey))
-
+	tmpl, err := minctlTemplate.NewTemplateCloudConfig("sdb")
+	if err != nil {
+		return nil, err
+	}
 	hetzner := &Hetzner{
 		client: client,
+		tmpl:   tmpl,
 	}
 	return hetzner, nil
 }
@@ -57,11 +62,8 @@ func (h *Hetzner) CreateServer(args automation.ServerArgs) (*automation.Ressourc
 	if err != nil {
 		return nil, err
 	}
-	tmpl, err := minctlTemplate.NewTemplateCloudConfig(args.MinecraftServer, "sdb")
-	if err != nil {
-		return nil, err
-	}
-	userData, err := tmpl.GetTemplate()
+
+	userData, err := h.tmpl.GetTemplate(args.MinecraftServer, minctlTemplate.TemplateCloudConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -197,7 +199,7 @@ func (h *Hetzner) UpdateServer(id string, args automation.ServerArgs) error {
 	}
 
 	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), instance.PublicNet.IPv4.IP.String(), "root")
-	err = remoteCommand.UpdateServer(args.MinecraftServer)
+	err = remoteCommand.UpdateServer(args.MinecraftServer, h.tmpl)
 	if err != nil {
 		return err
 	}

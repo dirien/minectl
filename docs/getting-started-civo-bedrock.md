@@ -22,6 +22,7 @@ spec:
     size: g3.large
     volumeSize: 100
     ssh: "xxx/ssh/minecraft"
+    port: 19132
   minecraft:
     edition: bedrock
     version: 1.17.10.04
@@ -35,7 +36,6 @@ spec:
       max-players=100
       online-mode=true
       white-list=false
-      server-port=19132
       server-portv6=19133
       view-distance=32
       tick-distance=4
