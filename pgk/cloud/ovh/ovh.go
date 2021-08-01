@@ -256,7 +256,7 @@ func (o *OVHcloud) UpdateServer(id string, args automation.ServerArgs) error {
 		return err
 	}
 	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), ip4, "ubuntu")
-	err = remoteCommand.UpdateServer(args.MinecraftServer, o.tmpl)
+	err = remoteCommand.UpdateServer(args.MinecraftServer)
 	if err != nil {
 		return err
 	}

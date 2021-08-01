@@ -199,7 +199,7 @@ func (l *Linode) UpdateServer(id string, args automation.ServerArgs) error {
 	}
 
 	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), instance.IPv4[0].String(), "root")
-	err = remoteCommand.UpdateServer(args.MinecraftServer, l.tmpl)
+	err = remoteCommand.UpdateServer(args.MinecraftServer)
 	if err != nil {
 		return err
 	}

@@ -150,7 +150,7 @@ func (e *Equinix) UpdateServer(id string, args automation.ServerArgs) error {
 	}
 
 	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), getIP4(instance), "root")
-	err = remoteCommand.UpdateServer(args.MinecraftServer, e.tmpl)
+	err = remoteCommand.UpdateServer(args.MinecraftServer)
 	if err != nil {
 		return err
 	}

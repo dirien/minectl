@@ -30,7 +30,8 @@ func NewRemoteServer(privateKey, ip, user string) *RemoteServer {
 	return ssh
 }
 
-func (r *RemoteServer) UpdateServer(args *model.MinecraftServer, tmpl *minctlTemplate.Template) error {
+func (r *RemoteServer) UpdateServer(args *model.MinecraftServer) error {
+	tmpl := minctlTemplate.GetUpdateTemplate()
 	var update string
 	var err error
 
@@ -42,25 +43,24 @@ func (r *RemoteServer) UpdateServer(args *model.MinecraftServer, tmpl *minctlTem
 		update, err = tmpl.GetTemplate(args, minctlTemplate.TemplatesSigotbukkitBinary)
 	} else if args.GetEdition() == "fabric" {
 		update, err = tmpl.GetTemplate(args, minctlTemplate.TemplatesFabricBinary)
-		update = fmt.Sprintf("rm -rf /minecraft/minecraft-server.jar\n%s", update)
+		update = fmt.Sprintf("\nrm -rf /minecraft/minecraft-server.jar%s", update)
 	} else if args.GetEdition() == "forge" {
 		update, err = tmpl.GetTemplate(args, minctlTemplate.TemplatesForgeBinary)
 	} else if args.GetEdition() == "papermc" {
 		update, err = tmpl.GetTemplate(args, minctlTemplate.TemplatesPaperMCBinary)
 	}
 	if args.GetEdition() != "bedrock" {
-		update = fmt.Sprintf("\n%s\napt-get install -y openjdk-%d-jre-headless\n", update, args.GetJDKVersion())
+		update = fmt.Sprintf("%s\napt-get install -y openjdk-%d-jre-headless\n", update, args.GetJDKVersion())
 	}
 	if err != nil {
 		return err
 	}
 
 	cmd := `
-	cd /minecraft
-    sudo systemctl stop minecraft.service
-	` + update + `
-	ls -la
-	sudo systemctl start minecraft.service
+cd /minecraft
+sudo systemctl stop minecraft.service` + update +
+		`ls -la
+sudo systemctl start minecraft.service
 	`
 
 	_, err = r.executeCommand(strings.TrimSpace(cmd))

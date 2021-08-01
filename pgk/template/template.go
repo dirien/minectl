@@ -34,8 +34,12 @@ const (
 	TemplatesPaperMCBinary     TemplateName = "papermc-binary"
 )
 
-func (t Template) GetUpdateTemplate(model *model.MinecraftServer, name TemplateName) (string, error) {
-	return "", nil
+func GetUpdateTemplate() *Template {
+	bash := template.Must(template.ParseFS(templateBash, "templates/bash/*"))
+	return &Template{
+		Template: bash,
+		Values:   &templateValues{},
+	}
 }
 
 func (t Template) GetTemplate(model *model.MinecraftServer, name TemplateName) (string, error) {

@@ -83,7 +83,7 @@ func (d *DigitalOcean) UpdateServer(id string, args automation.ServerArgs) error
 	}
 	ipv4, _ := droplet.PublicIPv4()
 	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), ipv4, "root")
-	err = remoteCommand.UpdateServer(args.MinecraftServer, d.tmpl)
+	err = remoteCommand.UpdateServer(args.MinecraftServer)
 	if err != nil {
 		return err
 	}

@@ -348,7 +348,7 @@ func (g *GCE) UpdateServer(id string, args automation.ServerArgs) error {
 	if len(instancesListOp.Items) == 1 {
 		instance := instancesListOp.Items[0]
 		remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), instance.NetworkInterfaces[0].AccessConfigs[0].NatIP, fmt.Sprintf("sa_%s", g.serviceAccountID))
-		err = remoteCommand.UpdateServer(args.MinecraftServer, g.tmpl)
+		err = remoteCommand.UpdateServer(args.MinecraftServer)
 		if err != nil {
 			return err
 		}
