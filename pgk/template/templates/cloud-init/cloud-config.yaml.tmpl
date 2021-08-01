@@ -2,6 +2,7 @@
 #cloud-config
 users:
   - default
+  {{- if .Spec.Monitoring.Enabled }}
   - name: prometheus
     shell: /bin/false
   - name: node_exporter
@@ -10,7 +11,7 @@ users:
   - name: minecraft_exporter
     shell: /bin/false
   {{- end }}
-
+  {{- end }}
 package_update: true
 
 packages:
@@ -46,72 +47,9 @@ write_files:
        rcon.password={{.Spec.Minecraft.Java.Rcon.Password}}
       {{- end }}
        server-port={{.Spec.Server.Port}}
-  - path: /tmp/prometheus.yml
-    content: |
-      global:
-        scrape_interval: 15s
-
-      scrape_configs:
-        - job_name: 'prometheus'
-          scrape_interval: 5s
-          static_configs:
-            - targets: ['localhost:9090']
-        - job_name: 'node_exporter'
-          scrape_interval: 5s
-          static_configs:
-            - targets: ['localhost:9100']
-        {{- if ne .Spec.Minecraft.Edition "bedrock" }}
-        - job_name: 'minecraft_exporter'
-          scrape_interval: 1m
-          static_configs:
-            - targets: ['localhost:9150']
-        {{- end }}
-  - path: /etc/systemd/system/prometheus.service
-    content: |
-      [Unit]
-      Description=Prometheus
-      Wants=network-online.target
-      After=network-online.target
-      [Service]
-      User=prometheus
-      Group=prometheus
-      Type=simple
-      ExecStart=/usr/local/bin/prometheus \
-          --config.file /etc/prometheus/prometheus.yml \
-          --storage.tsdb.path /var/lib/prometheus/ \
-          --web.console.templates=/etc/prometheus/consoles \
-          --web.console.libraries=/etc/prometheus/console_libraries
-      [Install]
-      WantedBy=multi-user.target
-  - path: /etc/systemd/system/node_exporter.service
-    content: |
-      [Unit]
-      Description=Node Exporter
-      Wants=network-online.target
-      After=network-online.target
-      [Service]
-      User=node_exporter
-      Group=node_exporter
-      Type=simple
-      ExecStart=/usr/local/bin/node_exporter
-      [Install]
-      WantedBy=multi-user.target
-  {{ if ne .Spec.Minecraft.Edition "bedrock" -}}
-  - path: /etc/systemd/system/minecraft-exporter.service
-    content: |
-      [Unit]
-      Description=Minecraft Exporter
-      Wants=network-online.target
-      After=network-online.target
-      [Service]
-      User=minecraft_exporter
-      Group=minecraft_exporter
-      Type=simple
-      ExecStart=/usr/local/bin/minecraft-exporter \
-          --mc.rcon-password={{.Spec.Minecraft.Java.Rcon.Password}}
-      [Install]
-      WantedBy=multi-user.target
-  {{ end -}}
+  {{- if .Spec.Monitoring.Enabled }}
+  {{- template "monitoring-files" . }}
+  {{- end }}
   - path: /etc/systemd/system/minecraft.service
     content: |
       [Unit]
@@ -131,41 +69,9 @@ write_files:
       WantedBy=multi-user.target
 
 runcmd:
-  - export PROM_VERSION=2.28.1
-  - mkdir /etc/prometheus
-  - mkdir /var/lib/prometheus
-  - curl -sSL https://github.com/prometheus/prometheus/releases/download/v$PROM_VERSION/prometheus-$PROM_VERSION.linux-amd64.tar.gz | tar -xz
-  - cp prometheus-$PROM_VERSION.linux-amd64/prometheus /usr/local/bin/
-  - cp prometheus-$PROM_VERSION.linux-amd64/promtool /usr/local/bin/
-  - chown prometheus:prometheus /usr/local/bin/prometheus
-  - chown prometheus:prometheus /usr/local/bin/promtool
-  - cp -r prometheus-$PROM_VERSION.linux-amd64/consoles /etc/prometheus
-  - cp -r prometheus-$PROM_VERSION.linux-amd64/console_libraries /etc/prometheus
-  - chown -R prometheus:prometheus /var/lib/prometheus
-  - chown -R prometheus:prometheus /etc/prometheus/consoles
-  - chown -R prometheus:prometheus /etc/prometheus/console_libraries
-  - mv /tmp/prometheus.yml /etc/prometheus/prometheus.yml
-  - chown prometheus:prometheus /etc/prometheus/prometheus.yml
-  - systemctl daemon-reload
-  - systemctl start prometheus
-  - systemctl enable prometheus
-
-  - export NODE_EXPORTER_VERSION=1.1.2
-  - curl -sSL https://github.com/prometheus/node_exporter/releases/download/v$NODE_EXPORTER_VERSION/node_exporter-$NODE_EXPORTER_VERSION.linux-amd64.tar.gz | tar -xz
-  - cp node_exporter-$NODE_EXPORTER_VERSION.linux-amd64/node_exporter /usr/local/bin
-  - chown node_exporter:node_exporter /usr/local/bin/node_exporter
-  - systemctl daemon-reload
-  - systemctl start node_exporter
-  - systemctl enable node_exporter
-
-  {{ if ne .Spec.Minecraft.Edition "bedrock" -}}
-  - export MINECRAFT_EXPORTER_VERSION=0.4.0
-  - curl -sSL https://github.com/dirien/minecraft-prometheus-exporter/releases/download/v$MINECRAFT_EXPORTER_VERSION/minecraft-exporter_$MINECRAFT_EXPORTER_VERSION.linux-amd64.tar.gz | tar -xz
-  - cp minecraft-exporter /usr/local/bin
-  - chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
-  - systemctl start minecraft-exporter.service
-  - systemctl enable minecraft-exporter.service
-  {{ end -}}
+  {{- if .Spec.Monitoring.Enabled }}
+  {{- template "monitoring-binaries" . }}
+  {{- end }}
 
   - ufw allow ssh
   - ufw allow 5201

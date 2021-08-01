@@ -193,6 +193,8 @@ kind: MinecraftServer
 metadata:
   name: minecraft-server
 spec:
+  monitoring:
+    enabled: true|false
   server:
     cloud: "provider: civo|scaleway|do|hetzner|linode|ovh|equinix|gce"
     region: "region see cloud provider for details eg. fra1"
@@ -311,6 +313,22 @@ Flags:
 ```
 
 #### Monitoring 📊
+
+Monitoring is optional and disabled by default. It can be enabled with simply adding following fields to the
+MinecraftServer manifest:
+
+```yaml
+...
+apiVersion: ediri.io/minectl/v1alpha1
+kind: MinecraftServer
+metadata:
+  name: minecraft-server
+spec:
+  monitoring:
+    enabled: true|false
+  server:
+...
+```
 
 Every instance of minectl 🗺, has following monitoring components included:
 
