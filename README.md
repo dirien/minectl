@@ -210,7 +210,7 @@ spec:
         port: 25575
         enabled: true
         broadcast: true
-    edition: "java|bedrock|craftbukkit"
+    edition: "java|bedrock|craftbukkit|fabric|forge|papermc|spigot"
     version: "<version>"
     eula: true
     properties: |
