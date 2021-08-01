@@ -24,7 +24,7 @@ type Equinix struct {
 func NewEquinix(APIKey, project string) (*Equinix, error) {
 
 	httpClient := retryablehttp.NewClient().HTTPClient
-	tmpl, err := minctlTemplate.NewTemplateBash("")
+	tmpl, err := minctlTemplate.NewTemplateBash()
 	if err != nil {
 		return nil, err
 	}
@@ -49,7 +49,7 @@ func (e *Equinix) CreateServer(args automation.ServerArgs) (*automation.Ressourc
 		return nil, err
 	}
 
-	userData, err := e.tmpl.GetTemplate(args.MinecraftServer, minctlTemplate.TemplateBash)
+	userData, err := e.tmpl.GetTemplate(args.MinecraftServer, "", minctlTemplate.TemplateBash)
 	if err != nil {
 		return nil, err
 	}

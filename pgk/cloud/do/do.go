@@ -42,7 +42,7 @@ func NewDigitalOcean(APIKey string) (*DigitalOcean, error) {
 	}
 	oauthClient := oauth2.NewClient(context.Background(), tokenSource)
 	client := godo.NewClient(oauthClient)
-	tmpl, err := minctlTemplate.NewTemplateCloudConfig("sda")
+	tmpl, err := minctlTemplate.NewTemplateCloudConfig()
 	if err != nil {
 		return nil, err
 	}
@@ -105,19 +105,25 @@ func (d *DigitalOcean) CreateServer(args automation.ServerArgs) (*automation.Res
 		return nil, err
 	}
 
-	volumeRequest := &godo.VolumeCreateRequest{
-		Name:           fmt.Sprintf("%s-vol", args.MinecraftServer.GetName()),
-		Region:         args.MinecraftServer.GetRegion(),
-		Description:    "volume for storing the minecraft data",
-		FilesystemType: "ext4",
-		SizeGigaBytes:  int64(args.MinecraftServer.GetVolumeSize()),
-	}
-	volume, _, err := d.client.Storage.CreateVolume(context.Background(), volumeRequest)
-	if err != nil {
-		return nil, err
+	var volume *godo.Volume
+
+	var mount string
+	if args.MinecraftServer.GetVolumeSize() > 0 {
+		volumeRequest := &godo.VolumeCreateRequest{
+			Name:           fmt.Sprintf("%s-vol", args.MinecraftServer.GetName()),
+			Region:         args.MinecraftServer.GetRegion(),
+			Description:    "volume for storing the minecraft data",
+			FilesystemType: "ext4",
+			SizeGigaBytes:  int64(args.MinecraftServer.GetVolumeSize()),
+		}
+		volume, _, err = d.client.Storage.CreateVolume(context.Background(), volumeRequest)
+		if err != nil {
+			return nil, err
+		}
+		mount = "sda"
 	}
 
-	userData, err := d.tmpl.GetTemplate(args.MinecraftServer, minctlTemplate.TemplateCloudConfig)
+	userData, err := d.tmpl.GetTemplate(args.MinecraftServer, mount, minctlTemplate.TemplateCloudConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -136,12 +142,15 @@ func (d *DigitalOcean) CreateServer(args automation.ServerArgs) (*automation.Res
 		},
 		UserData: userData,
 		Tags:     []string{common.InstanceTag, args.MinecraftServer.GetEdition()},
-		Volumes: []godo.DropletCreateVolume{
+	}
+	if args.MinecraftServer.GetVolumeSize() > 0 {
+		createRequest.Volumes = []godo.DropletCreateVolume{
 			{
 				ID: volume.ID,
 			},
-		},
+		}
 	}
+
 	droplet, _, err := d.client.Droplets.Create(context.Background(), createRequest)
 	if err != nil {
 		return nil, err

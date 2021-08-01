@@ -26,7 +26,7 @@ func NewOVHcloud(endpoint, appKey, appSecret, consumerKey, serviceName, region s
 	if err != nil {
 		return nil, err
 	}
-	tmpl, err := minctlTemplate.NewTemplateBash("sdb")
+	tmpl, err := minctlTemplate.NewTemplateBash()
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +77,11 @@ func (o *OVHcloud) CreateServer(args automation.ServerArgs) (*automation.Ressour
 		return nil, err
 	}
 
-	userData, err := o.tmpl.GetTemplate(args.MinecraftServer, minctlTemplate.TemplateBash)
+	var mount string
+	if args.MinecraftServer.GetVolumeSize() > 0 {
+		mount = "sdb"
+	}
+	userData, err := o.tmpl.GetTemplate(args.MinecraftServer, mount, minctlTemplate.TemplateBash)
 	if err != nil {
 		return nil, err
 	}
@@ -108,45 +112,47 @@ func (o *OVHcloud) CreateServer(args automation.ServerArgs) (*automation.Ressour
 		}
 	}
 
-	volume, err := o.client.CreateVolume(context.Background(), ovhsdk.VolumeCreateOptions{
-		Name:   fmt.Sprintf("%s-vol", args.MinecraftServer.GetName()),
-		Size:   args.MinecraftServer.GetVolumeSize(),
-		Region: args.MinecraftServer.GetRegion(),
-		Type:   ovhsdk.VolumeClassic,
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	stillCreating = true
-	for stillCreating {
-		volume, err = o.client.GetVolume(context.Background(), volume.ID)
+	if args.MinecraftServer.GetVolumeSize() > 0 {
+		volume, err := o.client.CreateVolume(context.Background(), ovhsdk.VolumeCreateOptions{
+			Name:   fmt.Sprintf("%s-vol", args.MinecraftServer.GetName()),
+			Size:   args.MinecraftServer.GetVolumeSize(),
+			Region: args.MinecraftServer.GetRegion(),
+			Type:   ovhsdk.VolumeClassic,
+		})
 		if err != nil {
 			return nil, err
 		}
-		if volume.Status == ovhsdk.VolumeAvailable {
-			stillCreating = false
-		} else {
-			time.Sleep(2 * time.Second)
-		}
-	}
 
-	_, err = o.client.AttachVolume(context.Background(), volume.ID, &ovhsdk.VolumeAttachOptions{
-		InstanceID: instance.ID,
-	})
-	if err != nil {
-		return nil, err
-	}
-	stillAttaching := true
-	for stillAttaching {
-		volume, err = o.client.GetVolume(context.Background(), volume.ID)
+		stillCreating = true
+		for stillCreating {
+			volume, err = o.client.GetVolume(context.Background(), volume.ID)
+			if err != nil {
+				return nil, err
+			}
+			if volume.Status == ovhsdk.VolumeAvailable {
+				stillCreating = false
+			} else {
+				time.Sleep(2 * time.Second)
+			}
+		}
+
+		_, err = o.client.AttachVolume(context.Background(), volume.ID, &ovhsdk.VolumeAttachOptions{
+			InstanceID: instance.ID,
+		})
 		if err != nil {
 			return nil, err
 		}
-		if volume.Status == ovhsdk.VolumeInUse {
-			stillAttaching = false
-		} else {
-			time.Sleep(2 * time.Second)
+		stillAttaching := true
+		for stillAttaching {
+			volume, err = o.client.GetVolume(context.Background(), volume.ID)
+			if err != nil {
+				return nil, err
+			}
+			if volume.Status == ovhsdk.VolumeInUse {
+				stillAttaching = false
+			} else {
+				time.Sleep(2 * time.Second)
+			}
 		}
 	}
 

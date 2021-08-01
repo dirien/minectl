@@ -7,7 +7,6 @@ spec:
     cloud: linode
     region: eu-central
     size: g6-standard-4
-    volumeSize: 100
     ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft-be"
     port: 19132
   minecraft:

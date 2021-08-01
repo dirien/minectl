@@ -37,7 +37,7 @@ func NewScaleway(accessKey, secretKey, organizationID, region string) (*Scaleway
 	if err != nil {
 		return nil, err
 	}
-	tmpl, err := minctlTemplate.NewTemplateCloudConfig("sda")
+	tmpl, err := minctlTemplate.NewTemplateCloudConfig()
 	if err != nil {
 		return nil, err
 	}
@@ -72,7 +72,26 @@ func (s *Scaleway) CreateServer(args automation.ServerArgs) (*automation.Ressour
 		return nil, err
 	}
 
-	userData, err := s.tmpl.GetTemplate(args.MinecraftServer, minctlTemplate.TemplateCloudConfig)
+	var mount string
+	if args.MinecraftServer.GetVolumeSize() > 0 {
+		volume, err := s.instanceAPI.CreateVolume(&instance.CreateVolumeRequest{
+			Name:       fmt.Sprintf("%s-vol", args.MinecraftServer.GetName()),
+			VolumeType: instance.VolumeVolumeTypeBSSD,
+			Size:       scw.SizePtr(scw.Size(args.MinecraftServer.GetVolumeSize()) * scw.GB),
+		})
+		if err != nil {
+			return nil, err
+		}
+		_, err = s.instanceAPI.AttachVolume(&instance.AttachVolumeRequest{
+			VolumeID: volume.Volume.ID,
+			ServerID: server.Server.ID,
+		})
+		if err != nil {
+			return nil, err
+		}
+		mount = "sda"
+	}
+	userData, err := s.tmpl.GetTemplate(args.MinecraftServer, mount, minctlTemplate.TemplateCloudConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -80,23 +99,6 @@ func (s *Scaleway) CreateServer(args automation.ServerArgs) (*automation.Ressour
 		ServerID: server.Server.ID,
 		Key:      "cloud-init",
 		Content:  strings.NewReader(userData),
-	})
-
-	if err != nil {
-		return nil, err
-	}
-
-	volume, err := s.instanceAPI.CreateVolume(&instance.CreateVolumeRequest{
-		Name:       fmt.Sprintf("%s-vol", args.MinecraftServer.GetName()),
-		VolumeType: instance.VolumeVolumeTypeBSSD,
-		Size:       scw.SizePtr(scw.Size(args.MinecraftServer.GetVolumeSize()) * scw.GB),
-	})
-	if err != nil {
-		return nil, err
-	}
-	_, err = s.instanceAPI.AttachVolume(&instance.AttachVolumeRequest{
-		VolumeID: volume.Volume.ID,
-		ServerID: server.Server.ID,
 	})
 	if err != nil {
 		return nil, err
@@ -111,6 +113,7 @@ func (s *Scaleway) CreateServer(args automation.ServerArgs) (*automation.Ressour
 	if err != nil {
 		return nil, err
 	}
+
 	getServer, err := s.instanceAPI.GetServer(&instance.GetServerRequest{
 		ServerID: server.Server.ID,
 	})

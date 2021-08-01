@@ -7,7 +7,6 @@ spec:
     cloud: equinix
     region: fr
     size: c3.small.x86
-    volumeSize: 100
     ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft"
     port: 25565
   minecraft:

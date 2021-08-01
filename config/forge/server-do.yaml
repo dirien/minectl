@@ -9,7 +9,6 @@ spec:
     cloud: do
     region: fra1
     size: s-4vcpu-8gb
-    volumeSize: 100
     ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft"
     port: 25565
   minecraft:

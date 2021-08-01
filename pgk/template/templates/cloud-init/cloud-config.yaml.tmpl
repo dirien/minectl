@@ -20,7 +20,7 @@ packages:
   - curl
   - {{if ne .Spec.Minecraft.Edition "bedrock"}}openjdk-{{.Spec.Minecraft.Java.OpenJDK}}-jre-headless{{else if eq .Spec.Minecraft.Edition "bedrock"}}unzip{{end}}
   - fail2ban
-
+{{- if .Mount }}
 fs_setup:
   - label: minecraft
     device: /dev/{{.Mount}}
@@ -29,7 +29,7 @@ fs_setup:
 
 mounts:
   - [/dev/{{.Mount}}, /minecraft]
-
+{{- end }}
 # Enable ipv4 forwarding, required on CIS hardened machines
 write_files:
   - path: /etc/sysctl.d/enabled_ipv4_forwarding.conf
@@ -72,7 +72,9 @@ runcmd:
   {{- if .Spec.Monitoring.Enabled }}
   {{- template "monitoring-binaries" . }}
   {{- end }}
-
+  {{- if not .Mount }}
+  - mkdir /minecraft
+  {{- end }}
   - ufw allow ssh
   - ufw allow 5201
   {{ if ne .Spec.Minecraft.Edition "bedrock" -}}

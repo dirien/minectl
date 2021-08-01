@@ -7,7 +7,6 @@ spec:
     cloud: scaleway
     region: fr-par-1
     size: GP1-XS
-    volumeSize: 100
     ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft-be"
     port: 19132
   minecraft:

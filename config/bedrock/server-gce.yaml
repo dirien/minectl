@@ -7,7 +7,6 @@ spec:
     cloud: gce
     region: europe-west6-a
     size: e2-standard-2
-    volumeSize: 100
     ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft-be"
     port: 19132
   minecraft:
