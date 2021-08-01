@@ -2,8 +2,14 @@ package model
 
 // Spec
 type Spec struct {
-	Server    Server    `yaml:"server"`
-	Minecraft Minecraft `yaml:"minecraft"`
+	Monitoring Monitoring `json:"monitoring"`
+	Server     Server     `yaml:"server"`
+	Minecraft  Minecraft  `yaml:"minecraft"`
+}
+
+// Monitoring
+type Monitoring struct {
+	Enabled bool `json:"enabled"`
 }
 
 // Server

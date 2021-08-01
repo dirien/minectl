@@ -40,10 +40,26 @@
       ],
       "title": "Metadata"
     },
+    "Monitoring":{
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "enabled"
+      ],
+      "title": "Monitoring"
+    },
     "Spec": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "monitoring": {
+          "$ref": "#/definitions/Monitoring"
+        },
         "server": {
           "$ref": "#/definitions/Server"
         },

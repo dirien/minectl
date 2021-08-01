@@ -1,0 +1,72 @@
+{{- define "monitoring-files" }}
+tee /tmp/prometheus.yml <<EOF
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['localhost:9090']
+  - job_name: 'node_exporter'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['localhost:9100']
+  {{- if ne .Spec.Minecraft.Edition "bedrock" }}
+  - job_name: 'minecraft_exporter'
+    scrape_interval: 1m
+    static_configs:
+      - targets: ['localhost:9150']
+  {{- end }}
+EOF
+tee /etc/systemd/system/prometheus.service <<EOF
+[Unit]
+Description=Prometheus
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=prometheus
+Group=prometheus
+Type=simple
+ExecStart=/usr/local/bin/prometheus \
+    --config.file /etc/prometheus/prometheus.yml \
+    --storage.tsdb.path /var/lib/prometheus/ \
+    --web.console.templates=/etc/prometheus/consoles \
+    --web.console.libraries=/etc/prometheus/console_libraries
+
+[Install]
+WantedBy=multi-user.target
+EOF
+tee /etc/systemd/system/node_exporter.service <<EOF
+[Unit]
+Description=Node Exporter
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=node_exporter
+Group=node_exporter
+Type=simple
+ExecStart=/usr/local/bin/node_exporter
+
+[Install]
+WantedBy=multi-user.target
+EOF
+{{- if ne .Spec.Minecraft.Edition "bedrock" }}
+tee /etc/systemd/system/minecraft-exporter.service <<EOF
+[Unit]
+Description=Minecraft Exporter
+Wants=network-online.target
+After=network-online.target
+[Service]
+User=minecraft_exporter
+Group=minecraft_exporter
+Type=simple
+ExecStart=/usr/local/bin/minecraft-exporter \
+  --mc.rcon-password={{.Spec.Minecraft.Java.Rcon.Password}}
+[Install]
+WantedBy=multi-user.target
+EOF
+{{ end }}
+{{- end }}

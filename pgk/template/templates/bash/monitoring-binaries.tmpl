@@ -1,0 +1,43 @@
+{{- define "monitoring-binaries" }}
+useradd prometheus -s /bin/false
+useradd node_exporter -s /bin/false
+{{- if ne .Spec.Minecraft.Edition "bedrock" }}
+useradd minecraft_exporter -s /bin/false
+{{- end }}
+
+export PROM_VERSION=2.28.1
+mkdir /etc/prometheus
+mkdir /var/lib/prometheus
+curl -sSL https://github.com/prometheus/prometheus/releases/download/v$PROM_VERSION/prometheus-$PROM_VERSION.linux-amd64.tar.gz | tar -xz
+cp prometheus-$PROM_VERSION.linux-amd64/prometheus /usr/local/bin/
+cp prometheus-$PROM_VERSION.linux-amd64/promtool /usr/local/bin/
+chown prometheus:prometheus /usr/local/bin/prometheus
+chown prometheus:prometheus /usr/local/bin/promtool
+cp -r prometheus-$PROM_VERSION.linux-amd64/consoles /etc/prometheus
+cp -r prometheus-$PROM_VERSION.linux-amd64/console_libraries /etc/prometheus
+chown -R prometheus:prometheus /var/lib/prometheus
+chown -R prometheus:prometheus /etc/prometheus/consoles
+chown -R prometheus:prometheus /etc/prometheus/console_libraries
+mv /tmp/prometheus.yml /etc/prometheus/prometheus.yml
+chown prometheus:prometheus /etc/prometheus/prometheus.yml
+systemctl daemon-reload
+systemctl start prometheus
+systemctl enable prometheus
+
+export NODE_EXPORTER_VERSION=1.1.2
+curl -sSL https://github.com/prometheus/node_exporter/releases/download/v$NODE_EXPORTER_VERSION/node_exporter-$NODE_EXPORTER_VERSION.linux-amd64.tar.gz | tar -xz
+cp node_exporter-$NODE_EXPORTER_VERSION.linux-amd64/node_exporter /usr/local/bin
+chown node_exporter:node_exporter /usr/local/bin/node_exporter
+systemctl daemon-reload
+systemctl start node_exporter
+systemctl enable node_exporter
+
+{{ if ne .Spec.Minecraft.Edition "bedrock" -}}
+export MINECRAFT_EXPORTER_VERSION=0.4.0
+curl -sSL https://github.com/dirien/minecraft-prometheus-exporter/releases/download/v$MINECRAFT_EXPORTER_VERSION/minecraft-exporter_$MINECRAFT_EXPORTER_VERSION.linux-amd64.tar.gz | tar -xz
+cp minecraft-exporter /usr/local/bin
+chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
+systemctl start minecraft-exporter.service
+systemctl enable minecraft-exporter.service
+{{ end -}}
+{{- end }}
