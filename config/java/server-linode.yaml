@@ -9,8 +9,10 @@ spec:
     size: g6-standard-4
     volumeSize: 100
     ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft"
+    port: 25565
   minecraft:
     java:
+      openjdk: 16
       xmx: 2G
       xms: 2G
       rcon:
@@ -19,7 +21,7 @@ spec:
         enabled: true
         broadcast: true
     edition: java
-    version: 1.17.1
+    version: "1.17.1"
     eula: true
     properties: |
       level-seed=stackitminecraftrocks
@@ -28,7 +30,6 @@ spec:
       server-ip=
       resource-pack-prompt=
       gamemode=survival
-      server-port=25565
       allow-nether=true
       enable-command-block=false
       sync-chunk-writes=true
@@ -39,7 +40,7 @@ spec:
       entity-broadcast-range-percentage=100
       level-name=world
       player-idle-timeout=0
-      motd=Linode Minecraft
+      motd=\u00A7aLinode \u00A7rMinecraft --- \u00A76Java \u00A7redition
       query.port=25565
       force-gamemode=false
       rate-limit=0

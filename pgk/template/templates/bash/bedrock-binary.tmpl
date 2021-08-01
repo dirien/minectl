@@ -1,0 +1,6 @@
+{{- define "bedrock-binary" }}
+URL=$(curl -s https://bedrock-version.minectl.ediri.online/binary/{{ .Spec.Minecraft.Version }})
+curl -sLSf $URL > /tmp/bedrock-server.zip
+unzip -o /tmp/bedrock-server.zip -d /minecraft
+chmod +x /minecraft/bedrock_server
+{{- end }}

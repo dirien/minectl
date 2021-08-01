@@ -16,6 +16,7 @@ import (
 func init() {
 	minectlCmd.AddCommand(createCmd)
 	createCmd.Flags().StringP("filename", "f", "", "Contains the configuration for minectl")
+	createCmd.Flags().BoolP("wait", "w", true, "Wait for Minecraft Server is started")
 }
 
 var createCmd = &cobra.Command{
@@ -40,7 +41,11 @@ func runCreate(cmd *cobra.Command, _ []string) error {
 	if err != nil {
 		log.Fatal(err)
 	}
-	res, err := p.CreateServer()
+	wait := true
+	if cmd.Flags().Changed("wait") {
+		wait, _ = cmd.Flags().GetBool("wait")
+	}
+	res, err := p.CreateServer(wait)
 	if err != nil {
 		log.Fatal(err)
 	}

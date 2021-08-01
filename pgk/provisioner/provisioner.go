@@ -2,6 +2,7 @@ package provisioner
 
 import (
 	"fmt"
+	"net"
 	"os"
 	"time"
 
@@ -33,7 +34,7 @@ type PulumiProvisioner struct {
 }
 
 type Provisioner interface {
-	CreateServer() (*automation.RessourceResults, error)
+	CreateServer(wait bool) (*automation.RessourceResults, error)
 	DeleteServer() error
 	UpdateServer() error
 	ListServer() ([]automation.RessourceResults, error)
@@ -59,12 +60,48 @@ func (p *PulumiProvisioner) UpdateServer() error {
 	return err
 }
 
-func (p *PulumiProvisioner) CreateServer() (*automation.RessourceResults, error) {
+//wait that server is ready... Currently on for Java based Editions (TCP), as Bedrock is UDP
+func (p *PulumiProvisioner) waitForMinecraftServerReady(server *automation.RessourceResults) {
+	if p.args.MinecraftServer.GetEdition() != "bedrock" {
+		p.startSpinner(
+			"🕹 Starting Minecraft server... ",
+			"\n✅ Minecraft successfully started.\n")
+
+		check := fmt.Sprintf("%s:%d", server.PublicIP, p.args.MinecraftServer.GetPort())
+		checkCounter := 0
+
+		for checkCounter < 500 {
+			timeout, err := net.DialTimeout("tcp", check, 15*time.Second)
+			if err != nil {
+				time.Sleep(15 * time.Second)
+				checkCounter++
+			}
+			if timeout != nil {
+				err = timeout.Close()
+				if err != nil {
+					fmt.Printf("Timeout error: %s\n", err)
+					p.stopSpinner()
+				}
+				break
+			}
+		}
+		p.stopSpinner()
+	}
+}
+
+func (p *PulumiProvisioner) CreateServer(wait bool) (*automation.RessourceResults, error) {
 	p.startSpinner(
 		fmt.Sprintf("🏗 Creating server (%s)... ", common.Green(p.args.MinecraftServer.GetName())),
 		fmt.Sprintf("\n✅ Server (%s) created\n", common.Green(p.args.MinecraftServer.GetName())))
 	server, err := p.auto.CreateServer(p.args)
+	if err != nil {
+		p.stopSpinner()
+		return nil, err
+	}
 	p.stopSpinner()
+	if wait {
+		p.waitForMinecraftServerReady(server)
+	}
 	return server, err
 }
 

@@ -1,0 +1,4 @@
+{{- define "java-binary" }}
+URL=$(curl -s https://java-version.minectl.ediri.online/binary/{{ .Spec.Minecraft.Version }})
+curl -sLSf $URL > /minecraft/server.jar
+{{- end }}

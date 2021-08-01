@@ -13,6 +13,7 @@ type Server struct {
 	Ssh        string `yaml:"ssh"`
 	Cloud      string `yaml:"cloud"`
 	Region     string `yaml:"region"`
+	Port       int    `yaml:"port"`
 }
 
 // Minecraft
@@ -26,9 +27,10 @@ type Minecraft struct {
 
 // Java
 type Java struct {
-	Xmx  string `yaml:"xmx"`
-	Xms  string `yaml:"xms"`
-	Rcon Rcon   `yaml:"rcon"`
+	Xmx     string `yaml:"xmx"`
+	Xms     string `yaml:"xms"`
+	OpenJDK int    `yaml:"openjdk"`
+	Rcon    Rcon   `yaml:"rcon"`
 }
 
 // Rcon
@@ -86,4 +88,12 @@ func (m *MinecraftServer) GetVolumeSize() int {
 
 func (m *MinecraftServer) GetVersion() string {
 	return m.Spec.Minecraft.Version
+}
+
+func (m *MinecraftServer) GetPort() int {
+	return m.Spec.Server.Port
+}
+
+func (m *MinecraftServer) GetJDKVersion() int {
+	return m.Spec.Minecraft.Java.OpenJDK
 }

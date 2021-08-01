@@ -18,6 +18,7 @@ import (
 
 type OVHcloud struct {
 	client *ovhsdk.OVHcloud
+	tmpl   *minctlTemplate.Template
 }
 
 func NewOVHcloud(endpoint, appKey, appSecret, consumerKey, serviceName, region string) (*OVHcloud, error) {
@@ -25,8 +26,13 @@ func NewOVHcloud(endpoint, appKey, appSecret, consumerKey, serviceName, region s
 	if err != nil {
 		return nil, err
 	}
+	tmpl, err := minctlTemplate.NewTemplateBash("sdb")
+	if err != nil {
+		return nil, err
+	}
 	return &OVHcloud{
 		client: client,
+		tmpl:   tmpl,
 	}, nil
 }
 
@@ -71,11 +77,7 @@ func (o *OVHcloud) CreateServer(args automation.ServerArgs) (*automation.Ressour
 		return nil, err
 	}
 
-	tmpl, err := minctlTemplate.NewTemplateBash(args.MinecraftServer, "sdb")
-	if err != nil {
-		return nil, err
-	}
-	userData, err := tmpl.GetTemplate()
+	userData, err := o.tmpl.GetTemplate(args.MinecraftServer, minctlTemplate.TemplateBash)
 	if err != nil {
 		return nil, err
 	}
@@ -243,7 +245,7 @@ func (o *OVHcloud) ListServer() ([]automation.RessourceResults, error) {
 	return result, nil
 }
 
-func (o OVHcloud) UpdateServer(id string, args automation.ServerArgs) error {
+func (o *OVHcloud) UpdateServer(id string, args automation.ServerArgs) error {
 	instance, err := o.client.GetInstance(context.Background(), id)
 	if err != nil {
 		return err
@@ -254,7 +256,7 @@ func (o OVHcloud) UpdateServer(id string, args automation.ServerArgs) error {
 		return err
 	}
 	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), ip4, "ubuntu")
-	err = remoteCommand.UpdateServer(args.MinecraftServer)
+	err = remoteCommand.UpdateServer(args.MinecraftServer, o.tmpl)
 	if err != nil {
 		return err
 	}

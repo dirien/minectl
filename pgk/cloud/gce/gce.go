@@ -33,6 +33,7 @@ type GCE struct {
 	serviceAccountName string
 	serviceAccountID   string
 	zone               string
+	tmpl               *minctlTemplate.Template
 }
 
 func NewGCE(keyfile, zone string) (*GCE, error) {
@@ -55,7 +56,10 @@ func NewGCE(keyfile, zone string) (*GCE, error) {
 	if err != nil {
 		return nil, err
 	}
-
+	tmpl, err := minctlTemplate.NewTemplateBash("sdb")
+	if err != nil {
+		return nil, err
+	}
 	return &GCE{
 		client:             computeService,
 		projectID:          cred.ProjectID,
@@ -63,6 +67,7 @@ func NewGCE(keyfile, zone string) (*GCE, error) {
 		serviceAccountName: cred.ClientEmail,
 		serviceAccountID:   cred.ClientId,
 		zone:               zone,
+		tmpl:               tmpl,
 	}, nil
 }
 
@@ -107,11 +112,7 @@ func (g *GCE) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 		}
 	}
 
-	tmpl, err := minctlTemplate.NewTemplateBash(args.MinecraftServer, "sdb")
-	if err != nil {
-		return nil, err
-	}
-	userData, err := tmpl.GetTemplate()
+	userData, err := g.tmpl.GetTemplate(args.MinecraftServer, minctlTemplate.TemplateBash)
 	if err != nil {
 		return nil, err
 	}
@@ -347,7 +348,7 @@ func (g *GCE) UpdateServer(id string, args automation.ServerArgs) error {
 	if len(instancesListOp.Items) == 1 {
 		instance := instancesListOp.Items[0]
 		remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), instance.NetworkInterfaces[0].AccessConfigs[0].NatIP, fmt.Sprintf("sa_%s", g.serviceAccountID))
-		err = remoteCommand.UpdateServer(args.MinecraftServer)
+		err = remoteCommand.UpdateServer(args.MinecraftServer, g.tmpl)
 		if err != nil {
 			return err
 		}
