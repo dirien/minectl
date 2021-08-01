@@ -203,7 +203,7 @@ func (s *Scaleway) UpdateServer(id string, args automation.ServerArgs) error {
 	}
 
 	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), instance.Server.PublicIP.Address.String(), "root")
-	err = remoteCommand.UpdateServer(args.MinecraftServer, s.tmpl)
+	err = remoteCommand.UpdateServer(args.MinecraftServer)
 	if err != nil {
 		return err
 	}

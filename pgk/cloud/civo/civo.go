@@ -194,7 +194,7 @@ func (c *Civo) UpdateServer(id string, args automation.ServerArgs) error {
 	}
 
 	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), instance.PublicIP, "root")
-	err = remoteCommand.UpdateServer(args.MinecraftServer, c.tmpl)
+	err = remoteCommand.UpdateServer(args.MinecraftServer)
 	if err != nil {
 		return err
 	}
