@@ -522,7 +522,6 @@ packages:
   - curl
   - unzip
   - fail2ban
-
 fs_setup:
   - label: minecraft
     device: /dev/sda
@@ -531,7 +530,6 @@ fs_setup:
 
 mounts:
   - [/dev/sda, /minecraft]
-
 # Enable ipv4 forwarding, required on CIS hardened machines
 write_files:
   - path: /etc/sysctl.d/enabled_ipv4_forwarding.conf
@@ -630,7 +628,6 @@ runcmd:
   - systemctl daemon-reload
   - systemctl start node_exporter
   - systemctl enable node_exporter
-
   - ufw allow ssh
   - ufw allow 5201
   - ufw allow proto udp to 0.0.0.0/0 port 19132
@@ -665,7 +662,6 @@ packages:
   - curl
   - openjdk-16-jre-headless
   - fail2ban
-
 fs_setup:
   - label: minecraft
     device: /dev/sda
@@ -674,7 +670,6 @@ fs_setup:
 
 mounts:
   - [/dev/sda, /minecraft]
-
 # Enable ipv4 forwarding, required on CIS hardened machines
 write_files:
   - path: /etc/sysctl.d/enabled_ipv4_forwarding.conf
@@ -801,7 +796,6 @@ runcmd:
   - chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
   - systemctl start minecraft-exporter.service
   - systemctl enable minecraft-exporter.service
-
   - ufw allow ssh
   - ufw allow 5201
   - ufw allow proto udp to 0.0.0.0/0 port 25565
@@ -834,7 +828,6 @@ packages:
   - curl
   - openjdk-16-jre-headless
   - fail2ban
-
 fs_setup:
   - label: minecraft
     device: /dev/sda
@@ -843,7 +836,6 @@ fs_setup:
 
 mounts:
   - [/dev/sda, /minecraft]
-
 # Enable ipv4 forwarding, required on CIS hardened machines
 write_files:
   - path: /etc/sysctl.d/enabled_ipv4_forwarding.conf
@@ -970,7 +962,6 @@ runcmd:
   - chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
   - systemctl start minecraft-exporter.service
   - systemctl enable minecraft-exporter.service
-
   - ufw allow ssh
   - ufw allow 5201
   - ufw allow proto udp to 0.0.0.0/0 port 25565
@@ -1446,7 +1437,6 @@ packages:
   - curl
   - openjdk-16-jre-headless
   - fail2ban
-
 fs_setup:
   - label: minecraft
     device: /dev/sda
@@ -1455,7 +1445,6 @@ fs_setup:
 
 mounts:
   - [/dev/sda, /minecraft]
-
 # Enable ipv4 forwarding, required on CIS hardened machines
 write_files:
   - path: /etc/sysctl.d/enabled_ipv4_forwarding.conf
@@ -1582,7 +1571,6 @@ runcmd:
   - chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
   - systemctl start minecraft-exporter.service
   - systemctl enable minecraft-exporter.service
-
   - ufw allow ssh
   - ufw allow 5201
   - ufw allow proto udp to 0.0.0.0/0 port 25565
@@ -1790,7 +1778,6 @@ packages:
   - curl
   - openjdk-16-jre-headless
   - fail2ban
-
 fs_setup:
   - label: minecraft
     device: /dev/sda
@@ -1799,7 +1786,6 @@ fs_setup:
 
 mounts:
   - [/dev/sda, /minecraft]
-
 # Enable ipv4 forwarding, required on CIS hardened machines
 write_files:
   - path: /etc/sysctl.d/enabled_ipv4_forwarding.conf
@@ -1926,7 +1912,6 @@ runcmd:
   - chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
   - systemctl start minecraft-exporter.service
   - systemctl enable minecraft-exporter.service
-
   - ufw allow ssh
   - ufw allow 5201
   - ufw allow proto udp to 0.0.0.0/0 port 25565
@@ -2131,7 +2116,6 @@ packages:
   - curl
   - openjdk-16-jre-headless
   - fail2ban
-
 fs_setup:
   - label: minecraft
     device: /dev/sda
@@ -2140,7 +2124,6 @@ fs_setup:
 
 mounts:
   - [/dev/sda, /minecraft]
-
 # Enable ipv4 forwarding, required on CIS hardened machines
 write_files:
   - path: /etc/sysctl.d/enabled_ipv4_forwarding.conf
@@ -2267,7 +2250,6 @@ runcmd:
   - chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
   - systemctl start minecraft-exporter.service
   - systemctl enable minecraft-exporter.service
-
   - ufw allow ssh
   - ufw allow 5201
   - ufw allow proto udp to 0.0.0.0/0 port 25565
@@ -2470,7 +2452,6 @@ packages:
   - curl
   - openjdk-16-jre-headless
   - fail2ban
-
 fs_setup:
   - label: minecraft
     device: /dev/sda
@@ -2479,7 +2460,6 @@ fs_setup:
 
 mounts:
   - [/dev/sda, /minecraft]
-
 # Enable ipv4 forwarding, required on CIS hardened machines
 write_files:
   - path: /etc/sysctl.d/enabled_ipv4_forwarding.conf
@@ -2606,7 +2586,6 @@ runcmd:
   - chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
   - systemctl start minecraft-exporter.service
   - systemctl enable minecraft-exporter.service
-
   - ufw allow ssh
   - ufw allow 5201
   - ufw allow proto udp to 0.0.0.0/0 port 25565
@@ -2853,7 +2832,6 @@ packages:
   - curl
   - openjdk-16-jre-headless
   - fail2ban
-
 fs_setup:
   - label: minecraft
     device: /dev/sda
@@ -2862,7 +2840,6 @@ fs_setup:
 
 mounts:
   - [/dev/sda, /minecraft]
-
 # Enable ipv4 forwarding, required on CIS hardened machines
 write_files:
   - path: /etc/sysctl.d/enabled_ipv4_forwarding.conf
@@ -2894,7 +2871,6 @@ write_files:
       WantedBy=multi-user.target
 
 runcmd:
-
   - ufw allow ssh
   - ufw allow 5201
   - ufw allow proto udp to 0.0.0.0/0 port 25565
@@ -2980,11 +2956,11 @@ systemctl enable minecraft.service`
 
 func TestCivoBedrockTemplate(t *testing.T) {
 	t.Run("Test Template Bedrock for Civo bash", func(t *testing.T) {
-		civo, err := NewTemplateBash("")
+		civo, err := NewTemplateBash()
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := civo.GetTemplate(&bedrock, TemplateBash)
+		got, err := civo.GetTemplate(&bedrock, "", TemplateBash)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -2995,11 +2971,11 @@ func TestCivoBedrockTemplate(t *testing.T) {
 
 func TestCivoBedrockNoMonTemplate(t *testing.T) {
 	t.Run("Test Template Bedrock for Civo bash", func(t *testing.T) {
-		civo, err := NewTemplateBash("")
+		civo, err := NewTemplateBash()
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := civo.GetTemplate(&bedrockNoMon, TemplateBash)
+		got, err := civo.GetTemplate(&bedrockNoMon, "", TemplateBash)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3010,11 +2986,11 @@ func TestCivoBedrockNoMonTemplate(t *testing.T) {
 
 func TestCivoJavaTemplate(t *testing.T) {
 	t.Run("Test Template Java for Civo bash", func(t *testing.T) {
-		civo, err := NewTemplateBash("")
+		civo, err := NewTemplateBash()
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := civo.GetTemplate(&java, TemplateBash)
+		got, err := civo.GetTemplate(&java, "", TemplateBash)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3025,11 +3001,11 @@ func TestCivoJavaTemplate(t *testing.T) {
 
 func TestCloudInitBedrockTemplate(t *testing.T) {
 	t.Run("Test Template Bedrock for Cloud-Init", func(t *testing.T) {
-		civo, err := NewTemplateCloudConfig("sda")
+		civo, err := NewTemplateCloudConfig()
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := civo.GetTemplate(&bedrock, TemplateCloudConfig)
+		got, err := civo.GetTemplate(&bedrock, "sda", TemplateCloudConfig)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3040,11 +3016,11 @@ func TestCloudInitBedrockTemplate(t *testing.T) {
 
 func TestCloudInitJavaTemplate(t *testing.T) {
 	t.Run("Test Template Java for Cloud-Init", func(t *testing.T) {
-		civo, err := NewTemplateCloudConfig("sda")
+		civo, err := NewTemplateCloudConfig()
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := civo.GetTemplate(&java, TemplateCloudConfig)
+		got, err := civo.GetTemplate(&java, "sda", TemplateCloudConfig)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3055,11 +3031,11 @@ func TestCloudInitJavaTemplate(t *testing.T) {
 
 func TestBedrockBashMountTemplate(t *testing.T) {
 	t.Run("Test Template Bedrock for bash", func(t *testing.T) {
-		civo, err := NewTemplateBash("sdc")
+		civo, err := NewTemplateBash()
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := civo.GetTemplate(&bedrock, TemplateBash)
+		got, err := civo.GetTemplate(&bedrock, "sdc", TemplateBash)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3070,11 +3046,11 @@ func TestBedrockBashMountTemplate(t *testing.T) {
 
 func TestJavaBashMountTemplate(t *testing.T) {
 	t.Run("Test Template Bedrock for bash", func(t *testing.T) {
-		civo, err := NewTemplateBash("sdc")
+		civo, err := NewTemplateBash()
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := civo.GetTemplate(&java, TemplateBash)
+		got, err := civo.GetTemplate(&java, "sdc", TemplateBash)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3085,11 +3061,11 @@ func TestJavaBashMountTemplate(t *testing.T) {
 
 func TestCloudInitPaperMCTemplate(t *testing.T) {
 	t.Run("Test Template PaperMC for Cloud-Init", func(t *testing.T) {
-		paper, err := NewTemplateCloudConfig("sda")
+		paper, err := NewTemplateCloudConfig()
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := paper.GetTemplate(&papermc, TemplateCloudConfig)
+		got, err := paper.GetTemplate(&papermc, "sda", TemplateCloudConfig)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3100,11 +3076,11 @@ func TestCloudInitPaperMCTemplate(t *testing.T) {
 
 func TestBashPaperMCTemplate(t *testing.T) {
 	t.Run("Test Template PaperMC for Bash", func(t *testing.T) {
-		paper, err := NewTemplateBash("sdc")
+		paper, err := NewTemplateBash()
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := paper.GetTemplate(&papermc, TemplateBash)
+		got, err := paper.GetTemplate(&papermc, "sdc", TemplateBash)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3115,11 +3091,11 @@ func TestBashPaperMCTemplate(t *testing.T) {
 
 func TestCloudInitCraftBukkitTemplate(t *testing.T) {
 	t.Run("Test Template CraftBukkit for Cloud-Init", func(t *testing.T) {
-		paper, err := NewTemplateCloudConfig("sda")
+		paper, err := NewTemplateCloudConfig()
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := paper.GetTemplate(&craftbukkit, TemplateCloudConfig)
+		got, err := paper.GetTemplate(&craftbukkit, "sda", TemplateCloudConfig)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3130,11 +3106,11 @@ func TestCloudInitCraftBukkitTemplate(t *testing.T) {
 
 func TestBashCraftBukkitTemplate(t *testing.T) {
 	t.Run("Test Template CraftBukkit for Bash", func(t *testing.T) {
-		paper, err := NewTemplateBash("sda")
+		paper, err := NewTemplateBash()
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := paper.GetTemplate(&craftbukkit, TemplateBash)
+		got, err := paper.GetTemplate(&craftbukkit, "sda", TemplateBash)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3145,11 +3121,11 @@ func TestBashCraftBukkitTemplate(t *testing.T) {
 
 func TestCloudInitFabricTemplate(t *testing.T) {
 	t.Run("Test Template fabric for Cloud-Init", func(t *testing.T) {
-		paper, err := NewTemplateCloudConfig("sda")
+		paper, err := NewTemplateCloudConfig()
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := paper.GetTemplate(&fabric, TemplateCloudConfig)
+		got, err := paper.GetTemplate(&fabric, "sda", TemplateCloudConfig)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3160,11 +3136,11 @@ func TestCloudInitFabricTemplate(t *testing.T) {
 
 func TestCloudInitFabricNoMonTemplate(t *testing.T) {
 	t.Run("Test Template fabric for Cloud-Init", func(t *testing.T) {
-		paper, err := NewTemplateCloudConfig("sda")
+		paper, err := NewTemplateCloudConfig()
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := paper.GetTemplate(&fabricNoMon, TemplateCloudConfig)
+		got, err := paper.GetTemplate(&fabricNoMon, "sda", TemplateCloudConfig)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3175,11 +3151,11 @@ func TestCloudInitFabricNoMonTemplate(t *testing.T) {
 
 func TestBashFabricTemplate(t *testing.T) {
 	t.Run("Test Template fabric for Bash", func(t *testing.T) {
-		paper, err := NewTemplateBash("sda")
+		paper, err := NewTemplateBash()
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := paper.GetTemplate(&fabric, TemplateBash)
+		got, err := paper.GetTemplate(&fabric, "sda", TemplateBash)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3190,11 +3166,11 @@ func TestBashFabricTemplate(t *testing.T) {
 
 func TestBashFabricNoMonTemplate(t *testing.T) {
 	t.Run("Test Template fabric for Bash", func(t *testing.T) {
-		paper, err := NewTemplateBash("sda")
+		paper, err := NewTemplateBash()
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := paper.GetTemplate(&fabricNoMon, TemplateBash)
+		got, err := paper.GetTemplate(&fabricNoMon, "sda", TemplateBash)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3205,11 +3181,11 @@ func TestBashFabricNoMonTemplate(t *testing.T) {
 
 func TestCloudInitForgeTemplate(t *testing.T) {
 	t.Run("Test Template forge for Cloud-Init", func(t *testing.T) {
-		paper, err := NewTemplateCloudConfig("sda")
+		paper, err := NewTemplateCloudConfig()
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := paper.GetTemplate(&forge, TemplateCloudConfig)
+		got, err := paper.GetTemplate(&forge, "sda", TemplateCloudConfig)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3220,11 +3196,11 @@ func TestCloudInitForgeTemplate(t *testing.T) {
 
 func TestBashForgeTemplate(t *testing.T) {
 	t.Run("Test Template forge for Bash", func(t *testing.T) {
-		paper, err := NewTemplateBash("sda")
+		paper, err := NewTemplateBash()
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := paper.GetTemplate(&forge, TemplateBash)
+		got, err := paper.GetTemplate(&forge, "sda", TemplateBash)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3235,11 +3211,11 @@ func TestBashForgeTemplate(t *testing.T) {
 
 func TestCloudInitSpigotTemplate(t *testing.T) {
 	t.Run("Test Template spigot for Cloud-Init", func(t *testing.T) {
-		paper, err := NewTemplateCloudConfig("sda")
+		paper, err := NewTemplateCloudConfig()
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := paper.GetTemplate(&spigot, TemplateCloudConfig)
+		got, err := paper.GetTemplate(&spigot, "sda", TemplateCloudConfig)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3250,11 +3226,11 @@ func TestCloudInitSpigotTemplate(t *testing.T) {
 
 func TestBashSpigotTemplate(t *testing.T) {
 	t.Run("Test Template spigot for Bash", func(t *testing.T) {
-		paper, err := NewTemplateBash("sda")
+		paper, err := NewTemplateBash()
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := paper.GetTemplate(&spigot, TemplateBash)
+		got, err := paper.GetTemplate(&spigot, "sda", TemplateBash)
 		if err != nil {
 			t.Fatal(err)
 		}

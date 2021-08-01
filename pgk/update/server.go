@@ -36,18 +36,18 @@ func (r *RemoteServer) UpdateServer(args *model.MinecraftServer) error {
 	var err error
 
 	if args.GetEdition() == "java" {
-		update, err = tmpl.GetTemplate(args, minctlTemplate.TemplateJavaBinary)
+		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplateJavaBinary)
 	} else if args.GetEdition() == "bedrock" {
-		update, err = tmpl.GetTemplate(args, minctlTemplate.TemplateBedrockBinary)
+		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplateBedrockBinary)
 	} else if args.GetEdition() == "craftbukkit" || args.GetEdition() == "spigot" {
-		update, err = tmpl.GetTemplate(args, minctlTemplate.TemplatesSigotbukkitBinary)
+		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplatesSigotbukkitBinary)
 	} else if args.GetEdition() == "fabric" {
-		update, err = tmpl.GetTemplate(args, minctlTemplate.TemplatesFabricBinary)
+		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplatesFabricBinary)
 		update = fmt.Sprintf("\nrm -rf /minecraft/minecraft-server.jar%s", update)
 	} else if args.GetEdition() == "forge" {
-		update, err = tmpl.GetTemplate(args, minctlTemplate.TemplatesForgeBinary)
+		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplatesForgeBinary)
 	} else if args.GetEdition() == "papermc" {
-		update, err = tmpl.GetTemplate(args, minctlTemplate.TemplatesPaperMCBinary)
+		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplatesPaperMCBinary)
 	}
 	if args.GetEdition() != "bedrock" {
 		update = fmt.Sprintf("%s\napt-get install -y openjdk-%d-jre-headless\n", update, args.GetJDKVersion())

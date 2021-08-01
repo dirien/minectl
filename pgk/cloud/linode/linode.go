@@ -35,7 +35,7 @@ func NewLinode(APItoken string) (*Linode, error) {
 	}
 
 	linodeClient := linodego.NewClient(oauth2Client)
-	tmpl, err := minctlTemplate.NewTemplateBash("sdc")
+	tmpl, err := minctlTemplate.NewTemplateBash()
 	if err != nil {
 		return nil, err
 	}
@@ -59,16 +59,22 @@ func (l *Linode) CreateServer(args automation.ServerArgs) (*automation.Ressource
 	if err != nil {
 		return nil, err
 	}
-	volume, err := l.client.CreateVolume(context.Background(), linodego.VolumeCreateOptions{
-		Label:  fmt.Sprintf("%s-vol", args.MinecraftServer.GetName()),
-		Size:   args.MinecraftServer.GetVolumeSize(),
-		Region: args.MinecraftServer.GetRegion(),
-	})
+
+	var volume *linodego.Volume
+	var mount string
+	if args.MinecraftServer.GetVolumeSize() > 0 {
+		volume, err = l.client.CreateVolume(context.Background(), linodego.VolumeCreateOptions{
+			Label:  fmt.Sprintf("%s-vol", args.MinecraftServer.GetName()),
+			Size:   args.MinecraftServer.GetVolumeSize(),
+			Region: args.MinecraftServer.GetRegion(),
+		})
+		mount = "sdc"
+	}
 	if err != nil {
 		return nil, err
 	}
 
-	userData, err := l.tmpl.GetTemplate(args.MinecraftServer, minctlTemplate.TemplateBash)
+	userData, err := l.tmpl.GetTemplate(args.MinecraftServer, mount, minctlTemplate.TemplateBash)
 	if err != nil {
 		return nil, err
 	}
@@ -99,12 +105,16 @@ func (l *Linode) CreateServer(args automation.ServerArgs) (*automation.Ressource
 	if err != nil {
 		return nil, err
 	}
-	_, err = l.client.AttachVolume(context.Background(), volume.ID, &linodego.VolumeAttachOptions{
-		LinodeID: instance.ID,
-	})
-	if err != nil {
-		return nil, err
+
+	if args.MinecraftServer.GetVolumeSize() > 0 {
+		_, err = l.client.AttachVolume(context.Background(), volume.ID, &linodego.VolumeAttachOptions{
+			LinodeID: instance.ID,
+		})
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	_, err = l.client.WaitForInstanceStatus(context.Background(), instance.ID, linodego.InstanceRunning, 600)
 	if err != nil {
 		return nil, err

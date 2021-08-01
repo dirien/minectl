@@ -56,7 +56,7 @@ func NewGCE(keyfile, zone string) (*GCE, error) {
 	if err != nil {
 		return nil, err
 	}
-	tmpl, err := minctlTemplate.NewTemplateBash("sdb")
+	tmpl, err := minctlTemplate.NewTemplateBash()
 	if err != nil {
 		return nil, err
 	}
@@ -87,32 +87,36 @@ func (g *GCE) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 		return nil, err
 	}
 
-	diskInsertOp, err := g.client.Disks.Insert(g.projectID, args.MinecraftServer.GetRegion(), &compute.Disk{
-		Name:   fmt.Sprintf("%s-vol", args.MinecraftServer.GetName()),
-		SizeGb: int64(args.MinecraftServer.GetVolumeSize()),
-		Type:   fmt.Sprintf("zones/%s/diskTypes/pd-standard", args.MinecraftServer.GetRegion()),
-	}).Context(context.Background()).Do()
-	if err != nil {
-		return nil, err
-	}
-
 	stillCreating := true
-	for stillCreating {
-		diskInsertOps, err := g.client.ZoneOperations.Get(g.projectID, args.MinecraftServer.GetRegion(), diskInsertOp.Name).Context(context.Background()).Do()
+	var mount string
+	if args.MinecraftServer.GetVolumeSize() > 0 {
+		diskInsertOp, err := g.client.Disks.Insert(g.projectID, args.MinecraftServer.GetRegion(), &compute.Disk{
+			Name:   fmt.Sprintf("%s-vol", args.MinecraftServer.GetName()),
+			SizeGb: int64(args.MinecraftServer.GetVolumeSize()),
+			Type:   fmt.Sprintf("zones/%s/diskTypes/pd-standard", args.MinecraftServer.GetRegion()),
+		}).Context(context.Background()).Do()
 		if err != nil {
 			return nil, err
 		}
-		if err != nil {
-			return nil, err
+
+		for stillCreating {
+			diskInsertOps, err := g.client.ZoneOperations.Get(g.projectID, args.MinecraftServer.GetRegion(), diskInsertOp.Name).Context(context.Background()).Do()
+			if err != nil {
+				return nil, err
+			}
+			if err != nil {
+				return nil, err
+			}
+			if diskInsertOps.Status == "DONE" {
+				stillCreating = false
+			} else {
+				time.Sleep(2 * time.Second)
+			}
 		}
-		if diskInsertOps.Status == "DONE" {
-			stillCreating = false
-		} else {
-			time.Sleep(2 * time.Second)
-		}
+		mount = "sdb"
 	}
 
-	userData, err := g.tmpl.GetTemplate(args.MinecraftServer, minctlTemplate.TemplateBash)
+	userData, err := g.tmpl.GetTemplate(args.MinecraftServer, mount, minctlTemplate.TemplateBash)
 	if err != nil {
 		return nil, err
 	}
@@ -131,10 +135,6 @@ func (g *GCE) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 				InitializeParams: &compute.AttachedDiskInitializeParams{
 					SourceImage: imageURL,
 				},
-			},
-			{
-				Source: fmt.Sprintf("zones/%s/disks/%s-vol", args.MinecraftServer.GetRegion(),
-					args.MinecraftServer.GetName()),
 			},
 		},
 		Metadata: &compute.Metadata{
@@ -180,6 +180,12 @@ func (g *GCE) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 		Tags: &compute.Tags{
 			Items: []string{common.InstanceTag, args.MinecraftServer.GetEdition()},
 		},
+	}
+	if args.MinecraftServer.GetVolumeSize() > 0 {
+		instance.Disks = append(instance.Disks, &compute.AttachedDisk{
+			Source: fmt.Sprintf("zones/%s/disks/%s-vol", args.MinecraftServer.GetRegion(),
+				args.MinecraftServer.GetName()),
+		})
 	}
 
 	insertInstanceOp, err := g.client.Instances.Insert(g.projectID, args.MinecraftServer.GetRegion(), instance).Context(context.Background()).Do()

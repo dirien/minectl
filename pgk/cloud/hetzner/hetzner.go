@@ -24,7 +24,7 @@ type Hetzner struct {
 func NewHetzner(APIKey string) (*Hetzner, error) {
 
 	client := hcloud.NewClient(hcloud.WithToken(APIKey))
-	tmpl, err := minctlTemplate.NewTemplateCloudConfig("sdb")
+	tmpl, err := minctlTemplate.NewTemplateCloudConfig()
 	if err != nil {
 		return nil, err
 	}
@@ -53,17 +53,21 @@ func (h *Hetzner) CreateServer(args automation.ServerArgs) (*automation.Ressourc
 		return nil, err
 	}
 
-	volume, _, err := h.client.Volume.Create(context.Background(), hcloud.VolumeCreateOpts{
-		Name:     fmt.Sprintf("%s-vol", args.MinecraftServer.GetName()),
-		Size:     args.MinecraftServer.GetVolumeSize(),
-		Location: location,
-		Format:   hcloud.String("ext4"),
-	})
-	if err != nil {
-		return nil, err
+	var volume hcloud.VolumeCreateResult
+	var mount string
+	if args.MinecraftServer.GetVolumeSize() > 0 {
+		volume, _, err = h.client.Volume.Create(context.Background(), hcloud.VolumeCreateOpts{
+			Name:     fmt.Sprintf("%s-vol", args.MinecraftServer.GetName()),
+			Size:     args.MinecraftServer.GetVolumeSize(),
+			Location: location,
+			Format:   hcloud.String("ext4"),
+		})
+		if err != nil {
+			return nil, err
+		}
+		mount = "sdb"
 	}
-
-	userData, err := h.tmpl.GetTemplate(args.MinecraftServer, minctlTemplate.TemplateCloudConfig)
+	userData, err := h.tmpl.GetTemplate(args.MinecraftServer, mount, minctlTemplate.TemplateCloudConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -76,17 +80,24 @@ func (h *Hetzner) CreateServer(args automation.ServerArgs) (*automation.Ressourc
 	if err != nil {
 		return nil, err
 	}
-	serverCreateReq, _, err := h.client.Server.Create(context.Background(), hcloud.ServerCreateOpts{
+
+	requestOpts := hcloud.ServerCreateOpts{
 		Name:       args.MinecraftServer.GetName(),
 		ServerType: plan,
 		Image:      image,
 		Location:   location,
 		SSHKeys:    []*hcloud.SSHKey{key},
-		Volumes:    []*hcloud.Volume{volume.Volume},
 		UserData:   userData,
 		Labels:     map[string]string{common.InstanceTag: "true", args.MinecraftServer.GetEdition(): "true"},
-		Automount:  hcloud.Bool(true),
-	})
+	}
+
+	if args.MinecraftServer.GetVolumeSize() > 0 {
+		requestOpts.Volumes = []*hcloud.Volume{volume.Volume}
+		requestOpts.Automount = hcloud.Bool(true)
+	}
+
+	serverCreateReq, _, err := h.client.Server.Create(context.Background(), requestOpts)
+
 	if err != nil {
 		return nil, err
 	}
@@ -119,32 +130,34 @@ func (h *Hetzner) DeleteServer(id string, args automation.ServerArgs) error {
 	if err != nil {
 		return err
 	}
+
 	volume, _, err := h.client.Volume.Get(context.Background(), fmt.Sprintf("%s-vol", args.MinecraftServer.GetName()))
 	if err != nil {
 		return err
 	}
 
-	res, _, err := h.client.Volume.Detach(context.Background(), volume)
-	if err != nil {
-		return err
-	}
-	stillDetatching := true
-	for stillDetatching {
-		action, _, err := h.client.Action.GetByID(context.Background(), res.ID)
+	if volume != nil {
+		res, _, err := h.client.Volume.Detach(context.Background(), volume)
 		if err != nil {
 			return err
 		}
-		if action.Status == "success" {
-			stillDetatching = false
-		} else {
-			time.Sleep(2 * time.Second)
+		stillDetatching := true
+		for stillDetatching {
+			action, _, err := h.client.Action.GetByID(context.Background(), res.ID)
+			if err != nil {
+				return err
+			}
+			if action.Status == "success" {
+				stillDetatching = false
+			} else {
+				time.Sleep(2 * time.Second)
+			}
+		}
+		_, err = h.client.Volume.Delete(context.Background(), volume)
+		if err != nil {
+			return err
 		}
 	}
-	_, err = h.client.Volume.Delete(context.Background(), volume)
-	if err != nil {
-		return err
-	}
-
 	_, err = h.client.Server.Delete(context.Background(), server)
 	if err != nil {
 		return err

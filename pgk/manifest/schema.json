@@ -175,7 +175,6 @@
         "region",
         "size",
         "ssh",
-        "volumeSize",
         "port"
       ],
       "title": "Server"

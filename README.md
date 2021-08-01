@@ -18,6 +18,7 @@
     - [List Minecraft Server 📒](#list-minecraft-server-)
     - [Update Minecraft Server 🆙](#update-minecraft-server-)
     - [Monitoring 📊](#monitoring-)
+    - [Volumes 💽](#volumes-)
     - [Getting Started 🎫](#getting-started-)
 + [Known Limitation 😵](#known-limitation-)
 + [Contributing 🤝](#contributing-)
@@ -343,6 +344,32 @@ You can acces the `prometheus` via
 
 ```bash
 http://<ip>:9090/graph
+```
+
+#### Volumes 💽
+
+With the `volumeSize` tag, you are able to provision an extra volume during the creation phase of the server.
+
+It is always recommended using the provided volume of the server, but in some cases (large mod packs, community server,
+etc.) it make sense to provision a bigger volume separately.
+
+When a seperate volume is defined, `minectl` is automatically installing Minecraft binaries on this volume.
+
+```yaml
+apiVersion: ediri.io/minectl/v1alpha1
+kind: MinecraftServer
+metadata:
+  name: minecraft-server
+spec:
+  server:
+    cloud: linode
+    region: eu-central
+    size: g6-standard-4
+    volumeSize: 100
+    ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft"
+    port: 25565
+  minecraft:
+...
 ```
 
 #### Getting Started 🎫

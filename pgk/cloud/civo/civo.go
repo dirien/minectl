@@ -25,7 +25,7 @@ func NewCivo(APIKey, region string) (*Civo, error) {
 	if err != nil {
 		return nil, err
 	}
-	tmpl, err := minctlTemplate.NewTemplateBash("")
+	tmpl, err := minctlTemplate.NewTemplateBash()
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +68,7 @@ func (c *Civo) CreateServer(args automation.ServerArgs) (*automation.RessourceRe
 	config.InitialUser = "root"
 	config.Tags = []string{common.InstanceTag, args.MinecraftServer.GetEdition()}
 
-	script, err := c.tmpl.GetTemplate(args.MinecraftServer, minctlTemplate.TemplateBash)
+	script, err := c.tmpl.GetTemplate(args.MinecraftServer, "", minctlTemplate.TemplateBash)
 	if err != nil {
 		return nil, err
 	}

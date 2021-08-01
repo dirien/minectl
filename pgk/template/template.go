@@ -42,10 +42,15 @@ func GetUpdateTemplate() *Template {
 	}
 }
 
-func (t Template) GetTemplate(model *model.MinecraftServer, name TemplateName) (string, error) {
+func (t *Template) DoUpdate(model *model.MinecraftServer, name TemplateName) (string, error) {
+	return t.GetTemplate(model, "", name)
+}
+
+func (t *Template) GetTemplate(model *model.MinecraftServer, mount string, name TemplateName) (string, error) {
 	var buff bytes.Buffer
 
 	t.Values.MinecraftServer = model
+	t.Values.Mount = mount
 	t.Values.Properties = strings.Split(model.GetProperties(), "\n")
 
 	err := t.Template.ExecuteTemplate(&buff, string(name), t.Values)
@@ -58,25 +63,21 @@ func (t Template) GetTemplate(model *model.MinecraftServer, name TemplateName) (
 //go:embed templates
 var templateBash embed.FS
 
-func NewTemplateBash(mount string) (*Template, error) {
+func NewTemplateBash() (*Template, error) {
 	bash := template.Must(template.ParseFS(templateBash, "templates/bash/*"))
 	return &Template{
 		Template: bash,
-		Values: &templateValues{
-			Mount: mount,
-		},
+		Values:   &templateValues{},
 	}, nil
 }
 
 //go:embed templates
 var templateCloudConfig embed.FS
 
-func NewTemplateCloudConfig(mount string) (*Template, error) {
+func NewTemplateCloudConfig() (*Template, error) {
 	cloudInit := template.Must(template.ParseFS(templateCloudConfig, "templates/cloud-init/*"))
 	return &Template{
 		Template: cloudInit,
-		Values: &templateValues{
-			Mount: mount,
-		},
+		Values:   &templateValues{},
 	}, nil
 }

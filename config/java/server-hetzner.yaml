@@ -7,7 +7,6 @@ spec:
     cloud: hetzner
     region: nbg1
     size: cpx31
-    volumeSize: 100
     ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft"
     port: 25565
   minecraft:
