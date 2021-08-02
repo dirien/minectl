@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io/ioutil"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -213,6 +214,25 @@ func (h *Hetzner) UpdateServer(id string, args automation.ServerArgs) error {
 
 	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), instance.PublicNet.IPv4.IP.String(), "root")
 	err = remoteCommand.UpdateServer(args.MinecraftServer)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (h *Hetzner) UploadPlugin(id string, args automation.ServerArgs, plugin, destination string) error {
+	intID, _ := strconv.Atoi(id)
+	instance, _, err := h.client.Server.GetByID(context.Background(), intID)
+	if err != nil {
+		return err
+	}
+
+	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), instance.PublicNet.IPv4.IP.String(), "root")
+	err = remoteCommand.TransferFile(plugin, filepath.Join(destination, filepath.Base(plugin)))
+	if err != nil {
+		return err
+	}
+	_, err = remoteCommand.ExecuteCommand("systemctl restart minecraft.service")
 	if err != nil {
 		return err
 	}

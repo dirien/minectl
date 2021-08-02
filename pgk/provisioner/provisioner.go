@@ -37,12 +37,13 @@ type Provisioner interface {
 	CreateServer(wait bool) (*automation.RessourceResults, error)
 	DeleteServer() error
 	UpdateServer() error
+	UploadPlugin(plugin, destination string) error
 	ListServer() ([]automation.RessourceResults, error)
 }
 
-func (p *PulumiProvisioner) startSpinner(prefix, finalMSG string) {
+func (p *PulumiProvisioner) startSpinner(prefix string) {
 	p.spinner.Prefix = prefix
-	p.spinner.FinalMSG = finalMSG
+	//p.spinner.FinalMSG = finalMSG
 	p.spinner.HideCursor = true
 	p.spinner.Start()
 }
@@ -51,11 +52,25 @@ func (p *PulumiProvisioner) stopSpinner() {
 	p.spinner.Stop()
 }
 
+func (p *PulumiProvisioner) UploadPlugin(plugin, destination string) error {
+	fmt.Println("🚧 Plugins feature is still in beta...")
+	p.startSpinner(
+		fmt.Sprintf("⤴️ Upload plugin to server (%s)... ", common.Green(p.args.MinecraftServer.GetName())))
+	err := p.auto.UploadPlugin(p.args.ID, p.args, plugin, destination)
+	if err == nil {
+		fmt.Printf("\n✅ Plugin (%s) uploaded\n", common.Green(p.args.MinecraftServer.GetName()))
+	}
+	p.stopSpinner()
+	return err
+}
+
 func (p *PulumiProvisioner) UpdateServer() error {
 	p.startSpinner(
-		fmt.Sprintf("🆙 Update server (%s)... ", common.Green(p.args.MinecraftServer.GetName())),
-		fmt.Sprintf("\n✅ Server (%s) updated\n", common.Green(p.args.MinecraftServer.GetName())))
+		fmt.Sprintf("🆙 Update server (%s)... ", common.Green(p.args.MinecraftServer.GetName())))
 	err := p.auto.UpdateServer(p.args.ID, p.args)
+	if err == nil {
+		fmt.Printf("\n✅ Server (%s) updated\n", common.Green(p.args.MinecraftServer.GetName()))
+	}
 	p.stopSpinner()
 	return err
 }
@@ -63,10 +78,7 @@ func (p *PulumiProvisioner) UpdateServer() error {
 //wait that server is ready... Currently on for Java based Editions (TCP), as Bedrock is UDP
 func (p *PulumiProvisioner) waitForMinecraftServerReady(server *automation.RessourceResults) {
 	if p.args.MinecraftServer.GetEdition() != "bedrock" {
-		p.startSpinner(
-			"🕹 Starting Minecraft server... ",
-			"\n✅ Minecraft successfully started.\n")
-
+		p.startSpinner("🕹 Starting Minecraft server... ")
 		check := fmt.Sprintf("%s:%d", server.PublicIP, p.args.MinecraftServer.GetPort())
 		checkCounter := 0
 
@@ -87,12 +99,12 @@ func (p *PulumiProvisioner) waitForMinecraftServerReady(server *automation.Resso
 		}
 		p.stopSpinner()
 	}
+	fmt.Println("\n✅ Minecraft successfully started.")
 }
 
 func (p *PulumiProvisioner) CreateServer(wait bool) (*automation.RessourceResults, error) {
 	p.startSpinner(
-		fmt.Sprintf("🏗 Creating server (%s)... ", common.Green(p.args.MinecraftServer.GetName())),
-		fmt.Sprintf("\n✅ Server (%s) created\n", common.Green(p.args.MinecraftServer.GetName())))
+		fmt.Sprintf("🏗 Creating server (%s)... ", common.Green(p.args.MinecraftServer.GetName())))
 	server, err := p.auto.CreateServer(p.args)
 	if err != nil {
 		p.stopSpinner()
@@ -102,6 +114,7 @@ func (p *PulumiProvisioner) CreateServer(wait bool) (*automation.RessourceResult
 	if wait {
 		p.waitForMinecraftServerReady(server)
 	}
+	fmt.Printf("\n✅ Server (%s) created\n", common.Green(p.args.MinecraftServer.GetName()))
 	return server, err
 }
 
@@ -111,10 +124,12 @@ func (p *PulumiProvisioner) ListServer() ([]automation.RessourceResults, error) 
 
 func (p *PulumiProvisioner) DeleteServer() error {
 	p.startSpinner(
-		fmt.Sprintf("🪓 Deleting server (%s)... ", common.Green(p.args.MinecraftServer.GetName())),
-		fmt.Sprintf("\n🗑 Server (%s) deleted\n", common.Green(p.args.MinecraftServer.GetName())))
+		fmt.Sprintf("🪓 Deleting server (%s)... ", common.Green(p.args.MinecraftServer.GetName())))
 	err := p.auto.DeleteServer(p.args.ID, p.args)
 	p.stopSpinner()
+	if err == nil {
+		fmt.Printf("\n🗑 Server (%s) deleted\n", common.Green(p.args.MinecraftServer.GetName()))
+	}
 	return err
 }
 

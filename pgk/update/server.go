@@ -63,14 +63,39 @@ sudo systemctl stop minecraft.service` + update +
 sudo systemctl start minecraft.service
 	`
 
-	_, err = r.executeCommand(strings.TrimSpace(cmd))
+	_, err = r.ExecuteCommand(strings.TrimSpace(cmd))
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (r *RemoteServer) executeCommand(cmd string) (string, error) {
+func (r *RemoteServer) TransferFile(src, dstPath string) error {
+	auth, err := goph.Key(r.privateSSHKey, "")
+	if err != nil {
+		return err
+	}
+
+	client, err := goph.NewConn(&goph.Config{
+		User:     r.user,
+		Addr:     r.ip,
+		Port:     22,
+		Auth:     auth,
+		Callback: ssh.InsecureIgnoreHostKey(),
+	})
+	if err != nil {
+		return err
+	}
+
+	defer client.Close()
+	err = client.Upload(src, dstPath)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *RemoteServer) ExecuteCommand(cmd string) (string, error) {
 	//fmt.Printf("Running remote command %s\n", color.GreenString(cmd))
 	auth, err := goph.Key(r.privateSSHKey, "")
 	if err != nil {

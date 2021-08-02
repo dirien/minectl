@@ -3,6 +3,7 @@ package equinix
 import (
 	"fmt"
 	"io/ioutil"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -166,4 +167,22 @@ func getIP4(server *packngo.Device) string {
 		}
 	}
 	return ip4
+}
+
+func (e *Equinix) UploadPlugin(id string, args automation.ServerArgs, plugin, destination string) error {
+	instance, _, err := e.client.Devices.Get(id, nil)
+	if err != nil {
+		return err
+	}
+
+	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), getIP4(instance), "root")
+	err = remoteCommand.TransferFile(plugin, filepath.Join(destination, filepath.Base(plugin)))
+	if err != nil {
+		return err
+	}
+	_, err = remoteCommand.ExecuteCommand("systemctl restart minecraft.service")
+	if err != nil {
+		return err
+	}
+	return nil
 }

@@ -60,5 +60,8 @@ func runCreate(cmd *cobra.Command, _ []string) error {
 
 	common.PrintMixedGreen("\n🪓 To delete the server type:\n\n %s", fmt.Sprintf("minectl delete -f %s --id %s\n", filename, res.ID))
 	common.PrintMixedGreen("\n🆙 To update the server type:\n\n %s", fmt.Sprintf("minectl update -f %s --id %s\n", filename, res.ID))
+	fmt.Println("🚧 Beta features:")
+	common.PrintMixedGreen("⤴️ To upload a plugin type:\n\n %s",
+		fmt.Sprintf("minectl plugins -f %s --id %s --plugin <folder>/x.jar --destination /minecraft/plugins\n", filename, res.ID))
 	return err
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io/ioutil"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -263,6 +264,28 @@ func (o *OVHcloud) UpdateServer(id string, args automation.ServerArgs) error {
 	}
 	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), ip4, "ubuntu")
 	err = remoteCommand.UpdateServer(args.MinecraftServer)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (o *OVHcloud) UploadPlugin(id string, args automation.ServerArgs, plugin, destination string) error {
+	instance, err := o.client.GetInstance(context.Background(), id)
+	if err != nil {
+		return err
+	}
+
+	ip4, err := ovhsdk.IPv4(instance)
+	if err != nil {
+		return err
+	}
+	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), ip4, "ubuntu")
+	err = remoteCommand.TransferFile(plugin, filepath.Join(destination, filepath.Base(plugin)))
+	if err != nil {
+		return err
+	}
+	_, err = remoteCommand.ExecuteCommand("systemctl restart minecraft.service")
 	if err != nil {
 		return err
 	}

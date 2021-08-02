@@ -3,6 +3,7 @@ package scaleway
 import (
 	"fmt"
 	"io/ioutil"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -207,6 +208,26 @@ func (s *Scaleway) UpdateServer(id string, args automation.ServerArgs) error {
 
 	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), instance.Server.PublicIP.Address.String(), "root")
 	err = remoteCommand.UpdateServer(args.MinecraftServer)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *Scaleway) UploadPlugin(id string, args automation.ServerArgs, plugin, destination string) error {
+	instance, err := s.instanceAPI.GetServer(&instance.GetServerRequest{
+		ServerID: id,
+	})
+	if err != nil {
+		return err
+	}
+
+	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), instance.Server.PublicIP.Address.String(), "root")
+	err = remoteCommand.TransferFile(plugin, filepath.Join(destination, filepath.Base(plugin)))
+	if err != nil {
+		return err
+	}
+	_, err = remoteCommand.ExecuteCommand("systemctl restart minecraft.service")
 	if err != nil {
 		return err
 	}

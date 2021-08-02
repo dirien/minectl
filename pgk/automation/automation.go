@@ -7,6 +7,7 @@ type Automation interface {
 	DeleteServer(id string, args ServerArgs) error
 	ListServer() ([]RessourceResults, error)
 	UpdateServer(id string, args ServerArgs) error
+	UploadPlugin(id string, args ServerArgs, plugin, destination string) error
 }
 
 type Rcon struct {
