@@ -36,7 +36,7 @@ So a rough table could look like this:
 |7GB|100|
 |8GB|120|
 
-## Scaleway STARDUST instances
+## Scaleway instances
 
 [Scaleway](https://www.scaleway.com/en/) is the rising star in the European Cloud provider market.
 
@@ -48,7 +48,7 @@ Scaleway has this amazing [DEV1-S](https://www.scaleway.com/en/pricing/#developm
 
 > 2 vCPU, 2 GB of RAM, 1 IPv4 address, 20B of local storage
 
-For whopping €0.01/hour (~ $0,012/hour) you get enough power, for a small sever. Perfect for a little play with friends.
+For whopping €0.01/hour (~ $0,012/hour) you get enough power, for a small server. Perfect for a little play with friends.
 
 ## Assembly
 
