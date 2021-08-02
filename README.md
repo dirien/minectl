@@ -43,7 +43,10 @@
 ![Equinix Metal](https://img.shields.io/badge/equinix--metal-d10810?style=for-the-badge&logo=equinix-metal&logoColor=white)
 ![Google Cloud](https://img.shields.io/badge/google--cloud-4285F4?style=for-the-badge&logo=google-cloud&logoColor=white)
 
-[![Build Binary](https://github.com/dirien/minectl/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/dirien/minectl/actions/workflows/ci.yaml)
+![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/dirien/minectl/Build%20Binary/main?logo=github&style=for-the-badge)
+![GitHub](https://img.shields.io/github/license/dirien/minectl?style=for-the-badge)
+
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/dirien/minectl?style=for-the-badge)
 
 `minectl`️️ is a cli for creating Minecraft (java or bedrock) server on different cloud provider.
 
@@ -409,6 +412,8 @@ spec:
 - [Civo Bedrock Edition](docs/getting-started-civo-bedrock.md)
 - [Scaleway Java Edition](docs/getting-started-scaleway.md)
 - [How to monitor your multi-cloud minectl 🗺 server?](docs/multi-server-monitoring-civo.md)
+- [Running a modded LuckyBlocks Minecraft Server on budget 💰 - Scaleway edition](docs/running-minecraft-luckyblocks-budget-scaleway.md)
+- [Running a PaperMC SkyBlock server - Hetzner edition](docs/skyblock-papermc-hetzner.md)
 
 ### Known Limitation 😵
 

@@ -30,3 +30,11 @@ gcloud projects add-iam-policy-binding $PROJECTID \
 gcloud iam service-accounts keys create key.json \
 --iam-account $SERVICEACCOUNT
 ```
+
+### Legal Disclaimer 👮
+
+This project is not affiliated with Mojang Studios, XBox Game Studios, Double Eleven or the Minecraft brand.
+
+"Minecraft" is a trademark of Mojang Synergies AB.
+
+Other trademarks referenced herein are property of their respective owners.
