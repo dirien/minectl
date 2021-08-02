@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -355,6 +356,33 @@ func (g *GCE) UpdateServer(id string, args automation.ServerArgs) error {
 		instance := instancesListOp.Items[0]
 		remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), instance.NetworkInterfaces[0].AccessConfigs[0].NatIP, fmt.Sprintf("sa_%s", g.serviceAccountID))
 		err = remoteCommand.UpdateServer(args.MinecraftServer)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (g *GCE) UploadPlugin(id string, args automation.ServerArgs, plugin, destination string) error {
+	instancesListOp, err := g.client.Instances.List(g.projectID, args.MinecraftServer.GetRegion()).
+		Filter(fmt.Sprintf("(id=%s)", id)).
+		Context(context.Background()).
+		Do()
+	if err != nil {
+		return err
+	}
+	if len(instancesListOp.Items) == 1 {
+		instance := instancesListOp.Items[0]
+		remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), instance.NetworkInterfaces[0].AccessConfigs[0].NatIP, fmt.Sprintf("sa_%s", g.serviceAccountID))
+		err = remoteCommand.TransferFile(plugin, filepath.Join(destination, filepath.Base(plugin)))
+		if err != nil {
+			return err
+		}
+		_, err = remoteCommand.ExecuteCommand("systemctl restart minecraft.service")
+		if err != nil {
+			return err
+		}
 		if err != nil {
 			return err
 		}

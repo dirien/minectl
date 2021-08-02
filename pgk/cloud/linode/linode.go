@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -210,6 +211,25 @@ func (l *Linode) UpdateServer(id string, args automation.ServerArgs) error {
 
 	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), instance.IPv4[0].String(), "root")
 	err = remoteCommand.UpdateServer(args.MinecraftServer)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (l *Linode) UploadPlugin(id string, args automation.ServerArgs, plugin, destination string) error {
+	intID, _ := strconv.Atoi(id)
+	instance, err := l.client.GetInstance(context.Background(), intID)
+	if err != nil {
+		return err
+	}
+
+	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), instance.IPv4[0].String(), "root")
+	err = remoteCommand.TransferFile(plugin, filepath.Join(destination, filepath.Base(plugin)))
+	if err != nil {
+		return err
+	}
+	_, err = remoteCommand.ExecuteCommand("systemctl restart minecraft.service")
 	if err != nil {
 		return err
 	}

@@ -17,6 +17,7 @@
     - [Delete Minecraft Server 🗑](#delete-minecraft-server-)
     - [List Minecraft Server 📒](#list-minecraft-server-)
     - [Update Minecraft Server 🆙](#update-minecraft-server-)
+    - [Plugins Minecraft Server ⤴️](#plugins-minecraft-server-)
     - [Monitoring 📊](#monitoring-)
     - [Volumes 💽](#volumes-)
     - [Getting Started 🎫](#getting-started-)
@@ -147,16 +148,16 @@ minectl 🗺
 
 #### Minecraft Server Versions 📚
 
-> ⚠️ `minectl 🗺` is not(!) providing any pre-compiled binaries of minecraft or use a page to download a pre-compiled version.
+> ⚠️ `minectl 🗺` is not(!) providing any pre-compiled binaries of Minecraft or download a pre-compiled version.
 >
-> Every non-vanilla version will be compiled during the creation phase of the server
+> Every _non-vanilla_ version will be compiled during the build phase of your server.
 
 Following Minecraft versions is `minectl 🗺` supporting.
 
 ##### Vanilla (Mincraft: Java Edition or Bedrock Edition)
 
 The Vanilla software is the original, untouched, unmodified Minecraft server software created and distributed directly
-by Mojang.[2]
+by Mojang.
 
 ##### CraftBukkit
 
@@ -295,6 +296,8 @@ Flags:
 
 #### Update Minecraft Server 🆙
 
+Update the Minecraft version. The function uses  `ssh` (port 22).
+
 ```bash
 minectl update -h
 Update an Minecraft Server.
@@ -311,6 +314,34 @@ Flags:
   -f, --filename string   Contains the configuration for minectl
   -h, --help              help for update
       --id string         contains the server id
+```
+
+#### Plugins Minecraft Server ⤴️
+
+> 🚧 Plugins feature is still in beta.
+
+Raw mode, to upload a local plugin file to your server. The function uses  `ssh` (port 22).
+
+```bash
+minectl plugins  -h
+Manage your plugins for a specific server
+
+Usage:
+  minectl plugins [flags]
+
+Examples:
+mincetl plugins  \
+    --filename server-do.yaml
+    --id xxx-xxx-xxx-xxx
+        --plugin plugin.jar
+    --destination /minecraft/mods
+
+Flags:
+  -d, --destination string   Plugin destination location
+  -f, --filename string      Contains the configuration for minectl
+  -h, --help                 help for plugins
+      --id string            contains the server id
+  -p, --plugin string        Local plugin file location
 ```
 
 #### Monitoring 📊
@@ -348,12 +379,12 @@ http://<ip>:9090/graph
 
 #### Volumes 💽
 
-With the `volumeSize` tag, you are able to provision an extra volume during the creation phase of the server.
+With the `volumeSize` property, you can provision an extra volume during the creation phase of the server.
 
 It is always recommended using the provided volume of the server, but in some cases (large mod packs, community server,
-etc.) it make sense to provision a bigger volume separately.
+etc.) it makes sense to provision a bigger volume separately.
 
-When a seperate volume is defined, `minectl` is automatically installing Minecraft binaries on this volume.
+When a separate volume is defined, `minectl` is automatically installing the Minecraft binaries on this volume.
 
 ```yaml
 apiVersion: ediri.io/minectl/v1alpha1

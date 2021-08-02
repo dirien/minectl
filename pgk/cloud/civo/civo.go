@@ -4,6 +4,7 @@ import (
 	_ "embed"
 	"fmt"
 	"io/ioutil"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -195,6 +196,24 @@ func (c *Civo) UpdateServer(id string, args automation.ServerArgs) error {
 
 	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), instance.PublicIP, "root")
 	err = remoteCommand.UpdateServer(args.MinecraftServer)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *Civo) UploadPlugin(id string, args automation.ServerArgs, plugin, destination string) error {
+	instance, err := c.client.GetInstance(id)
+	if err != nil {
+		return err
+	}
+
+	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), instance.PublicIP, "root")
+	err = remoteCommand.TransferFile(plugin, filepath.Join(destination, filepath.Base(plugin)))
+	if err != nil {
+		return err
+	}
+	_, err = remoteCommand.ExecuteCommand("systemctl restart minecraft.service")
 	if err != nil {
 		return err
 	}

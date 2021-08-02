@@ -5,6 +5,7 @@ import (
 	_ "embed"
 	"fmt"
 	"io/ioutil"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -221,6 +222,29 @@ func (d *DigitalOcean) DeleteServer(id string, args automation.ServerArgs) error
 		if err != nil {
 			return err
 		}
+	}
+	return nil
+}
+
+func (d *DigitalOcean) UploadPlugin(id string, args automation.ServerArgs, plugin, destination string) error {
+	intID, err := strconv.Atoi(id)
+	if err != nil {
+		return err
+	}
+	droplet, _, err := d.client.Droplets.Get(context.Background(), intID)
+	if err != nil {
+		return err
+	}
+	ipv4, _ := droplet.PublicIPv4()
+	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), ipv4, "root")
+
+	err = remoteCommand.TransferFile(plugin, filepath.Join(destination, filepath.Base(plugin)))
+	if err != nil {
+		return err
+	}
+	_, err = remoteCommand.ExecuteCommand("systemctl restart minecraft.service")
+	if err != nil {
+		return err
 	}
 	return nil
 }
