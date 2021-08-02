@@ -31,7 +31,6 @@ spec:
     cloud: civo
     region: LON1
     size: g3.large
-    volumeSize: 100
     ssh: "xxx/ssh/minecraft"
     port: 25565
   minecraft:
