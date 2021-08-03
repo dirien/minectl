@@ -27,7 +27,7 @@ From their website:
 
 > As a leading webhosting provider and experienced datacenter operator in Germany, Hetzner Online offers professional hosting solutions for a fair price.
 
-For this installation we going to choose their `CX21` plan which offers is 2vCPU, 4GB RAM and 40TB of disk.
+For this installation we going to choose their `CX21` plan which offers is 2vCPU, 4GB RAM and 40GB of disk.
 
 That's all for `0,010€/h` or `5,83€/mo` which is quite a nice price.
 
