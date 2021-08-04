@@ -103,3 +103,10 @@ func (m *MinecraftServer) GetPort() int {
 func (m *MinecraftServer) GetJDKVersion() int {
 	return m.Spec.Minecraft.Java.OpenJDK
 }
+
+func (m *MinecraftServer) GetRCONPort() int {
+	return m.Spec.Minecraft.Java.Rcon.Port
+}
+func (m *MinecraftServer) GetRCONPassword() string {
+	return m.Spec.Minecraft.Java.Rcon.Password
+}

@@ -248,3 +248,22 @@ func (d *DigitalOcean) UploadPlugin(id string, args automation.ServerArgs, plugi
 	}
 	return nil
 }
+
+func (d *DigitalOcean) GetServer(id string, _ automation.ServerArgs) (*automation.RessourceResults, error) {
+	intID, err := strconv.Atoi(id)
+	if err != nil {
+		return nil, err
+	}
+	droplet, _, err := d.client.Droplets.Get(context.Background(), intID)
+	if err != nil {
+		return nil, err
+	}
+	ipv4, _ := droplet.PublicIPv4()
+	return &automation.RessourceResults{
+		ID:       strconv.Itoa(droplet.ID),
+		Name:     droplet.Name,
+		Region:   droplet.Region.Slug,
+		PublicIP: ipv4,
+		Tags:     strings.Join(droplet.Tags, ","),
+	}, err
+}

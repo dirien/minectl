@@ -20,7 +20,7 @@ spec:
         enabled: true
         broadcast: true
     edition: papermc
-    version: 1.17.1-138
+    version: 1.17.1-157
     eula: true
     properties: |
       level-seed=stackitminecraftrocks

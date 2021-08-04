@@ -390,3 +390,25 @@ func (g *GCE) UploadPlugin(id string, args automation.ServerArgs, plugin, destin
 
 	return nil
 }
+
+func (g *GCE) GetServer(id string, args automation.ServerArgs) (*automation.RessourceResults, error) {
+	instancesListOp, err := g.client.Instances.List(g.projectID, args.MinecraftServer.GetRegion()).
+		Filter(fmt.Sprintf("(id=%s)", id)).
+		Context(context.Background()).
+		Do()
+	if err != nil {
+		return nil, err
+	}
+	if len(instancesListOp.Items) == 1 {
+		instance := instancesListOp.Items[0]
+		ip := instance.NetworkInterfaces[0].AccessConfigs[0].NatIP
+		return &automation.RessourceResults{
+			ID:       strconv.Itoa(int(instance.Id)),
+			Name:     instance.Name,
+			Region:   instance.Zone,
+			PublicIP: ip,
+			Tags:     strings.Join(instance.Tags.Items, ","),
+		}, err
+	}
+	return nil, nil
+}

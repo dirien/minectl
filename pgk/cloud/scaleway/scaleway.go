@@ -233,3 +233,19 @@ func (s *Scaleway) UploadPlugin(id string, args automation.ServerArgs, plugin, d
 	}
 	return nil
 }
+
+func (s *Scaleway) GetServer(id string, args automation.ServerArgs) (*automation.RessourceResults, error) {
+	instance, err := s.instanceAPI.GetServer(&instance.GetServerRequest{
+		ServerID: id,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &automation.RessourceResults{
+		ID:       instance.Server.ID,
+		Name:     instance.Server.Name,
+		Region:   instance.Server.Zone.String(),
+		PublicIP: instance.Server.PublicIP.Address.String(),
+		Tags:     strings.Join(instance.Server.Tags, ","),
+	}, err
+}

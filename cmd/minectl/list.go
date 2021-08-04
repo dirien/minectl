@@ -34,6 +34,9 @@ func runList(cmd *cobra.Command, _ []string) error {
 	if err != nil {
 		return errors.Wrap(err, "failed to get 'provider' value.")
 	}
+	if len(provider) == 0 {
+		return errors.New("Please provide a valid 'provider' value")
+	}
 	region, err := cmd.Flags().GetString("region")
 	if err != nil {
 		return errors.Wrap(err, "failed to get 'region' value.")

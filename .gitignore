@@ -1,6 +1,5 @@
 .idea
 **/passwords
-**/minectl
 **/server.properties
 tmp*/
 bin/
@@ -9,3 +8,4 @@ coverage.out
 revive.log
 **/.DS_Store
 **/key.json
+/minectl

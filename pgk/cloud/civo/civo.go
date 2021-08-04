@@ -219,3 +219,21 @@ func (c *Civo) UploadPlugin(id string, args automation.ServerArgs, plugin, desti
 	}
 	return nil
 }
+
+func (c *Civo) GetServer(id string, _ automation.ServerArgs) (*automation.RessourceResults, error) {
+	instance, err := c.client.GetInstance(id)
+	if err != nil {
+		return nil, err
+	}
+	region := c.client.Region
+	if len(instance.Region) > 0 {
+		region = instance.Region
+	}
+	return &automation.RessourceResults{
+		ID:       instance.ID,
+		Name:     instance.Hostname,
+		Region:   region,
+		PublicIP: instance.PublicIP,
+		Tags:     strings.Join(instance.Tags, ","),
+	}, err
+}

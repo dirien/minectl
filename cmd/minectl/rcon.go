@@ -4,28 +4,29 @@ import (
 	"log"
 
 	"github.com/minectl/pgk/provisioner"
+	"github.com/minectl/pgk/rcon"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
 func init() {
-	minectlCmd.AddCommand(updateCmd)
-	updateCmd.Flags().StringP("filename", "f", "", "Contains the configuration for minectl")
-	updateCmd.Flags().String("id", "", "contains the server id")
+	minectlCmd.AddCommand(rconCmd)
+	rconCmd.Flags().StringP("filename", "f", "", "Contains the configuration for minectl")
+	rconCmd.Flags().String("id", "", "contains the server id")
 }
 
-var updateCmd = &cobra.Command{
-	Use:   "update",
-	Short: "Update an Minecraft Server.",
-	Example: `mincetl update  \
-    --filename server-do.yaml
-    --id xxx-xxx-xxx-xxx`,
-	RunE:          runUpdate,
+var rconCmd = &cobra.Command{
+	Use:   "rcon",
+	Short: "RCON client to your Minecraft server.",
+	Example: `mincetl rcon  \
+    --filename server-do.yaml \
+    --id xxxx`,
+	RunE:          runRCON,
 	SilenceUsage:  true,
 	SilenceErrors: true,
 }
 
-func runUpdate(cmd *cobra.Command, _ []string) error {
+func runRCON(cmd *cobra.Command, _ []string) error {
 	filename, err := cmd.Flags().GetString("filename")
 	if len(filename) == 0 {
 		return errors.New("Please provide a valid MinecraftServer manifest file")
@@ -44,9 +45,11 @@ func runUpdate(cmd *cobra.Command, _ []string) error {
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = p.UpdateServer()
+	server, err := p.GetServer()
 	if err != nil {
 		return err
 	}
-	return err
+	r := rcon.NewRCON(server.PublicIP, p.Manifest.MinecraftServer.GetRCONPassword(), p.Manifest.MinecraftServer.GetRCONPort())
+	r.RunPrompt()
+	return nil
 }

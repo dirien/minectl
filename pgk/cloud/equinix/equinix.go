@@ -186,3 +186,18 @@ func (e *Equinix) UploadPlugin(id string, args automation.ServerArgs, plugin, de
 	}
 	return nil
 }
+
+func (e *Equinix) GetServer(id string, _ automation.ServerArgs) (*automation.RessourceResults, error) {
+	instance, _, err := e.client.Devices.Get(id, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return &automation.RessourceResults{
+		ID:       instance.ID,
+		Name:     instance.Hostname,
+		Region:   instance.Metro.Code,
+		PublicIP: getIP4(instance),
+		Tags:     strings.Join(instance.Tags, ","),
+	}, err
+}
