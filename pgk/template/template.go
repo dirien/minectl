@@ -7,6 +7,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/Masterminds/sprig"
 	"github.com/minectl/pgk/model"
 )
 
@@ -64,7 +65,7 @@ func (t *Template) GetTemplate(model *model.MinecraftServer, mount string, name 
 var templateBash embed.FS
 
 func NewTemplateBash() (*Template, error) {
-	bash := template.Must(template.ParseFS(templateBash, "templates/bash/*"))
+	bash := template.Must(template.New("base").Funcs(sprig.TxtFuncMap()).ParseFS(templateBash, "templates/bash/*"))
 	return &Template{
 		Template: bash,
 		Values:   &templateValues{},
@@ -75,7 +76,7 @@ func NewTemplateBash() (*Template, error) {
 var templateCloudConfig embed.FS
 
 func NewTemplateCloudConfig() (*Template, error) {
-	cloudInit := template.Must(template.ParseFS(templateCloudConfig, "templates/cloud-init/*"))
+	cloudInit := template.Must(template.New("base").Funcs(sprig.TxtFuncMap()).ParseFS(templateCloudConfig, "templates/cloud-init/*"))
 	return &Template{
 		Template: cloudInit,
 		Values:   &templateValues{},

@@ -1,4 +1,5 @@
 {{- define "papermc-binary" }}
-URL="https://papermc.io/api/v2/projects/paper/versions/1.17.1/builds/138/downloads/paper-{{ .Spec.Minecraft.Version }}.jar"
+{{- $X:= splitList "-" .Spec.Minecraft.Version }}
+URL="https://papermc.io/api/v2/projects/paper/versions/{{index $X 0}}/builds/{{index $X 1}}/downloads/paper-{{ .Spec.Minecraft.Version }}.jar"
 curl -sLSf $URL > /minecraft/server.jar
 {{- end }}
