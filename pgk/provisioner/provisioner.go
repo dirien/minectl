@@ -39,6 +39,7 @@ type Provisioner interface {
 	UpdateServer() error
 	UploadPlugin(plugin, destination string) error
 	ListServer() ([]automation.RessourceResults, error)
+	GetServer() (*automation.RessourceResults, error)
 }
 
 func (p *PulumiProvisioner) startSpinner(prefix string) {
@@ -50,6 +51,10 @@ func (p *PulumiProvisioner) startSpinner(prefix string) {
 
 func (p *PulumiProvisioner) stopSpinner() {
 	p.spinner.Stop()
+}
+
+func (p *PulumiProvisioner) GetServer() (*automation.RessourceResults, error) {
+	return p.auto.GetServer(p.args.ID, p.args)
 }
 
 func (p *PulumiProvisioner) UploadPlugin(plugin, destination string) error {

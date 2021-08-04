@@ -18,6 +18,7 @@
     - [List Minecraft Server 📒](#list-minecraft-server-)
     - [Update Minecraft Server 🆙](#update-minecraft-server-)
     - [Plugins Minecraft Server ⤴️](#plugins-minecraft-server-)
+    - [RCON Minecraft Server 🔌](#rcon-minecraft-server-)
     - [Monitoring 📊](#monitoring-)
     - [Volumes 💽](#volumes-)
     - [Getting Started 🎫](#getting-started-)
@@ -319,6 +320,29 @@ Flags:
       --id string         contains the server id
 ```
 
+#### RCON Minecraft Server 🔌
+
+Use this function, to connect to the RCON port of your Minecraft Server. RCON is a protocol that allows server
+administrators to remotely execute Minecraft commands.
+
+```bash
+minectl rcon -h
+RCON client to your Minecraft server.
+
+Usage:
+  minectl rcon [flags]
+
+Examples:
+mincetl rcon  \
+    --filename server-do.yaml / \
+    --id xxxx
+
+Flags:
+  -f, --filename string   Contains the configuration for minectl
+  -h, --help              help for rcon
+      --id string         contains the server id
+```
+
 #### Plugins Minecraft Server ⤴️
 
 > 🚧 Plugins feature is still in beta.
@@ -464,6 +488,8 @@ Apache License, Version 2.0
 - https://github.com/melbahja/goph
 - https://github.com/googleapis/google-api-go-client
 - https://github.com/Masterminds/sprig
+- https://github.com/Tnze/go-mc
+- https://github.com/c-bata/go-prompt
 
 ### Legal Disclaimer 👮
 

@@ -291,3 +291,26 @@ func (o *OVHcloud) UploadPlugin(id string, args automation.ServerArgs, plugin, d
 	}
 	return nil
 }
+
+func (o *OVHcloud) GetServer(id string, args automation.ServerArgs) (*automation.RessourceResults, error) {
+	instance, err := o.client.GetInstance(context.Background(), id)
+	if err != nil {
+		return nil, err
+	}
+
+	ip4, err := ovhsdk.IPv4(instance)
+	if err != nil {
+		return nil, err
+	}
+	_, labels, err := getOVHFieldsFromID(instance.Name)
+	if err != nil {
+		return nil, err
+	}
+	return &automation.RessourceResults{
+		ID:       instance.ID,
+		Name:     instance.Name,
+		Region:   instance.Region,
+		PublicIP: ip4,
+		Tags:     labels,
+	}, err
+}

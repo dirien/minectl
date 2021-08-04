@@ -238,3 +238,18 @@ func (h *Hetzner) UploadPlugin(id string, args automation.ServerArgs, plugin, de
 	}
 	return nil
 }
+
+func (h *Hetzner) GetServer(id string, args automation.ServerArgs) (*automation.RessourceResults, error) {
+	intID, _ := strconv.Atoi(id)
+	instance, _, err := h.client.Server.GetByID(context.Background(), intID)
+	if err != nil {
+		return nil, err
+	}
+	return &automation.RessourceResults{
+		ID:       strconv.Itoa(instance.ID),
+		Name:     instance.Name,
+		Region:   instance.Datacenter.Location.Name,
+		PublicIP: instance.PublicNet.IPv4.IP.String(),
+		Tags:     hetznerLabelsToTags(instance.Labels),
+	}, err
+}

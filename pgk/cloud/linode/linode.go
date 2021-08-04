@@ -235,3 +235,18 @@ func (l *Linode) UploadPlugin(id string, args automation.ServerArgs, plugin, des
 	}
 	return nil
 }
+
+func (l *Linode) GetServer(id string, args automation.ServerArgs) (*automation.RessourceResults, error) {
+	intID, _ := strconv.Atoi(id)
+	instance, err := l.client.GetInstance(context.Background(), intID)
+	if err != nil {
+		return nil, err
+	}
+	return &automation.RessourceResults{
+		ID:       strconv.Itoa(instance.ID),
+		Name:     instance.Label,
+		Region:   instance.Region,
+		PublicIP: instance.IPv4[0].String(),
+		Tags:     strings.Join(instance.Tags, ","),
+	}, err
+}

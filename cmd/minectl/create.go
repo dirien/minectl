@@ -31,7 +31,7 @@ var createCmd = &cobra.Command{
 
 func runCreate(cmd *cobra.Command, _ []string) error {
 	filename, err := cmd.Flags().GetString("filename")
-	if filename == "" {
+	if len(filename) == 0 {
 		return errors.New("Please provide a valid MinecraftServer manifest file")
 	}
 	if err != nil {
@@ -63,5 +63,6 @@ func runCreate(cmd *cobra.Command, _ []string) error {
 	fmt.Println("🚧 Beta features:")
 	common.PrintMixedGreen("⤴️ To upload a plugin type:\n\n %s",
 		fmt.Sprintf("minectl plugins -f %s --id %s --plugin <folder>/x.jar --destination /minecraft/plugins\n", filename, res.ID))
+	common.PrintMixedGreen("\n🔌 Connected to RCON type:\n\n %s", fmt.Sprintf("minectl rcon -f %s --id %s\n", filename, res.ID))
 	return err
 }

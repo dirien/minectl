@@ -4,9 +4,9 @@ metadata:
   name: minecraft-server
 spec:
   server:
-    cloud: linode
-    region: eu-central
-    size: g6-standard-4
+    cloud: scaleway
+    region: fr-par-1
+    size: GP1-XS
     ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft"
     port: 25565
   minecraft:
@@ -39,7 +39,7 @@ spec:
       entity-broadcast-range-percentage=100
       level-name=world
       player-idle-timeout=0
-      motd=\u00A7aLinode \u00A7rMinecraft --- \u00A76PaperMC \u00A7redition
+      motd=\u00A7cScaleway \u00A7rMinecraft --- \u00A76PaperMC \u00A7redition
       query.port=25565
       force-gamemode=false
       rate-limit=0
@@ -65,4 +65,4 @@ spec:
       online-mode=true
       enable-status=true
       allow-flight=false
-      max-world-size=29999984
+      max-world-size=
