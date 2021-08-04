@@ -463,6 +463,7 @@ Apache License, Version 2.0
 - https://github.com/hashicorp/go-retryablehttp
 - https://github.com/melbahja/goph
 - https://github.com/googleapis/google-api-go-client
+- https://github.com/Masterminds/sprig
 
 ### Legal Disclaimer 👮
 

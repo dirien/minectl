@@ -3,6 +3,9 @@ module github.com/minectl
 go 1.16
 
 require (
+	github.com/Masterminds/goutils v1.1.1 // indirect
+	github.com/Masterminds/semver v1.5.0 // indirect
+	github.com/Masterminds/sprig v2.22.0+incompatible
 	github.com/briandowns/spinner v1.16.0
 	github.com/civo/civogo v0.2.49
 	github.com/digitalocean/godo v1.64.2
@@ -12,12 +15,14 @@ require (
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/hashicorp/go-retryablehttp v0.7.0
 	github.com/hetznercloud/hcloud-go v1.29.0
+	github.com/huandu/xstrings v1.3.2 // indirect
 	github.com/kr/pretty v0.2.1 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/linode/linodego v1.0.0
 	github.com/mattn/go-isatty v0.0.13 // indirect
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/melbahja/goph v1.2.1
+	github.com/mitchellh/copystructure v1.2.0 // indirect
 	github.com/morikuni/aec v1.0.0
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/packethost/packngo v0.17.0

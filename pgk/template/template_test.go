@@ -83,7 +83,7 @@ var (
 				},
 				Edition:    "papermc",
 				Properties: "level-seed=stackitminecraftrocks\nview-distance=10\nenable-jmx-monitoring=false\n",
-				Version:    "1.17.1-138",
+				Version:    "1.17.1-157",
 				Eula:       true,
 			},
 			Monitoring: model.Monitoring{
@@ -970,7 +970,7 @@ runcmd:
   - echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
   - echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
   - sudo systemctl restart fail2ban
-  - URL="https://papermc.io/api/v2/projects/paper/versions/1.17.1/builds/138/downloads/paper-1.17.1-138.jar"
+  - URL="https://papermc.io/api/v2/projects/paper/versions/1.17.1/builds/157/downloads/paper-1.17.1-157.jar"
   - curl -sLSf $URL > /minecraft/server.jar
   - echo "eula=true" > /minecraft/eula.txt
   - mv /tmp/server.properties /minecraft/server.properties
@@ -1413,7 +1413,7 @@ mkdir /minecraft
 mkfs.ext4  /dev/sdc
 mount /dev/sdc /minecraft
 echo "/dev/sdc /minecraft ext4 defaults,noatime,nofail 0 2" >> /etc/fstab
-URL="https://papermc.io/api/v2/projects/paper/versions/1.17.1/builds/138/downloads/paper-1.17.1-138.jar"
+URL="https://papermc.io/api/v2/projects/paper/versions/1.17.1/builds/157/downloads/paper-1.17.1-157.jar"
 curl -sLSf $URL > /minecraft/server.jar
 echo "eula=true" > /minecraft/eula.txt
 mv /tmp/server.properties /minecraft/server.properties
