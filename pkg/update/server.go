@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"strings"
 
-	minctlTemplate "github.com/minectl/pgk/template"
+	minctlTemplate "github.com/minectl/pkg/template"
 
 	"github.com/melbahja/goph"
-	"github.com/minectl/pgk/model"
+	"github.com/minectl/pkg/model"
 	"golang.org/x/crypto/ssh"
 )
 

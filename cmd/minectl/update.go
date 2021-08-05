@@ -3,7 +3,7 @@ package minectl
 import (
 	"log"
 
-	"github.com/minectl/pgk/provisioner"
+	"github.com/minectl/pkg/provisioner"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )

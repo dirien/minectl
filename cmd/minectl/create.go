@@ -5,8 +5,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/minectl/pgk/common"
-	"github.com/minectl/pgk/provisioner"
+	"github.com/minectl/pkg/common"
+	"github.com/minectl/pkg/provisioner"
 	"github.com/olekukonko/tablewriter"
 
 	"github.com/pkg/errors"

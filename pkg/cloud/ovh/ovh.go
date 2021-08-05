@@ -8,13 +8,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/minectl/pgk/update"
+	"github.com/minectl/pkg/update"
 
 	ovhsdk "github.com/dirien/ovh-go-sdk/pkg/sdk"
 
-	"github.com/minectl/pgk/automation"
-	"github.com/minectl/pgk/common"
-	minctlTemplate "github.com/minectl/pgk/template"
+	"github.com/minectl/pkg/automation"
+	"github.com/minectl/pkg/common"
+	minctlTemplate "github.com/minectl/pkg/template"
 )
 
 type OVHcloud struct {
