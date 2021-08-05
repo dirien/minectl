@@ -1,6 +1,6 @@
 package automation
 
-import "github.com/minectl/pgk/model"
+import "github.com/minectl/pkg/model"
 
 type Automation interface {
 	CreateServer(args ServerArgs) (*RessourceResults, error)

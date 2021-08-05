@@ -3,8 +3,8 @@ package minectl
 import (
 	"log"
 
-	"github.com/minectl/pgk/provisioner"
-	"github.com/minectl/pgk/rcon"
+	"github.com/minectl/pkg/provisioner"
+	"github.com/minectl/pkg/rcon"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )

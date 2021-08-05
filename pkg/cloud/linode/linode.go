@@ -10,12 +10,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/minectl/pgk/update"
+	"github.com/minectl/pkg/update"
 
 	"github.com/linode/linodego"
-	"github.com/minectl/pgk/automation"
-	"github.com/minectl/pgk/common"
-	minctlTemplate "github.com/minectl/pgk/template"
+	"github.com/minectl/pkg/automation"
+	"github.com/minectl/pkg/common"
+	minctlTemplate "github.com/minectl/pkg/template"
 	"github.com/sethvargo/go-password/password"
 	"golang.org/x/oauth2"
 )

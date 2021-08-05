@@ -3,7 +3,7 @@ package template
 import (
 	"testing"
 
-	"github.com/minectl/pgk/model"
+	"github.com/minectl/pkg/model"
 	"github.com/stretchr/testify/assert"
 )
 

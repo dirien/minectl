@@ -8,7 +8,7 @@ import (
 	"text/template"
 
 	"github.com/Masterminds/sprig"
-	"github.com/minectl/pgk/model"
+	"github.com/minectl/pkg/model"
 )
 
 type Template struct {

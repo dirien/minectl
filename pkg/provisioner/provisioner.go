@@ -6,23 +6,23 @@ import (
 	"os"
 	"time"
 
-	"github.com/minectl/pgk/cloud/gce"
+	"github.com/minectl/pkg/cloud/gce"
 
-	"github.com/minectl/pgk/cloud/equinix"
+	"github.com/minectl/pkg/cloud/equinix"
 
-	"github.com/minectl/pgk/cloud/ovh"
+	"github.com/minectl/pkg/cloud/ovh"
 
-	"github.com/minectl/pgk/cloud/linode"
+	"github.com/minectl/pkg/cloud/linode"
 
 	"github.com/briandowns/spinner"
-	"github.com/minectl/pgk/automation"
-	"github.com/minectl/pgk/cloud"
-	"github.com/minectl/pgk/cloud/civo"
-	"github.com/minectl/pgk/cloud/do"
-	"github.com/minectl/pgk/cloud/hetzner"
-	"github.com/minectl/pgk/cloud/scaleway"
-	"github.com/minectl/pgk/common"
-	"github.com/minectl/pgk/manifest"
+	"github.com/minectl/pkg/automation"
+	"github.com/minectl/pkg/cloud"
+	"github.com/minectl/pkg/cloud/civo"
+	"github.com/minectl/pkg/cloud/do"
+	"github.com/minectl/pkg/cloud/hetzner"
+	"github.com/minectl/pkg/cloud/scaleway"
+	"github.com/minectl/pkg/common"
+	"github.com/minectl/pkg/manifest"
 	"github.com/pkg/errors"
 )
 
