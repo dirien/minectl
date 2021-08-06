@@ -4,7 +4,6 @@ import (
 	"log"
 
 	"github.com/minectl/pkg/provisioner"
-	"github.com/minectl/pkg/rcon"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
@@ -29,10 +28,10 @@ var rconCmd = &cobra.Command{
 func runRCON(cmd *cobra.Command, _ []string) error {
 	filename, err := cmd.Flags().GetString("filename")
 	if len(filename) == 0 {
-		return errors.New("Please provide a valid MinecraftServer manifest file")
+		return errors.New("Please provide a valid MinecraftResource manifest file")
 	}
 	if err != nil {
-		return errors.Wrap(err, "Please provide a valid MinecraftServer manifest file")
+		return errors.Wrap(err, "Please provide a valid MinecraftResource manifest file")
 	}
 	id, err := cmd.Flags().GetString("id")
 	if err != nil {
@@ -45,11 +44,9 @@ func runRCON(cmd *cobra.Command, _ []string) error {
 	if err != nil {
 		log.Fatal(err)
 	}
-	server, err := p.GetServer()
+	err = p.DoRCON()
 	if err != nil {
-		return err
+		log.Fatal(err)
 	}
-	r := rcon.NewRCON(server.PublicIP, p.Manifest.MinecraftServer.GetRCONPassword(), p.Manifest.MinecraftServer.GetRCONPort())
-	r.RunPrompt()
 	return nil
 }

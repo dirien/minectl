@@ -1,0 +1,132 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$ref": "#/definitions/Welcome8",
+  "definitions": {
+    "Welcome8": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "metadata": {
+          "$ref": "#/definitions/Metadata"
+        },
+        "spec": {
+          "$ref": "#/definitions/Spec"
+        }
+      },
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata",
+        "spec"
+      ],
+      "title": "Welcome8"
+    },
+    "Metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "Metadata"
+    },
+    "Spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "server": {
+          "$ref": "#/definitions/Server"
+        },
+        "proxy": {
+          "$ref": "#/definitions/Proxy"
+        }
+      },
+      "required": [
+        "proxy",
+        "server"
+      ],
+      "title": "Spec"
+    },
+    "Proxy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "java": {
+          "$ref": "#/definitions/Java"
+        },
+        "type": {
+          "type": "string"
+        },
+        "version": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "java",
+        "type",
+        "version"
+      ],
+      "title": "Proxy"
+    },
+    "Java": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "openjdk": {
+          "type": "integer"
+        },
+        "xmx": {
+          "type": "string"
+        },
+        "xms": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "openjdk",
+        "xms",
+        "xmx"
+      ],
+      "title": "Java"
+    },
+    "Server": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cloud": {
+          "type": "string"
+        },
+        "region": {
+          "type": "string"
+        },
+        "size": {
+          "type": "string"
+        },
+        "ssh": {
+          "type": "string"
+        },
+        "port": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "cloud",
+        "port",
+        "region",
+        "size",
+        "ssh"
+      ],
+      "title": "Server"
+    }
+  }
+}

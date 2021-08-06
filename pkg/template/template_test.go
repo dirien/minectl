@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	bedrock = model.MinecraftServer{
+	bedrock = model.MinecraftResource{
 		Spec: model.Spec{
 			Minecraft: model.Minecraft{
 				Edition:    "bedrock",
@@ -24,7 +24,7 @@ var (
 			},
 		},
 	}
-	bedrockNoMon = model.MinecraftServer{
+	bedrockNoMon = model.MinecraftResource{
 		Spec: model.Spec{
 			Minecraft: model.Minecraft{
 				Edition:    "bedrock",
@@ -37,7 +37,7 @@ var (
 			},
 		},
 	}
-	java = model.MinecraftServer{
+	java = model.MinecraftResource{
 		Spec: model.Spec{
 			Server: model.Server{
 				Port: 25565,
@@ -64,7 +64,7 @@ var (
 			},
 		},
 	}
-	papermc = model.MinecraftServer{
+	papermc = model.MinecraftResource{
 		Spec: model.Spec{
 			Server: model.Server{
 				Port: 25565,
@@ -91,7 +91,7 @@ var (
 			},
 		},
 	}
-	craftbukkit = model.MinecraftServer{
+	craftbukkit = model.MinecraftResource{
 		Spec: model.Spec{
 			Server: model.Server{
 				Port: 25565,
@@ -118,7 +118,7 @@ var (
 			},
 		},
 	}
-	fabric = model.MinecraftServer{
+	fabric = model.MinecraftResource{
 		Spec: model.Spec{
 			Server: model.Server{
 				Port: 25565,
@@ -145,7 +145,7 @@ var (
 			},
 		},
 	}
-	forge = model.MinecraftServer{
+	forge = model.MinecraftResource{
 		Spec: model.Spec{
 			Server: model.Server{
 				Port: 25565,
@@ -172,7 +172,7 @@ var (
 			},
 		},
 	}
-	spigot = model.MinecraftServer{
+	spigot = model.MinecraftResource{
 		Spec: model.Spec{
 			Server: model.Server{
 				Port: 25565,
@@ -200,7 +200,7 @@ var (
 		},
 	}
 
-	fabricNoMon = model.MinecraftServer{
+	fabricNoMon = model.MinecraftResource{
 		Spec: model.Spec{
 			Server: model.Server{
 				Port: 25565,

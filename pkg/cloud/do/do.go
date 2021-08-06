@@ -83,8 +83,8 @@ func (d *DigitalOcean) UpdateServer(id string, args automation.ServerArgs) error
 		return err
 	}
 	ipv4, _ := droplet.PublicIPv4()
-	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), ipv4, "root")
-	err = remoteCommand.UpdateServer(args.MinecraftServer)
+	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSH(), ipv4, "root")
+	err = remoteCommand.UpdateServer(args.MinecraftResource)
 	if err != nil {
 		return err
 	}
@@ -93,12 +93,12 @@ func (d *DigitalOcean) UpdateServer(id string, args automation.ServerArgs) error
 }
 
 func (d *DigitalOcean) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
-	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftServer.GetSSH()))
+	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
 	if err != nil {
 		return nil, err
 	}
 	keyRequest := &godo.KeyCreateRequest{
-		Name:      fmt.Sprintf("%s-ssh", args.MinecraftServer.GetName()),
+		Name:      fmt.Sprintf("%s-ssh", args.MinecraftResource.GetName()),
 		PublicKey: string(pubKeyFile),
 	}
 	key, _, err := d.client.Keys.Create(context.Background(), keyRequest)
@@ -109,13 +109,13 @@ func (d *DigitalOcean) CreateServer(args automation.ServerArgs) (*automation.Res
 	var volume *godo.Volume
 
 	var mount string
-	if args.MinecraftServer.GetVolumeSize() > 0 {
+	if args.MinecraftResource.GetVolumeSize() > 0 {
 		volumeRequest := &godo.VolumeCreateRequest{
-			Name:           fmt.Sprintf("%s-vol", args.MinecraftServer.GetName()),
-			Region:         args.MinecraftServer.GetRegion(),
+			Name:           fmt.Sprintf("%s-vol", args.MinecraftResource.GetName()),
+			Region:         args.MinecraftResource.GetRegion(),
 			Description:    "volume for storing the minecraft data",
 			FilesystemType: "ext4",
-			SizeGigaBytes:  int64(args.MinecraftServer.GetVolumeSize()),
+			SizeGigaBytes:  int64(args.MinecraftResource.GetVolumeSize()),
 		}
 		volume, _, err = d.client.Storage.CreateVolume(context.Background(), volumeRequest)
 		if err != nil {
@@ -124,27 +124,27 @@ func (d *DigitalOcean) CreateServer(args automation.ServerArgs) (*automation.Res
 		mount = "sda"
 	}
 
-	userData, err := d.tmpl.GetTemplate(args.MinecraftServer, mount, minctlTemplate.TemplateCloudConfig)
+	userData, err := d.tmpl.GetTemplate(args.MinecraftResource, mount, minctlTemplate.TemplateCloudConfig)
 	if err != nil {
 		return nil, err
 	}
 
 	createRequest := &godo.DropletCreateRequest{
-		Name: args.MinecraftServer.GetName(),
+		Name: args.MinecraftResource.GetName(),
 		SSHKeys: []godo.DropletCreateSSHKey{
 			{
 				Fingerprint: key.Fingerprint,
 			},
 		},
-		Region: args.MinecraftServer.GetRegion(),
-		Size:   args.MinecraftServer.GetSize(),
+		Region: args.MinecraftResource.GetRegion(),
+		Size:   args.MinecraftResource.GetSize(),
 		Image: godo.DropletCreateImage{
 			Slug: "ubuntu-20-04-x64",
 		},
 		UserData: userData,
-		Tags:     []string{common.InstanceTag, args.MinecraftServer.GetEdition()},
+		Tags:     []string{common.InstanceTag, args.MinecraftResource.GetEdition()},
 	}
-	if args.MinecraftServer.GetVolumeSize() > 0 {
+	if args.MinecraftResource.GetVolumeSize() > 0 {
 		createRequest.Volumes = []godo.DropletCreateVolume{
 			{
 				ID: volume.ID,
@@ -186,7 +186,7 @@ func (d *DigitalOcean) DeleteServer(id string, args automation.ServerArgs) error
 		return err
 	}
 	for _, key := range list {
-		if key.Name == fmt.Sprintf("%s-ssh", args.MinecraftServer.GetName()) {
+		if key.Name == fmt.Sprintf("%s-ssh", args.MinecraftResource.GetName()) {
 			_, err := d.client.Keys.DeleteByID(context.Background(), key.ID)
 			if err != nil {
 				return err
@@ -211,7 +211,7 @@ func (d *DigitalOcean) DeleteServer(id string, args automation.ServerArgs) error
 	}
 
 	volumes, _, err := d.client.Storage.ListVolumes(context.Background(), &godo.ListVolumeParams{
-		Name: fmt.Sprintf("%s-vol", args.MinecraftServer.GetName()),
+		Name: fmt.Sprintf("%s-vol", args.MinecraftResource.GetName()),
 	})
 
 	if err != nil {
@@ -236,7 +236,7 @@ func (d *DigitalOcean) UploadPlugin(id string, args automation.ServerArgs, plugi
 		return err
 	}
 	ipv4, _ := droplet.PublicIPv4()
-	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), ipv4, "root")
+	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSH(), ipv4, "root")
 
 	err = remoteCommand.TransferFile(plugin, filepath.Join(destination, filepath.Base(plugin)))
 	if err != nil {

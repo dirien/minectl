@@ -37,12 +37,12 @@ func NewEquinix(APIKey, project string) (*Equinix, error) {
 }
 
 func (e *Equinix) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
-	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftServer.GetSSH()))
+	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
 	if err != nil {
 		return nil, err
 	}
 	key, _, err := e.client.SSHKeys.Create(&packngo.SSHKeyCreateRequest{
-		Label:     fmt.Sprintf("%s-ssh", args.MinecraftServer.GetName()),
+		Label:     fmt.Sprintf("%s-ssh", args.MinecraftResource.GetName()),
 		ProjectID: e.project,
 		Key:       string(pubKeyFile),
 	})
@@ -50,21 +50,21 @@ func (e *Equinix) CreateServer(args automation.ServerArgs) (*automation.Ressourc
 		return nil, err
 	}
 
-	userData, err := e.tmpl.GetTemplate(args.MinecraftServer, "", minctlTemplate.TemplateBash)
+	userData, err := e.tmpl.GetTemplate(args.MinecraftResource, "", minctlTemplate.TemplateBash)
 	if err != nil {
 		return nil, err
 	}
 
 	server, _, err := e.client.Devices.Create(&packngo.DeviceCreateRequest{
-		Hostname:       args.MinecraftServer.GetName(),
+		Hostname:       args.MinecraftResource.GetName(),
 		ProjectID:      e.project,
 		OS:             "ubuntu_20_04",
-		Plan:           args.MinecraftServer.GetSize(),
-		Tags:           []string{common.InstanceTag, args.MinecraftServer.GetEdition()},
+		Plan:           args.MinecraftResource.GetSize(),
+		Tags:           []string{common.InstanceTag, args.MinecraftResource.GetEdition()},
 		ProjectSSHKeys: []string{key.ID},
 		UserData:       userData,
 		BillingCycle:   "hourly",
-		Metro:          args.MinecraftServer.GetRegion(),
+		Metro:          args.MinecraftResource.GetRegion(),
 		SpotInstance:   false,
 	})
 	if err != nil {
@@ -99,7 +99,7 @@ func (e *Equinix) DeleteServer(id string, args automation.ServerArgs) error {
 		return err
 	}
 	for _, key := range keys {
-		if key.Label == fmt.Sprintf("%s-ssh", args.MinecraftServer.GetName()) {
+		if key.Label == fmt.Sprintf("%s-ssh", args.MinecraftResource.GetName()) {
 			_, err := e.client.SSHKeys.Delete(key.ID)
 			if err != nil {
 				return err
@@ -107,13 +107,13 @@ func (e *Equinix) DeleteServer(id string, args automation.ServerArgs) error {
 		}
 	}
 	instances, _, err := e.client.Devices.List(e.project, &packngo.ListOptions{
-		Search: args.MinecraftServer.GetName(),
+		Search: args.MinecraftResource.GetName(),
 	})
 	if err != nil {
 		return err
 	}
 	for _, instance := range instances {
-		if instance.Hostname == args.MinecraftServer.GetName() {
+		if instance.Hostname == args.MinecraftResource.GetName() {
 			_, err = e.client.Devices.Delete(instance.ID, true)
 			if err != nil {
 				return err
@@ -150,8 +150,8 @@ func (e *Equinix) UpdateServer(id string, args automation.ServerArgs) error {
 		return err
 	}
 
-	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), getIP4(instance), "root")
-	err = remoteCommand.UpdateServer(args.MinecraftServer)
+	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSH(), getIP4(instance), "root")
+	err = remoteCommand.UpdateServer(args.MinecraftResource)
 	if err != nil {
 		return err
 	}
@@ -175,7 +175,7 @@ func (e *Equinix) UploadPlugin(id string, args automation.ServerArgs, plugin, de
 		return err
 	}
 
-	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), getIP4(instance), "root")
+	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSH(), getIP4(instance), "root")
 	err = remoteCommand.TransferFile(plugin, filepath.Join(destination, filepath.Base(plugin)))
 	if err != nil {
 		return err

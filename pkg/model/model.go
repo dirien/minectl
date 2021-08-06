@@ -5,6 +5,14 @@ type Spec struct {
 	Monitoring Monitoring `json:"monitoring"`
 	Server     Server     `yaml:"server"`
 	Minecraft  Minecraft  `yaml:"minecraft"`
+	Proxy      Proxy      `yaml:"proxy"`
+}
+
+// Proxy
+type Proxy struct {
+	Java    Java   `yaml:"java"`
+	Type    string `yaml:"type"`
+	Version string `yaml:"version"`
 }
 
 // Monitoring
@@ -52,61 +60,61 @@ type Metadata struct {
 	Name string `yaml:"name"`
 }
 
-// MinecraftServer
-type MinecraftServer struct {
+// MinecraftResource
+type MinecraftResource struct {
 	Spec       Spec     `yaml:"spec"`
 	ApiVersion string   `yaml:"apiVersion"`
 	Kind       string   `yaml:"kind"`
 	Metadata   Metadata `yaml:"metadata"`
 }
 
-func (m *MinecraftServer) GetProperties() string {
+func (m *MinecraftResource) GetProperties() string {
 	return m.Spec.Minecraft.Properties
 }
 
-func (m *MinecraftServer) GetName() string {
+func (m *MinecraftResource) GetName() string {
 	return m.Metadata.Name
 }
 
-func (m *MinecraftServer) GetCloud() string {
+func (m *MinecraftResource) GetCloud() string {
 	return m.Spec.Server.Cloud
 }
 
-func (m *MinecraftServer) GetSSH() string {
+func (m *MinecraftResource) GetSSH() string {
 	return m.Spec.Server.Ssh
 }
 
-func (m *MinecraftServer) GetRegion() string {
+func (m *MinecraftResource) GetRegion() string {
 	return m.Spec.Server.Region
 }
 
-func (m *MinecraftServer) GetSize() string {
+func (m *MinecraftResource) GetSize() string {
 	return m.Spec.Server.Size
 }
 
-func (m *MinecraftServer) GetEdition() string {
+func (m *MinecraftResource) GetEdition() string {
 	return m.Spec.Minecraft.Edition
 }
 
-func (m *MinecraftServer) GetVolumeSize() int {
+func (m *MinecraftResource) GetVolumeSize() int {
 	return m.Spec.Server.VolumeSize
 }
 
-func (m *MinecraftServer) GetVersion() string {
+func (m *MinecraftResource) GetVersion() string {
 	return m.Spec.Minecraft.Version
 }
 
-func (m *MinecraftServer) GetPort() int {
+func (m *MinecraftResource) GetPort() int {
 	return m.Spec.Server.Port
 }
 
-func (m *MinecraftServer) GetJDKVersion() int {
+func (m *MinecraftResource) GetJDKVersion() int {
 	return m.Spec.Minecraft.Java.OpenJDK
 }
 
-func (m *MinecraftServer) GetRCONPort() int {
+func (m *MinecraftResource) GetRCONPort() int {
 	return m.Spec.Minecraft.Java.Rcon.Port
 }
-func (m *MinecraftServer) GetRCONPassword() string {
+func (m *MinecraftResource) GetRCONPassword() string {
 	return m.Spec.Minecraft.Java.Rcon.Password
 }

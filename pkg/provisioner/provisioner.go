@@ -6,6 +6,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/minectl/pkg/rcon"
+
 	"github.com/minectl/pkg/cloud/vultr"
 
 	"github.com/minectl/pkg/cloud/gce"
@@ -29,10 +31,9 @@ import (
 )
 
 type PulumiProvisioner struct {
-	auto     automation.Automation
-	Manifest *manifest.MinecraftServerManifest
-	args     automation.ServerArgs
-	spinner  *spinner.Spinner
+	auto    automation.Automation
+	args    automation.ServerArgs
+	spinner *spinner.Spinner
 }
 
 type Provisioner interface {
@@ -42,6 +43,7 @@ type Provisioner interface {
 	UploadPlugin(plugin, destination string) error
 	ListServer() ([]automation.RessourceResults, error)
 	GetServer() (*automation.RessourceResults, error)
+	DoRCON() error
 }
 
 func (p *PulumiProvisioner) startSpinner(prefix string) {
@@ -58,13 +60,23 @@ func (p *PulumiProvisioner) GetServer() (*automation.RessourceResults, error) {
 	return p.auto.GetServer(p.args.ID, p.args)
 }
 
+func (p *PulumiProvisioner) DoRCON() error {
+	server, err := p.GetServer()
+	if err != nil {
+		return err
+	}
+	r := rcon.NewRCON(server.PublicIP, p.args.MinecraftResource.GetRCONPassword(), p.args.MinecraftResource.GetRCONPort())
+	r.RunPrompt()
+	return nil
+}
+
 func (p *PulumiProvisioner) UploadPlugin(plugin, destination string) error {
 	fmt.Println("🚧 Plugins feature is still in beta...")
 	p.startSpinner(
-		fmt.Sprintf("⤴️ Upload plugin to server (%s)... ", common.Green(p.args.MinecraftServer.GetName())))
+		fmt.Sprintf("⤴️ Upload plugin to server (%s)... ", common.Green(p.args.MinecraftResource.GetName())))
 	err := p.auto.UploadPlugin(p.args.ID, p.args, plugin, destination)
 	if err == nil {
-		fmt.Printf("\n✅ Plugin (%s) uploaded\n", common.Green(p.args.MinecraftServer.GetName()))
+		fmt.Printf("\n✅ Plugin (%s) uploaded\n", common.Green(p.args.MinecraftResource.GetName()))
 	}
 	p.stopSpinner()
 	return err
@@ -72,10 +84,10 @@ func (p *PulumiProvisioner) UploadPlugin(plugin, destination string) error {
 
 func (p *PulumiProvisioner) UpdateServer() error {
 	p.startSpinner(
-		fmt.Sprintf("🆙 Update server (%s)... ", common.Green(p.args.MinecraftServer.GetName())))
+		fmt.Sprintf("🆙 Update server (%s)... ", common.Green(p.args.MinecraftResource.GetName())))
 	err := p.auto.UpdateServer(p.args.ID, p.args)
 	if err == nil {
-		fmt.Printf("\n✅ Server (%s) updated\n", common.Green(p.args.MinecraftServer.GetName()))
+		fmt.Printf("\n✅ Server (%s) updated\n", common.Green(p.args.MinecraftResource.GetName()))
 	}
 	p.stopSpinner()
 	return err
@@ -83,10 +95,9 @@ func (p *PulumiProvisioner) UpdateServer() error {
 
 //wait that server is ready... Currently on for Java based Editions (TCP), as Bedrock is UDP
 func (p *PulumiProvisioner) waitForMinecraftServerReady(server *automation.RessourceResults) {
-	if p.args.MinecraftServer.GetEdition() != "bedrock" {
+	if p.args.MinecraftResource.GetEdition() != "bedrock" {
 		p.startSpinner("🕹 Starting Minecraft server... ")
-		check := fmt.Sprintf("%s:%d", server.PublicIP, p.args.MinecraftServer.GetPort())
-		println(check)
+		check := fmt.Sprintf("%s:%d", server.PublicIP, p.args.MinecraftResource.GetPort())
 		checkCounter := 0
 
 		for checkCounter < 500 {
@@ -111,7 +122,7 @@ func (p *PulumiProvisioner) waitForMinecraftServerReady(server *automation.Resso
 
 func (p *PulumiProvisioner) CreateServer(wait bool) (*automation.RessourceResults, error) {
 	p.startSpinner(
-		fmt.Sprintf("🏗 Creating server (%s)... ", common.Green(p.args.MinecraftServer.GetName())))
+		fmt.Sprintf("🏗 Creating server (%s)... ", common.Green(p.args.MinecraftResource.GetName())))
 	server, err := p.auto.CreateServer(p.args)
 	if err != nil {
 		p.stopSpinner()
@@ -121,7 +132,7 @@ func (p *PulumiProvisioner) CreateServer(wait bool) (*automation.RessourceResult
 	if wait {
 		p.waitForMinecraftServerReady(server)
 	}
-	fmt.Printf("✅ Server (%s) created\n", common.Green(p.args.MinecraftServer.GetName()))
+	fmt.Printf("✅ Server (%s) created\n", common.Green(p.args.MinecraftResource.GetName()))
 	return server, err
 }
 
@@ -131,11 +142,11 @@ func (p *PulumiProvisioner) ListServer() ([]automation.RessourceResults, error) 
 
 func (p *PulumiProvisioner) DeleteServer() error {
 	p.startSpinner(
-		fmt.Sprintf("🪓 Deleting server (%s)... ", common.Green(p.args.MinecraftServer.GetName())))
+		fmt.Sprintf("🪓 Deleting server (%s)... ", common.Green(p.args.MinecraftResource.GetName())))
 	err := p.auto.DeleteServer(p.args.ID, p.args)
 	p.stopSpinner()
 	if err == nil {
-		fmt.Printf("\n🗑 Server (%s) deleted\n", common.Green(p.args.MinecraftServer.GetName()))
+		fmt.Printf("\n🗑 Server (%s) deleted\n", common.Green(p.args.MinecraftResource.GetName()))
 	}
 	return err
 }
@@ -223,26 +234,25 @@ func getProvisioner(provider, region string) (automation.Automation, error) {
 }
 
 func newProvisioner(manifestPath, id string) (*PulumiProvisioner, error) {
-	manifest, err := manifest.NewMinecraftServer(manifestPath)
+	manifest, err := manifest.NewMinecraftResource(manifestPath)
 	if err != nil {
 		return nil, err
 	}
 	args := automation.ServerArgs{
-		MinecraftServer: manifest.MinecraftServer,
-		ID:              id,
+		MinecraftResource: manifest,
+		ID:                id,
 	}
-	cloudProvider, err := getProvisioner(args.MinecraftServer.GetCloud(), args.MinecraftServer.GetRegion())
-	common.PrintMixedGreen("🛎 Using cloud provider %s\n", cloud.GetCloudProviderFullName(args.MinecraftServer.GetCloud()))
+	cloudProvider, err := getProvisioner(args.MinecraftResource.GetCloud(), args.MinecraftResource.GetRegion())
+	common.PrintMixedGreen("🛎 Using cloud provider %s\n", cloud.GetCloudProviderFullName(args.MinecraftResource.GetCloud()))
 	if err != nil {
 		return nil, err
 	}
-	common.PrintMixedGreen("🗺 Minecraft %s edition\n", args.MinecraftServer.GetEdition())
+	common.PrintMixedGreen("🗺 Minecraft %s edition\n", args.MinecraftResource.GetEdition())
 
 	p := &PulumiProvisioner{
-		auto:     cloudProvider,
-		Manifest: manifest,
-		args:     args,
-		spinner:  spinner.New(spinner.CharSets[11], 100*time.Millisecond),
+		auto:    cloudProvider,
+		args:    args,
+		spinner: spinner.New(spinner.CharSets[11], 100*time.Millisecond),
 	}
 	return p, nil
 }

@@ -57,10 +57,10 @@ var _ = []Plugin{
 func runPlugin(cmd *cobra.Command, _ []string) error {
 	filename, err := cmd.Flags().GetString("filename")
 	if err != nil {
-		return errors.Wrap(err, "Please provide a valid MinecraftServer manifest file")
+		return errors.Wrap(err, "Please provide a valid MinecraftResource manifest file")
 	}
 	if len(filename) == 0 {
-		return errors.New("Please provide a valid MinecraftServer manifest file")
+		return errors.New("Please provide a valid MinecraftResource manifest file")
 	}
 	id, err := cmd.Flags().GetString("id")
 	if err != nil {

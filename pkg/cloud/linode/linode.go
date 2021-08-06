@@ -49,13 +49,13 @@ func NewLinode(APItoken string) (*Linode, error) {
 
 func (l *Linode) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
 	os := "linode/ubuntu20.04"
-	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftServer.GetSSH()))
+	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
 	if err != nil {
 		return nil, err
 	}
 	key, err := l.client.CreateSSHKey(context.Background(), linodego.SSHKeyCreateOptions{
 		SSHKey: strings.TrimSpace(string(pubKeyFile)),
-		Label:  fmt.Sprintf("%s-ssh", args.MinecraftServer.GetName()),
+		Label:  fmt.Sprintf("%s-ssh", args.MinecraftResource.GetName()),
 	})
 	if err != nil {
 		return nil, err
@@ -63,11 +63,11 @@ func (l *Linode) CreateServer(args automation.ServerArgs) (*automation.Ressource
 
 	var volume *linodego.Volume
 	var mount string
-	if args.MinecraftServer.GetVolumeSize() > 0 {
+	if args.MinecraftResource.GetVolumeSize() > 0 {
 		volume, err = l.client.CreateVolume(context.Background(), linodego.VolumeCreateOptions{
-			Label:  fmt.Sprintf("%s-vol", args.MinecraftServer.GetName()),
-			Size:   args.MinecraftServer.GetVolumeSize(),
-			Region: args.MinecraftServer.GetRegion(),
+			Label:  fmt.Sprintf("%s-vol", args.MinecraftResource.GetName()),
+			Size:   args.MinecraftResource.GetVolumeSize(),
+			Region: args.MinecraftResource.GetRegion(),
 		})
 		mount = "sdc"
 	}
@@ -75,14 +75,14 @@ func (l *Linode) CreateServer(args automation.ServerArgs) (*automation.Ressource
 		return nil, err
 	}
 
-	userData, err := l.tmpl.GetTemplate(args.MinecraftServer, mount, minctlTemplate.TemplateBash)
+	userData, err := l.tmpl.GetTemplate(args.MinecraftResource, mount, minctlTemplate.TemplateBash)
 	if err != nil {
 		return nil, err
 	}
 
 	stackscript, err := l.client.CreateStackscript(context.Background(), linodego.StackscriptCreateOptions{
 		IsPublic: false,
-		Label:    fmt.Sprintf("%s-stackscript", args.MinecraftServer.GetName()),
+		Label:    fmt.Sprintf("%s-stackscript", args.MinecraftResource.GetName()),
 		Images:   []string{os},
 		Script:   userData,
 	})
@@ -94,20 +94,20 @@ func (l *Linode) CreateServer(args automation.ServerArgs) (*automation.Ressource
 		return nil, err
 	}
 	instance, err := l.client.CreateInstance(context.Background(), linodego.InstanceCreateOptions{
-		Label:          args.MinecraftServer.GetName(),
-		Region:         args.MinecraftServer.GetRegion(),
+		Label:          args.MinecraftResource.GetName(),
+		Region:         args.MinecraftResource.GetRegion(),
 		Image:          os,
-		Type:           args.MinecraftServer.GetSize(),
+		Type:           args.MinecraftResource.GetSize(),
 		AuthorizedKeys: []string{key.SSHKey},
 		StackScriptID:  stackscript.ID,
 		RootPass:       rootPassword,
-		Tags:           []string{common.InstanceTag, args.MinecraftServer.GetEdition()},
+		Tags:           []string{common.InstanceTag, args.MinecraftResource.GetEdition()},
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	if args.MinecraftServer.GetVolumeSize() > 0 {
+	if args.MinecraftResource.GetVolumeSize() > 0 {
 		_, err = l.client.AttachVolume(context.Background(), volume.ID, &linodego.VolumeAttachOptions{
 			LinodeID: instance.ID,
 		})
@@ -135,7 +135,7 @@ func (l *Linode) DeleteServer(id string, args automation.ServerArgs) error {
 		return err
 	}
 	for _, key := range keys {
-		if key.Label == fmt.Sprintf("%s-ssh", args.MinecraftServer.GetName()) {
+		if key.Label == fmt.Sprintf("%s-ssh", args.MinecraftResource.GetName()) {
 			err := l.client.DeleteSSHKey(context.Background(), key.ID)
 			if err != nil {
 				return err
@@ -147,7 +147,7 @@ func (l *Linode) DeleteServer(id string, args automation.ServerArgs) error {
 		return err
 	}
 	for _, volume := range volumes {
-		if volume.Label == fmt.Sprintf("%s-vol", args.MinecraftServer.GetName()) {
+		if volume.Label == fmt.Sprintf("%s-vol", args.MinecraftResource.GetName()) {
 			err := l.client.DetachVolume(context.Background(), volume.ID)
 			if err != nil {
 				return err
@@ -166,7 +166,7 @@ func (l *Linode) DeleteServer(id string, args automation.ServerArgs) error {
 		return err
 	}
 	for _, stackscript := range stackscripts {
-		if stackscript.Label == fmt.Sprintf("%s-stackscript", args.MinecraftServer.GetName()) {
+		if stackscript.Label == fmt.Sprintf("%s-stackscript", args.MinecraftResource.GetName()) {
 			err := l.client.DeleteStackscript(context.Background(), stackscript.ID)
 			if err != nil {
 				return err
@@ -209,8 +209,8 @@ func (l *Linode) UpdateServer(id string, args automation.ServerArgs) error {
 		return err
 	}
 
-	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), instance.IPv4[0].String(), "root")
-	err = remoteCommand.UpdateServer(args.MinecraftServer)
+	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSH(), instance.IPv4[0].String(), "root")
+	err = remoteCommand.UpdateServer(args.MinecraftResource)
 	if err != nil {
 		return err
 	}
@@ -224,7 +224,7 @@ func (l *Linode) UploadPlugin(id string, args automation.ServerArgs, plugin, des
 		return err
 	}
 
-	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), instance.IPv4[0].String(), "root")
+	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSH(), instance.IPv4[0].String(), "root")
 	err = remoteCommand.TransferFile(plugin, filepath.Join(destination, filepath.Base(plugin)))
 	if err != nil {
 		return err
