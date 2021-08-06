@@ -6,6 +6,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/minectl/pkg/cloud/vultr"
+
 	"github.com/minectl/pkg/cloud/gce"
 
 	"github.com/minectl/pkg/cloud/equinix"
@@ -44,7 +46,6 @@ type Provisioner interface {
 
 func (p *PulumiProvisioner) startSpinner(prefix string) {
 	p.spinner.Prefix = prefix
-	//p.spinner.FinalMSG = finalMSG
 	p.spinner.HideCursor = true
 	p.spinner.Start()
 }
@@ -85,6 +86,7 @@ func (p *PulumiProvisioner) waitForMinecraftServerReady(server *automation.Resso
 	if p.args.MinecraftServer.GetEdition() != "bedrock" {
 		p.startSpinner("🕹 Starting Minecraft server... ")
 		check := fmt.Sprintf("%s:%d", server.PublicIP, p.args.MinecraftServer.GetPort())
+		println(check)
 		checkCounter := 0
 
 		for checkCounter < 500 {
@@ -205,6 +207,12 @@ func getProvisioner(provider, region string) (automation.Automation, error) {
 		return cloudProvider, nil
 	case "gce":
 		cloudProvider, err := gce.NewGCE(os.Getenv("GCE_KEY"), region)
+		if err != nil {
+			return nil, err
+		}
+		return cloudProvider, nil
+	case "vultr":
+		cloudProvider, err := vultr.NewVultr(os.Getenv("VULTR_API_KEY"))
 		if err != nil {
 			return nil, err
 		}

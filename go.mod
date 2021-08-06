@@ -14,7 +14,7 @@ require (
 	github.com/dirien/ovh-go-sdk v0.1.1
 	github.com/fatih/color v1.12.0
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
-	github.com/google/go-querystring v1.1.0 // indirect
+	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
 	github.com/hashicorp/go-retryablehttp v0.7.0
 	github.com/hetznercloud/hcloud-go v1.29.1
 	github.com/huandu/xstrings v1.3.2 // indirect
@@ -34,6 +34,7 @@ require (
 	github.com/sethvargo/go-password v0.2.0
 	github.com/spf13/cobra v1.2.1
 	github.com/stretchr/testify v1.7.0
+	github.com/vultr/govultr/v2 v2.7.1
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
 	github.com/xeipuuv/gojsonschema v1.2.0
 	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97

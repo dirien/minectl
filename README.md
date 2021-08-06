@@ -10,6 +10,7 @@
         * [OVHCloud](#ovhcloud)
         * [Equinix Metal](#equinix-metal)
         * [Google Compute Engine (GCE)](#google-compute-engine-gce)
+        * [Vultr](#vultr)
     - [Minecraft Server Versions 📚](#minecraft-server-versions-)
     - [Server Config 📋](#server-config-)
     - [EULA ⚖️️](#eula-)
@@ -43,6 +44,7 @@
 ![OVH](https://img.shields.io/badge/ovh-123F6D?style=for-the-badge&logo=ovh&logoColor=white)
 ![Equinix Metal](https://img.shields.io/badge/equinix--metal-d10810?style=for-the-badge&logo=equinix-metal&logoColor=white)
 ![Google Cloud](https://img.shields.io/badge/google--cloud-4285F4?style=for-the-badge&logo=google-cloud&logoColor=white)
+![Vultr](https://img.shields.io/badge/vultr-007BFC?style=for-the-badge&logo=vultr&logoColor=white)
 
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/dirien/minectl/Build%20Binary/main?logo=github&style=for-the-badge)
 ![GitHub](https://img.shields.io/github/license/dirien/minectl?style=for-the-badge)
@@ -145,6 +147,12 @@ export EQUINIX_PROJECT=yyy
 
 ```bash
 export GCE_KEY=<pathto>/key.json
+```
+
+#### Vultr
+
+```bash
+export VULTR_API_KEY=xxx
 ```
 
 See [Getting Started - GCE edition](docs/getting-started-gce.md) for details on how to create a GCP service account for
@@ -465,6 +473,7 @@ Apache License, Version 2.0
 - [x] New Cloud Provider Equinix Metal [#49](https://github.com/dirien/minectl/issues/49)
 - [x] New cloud provider - GCE [#55](https://github.com/dirien/minectl/issues/55)
 - [x] Add modded versions as new edition [#20](https://github.com/dirien/minectl/issues/20)
+- [x] New cloud provider - Vultr [#90](https://github.com/dirien/minectl/issues/90)
 - [ ] ...
 
 ### Libraries & Tools 🔥
@@ -490,6 +499,7 @@ Apache License, Version 2.0
 - https://github.com/Masterminds/sprig
 - https://github.com/Tnze/go-mc
 - https://github.com/c-bata/go-prompt
+- https://github.com/vultr/govultr
 
 ### Legal Disclaimer 👮
 
