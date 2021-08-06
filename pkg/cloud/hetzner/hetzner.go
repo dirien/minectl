@@ -110,7 +110,7 @@ func (h *Hetzner) CreateServer(args automation.ServerArgs) (*automation.Ressourc
 		if err != nil {
 			return nil, err
 		}
-		if server.Status == "running" {
+		if server.Status == hcloud.ServerStatusRunning {
 			stillCreating = false
 		} else {
 			time.Sleep(2 * time.Second)

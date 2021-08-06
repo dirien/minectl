@@ -121,7 +121,7 @@ func (p *PulumiProvisioner) CreateServer(wait bool) (*automation.RessourceResult
 	if wait {
 		p.waitForMinecraftServerReady(server)
 	}
-	fmt.Printf("\n✅ Server (%s) created\n", common.Green(p.args.MinecraftServer.GetName()))
+	fmt.Printf("✅ Server (%s) created\n", common.Green(p.args.MinecraftServer.GetName()))
 	return server, err
 }
 
