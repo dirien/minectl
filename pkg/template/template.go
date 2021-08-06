@@ -17,7 +17,7 @@ type Template struct {
 }
 
 type templateValues struct {
-	*model.MinecraftServer
+	*model.MinecraftResource
 	Mount      string
 	Properties []string
 }
@@ -43,14 +43,14 @@ func GetUpdateTemplate() *Template {
 	}
 }
 
-func (t *Template) DoUpdate(model *model.MinecraftServer, name TemplateName) (string, error) {
+func (t *Template) DoUpdate(model *model.MinecraftResource, name TemplateName) (string, error) {
 	return t.GetTemplate(model, "", name)
 }
 
-func (t *Template) GetTemplate(model *model.MinecraftServer, mount string, name TemplateName) (string, error) {
+func (t *Template) GetTemplate(model *model.MinecraftResource, mount string, name TemplateName) (string, error) {
 	var buff bytes.Buffer
 
-	t.Values.MinecraftServer = model
+	t.Values.MinecraftResource = model
 	t.Values.Mount = mount
 	t.Values.Properties = strings.Split(model.GetProperties(), "\n")
 

@@ -37,29 +37,29 @@ func NewHetzner(APIKey string) (*Hetzner, error) {
 }
 
 func (h *Hetzner) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
-	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftServer.GetSSH()))
+	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
 	if err != nil {
 		return nil, err
 	}
 	key, _, err := h.client.SSHKey.Create(context.Background(), hcloud.SSHKeyCreateOpts{
-		Name:      fmt.Sprintf("%s-ssh", args.MinecraftServer.GetName()),
+		Name:      fmt.Sprintf("%s-ssh", args.MinecraftResource.GetName()),
 		PublicKey: string(pubKeyFile),
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	location, _, err := h.client.Location.Get(context.Background(), args.MinecraftServer.GetRegion())
+	location, _, err := h.client.Location.Get(context.Background(), args.MinecraftResource.GetRegion())
 	if err != nil {
 		return nil, err
 	}
 
 	var volume hcloud.VolumeCreateResult
 	var mount string
-	if args.MinecraftServer.GetVolumeSize() > 0 {
+	if args.MinecraftResource.GetVolumeSize() > 0 {
 		volume, _, err = h.client.Volume.Create(context.Background(), hcloud.VolumeCreateOpts{
-			Name:     fmt.Sprintf("%s-vol", args.MinecraftServer.GetName()),
-			Size:     args.MinecraftServer.GetVolumeSize(),
+			Name:     fmt.Sprintf("%s-vol", args.MinecraftResource.GetName()),
+			Size:     args.MinecraftResource.GetVolumeSize(),
 			Location: location,
 			Format:   hcloud.String("ext4"),
 		})
@@ -68,7 +68,7 @@ func (h *Hetzner) CreateServer(args automation.ServerArgs) (*automation.Ressourc
 		}
 		mount = "sdb"
 	}
-	userData, err := h.tmpl.GetTemplate(args.MinecraftServer, mount, minctlTemplate.TemplateCloudConfig)
+	userData, err := h.tmpl.GetTemplate(args.MinecraftResource, mount, minctlTemplate.TemplateCloudConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -77,22 +77,22 @@ func (h *Hetzner) CreateServer(args automation.ServerArgs) (*automation.Ressourc
 		return nil, err
 	}
 
-	plan, _, err := h.client.ServerType.GetByName(context.Background(), args.MinecraftServer.GetSize())
+	plan, _, err := h.client.ServerType.GetByName(context.Background(), args.MinecraftResource.GetSize())
 	if err != nil {
 		return nil, err
 	}
 
 	requestOpts := hcloud.ServerCreateOpts{
-		Name:       args.MinecraftServer.GetName(),
+		Name:       args.MinecraftResource.GetName(),
 		ServerType: plan,
 		Image:      image,
 		Location:   location,
 		SSHKeys:    []*hcloud.SSHKey{key},
 		UserData:   userData,
-		Labels:     map[string]string{common.InstanceTag: "true", args.MinecraftServer.GetEdition(): "true"},
+		Labels:     map[string]string{common.InstanceTag: "true", args.MinecraftResource.GetEdition(): "true"},
 	}
 
-	if args.MinecraftServer.GetVolumeSize() > 0 {
+	if args.MinecraftResource.GetVolumeSize() > 0 {
 		requestOpts.Volumes = []*hcloud.Volume{volume.Volume}
 		requestOpts.Automount = hcloud.Bool(true)
 	}
@@ -132,7 +132,7 @@ func (h *Hetzner) DeleteServer(id string, args automation.ServerArgs) error {
 		return err
 	}
 
-	volume, _, err := h.client.Volume.Get(context.Background(), fmt.Sprintf("%s-vol", args.MinecraftServer.GetName()))
+	volume, _, err := h.client.Volume.Get(context.Background(), fmt.Sprintf("%s-vol", args.MinecraftResource.GetName()))
 	if err != nil {
 		return err
 	}
@@ -164,7 +164,7 @@ func (h *Hetzner) DeleteServer(id string, args automation.ServerArgs) error {
 		return err
 	}
 
-	key, _, err := h.client.SSHKey.Get(context.Background(), fmt.Sprintf("%s-ssh", args.MinecraftServer.GetName()))
+	key, _, err := h.client.SSHKey.Get(context.Background(), fmt.Sprintf("%s-ssh", args.MinecraftResource.GetName()))
 	if err != nil {
 		return err
 	}
@@ -212,8 +212,8 @@ func (h *Hetzner) UpdateServer(id string, args automation.ServerArgs) error {
 		return err
 	}
 
-	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), instance.PublicNet.IPv4.IP.String(), "root")
-	err = remoteCommand.UpdateServer(args.MinecraftServer)
+	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSH(), instance.PublicNet.IPv4.IP.String(), "root")
+	err = remoteCommand.UpdateServer(args.MinecraftResource)
 	if err != nil {
 		return err
 	}
@@ -227,7 +227,7 @@ func (h *Hetzner) UploadPlugin(id string, args automation.ServerArgs, plugin, de
 		return err
 	}
 
-	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), instance.PublicNet.IPv4.IP.String(), "root")
+	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSH(), instance.PublicNet.IPv4.IP.String(), "root")
 	err = remoteCommand.TransferFile(plugin, filepath.Join(destination, filepath.Base(plugin)))
 	if err != nil {
 		return err

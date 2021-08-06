@@ -34,7 +34,7 @@ func runDelete(cmd *cobra.Command, _ []string) error {
 		return errors.Wrap(err, "failed to get 'filename' value.")
 	}
 	if len(filename) == 0 {
-		return errors.New("Please provide a valid MinecraftServer manifest file")
+		return errors.New("Please provide a valid MinecraftResource manifest file")
 	}
 	id, err := cmd.Flags().GetString("id")
 	if err != nil {

@@ -12,7 +12,7 @@ import (
 )
 
 type ServerOperations interface {
-	UpdateServer(*model.MinecraftServer) error
+	UpdateServer(*model.MinecraftResource) error
 }
 
 type RemoteServer struct {
@@ -30,7 +30,7 @@ func NewRemoteServer(privateKey, ip, user string) *RemoteServer {
 	return ssh
 }
 
-func (r *RemoteServer) UpdateServer(args *model.MinecraftServer) error {
+func (r *RemoteServer) UpdateServer(args *model.MinecraftResource) error {
 	tmpl := minctlTemplate.GetUpdateTemplate()
 	var update string
 	var err error

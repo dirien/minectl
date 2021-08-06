@@ -38,11 +38,11 @@ func NewCivo(APIKey, region string) (*Civo, error) {
 }
 
 func (c *Civo) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
-	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftServer.GetSSH()))
+	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
 	if err != nil {
 		return nil, err
 	}
-	sshPubKey, err := c.client.NewSSHKey(fmt.Sprintf("%s-ssh", args.MinecraftServer.GetName()), string(pubKeyFile))
+	sshPubKey, err := c.client.NewSSHKey(fmt.Sprintf("%s-ssh", args.MinecraftResource.GetName()), string(pubKeyFile))
 	if err != nil {
 		return nil, err
 	}
@@ -61,15 +61,15 @@ func (c *Civo) CreateServer(args automation.ServerArgs) (*automation.RessourceRe
 		return nil, err
 	}
 	config.TemplateID = template.ID
-	config.Size = args.MinecraftServer.GetSize()
-	config.Hostname = args.MinecraftServer.GetName()
-	config.Region = args.MinecraftServer.GetRegion()
+	config.Size = args.MinecraftResource.GetSize()
+	config.Hostname = args.MinecraftResource.GetName()
+	config.Region = args.MinecraftResource.GetRegion()
 	config.SSHKeyID = sshPubKey.ID
 	config.PublicIPRequired = "create"
 	config.InitialUser = "root"
-	config.Tags = []string{common.InstanceTag, args.MinecraftServer.GetEdition()}
+	config.Tags = []string{common.InstanceTag, args.MinecraftResource.GetEdition()}
 
-	script, err := c.tmpl.GetTemplate(args.MinecraftServer, "", minctlTemplate.TemplateBash)
+	script, err := c.tmpl.GetTemplate(args.MinecraftResource, "", minctlTemplate.TemplateBash)
 	if err != nil {
 		return nil, err
 	}
@@ -80,8 +80,8 @@ func (c *Civo) CreateServer(args automation.ServerArgs) (*automation.RessourceRe
 		return nil, err
 	}
 
-	if args.MinecraftServer.GetEdition() == "bedrock" {
-		firewall, err := c.client.NewFirewall(fmt.Sprintf("%s-fw", args.MinecraftServer.GetName()), network.ID)
+	if args.MinecraftResource.GetEdition() == "bedrock" {
+		firewall, err := c.client.NewFirewall(fmt.Sprintf("%s-fw", args.MinecraftResource.GetName()), network.ID)
 		if err != nil {
 			return nil, err
 		}
@@ -139,7 +139,7 @@ func (c *Civo) DeleteServer(id string, args automation.ServerArgs) error {
 	if err != nil {
 		return err
 	}
-	pubKeyFile, err := c.client.FindSSHKey(fmt.Sprintf("%s-ssh", args.MinecraftServer.GetName()))
+	pubKeyFile, err := c.client.FindSSHKey(fmt.Sprintf("%s-ssh", args.MinecraftResource.GetName()))
 	if err != nil {
 		return err
 	}
@@ -147,8 +147,8 @@ func (c *Civo) DeleteServer(id string, args automation.ServerArgs) error {
 	if err != nil {
 		return err
 	}
-	if args.MinecraftServer.GetEdition() == "bedrock" {
-		firewall, err := c.client.FindFirewall(fmt.Sprintf("%s-fw", args.MinecraftServer.GetName()))
+	if args.MinecraftResource.GetEdition() == "bedrock" {
+		firewall, err := c.client.FindFirewall(fmt.Sprintf("%s-fw", args.MinecraftResource.GetName()))
 		if err != nil {
 			return err
 		}
@@ -194,8 +194,8 @@ func (c *Civo) UpdateServer(id string, args automation.ServerArgs) error {
 		return err
 	}
 
-	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), instance.PublicIP, "root")
-	err = remoteCommand.UpdateServer(args.MinecraftServer)
+	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSH(), instance.PublicIP, "root")
+	err = remoteCommand.UpdateServer(args.MinecraftResource)
 	if err != nil {
 		return err
 	}
@@ -208,7 +208,7 @@ func (c *Civo) UploadPlugin(id string, args automation.ServerArgs, plugin, desti
 		return err
 	}
 
-	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), instance.PublicIP, "root")
+	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSH(), instance.PublicIP, "root")
 	err = remoteCommand.TransferFile(plugin, filepath.Join(destination, filepath.Base(plugin)))
 	if err != nil {
 		return err

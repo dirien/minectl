@@ -55,41 +55,41 @@ func getOVHFieldsFromID(id string) (instanceName, label string, err error) {
 }
 
 func (o *OVHcloud) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
-	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftServer.GetSSH()))
+	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
 	if err != nil {
 		return nil, err
 	}
 
 	key, err := o.client.CreateSSHKey(context.Background(), ovhsdk.SSHKeyCreateOptions{
-		Name:      fmt.Sprintf("%s-ssh", args.MinecraftServer.GetName()),
+		Name:      fmt.Sprintf("%s-ssh", args.MinecraftResource.GetName()),
 		PublicKey: string(pubKeyFile),
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	image, err := o.client.GetImage(context.Background(), "Ubuntu 20.04", args.MinecraftServer.GetRegion())
+	image, err := o.client.GetImage(context.Background(), "Ubuntu 20.04", args.MinecraftResource.GetRegion())
 	if err != nil {
 		return nil, err
 	}
 
-	flavor, err := o.client.GetFlavor(context.Background(), args.MinecraftServer.GetSize(), args.MinecraftServer.GetRegion())
+	flavor, err := o.client.GetFlavor(context.Background(), args.MinecraftResource.GetSize(), args.MinecraftResource.GetRegion())
 	if err != nil {
 		return nil, err
 	}
 
 	var mount string
-	if args.MinecraftServer.GetVolumeSize() > 0 {
+	if args.MinecraftResource.GetVolumeSize() > 0 {
 		mount = "sdb"
 	}
-	userData, err := o.tmpl.GetTemplate(args.MinecraftServer, mount, minctlTemplate.TemplateBash)
+	userData, err := o.tmpl.GetTemplate(args.MinecraftResource, mount, minctlTemplate.TemplateBash)
 	if err != nil {
 		return nil, err
 	}
 
 	instance, err := o.client.CreateInstance(context.Background(), ovhsdk.InstanceCreateOptions{
-		Name:           createOVHID(args.MinecraftServer.GetName(), strings.Join([]string{common.InstanceTag, args.MinecraftServer.GetEdition()}, "|")),
-		Region:         args.MinecraftServer.GetRegion(),
+		Name:           createOVHID(args.MinecraftResource.GetName(), strings.Join([]string{common.InstanceTag, args.MinecraftResource.GetEdition()}, "|")),
+		Region:         args.MinecraftResource.GetRegion(),
 		SSHKeyID:       key.ID,
 		FlavorID:       flavor.ID,
 		ImageID:        image.ID,
@@ -113,11 +113,11 @@ func (o *OVHcloud) CreateServer(args automation.ServerArgs) (*automation.Ressour
 		}
 	}
 
-	if args.MinecraftServer.GetVolumeSize() > 0 {
+	if args.MinecraftResource.GetVolumeSize() > 0 {
 		volume, err := o.client.CreateVolume(context.Background(), ovhsdk.VolumeCreateOptions{
-			Name:   fmt.Sprintf("%s-vol", args.MinecraftServer.GetName()),
-			Size:   args.MinecraftServer.GetVolumeSize(),
-			Region: args.MinecraftServer.GetRegion(),
+			Name:   fmt.Sprintf("%s-vol", args.MinecraftResource.GetName()),
+			Size:   args.MinecraftResource.GetVolumeSize(),
+			Region: args.MinecraftResource.GetRegion(),
 			Type:   ovhsdk.VolumeClassic,
 		})
 		if err != nil {
@@ -180,7 +180,7 @@ func (o *OVHcloud) DeleteServer(id string, args automation.ServerArgs) error {
 		return err
 	}
 	for _, key := range keys {
-		if key.Name == fmt.Sprintf("%s-ssh", args.MinecraftServer.GetName()) {
+		if key.Name == fmt.Sprintf("%s-ssh", args.MinecraftResource.GetName()) {
 			err := o.client.DeleteSSHKey(context.Background(), key.ID)
 			if err != nil {
 				return err
@@ -262,8 +262,8 @@ func (o *OVHcloud) UpdateServer(id string, args automation.ServerArgs) error {
 	if err != nil {
 		return err
 	}
-	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), ip4, "ubuntu")
-	err = remoteCommand.UpdateServer(args.MinecraftServer)
+	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSH(), ip4, "ubuntu")
+	err = remoteCommand.UpdateServer(args.MinecraftResource)
 	if err != nil {
 		return err
 	}
@@ -280,7 +280,7 @@ func (o *OVHcloud) UploadPlugin(id string, args automation.ServerArgs, plugin, d
 	if err != nil {
 		return err
 	}
-	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), ip4, "ubuntu")
+	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSH(), ip4, "ubuntu")
 	err = remoteCommand.TransferFile(plugin, filepath.Join(destination, filepath.Base(plugin)))
 	if err != nil {
 		return err

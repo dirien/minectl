@@ -19,8 +19,8 @@ type Rcon struct {
 }
 
 type ServerArgs struct {
-	ID              string
-	MinecraftServer *model.MinecraftServer
+	ID                string
+	MinecraftResource *model.MinecraftResource
 }
 
 type RessourceResults struct {

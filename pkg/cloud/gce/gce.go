@@ -75,7 +75,7 @@ func NewGCE(keyfile, zone string) (*GCE, error) {
 func (g *GCE) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
 	imageURL := "projects/ubuntu-os-cloud/global/images/ubuntu-2004-focal-v20210720"
 
-	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftServer.GetSSH()))
+	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
 	if err != nil {
 		return nil, err
 	}
@@ -90,18 +90,18 @@ func (g *GCE) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 
 	stillCreating := true
 	var mount string
-	if args.MinecraftServer.GetVolumeSize() > 0 {
-		diskInsertOp, err := g.client.Disks.Insert(g.projectID, args.MinecraftServer.GetRegion(), &compute.Disk{
-			Name:   fmt.Sprintf("%s-vol", args.MinecraftServer.GetName()),
-			SizeGb: int64(args.MinecraftServer.GetVolumeSize()),
-			Type:   fmt.Sprintf("zones/%s/diskTypes/pd-standard", args.MinecraftServer.GetRegion()),
+	if args.MinecraftResource.GetVolumeSize() > 0 {
+		diskInsertOp, err := g.client.Disks.Insert(g.projectID, args.MinecraftResource.GetRegion(), &compute.Disk{
+			Name:   fmt.Sprintf("%s-vol", args.MinecraftResource.GetName()),
+			SizeGb: int64(args.MinecraftResource.GetVolumeSize()),
+			Type:   fmt.Sprintf("zones/%s/diskTypes/pd-standard", args.MinecraftResource.GetRegion()),
 		}).Context(context.Background()).Do()
 		if err != nil {
 			return nil, err
 		}
 
 		for stillCreating {
-			diskInsertOps, err := g.client.ZoneOperations.Get(g.projectID, args.MinecraftServer.GetRegion(), diskInsertOp.Name).Context(context.Background()).Do()
+			diskInsertOps, err := g.client.ZoneOperations.Get(g.projectID, args.MinecraftResource.GetRegion(), diskInsertOp.Name).Context(context.Background()).Do()
 			if err != nil {
 				return nil, err
 			}
@@ -117,7 +117,7 @@ func (g *GCE) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 		mount = "sdb"
 	}
 
-	userData, err := g.tmpl.GetTemplate(args.MinecraftServer, mount, minctlTemplate.TemplateBash)
+	userData, err := g.tmpl.GetTemplate(args.MinecraftResource, mount, minctlTemplate.TemplateBash)
 	if err != nil {
 		return nil, err
 	}
@@ -125,8 +125,8 @@ func (g *GCE) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 	oslogin := "TRUE"
 	autoRestart := true
 	instance := &compute.Instance{
-		Name:        args.MinecraftServer.GetName(),
-		MachineType: fmt.Sprintf("zones/%s/machineTypes/%s", args.MinecraftServer.GetRegion(), args.MinecraftServer.GetSize()),
+		Name:        args.MinecraftResource.GetName(),
+		MachineType: fmt.Sprintf("zones/%s/machineTypes/%s", args.MinecraftResource.GetRegion(), args.MinecraftResource.GetSize()),
 		Disks: []*compute.AttachedDisk{
 			{
 				AutoDelete: true,
@@ -179,24 +179,24 @@ func (g *GCE) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 			common.InstanceTag: "true",
 		},
 		Tags: &compute.Tags{
-			Items: []string{common.InstanceTag, args.MinecraftServer.GetEdition()},
+			Items: []string{common.InstanceTag, args.MinecraftResource.GetEdition()},
 		},
 	}
-	if args.MinecraftServer.GetVolumeSize() > 0 {
+	if args.MinecraftResource.GetVolumeSize() > 0 {
 		instance.Disks = append(instance.Disks, &compute.AttachedDisk{
-			Source: fmt.Sprintf("zones/%s/disks/%s-vol", args.MinecraftServer.GetRegion(),
-				args.MinecraftServer.GetName()),
+			Source: fmt.Sprintf("zones/%s/disks/%s-vol", args.MinecraftResource.GetRegion(),
+				args.MinecraftResource.GetName()),
 		})
 	}
 
-	insertInstanceOp, err := g.client.Instances.Insert(g.projectID, args.MinecraftServer.GetRegion(), instance).Context(context.Background()).Do()
+	insertInstanceOp, err := g.client.Instances.Insert(g.projectID, args.MinecraftResource.GetRegion(), instance).Context(context.Background()).Do()
 	if err != nil {
 		return nil, err
 	}
 
 	stillCreating = true
 	for stillCreating {
-		insertInstanceOp, err := g.client.ZoneOperations.Get(g.projectID, args.MinecraftServer.GetRegion(), insertInstanceOp.Name).Context(context.Background()).Do()
+		insertInstanceOp, err := g.client.ZoneOperations.Get(g.projectID, args.MinecraftResource.GetRegion(), insertInstanceOp.Name).Context(context.Background()).Do()
 		if err != nil {
 			return nil, err
 		}
@@ -208,7 +208,7 @@ func (g *GCE) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 	}
 
 	firewallRule := &compute.Firewall{
-		Name:        fmt.Sprintf("%s-fw", args.MinecraftServer.GetName()),
+		Name:        fmt.Sprintf("%s-fw", args.MinecraftResource.GetName()),
 		Description: "Firewall rule created by minectl",
 		Network:     fmt.Sprintf("projects/%s/global/networks/default", g.projectID),
 		Allowed: []*compute.FirewallAllowed{
@@ -225,8 +225,8 @@ func (g *GCE) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 		return nil, err
 	}
 
-	instanceListOp, err := g.client.Instances.List(g.projectID, args.MinecraftServer.GetRegion()).
-		Filter(fmt.Sprintf("(name=%s)", args.MinecraftServer.GetName())).
+	instanceListOp, err := g.client.Instances.List(g.projectID, args.MinecraftResource.GetRegion()).
+		Filter(fmt.Sprintf("(name=%s)", args.MinecraftResource.GetName())).
 		Context(context.Background()).
 		Do()
 	if err != nil {
@@ -266,7 +266,7 @@ func (g *GCE) DeleteServer(id string, args automation.ServerArgs) error {
 			return err
 		}
 	}
-	instancesListOp, err := g.client.Instances.List(g.projectID, args.MinecraftServer.GetRegion()).
+	instancesListOp, err := g.client.Instances.List(g.projectID, args.MinecraftResource.GetRegion()).
 		Filter(fmt.Sprintf("(id=%s)", id)).
 		Context(context.Background()).
 		Do()
@@ -274,7 +274,7 @@ func (g *GCE) DeleteServer(id string, args automation.ServerArgs) error {
 		return err
 	}
 	if len(instancesListOp.Items) == 1 {
-		instanceDeleteOp, err := g.client.Instances.Delete(g.projectID, args.MinecraftServer.GetRegion(), instancesListOp.Items[0].Name).
+		instanceDeleteOp, err := g.client.Instances.Delete(g.projectID, args.MinecraftResource.GetRegion(), instancesListOp.Items[0].Name).
 			Context(context.Background()).
 			Do()
 		if err != nil {
@@ -282,7 +282,7 @@ func (g *GCE) DeleteServer(id string, args automation.ServerArgs) error {
 		}
 		var stillDeleting = true
 		for stillDeleting {
-			instanceDeleteOp, err := g.client.ZoneOperations.Get(g.projectID, args.MinecraftServer.GetRegion(), instanceDeleteOp.Name).Context(context.Background()).Do()
+			instanceDeleteOp, err := g.client.ZoneOperations.Get(g.projectID, args.MinecraftResource.GetRegion(), instanceDeleteOp.Name).Context(context.Background()).Do()
 			if err != nil {
 				return err
 			}
@@ -295,21 +295,21 @@ func (g *GCE) DeleteServer(id string, args automation.ServerArgs) error {
 
 	}
 
-	diskListOp, err := g.client.Disks.List(g.projectID, args.MinecraftServer.GetRegion()).
-		Filter(fmt.Sprintf("(name=%s)", fmt.Sprintf("%s-vol", args.MinecraftServer.GetName()))).
+	diskListOp, err := g.client.Disks.List(g.projectID, args.MinecraftResource.GetRegion()).
+		Filter(fmt.Sprintf("(name=%s)", fmt.Sprintf("%s-vol", args.MinecraftResource.GetName()))).
 		Context(context.Background()).
 		Do()
 	if err != nil {
 		return err
 	}
 	for _, disk := range diskListOp.Items {
-		_, err := g.client.Disks.Delete(g.projectID, args.MinecraftServer.GetRegion(), disk.Name).Context(context.Background()).Do()
+		_, err := g.client.Disks.Delete(g.projectID, args.MinecraftResource.GetRegion(), disk.Name).Context(context.Background()).Do()
 		if err != nil {
 			return err
 		}
 	}
 
-	firewallListOps, err := g.client.Firewalls.List(g.projectID).Filter(fmt.Sprintf("(name=%s)", fmt.Sprintf("%s-fw", args.MinecraftServer.GetName()))).Context(context.Background()).Do()
+	firewallListOps, err := g.client.Firewalls.List(g.projectID).Filter(fmt.Sprintf("(name=%s)", fmt.Sprintf("%s-fw", args.MinecraftResource.GetName()))).Context(context.Background()).Do()
 	if err != nil {
 		return err
 	}
@@ -345,7 +345,7 @@ func (g *GCE) ListServer() ([]automation.RessourceResults, error) {
 
 func (g *GCE) UpdateServer(id string, args automation.ServerArgs) error {
 
-	instancesListOp, err := g.client.Instances.List(g.projectID, args.MinecraftServer.GetRegion()).
+	instancesListOp, err := g.client.Instances.List(g.projectID, args.MinecraftResource.GetRegion()).
 		Filter(fmt.Sprintf("(id=%s)", id)).
 		Context(context.Background()).
 		Do()
@@ -354,8 +354,8 @@ func (g *GCE) UpdateServer(id string, args automation.ServerArgs) error {
 	}
 	if len(instancesListOp.Items) == 1 {
 		instance := instancesListOp.Items[0]
-		remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), instance.NetworkInterfaces[0].AccessConfigs[0].NatIP, fmt.Sprintf("sa_%s", g.serviceAccountID))
-		err = remoteCommand.UpdateServer(args.MinecraftServer)
+		remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSH(), instance.NetworkInterfaces[0].AccessConfigs[0].NatIP, fmt.Sprintf("sa_%s", g.serviceAccountID))
+		err = remoteCommand.UpdateServer(args.MinecraftResource)
 		if err != nil {
 			return err
 		}
@@ -365,7 +365,7 @@ func (g *GCE) UpdateServer(id string, args automation.ServerArgs) error {
 }
 
 func (g *GCE) UploadPlugin(id string, args automation.ServerArgs, plugin, destination string) error {
-	instancesListOp, err := g.client.Instances.List(g.projectID, args.MinecraftServer.GetRegion()).
+	instancesListOp, err := g.client.Instances.List(g.projectID, args.MinecraftResource.GetRegion()).
 		Filter(fmt.Sprintf("(id=%s)", id)).
 		Context(context.Background()).
 		Do()
@@ -374,7 +374,7 @@ func (g *GCE) UploadPlugin(id string, args automation.ServerArgs, plugin, destin
 	}
 	if len(instancesListOp.Items) == 1 {
 		instance := instancesListOp.Items[0]
-		remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), instance.NetworkInterfaces[0].AccessConfigs[0].NatIP, fmt.Sprintf("sa_%s", g.serviceAccountID))
+		remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSH(), instance.NetworkInterfaces[0].AccessConfigs[0].NatIP, fmt.Sprintf("sa_%s", g.serviceAccountID))
 		err = remoteCommand.TransferFile(plugin, filepath.Join(destination, filepath.Base(plugin)))
 		if err != nil {
 			return err
@@ -392,7 +392,7 @@ func (g *GCE) UploadPlugin(id string, args automation.ServerArgs, plugin, destin
 }
 
 func (g *GCE) GetServer(id string, args automation.ServerArgs) (*automation.RessourceResults, error) {
-	instancesListOp, err := g.client.Instances.List(g.projectID, args.MinecraftServer.GetRegion()).
+	instancesListOp, err := g.client.Instances.List(g.projectID, args.MinecraftResource.GetRegion()).
 		Filter(fmt.Sprintf("(id=%s)", id)).
 		Context(context.Background()).
 		Do()

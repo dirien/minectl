@@ -28,10 +28,10 @@ var updateCmd = &cobra.Command{
 func runUpdate(cmd *cobra.Command, _ []string) error {
 	filename, err := cmd.Flags().GetString("filename")
 	if len(filename) == 0 {
-		return errors.New("Please provide a valid MinecraftServer manifest file")
+		return errors.New("Please provide a valid MinecraftResource manifest file")
 	}
 	if err != nil {
-		return errors.Wrap(err, "Please provide a valid MinecraftServer manifest file")
+		return errors.Wrap(err, "Please provide a valid MinecraftResource manifest file")
 	}
 	id, err := cmd.Flags().GetString("id")
 	if err != nil {

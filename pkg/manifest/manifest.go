@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"log"
+	"strings"
 
 	"github.com/minectl/pkg/model"
 	"github.com/xeipuuv/gojsonschema"
@@ -13,23 +13,36 @@ import (
 )
 
 type MinecraftServerManifest struct {
-	MinecraftServer *model.MinecraftServer
+	MinecraftServer *model.MinecraftResource
 }
 
-//go:embed schema.json
-var schema string
+const (
+	MinecraftProxy  = "MinecraftProxy"
+	MinecraftServer = "MinecraftServer"
+)
+
+//go:embed server.json
+var server string
+
+//go:embed proxy.json
+var proxy string
 
 func validate(manifest []byte) error {
-	schemaLoader := gojsonschema.NewStringLoader(schema)
+	var schemaLoader gojsonschema.JSONLoader
+	if strings.Contains(string(manifest), MinecraftProxy) {
+		schemaLoader = gojsonschema.NewStringLoader(proxy)
+	} else if strings.Contains(string(manifest), MinecraftServer) {
+		schemaLoader = gojsonschema.NewStringLoader(server)
+	}
 	yaml, err := yaml.YAMLToJSON(manifest)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	documentLoader := gojsonschema.NewStringLoader(string(yaml))
 
 	result, err := gojsonschema.Validate(schemaLoader, documentLoader)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	if !result.Valid() {
@@ -42,8 +55,8 @@ func validate(manifest []byte) error {
 	return nil
 }
 
-func NewMinecraftServer(manifestPath string) (*MinecraftServerManifest, error) {
-	var server MinecraftServerManifest
+func NewMinecraftResource(manifestPath string) (*model.MinecraftResource, error) {
+	var server model.MinecraftResource
 	manifestFile, err := ioutil.ReadFile(manifestPath)
 	if err != nil {
 		return nil, err
@@ -52,7 +65,7 @@ func NewMinecraftServer(manifestPath string) (*MinecraftServerManifest, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = yaml.Unmarshal(manifestFile, &server.MinecraftServer)
+	err = yaml.Unmarshal(manifestFile, &server)
 	if err != nil {
 		return nil, err
 	}

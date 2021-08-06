@@ -50,20 +50,20 @@ func NewScaleway(accessKey, secretKey, organizationID, region string) (*Scaleway
 }
 
 func (s *Scaleway) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
-	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftServer.GetSSH()))
+	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
 	if err != nil {
 		return nil, err
 	}
 	_, err = s.accountAPI.CreateSSHKey(&account.CreateSSHKeyRequest{
-		Name:      fmt.Sprintf("%s-ssh", args.MinecraftServer.GetName()),
+		Name:      fmt.Sprintf("%s-ssh", args.MinecraftResource.GetName()),
 		PublicKey: string(pubKeyFile),
 	})
 	if err != nil {
 		return nil, err
 	}
 	server, err := s.instanceAPI.CreateServer(&instance.CreateServerRequest{
-		Name:              args.MinecraftServer.GetName(),
-		CommercialType:    args.MinecraftServer.GetSize(),
+		Name:              args.MinecraftResource.GetName(),
+		CommercialType:    args.MinecraftResource.GetSize(),
 		Image:             "ubuntu_focal",
 		Tags:              []string{"minectl"},
 		DynamicIPRequired: scw.BoolPtr(true),
@@ -74,11 +74,11 @@ func (s *Scaleway) CreateServer(args automation.ServerArgs) (*automation.Ressour
 	}
 
 	var mount string
-	if args.MinecraftServer.GetVolumeSize() > 0 {
+	if args.MinecraftResource.GetVolumeSize() > 0 {
 		volume, err := s.instanceAPI.CreateVolume(&instance.CreateVolumeRequest{
-			Name:       fmt.Sprintf("%s-vol", args.MinecraftServer.GetName()),
+			Name:       fmt.Sprintf("%s-vol", args.MinecraftResource.GetName()),
 			VolumeType: instance.VolumeVolumeTypeBSSD,
-			Size:       scw.SizePtr(scw.Size(args.MinecraftServer.GetVolumeSize()) * scw.GB),
+			Size:       scw.SizePtr(scw.Size(args.MinecraftResource.GetVolumeSize()) * scw.GB),
 		})
 		if err != nil {
 			return nil, err
@@ -92,7 +92,7 @@ func (s *Scaleway) CreateServer(args automation.ServerArgs) (*automation.Ressour
 		}
 		mount = "sda"
 	}
-	userData, err := s.tmpl.GetTemplate(args.MinecraftServer, mount, minctlTemplate.TemplateCloudConfig)
+	userData, err := s.tmpl.GetTemplate(args.MinecraftResource, mount, minctlTemplate.TemplateCloudConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -162,7 +162,7 @@ func (s *Scaleway) DeleteServer(id string, args automation.ServerArgs) error {
 		}
 	}
 	keys, err := s.accountAPI.ListSSHKeys(&account.ListSSHKeysRequest{
-		Name: scw.StringPtr(fmt.Sprintf("%s-ssh", args.MinecraftServer.GetName())),
+		Name: scw.StringPtr(fmt.Sprintf("%s-ssh", args.MinecraftResource.GetName())),
 	})
 	if err != nil {
 		return err
@@ -206,8 +206,8 @@ func (s *Scaleway) UpdateServer(id string, args automation.ServerArgs) error {
 		return err
 	}
 
-	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), instance.Server.PublicIP.Address.String(), "root")
-	err = remoteCommand.UpdateServer(args.MinecraftServer)
+	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSH(), instance.Server.PublicIP.Address.String(), "root")
+	err = remoteCommand.UpdateServer(args.MinecraftResource)
 	if err != nil {
 		return err
 	}
@@ -222,7 +222,7 @@ func (s *Scaleway) UploadPlugin(id string, args automation.ServerArgs, plugin, d
 		return err
 	}
 
-	remoteCommand := update.NewRemoteServer(args.MinecraftServer.GetSSH(), instance.Server.PublicIP.Address.String(), "root")
+	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSH(), instance.Server.PublicIP.Address.String(), "root")
 	err = remoteCommand.TransferFile(plugin, filepath.Join(destination, filepath.Base(plugin)))
 	if err != nil {
 		return err
