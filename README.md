@@ -12,7 +12,10 @@
         * [Google Compute Engine (GCE)](#google-compute-engine-gce)
         * [Vultr](#vultr)
     - [Minecraft Server Versions 📚](#minecraft-server-versions-)
-    - [Server Config 📋](#server-config-)
+    - [Minecraft Proxy Versions 📚](#minecraft-proxy-versions-)
+    - [Server Configs 📋](#server-configs-)
+        * [MinecraftProxy Config 📡](#minecraftproxy-config-)
+        * [MinecraftServer Config 🕹](#mincraftserver-config-)
     - [EULA ⚖️️](#eula-)
     - [Create Minecraft Server 🏗](#create-minecraft-server-)
     - [Delete Minecraft Server 🗑](#delete-minecraft-server-)
@@ -35,6 +38,7 @@
 
 ![Minecraft](https://img.shields.io/badge/Minecraft-62B47A?style=for-the-badge&logo=Minecraft&logoColor=white)
 ![Go](https://img.shields.io/badge/go-00ADD8?style=for-the-badge&logo=go&logoColor=white)
+![Ubuntu](https://img.shields.io/badge/ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
 ![Prometheus](https://img.shields.io/badge/Prometheus-E6522C?style=for-the-badge&logo=Prometheus&logoColor=white)
 ![Scaleway](https://img.shields.io/badge/scaleway-4F0599?style=for-the-badge&logo=scaleway&logoColor=white)
 ![DigitalOcean](https://img.shields.io/badge/DigitalOcean-0080FF?style=for-the-badge&logo=DigitalOcean&logoColor=white)
@@ -197,9 +201,74 @@ best mod loader in the future because its doing very good.
 
 Source: [[1]](#1-httpswwwspigotmcorgwikiwhat-is-spigot-craftbukkit-bukkit-vanilla-forg)
 
-#### Server Config 📋
+#### Minecraft Proxy Versions 📚
 
-You need a MinecraftServer manifest file, to describe your VM and the Minecraft Server:
+Network proxy server is what you set up and use as the controller of a network of server - this is the server that
+connects all of your playable servers together so people can log in through one server IP, and then teleport between the
+separate servers ingame rather than having to log out and into each different one.
+
+A server network typically consist of the following servers:
+
+1. The proxy server itself running the desired software (BungeeCord being the most widely used and supported). This is
+   the server that you would be advertising the IP of, as all players should be logging in through the proxy server at
+   all times
+
+2. The hub (or main) server. When users connect to the network proxy server's IP, it will re-route those users to this
+   server.
+
+3. All additional servers beyond the main server. Once you have at least one server running the proxy and one as the
+   hub, any other servers will be considered extra servers that you can teleport to from the hub.
+
+##### Bungee Cord
+
+BungeeCord is a useful software written in-house by the team at SpigotMC. It acts as a proxy between the player's client
+and the connected Minecraft servers. End-users of BungeeCord see no difference between it and a normal Minecraft server.
+
+##### Waterfall
+
+Waterfall is a fork of BungeeCord, a proxy used primarily to teleport players between multiple Minecraft servers.
+
+Waterfall focuses on three main areas:
+
+- Stability
+- Features
+- Scalability
+
+#### Server Configs 📋
+
+##### MinecraftProxy Config 📡
+
+If you want to start a server with a Minecraft Proxy, you need to define a MinecraftProxy proxy.
+
+```yaml
+apiVersion: ediri.io/minectl/v1alpha1
+kind: MinecraftProxy
+metadata:
+  name: minecraft-proxy
+spec:
+  server:
+    cloud: <cloud provider name civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr>
+    region: <cloud provider region>
+    size: <cloud provider plan>
+    ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft"
+    port: <server port>
+  proxy:
+    java:
+      openjdk: <jdk version>
+      xmx: <xmx memory for the vm>
+      xms: <xms memory for the vm>
+      rcon:
+        password: <RCON server password>
+        port: <RCON server port >
+        enabled: <RCON enabled true|false>
+        broadcast: <RCON broadcase true|false
+    type: "bungeecord|waterfall"
+    version: <version>
+```
+
+##### MincraftServer Config 🕹
+
+You need a MinecraftServer manifest file, to describe the underlying compute instance and the Minecraft Server:
 
 ```yaml
 apiVersion: ediri.io/minectl/v1alpha1
@@ -210,7 +279,7 @@ spec:
   monitoring:
     enabled: true|false
   server:
-    cloud: "provider: civo|scaleway|do|hetzner|linode|ovh|equinix|gce"
+    cloud: "provider: civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr"
     region: "region see cloud provider for details eg. fra1"
     size: "see cloud provider docs for details eg. g3.large"
     volumeSize: 100
@@ -474,6 +543,7 @@ Apache License, Version 2.0
 - [x] New cloud provider - GCE [#55](https://github.com/dirien/minectl/issues/55)
 - [x] Add modded versions as new edition [#20](https://github.com/dirien/minectl/issues/20)
 - [x] New cloud provider - Vultr [#90](https://github.com/dirien/minectl/issues/90)
+- [x] Add Suport for Proxy Server - bungeecord and waterfall [#95](https://github.com/dirien/minectl/issues/95)
 - [ ] ...
 
 ### Libraries & Tools 🔥

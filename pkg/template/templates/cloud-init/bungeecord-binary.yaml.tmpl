@@ -1,0 +1,7 @@
+{{- define "bungeecord-binary" }}
+  - URL=https://serverjars.com/api/fetchJar/bungeecord/{{ .Spec.Proxy.Version }}
+  - curl -sLSf $URL > /minecraft/proxy.jar
+{{- if .Spec.Proxy.Java.Rcon.Enabled }}
+  {{- template "rcon-proxy-binary" . }}
+{{- end }}
+{{- end }}

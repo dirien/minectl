@@ -75,7 +75,7 @@ func (l *Linode) CreateServer(args automation.ServerArgs) (*automation.Ressource
 		return nil, err
 	}
 
-	userData, err := l.tmpl.GetTemplate(args.MinecraftResource, mount, minctlTemplate.TemplateBash)
+	userData, err := l.tmpl.GetTemplate(args.MinecraftResource, mount, minctlTemplate.GetTemplateBashName(args.MinecraftResource.IsProxyServer()))
 	if err != nil {
 		return nil, err
 	}

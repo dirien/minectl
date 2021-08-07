@@ -93,6 +93,9 @@ func (m *MinecraftResource) GetSize() string {
 }
 
 func (m *MinecraftResource) GetEdition() string {
+	if (m.Spec.Proxy != Proxy{}) {
+		return m.Spec.Proxy.Type
+	}
 	return m.Spec.Minecraft.Edition
 }
 
@@ -113,8 +116,18 @@ func (m *MinecraftResource) GetJDKVersion() int {
 }
 
 func (m *MinecraftResource) GetRCONPort() int {
+	if (m.Spec.Proxy != Proxy{}) {
+		return m.Spec.Proxy.Java.Rcon.Port
+	}
 	return m.Spec.Minecraft.Java.Rcon.Port
 }
 func (m *MinecraftResource) GetRCONPassword() string {
+	if (m.Spec.Proxy != Proxy{}) {
+		return m.Spec.Proxy.Java.Rcon.Password
+	}
 	return m.Spec.Minecraft.Java.Rcon.Password
+}
+
+func (m *MinecraftResource) IsProxyServer() bool {
+	return m.Spec.Proxy != Proxy{}
 }

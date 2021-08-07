@@ -35,20 +35,28 @@ func (r *RemoteServer) UpdateServer(args *model.MinecraftResource) error {
 	var update string
 	var err error
 
-	if args.GetEdition() == "java" {
+	switch args.GetEdition() {
+	case "java":
 		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplateJavaBinary)
-	} else if args.GetEdition() == "bedrock" {
+	case "bedrock":
 		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplateBedrockBinary)
-	} else if args.GetEdition() == "craftbukkit" || args.GetEdition() == "spigot" {
-		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplatesSigotbukkitBinary)
-	} else if args.GetEdition() == "fabric" {
-		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplatesFabricBinary)
+	case "craftbukkit":
+		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplateSpigotBukkitBinary)
+	case "spigot":
+		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplateSpigotBukkitBinary)
+	case "fabric":
+		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplateFabricBinary)
 		update = fmt.Sprintf("\nrm -rf /minecraft/minecraft-server.jar%s", update)
-	} else if args.GetEdition() == "forge" {
-		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplatesForgeBinary)
-	} else if args.GetEdition() == "papermc" {
-		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplatesPaperMCBinary)
+	case "forge":
+		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplateForgeBinary)
+	case "papermc":
+		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplatePaperMCBinary)
+	case "bungeecord":
+		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplateBungeeCordBinary)
+	case "waterfall":
+		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplateWaterfallBinary)
 	}
+
 	if args.GetEdition() != "bedrock" {
 		update = fmt.Sprintf("%s\napt-get install -y openjdk-%d-jre-headless\n", update, args.GetJDKVersion())
 	}

@@ -117,7 +117,7 @@ func (g *GCE) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 		mount = "sdb"
 	}
 
-	userData, err := g.tmpl.GetTemplate(args.MinecraftResource, mount, minctlTemplate.TemplateBash)
+	userData, err := g.tmpl.GetTemplate(args.MinecraftResource, mount, minctlTemplate.GetTemplateBashName(args.MinecraftResource.IsProxyServer()))
 	if err != nil {
 		return nil, err
 	}

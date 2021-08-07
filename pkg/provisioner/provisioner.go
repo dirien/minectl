@@ -31,9 +31,8 @@ import (
 )
 
 type PulumiProvisioner struct {
-	auto    automation.Automation
-	args    automation.ServerArgs
-	spinner *spinner.Spinner
+	auto automation.Automation
+	args automation.ServerArgs
 }
 
 type Provisioner interface {
@@ -46,14 +45,12 @@ type Provisioner interface {
 	DoRCON() error
 }
 
-func (p *PulumiProvisioner) startSpinner(prefix string) {
-	p.spinner.Prefix = prefix
-	p.spinner.HideCursor = true
-	p.spinner.Start()
-}
-
-func (p *PulumiProvisioner) stopSpinner() {
-	p.spinner.Stop()
+func (p *PulumiProvisioner) startSpinner(prefix string) *spinner.Spinner {
+	spinner := spinner.New(spinner.CharSets[11], 100*time.Millisecond)
+	spinner.Prefix = prefix
+	spinner.HideCursor = true
+	spinner.Start()
+	return spinner
 }
 
 func (p *PulumiProvisioner) GetServer() (*automation.RessourceResults, error) {
@@ -72,31 +69,31 @@ func (p *PulumiProvisioner) DoRCON() error {
 
 func (p *PulumiProvisioner) UploadPlugin(plugin, destination string) error {
 	fmt.Println("🚧 Plugins feature is still in beta...")
-	p.startSpinner(
+	spinner := p.startSpinner(
 		fmt.Sprintf("⤴️ Upload plugin to server (%s)... ", common.Green(p.args.MinecraftResource.GetName())))
 	err := p.auto.UploadPlugin(p.args.ID, p.args, plugin, destination)
 	if err == nil {
 		fmt.Printf("\n✅ Plugin (%s) uploaded\n", common.Green(p.args.MinecraftResource.GetName()))
 	}
-	p.stopSpinner()
+	spinner.Stop()
 	return err
 }
 
 func (p *PulumiProvisioner) UpdateServer() error {
-	p.startSpinner(
+	spinner := p.startSpinner(
 		fmt.Sprintf("🆙 Update server (%s)... ", common.Green(p.args.MinecraftResource.GetName())))
 	err := p.auto.UpdateServer(p.args.ID, p.args)
 	if err == nil {
 		fmt.Printf("\n✅ Server (%s) updated\n", common.Green(p.args.MinecraftResource.GetName()))
 	}
-	p.stopSpinner()
+	spinner.Stop()
 	return err
 }
 
 //wait that server is ready... Currently on for Java based Editions (TCP), as Bedrock is UDP
 func (p *PulumiProvisioner) waitForMinecraftServerReady(server *automation.RessourceResults) {
 	if p.args.MinecraftResource.GetEdition() != "bedrock" {
-		p.startSpinner("🕹 Starting Minecraft server... ")
+		spinner := p.startSpinner("🕹 Starting Minecraft server... ")
 		check := fmt.Sprintf("%s:%d", server.PublicIP, p.args.MinecraftResource.GetPort())
 		checkCounter := 0
 
@@ -110,29 +107,29 @@ func (p *PulumiProvisioner) waitForMinecraftServerReady(server *automation.Resso
 				err = timeout.Close()
 				if err != nil {
 					fmt.Printf("Timeout error: %s\n", err)
-					p.stopSpinner()
+					spinner.Stop()
 				}
 				break
 			}
 		}
-		p.stopSpinner()
+		spinner.Stop()
 	}
 	fmt.Println("\n✅ Minecraft successfully started.")
 }
 
 func (p *PulumiProvisioner) CreateServer(wait bool) (*automation.RessourceResults, error) {
-	p.startSpinner(
+	spinner := p.startSpinner(
 		fmt.Sprintf("🏗 Creating server (%s)... ", common.Green(p.args.MinecraftResource.GetName())))
 	server, err := p.auto.CreateServer(p.args)
 	if err != nil {
-		p.stopSpinner()
+		spinner.Stop()
 		return nil, err
 	}
-	p.stopSpinner()
+	spinner.Stop()
+	fmt.Printf("\n✅ Server (%s) created\n", common.Green(p.args.MinecraftResource.GetName()))
 	if wait {
 		p.waitForMinecraftServerReady(server)
 	}
-	fmt.Printf("✅ Server (%s) created\n", common.Green(p.args.MinecraftResource.GetName()))
 	return server, err
 }
 
@@ -141,10 +138,10 @@ func (p *PulumiProvisioner) ListServer() ([]automation.RessourceResults, error) 
 }
 
 func (p *PulumiProvisioner) DeleteServer() error {
-	p.startSpinner(
+	spinner := p.startSpinner(
 		fmt.Sprintf("🪓 Deleting server (%s)... ", common.Green(p.args.MinecraftResource.GetName())))
 	err := p.auto.DeleteServer(p.args.ID, p.args)
-	p.stopSpinner()
+	spinner.Stop()
 	if err == nil {
 		fmt.Printf("\n🗑 Server (%s) deleted\n", common.Green(p.args.MinecraftResource.GetName()))
 	}
@@ -247,12 +244,16 @@ func newProvisioner(manifestPath, id string) (*PulumiProvisioner, error) {
 	if err != nil {
 		return nil, err
 	}
-	common.PrintMixedGreen("🗺 Minecraft %s edition\n", args.MinecraftResource.GetEdition())
+
+	if args.MinecraftResource.IsProxyServer() {
+		common.PrintMixedGreen("📡 Minecraft %s Proxy \n", args.MinecraftResource.GetEdition())
+	} else {
+		common.PrintMixedGreen("🗺 Minecraft %s edition\n", args.MinecraftResource.GetEdition())
+	}
 
 	p := &PulumiProvisioner{
-		auto:    cloudProvider,
-		args:    args,
-		spinner: spinner.New(spinner.CharSets[11], 100*time.Millisecond),
+		auto: cloudProvider,
+		args: args,
 	}
 	return p, nil
 }

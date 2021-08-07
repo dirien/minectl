@@ -29,14 +29,17 @@ const (
 	TemplateCloudConfig        TemplateName = "cloud-config"
 	TemplateJavaBinary         TemplateName = "java-binary"
 	TemplateBedrockBinary      TemplateName = "bedrock-binary"
-	TemplatesSigotbukkitBinary TemplateName = "spigotbukkit-binary"
-	TemplatesFabricBinary      TemplateName = "fabric-binary"
-	TemplatesForgeBinary       TemplateName = "forge-binary"
-	TemplatesPaperMCBinary     TemplateName = "papermc-binary"
+	TemplateSpigotBukkitBinary TemplateName = "spigotbukkit-binary"
+	TemplateFabricBinary       TemplateName = "fabric-binary"
+	TemplateForgeBinary        TemplateName = "forge-binary"
+	TemplatePaperMCBinary      TemplateName = "papermc-binary"
+	TemplateProxyCloudConfig   TemplateName = "proxy-cloud-config"
+	TemplateBungeeCordBinary   TemplateName = "bungeecord-binary"
+	TemplateWaterfallBinary    TemplateName = "waterfall-binary"
 )
 
 func GetUpdateTemplate() *Template {
-	bash := template.Must(template.ParseFS(templateBash, "templates/bash/*"))
+	bash := template.Must(template.New("base").Funcs(sprig.TxtFuncMap()).ParseFS(templateBash, "templates/bash/*"))
 	return &Template{
 		Template: bash,
 		Values:   &templateValues{},
@@ -59,6 +62,20 @@ func (t *Template) GetTemplate(model *model.MinecraftResource, mount string, nam
 		return "", err
 	}
 	return buff.String(), nil
+}
+
+func GetTemplateCloudConfigName(isProxy bool) TemplateName {
+	if isProxy {
+		return TemplateProxyCloudConfig
+	}
+	return TemplateCloudConfig
+}
+
+func GetTemplateBashName(isProxy bool) TemplateName {
+	if isProxy {
+		return TemplateProxyCloudConfig
+	}
+	return TemplateBash
 }
 
 //go:embed templates

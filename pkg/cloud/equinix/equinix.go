@@ -50,7 +50,7 @@ func (e *Equinix) CreateServer(args automation.ServerArgs) (*automation.Ressourc
 		return nil, err
 	}
 
-	userData, err := e.tmpl.GetTemplate(args.MinecraftResource, "", minctlTemplate.TemplateBash)
+	userData, err := e.tmpl.GetTemplate(args.MinecraftResource, "", minctlTemplate.GetTemplateBashName(args.MinecraftResource.IsProxyServer()))
 	if err != nil {
 		return nil, err
 	}
