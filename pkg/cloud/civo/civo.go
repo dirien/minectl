@@ -69,7 +69,7 @@ func (c *Civo) CreateServer(args automation.ServerArgs) (*automation.RessourceRe
 	config.InitialUser = "root"
 	config.Tags = []string{common.InstanceTag, args.MinecraftResource.GetEdition()}
 
-	script, err := c.tmpl.GetTemplate(args.MinecraftResource, "", minctlTemplate.TemplateBash)
+	script, err := c.tmpl.GetTemplate(args.MinecraftResource, "", minctlTemplate.GetTemplateBashName(args.MinecraftResource.IsProxyServer()))
 	if err != nil {
 		return nil, err
 	}

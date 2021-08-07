@@ -68,7 +68,7 @@ func (h *Hetzner) CreateServer(args automation.ServerArgs) (*automation.Ressourc
 		}
 		mount = "sdb"
 	}
-	userData, err := h.tmpl.GetTemplate(args.MinecraftResource, mount, minctlTemplate.TemplateCloudConfig)
+	userData, err := h.tmpl.GetTemplate(args.MinecraftResource, mount, minctlTemplate.GetTemplateCloudConfigName(args.MinecraftResource.IsProxyServer()))
 	if err != nil {
 		return nil, err
 	}

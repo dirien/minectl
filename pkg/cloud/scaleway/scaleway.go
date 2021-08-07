@@ -92,7 +92,7 @@ func (s *Scaleway) CreateServer(args automation.ServerArgs) (*automation.Ressour
 		}
 		mount = "sda"
 	}
-	userData, err := s.tmpl.GetTemplate(args.MinecraftResource, mount, minctlTemplate.TemplateCloudConfig)
+	userData, err := s.tmpl.GetTemplate(args.MinecraftResource, mount, minctlTemplate.GetTemplateCloudConfigName(args.MinecraftResource.IsProxyServer()))
 	if err != nil {
 		return nil, err
 	}

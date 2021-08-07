@@ -1,0 +1,33 @@
+{{- define "proxy-cloud-config" -}}
+#!/bin/bash
+
+{{- if .Spec.Proxy.Java.Rcon.Enabled }}
+mkdir -p /tmp/bungee-rcon/
+echo "port: {{.Spec.Proxy.Java.Rcon.Port}}" > /tmp/bungee-rcon/config.yml
+echo "password: {{.Spec.Proxy.Java.Rcon.Password}}" >> /tmp/bungee-rcon/config.yml
+{{- end }}
+
+
+tee /etc/systemd/system/minecraft.service <<EOF
+[Unit]
+Description=Minecraft Proxy Server
+[Service]
+WorkingDirectory=/minecraft
+Type=simple
+ExecStart=/usr/bin/java -Xmx{{.Spec.Proxy.Java.Xmx}} -Xms{{.Spec.Proxy.Java.Xms}} -jar proxy.jar
+Restart=on-failure
+RestartSec=5
+[Install]
+WantedBy=multi-user.target
+EOF
+apt update
+apt-get install -y apt-transport-https ca-certificates curl openjdk-{{.Spec.Proxy.Java.OpenJDK}}-jre-headless
+mkdir /minecraft
+{{- if eq .Spec.Proxy.Type "bungeecord" }}
+{{- template "bungeecord-binary" . }}
+{{- else if eq .Spec.Proxy.Type "waterfall" }}
+{{- template "waterfall-binary" . }}
+{{- end }}
+systemctl restart minecraft.service
+systemctl enable minecraft.service
+{{- end -}}

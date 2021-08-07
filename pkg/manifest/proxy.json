@@ -68,7 +68,7 @@
           "type": "string"
         },
         "version": {
-          "type": "number"
+          "type": "string"
         }
       },
       "required": [
@@ -90,6 +90,9 @@
         },
         "xms": {
           "type": "string"
+        },
+        "rcon": {
+          "$ref": "#/definitions/Rcon"
         }
       },
       "required": [
@@ -98,6 +101,28 @@
         "xmx"
       ],
       "title": "Java"
+    },
+    "Rcon": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "password": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "port": {
+          "type": "integer"
+        },
+        "broadcast": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "enabled"
+      ],
+      "title": "Rcon"
     },
     "Server": {
       "type": "object",

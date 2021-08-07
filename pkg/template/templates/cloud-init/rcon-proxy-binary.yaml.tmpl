@@ -1,0 +1,6 @@
+{{- define "rcon-proxy-binary" }}
+  - RCONURL=https://github.com/orblazer/bungee-rcon/releases/download/v1.0.0/bungee-rcon-1.0.0.jar
+  - mkdir -p /minecraft/plugins/bungee-rcon/
+  - curl -sLSf $RCONURL > /minecraft/plugins/bungee-rcon-1.0.0.jar
+  - mv /tmp/bungee-rcon/config.yml /minecraft/plugins/bungee-rcon/config.yml
+{{- end }}

@@ -82,7 +82,7 @@ func (o *OVHcloud) CreateServer(args automation.ServerArgs) (*automation.Ressour
 	if args.MinecraftResource.GetVolumeSize() > 0 {
 		mount = "sdb"
 	}
-	userData, err := o.tmpl.GetTemplate(args.MinecraftResource, mount, minctlTemplate.TemplateBash)
+	userData, err := o.tmpl.GetTemplate(args.MinecraftResource, mount, minctlTemplate.GetTemplateBashName(args.MinecraftResource.IsProxyServer()))
 	if err != nil {
 		return nil, err
 	}

@@ -1,0 +1,8 @@
+{{- define "waterfall-binary" }}
+{{- $X:= splitList "-" .Spec.Proxy.Version }}
+  - URL="https://papermc.io/api/v2/projects/waterfall/versions/{{index $X 0}}/builds/{{index $X 1}}/downloads/waterfall-{{ .Spec.Proxy.Version }}.jar"
+  - curl -sLSf $URL > /minecraft/proxy.jar
+{{- if .Spec.Proxy.Java.Rcon.Enabled }}
+  {{- template "rcon-proxy-binary" . }}
+{{- end }}
+{{- end }}
