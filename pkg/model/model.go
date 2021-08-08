@@ -1,5 +1,7 @@
 package model
 
+import "reflect"
+
 // Spec
 type Spec struct {
 	Monitoring Monitoring `json:"monitoring"`
@@ -41,10 +43,11 @@ type Minecraft struct {
 
 // Java
 type Java struct {
-	Xmx     string `yaml:"xmx"`
-	Xms     string `yaml:"xms"`
-	OpenJDK int    `yaml:"openjdk"`
-	Rcon    Rcon   `yaml:"rcon"`
+	Xmx     string   `yaml:"xmx"`
+	Xms     string   `yaml:"xms"`
+	Options []string `yaml:"options"`
+	OpenJDK int      `yaml:"openjdk"`
+	Rcon    Rcon     `yaml:"rcon"`
 }
 
 // Rcon
@@ -93,7 +96,7 @@ func (m *MinecraftResource) GetSize() string {
 }
 
 func (m *MinecraftResource) GetEdition() string {
-	if (m.Spec.Proxy != Proxy{}) {
+	if !m.IsProxyServer() {
 		return m.Spec.Proxy.Type
 	}
 	return m.Spec.Minecraft.Edition
@@ -116,18 +119,18 @@ func (m *MinecraftResource) GetJDKVersion() int {
 }
 
 func (m *MinecraftResource) GetRCONPort() int {
-	if (m.Spec.Proxy != Proxy{}) {
+	if !m.IsProxyServer() {
 		return m.Spec.Proxy.Java.Rcon.Port
 	}
 	return m.Spec.Minecraft.Java.Rcon.Port
 }
 func (m *MinecraftResource) GetRCONPassword() string {
-	if (m.Spec.Proxy != Proxy{}) {
+	if !m.IsProxyServer() {
 		return m.Spec.Proxy.Java.Rcon.Password
 	}
 	return m.Spec.Minecraft.Java.Rcon.Password
 }
 
 func (m *MinecraftResource) IsProxyServer() bool {
-	return m.Spec.Proxy != Proxy{}
+	return reflect.DeepEqual(m, Proxy{})
 }

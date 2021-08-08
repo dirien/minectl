@@ -14,7 +14,7 @@ Description=Minecraft Proxy Server
 [Service]
 WorkingDirectory=/minecraft
 Type=simple
-ExecStart=/usr/bin/java -Xmx{{.Spec.Proxy.Java.Xmx}} -Xms{{.Spec.Proxy.Java.Xms}} -jar proxy.jar
+ExecStart=/usr/bin/java -Xmx{{.Spec.Proxy.Java.Xmx}} -Xms{{.Spec.Proxy.Java.Xms}}{{range .Spec.Proxy.Java.Options }} {{.}}{{end}} -jar proxy.jar
 Restart=on-failure
 RestartSec=5
 [Install]
