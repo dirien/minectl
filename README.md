@@ -257,6 +257,10 @@ spec:
       openjdk: <jdk version>
       xmx: <xmx memory for the vm>
       xms: <xms memory for the vm>
+      options:
+        - "-XX:+UseG1GC"
+        - "-XX:+ParallelRefProcEnabled"
+        - "-XX:MaxGCPauseMillis=200"
       rcon:
         password: <RCON server password>
         port: <RCON server port >
@@ -290,6 +294,10 @@ spec:
       openjdk: "8|16 use jdk 8 for <1.17 java server version"
       xmx: 2G
       xms: 2G
+      options:
+        - "-XX:+UseG1GC"
+        - "-XX:+ParallelRefProcEnabled"
+        - "-XX:MaxGCPauseMillis=200"
       rcon:
         password: test
         port: 25575
