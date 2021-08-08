@@ -11,6 +11,7 @@
         * [Equinix Metal](#equinix-metal)
         * [Google Compute Engine (GCE)](#google-compute-engine-gce)
         * [Vultr](#vultr)
+        * [Azure](#azure)
     - [Minecraft Server Versions 📚](#minecraft-server-versions-)
     - [Minecraft Proxy Versions 📚](#minecraft-proxy-versions-)
     - [Server Configs 📋](#server-configs-)
@@ -49,6 +50,8 @@
 ![Equinix Metal](https://img.shields.io/badge/equinix--metal-d10810?style=for-the-badge&logo=equinix-metal&logoColor=white)
 ![Google Cloud](https://img.shields.io/badge/google--cloud-4285F4?style=for-the-badge&logo=google-cloud&logoColor=white)
 ![Vultr](https://img.shields.io/badge/vultr-007BFC?style=for-the-badge&logo=vultr&logoColor=white)
+![Microsoft Azure](https://img.shields.io/badge/Microsoft--Azure-0078D4?style=for-the-badge&logo=microsoft-azure&logoColor=white)
+
 
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/dirien/minectl/Build%20Binary/main?logo=github&style=for-the-badge)
 ![GitHub](https://img.shields.io/github/license/dirien/minectl?style=for-the-badge)
@@ -69,6 +72,7 @@ It is a private side project of me, to learn more about Go, CLI and multi cloud.
 + OVHCloud (https://www.ovh.com/)
 + Equinix Metal (https://metal.equinix.com/)
 + Google Compute Engine (GCE) (https://cloud.google.com/compute)
++ Azure (https://azure.microsoft.com/en-us/)
 
 ### TL;DR 🚀
 
@@ -161,6 +165,15 @@ export VULTR_API_KEY=xxx
 
 See [Getting Started - GCE edition](docs/getting-started-gce.md) for details on how to create a GCP service account for
 minectl 🗺
+
+#### Azure
+
+```bash
+az login
+az ad sp create-for-rbac --sdk-auth --role 'Contributor' > azure.auth
+
+export AZURE_AUTH_LOCATION=azure.auth
+```
 
 #### Minecraft Server Versions 📚
 
@@ -544,6 +557,7 @@ Apache License, Version 2.0
 - [x] Add modded versions as new edition [#20](https://github.com/dirien/minectl/issues/20)
 - [x] New cloud provider - Vultr [#90](https://github.com/dirien/minectl/issues/90)
 - [x] Add Suport for Proxy Server - bungeecord and waterfall [#95](https://github.com/dirien/minectl/issues/95)
+- [x] New cloud provider - Azure [#56](https://github.com/dirien/minectl/issues/56)  
 - [ ] ...
 
 ### Libraries & Tools 🔥
@@ -570,6 +584,7 @@ Apache License, Version 2.0
 - https://github.com/Tnze/go-mc
 - https://github.com/c-bata/go-prompt
 - https://github.com/vultr/govultr
+- https://github.com/Azure/azure-sdk-for-go
 
 ### Legal Disclaimer 👮
 
