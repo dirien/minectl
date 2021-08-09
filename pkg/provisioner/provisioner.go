@@ -6,6 +6,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/minectl/pkg/cloud/azure"
+
 	"github.com/minectl/pkg/rcon"
 
 	"github.com/minectl/pkg/cloud/vultr"
@@ -221,6 +223,12 @@ func getProvisioner(provider, region string) (automation.Automation, error) {
 		return cloudProvider, nil
 	case "vultr":
 		cloudProvider, err := vultr.NewVultr(os.Getenv("VULTR_API_KEY"))
+		if err != nil {
+			return nil, err
+		}
+		return cloudProvider, nil
+	case "azure":
+		cloudProvider, err := azure.NewAzure(os.Getenv("AZURE_AUTH_LOCATION"))
 		if err != nil {
 			return nil, err
 		}

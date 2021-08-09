@@ -281,11 +281,14 @@ func (o *OVHcloud) UploadPlugin(id string, args automation.ServerArgs, plugin, d
 		return err
 	}
 	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSH(), ip4, "ubuntu")
-	err = remoteCommand.TransferFile(plugin, filepath.Join(destination, filepath.Base(plugin)))
+
+	// as we are not allowed to login via root user, we need to add sudo to the command
+	source := filepath.Join("/tmp", filepath.Base(plugin))
+	err = remoteCommand.TransferFile(plugin, source)
 	if err != nil {
 		return err
 	}
-	_, err = remoteCommand.ExecuteCommand("systemctl restart minecraft.service")
+	_, err = remoteCommand.ExecuteCommand(fmt.Sprintf("sudo mv %s %s\nsudo systemctl restart minecraft.service", source, destination))
 	if err != nil {
 		return err
 	}
