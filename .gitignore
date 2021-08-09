@@ -9,3 +9,5 @@ revive.log
 **/.DS_Store
 **/key.json
 /minectl
+**/azure.auth
+**/ssh/
