@@ -52,7 +52,6 @@
 ![Vultr](https://img.shields.io/badge/vultr-007BFC?style=for-the-badge&logo=vultr&logoColor=white)
 ![Microsoft Azure](https://img.shields.io/badge/Microsoft--Azure-0078D4?style=for-the-badge&logo=microsoft-azure&logoColor=white)
 
-
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/dirien/minectl/Build%20Binary/main?logo=github&style=for-the-badge)
 ![GitHub](https://img.shields.io/github/license/dirien/minectl?style=for-the-badge)
 
@@ -85,6 +84,10 @@ brew install minectl
 
 Linux or Windows user, can directly download (or use `curl`/`wget`) the binary via
 the [release page](https://github.com/dirien/minectl/releases).
+
+### Architectural overview
+
+You can find a high level architectural overview [here](docs/architecture.md)
 
 ### Usage ⚙
 
@@ -565,7 +568,7 @@ Apache License, Version 2.0
 - [x] Add modded versions as new edition [#20](https://github.com/dirien/minectl/issues/20)
 - [x] New cloud provider - Vultr [#90](https://github.com/dirien/minectl/issues/90)
 - [x] Add Suport for Proxy Server - bungeecord and waterfall [#95](https://github.com/dirien/minectl/issues/95)
-- [x] New cloud provider - Azure [#56](https://github.com/dirien/minectl/issues/56)  
+- [x] New cloud provider - Azure [#56](https://github.com/dirien/minectl/issues/56)
 - [ ] ...
 
 ### Libraries & Tools 🔥
