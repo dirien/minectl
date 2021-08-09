@@ -114,6 +114,12 @@
         "xms": {
           "type": "string"
         },
+        "options": {
+          "type": "array",
+          "contains": {
+            "type": "string"
+          }
+        },
         "rcon": {
           "$ref": "#/definitions/Rcon"
         }
