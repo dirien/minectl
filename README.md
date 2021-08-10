@@ -160,14 +160,14 @@ export EQUINIX_PROJECT=yyy
 export GCE_KEY=<pathto>/key.json
 ```
 
+See [Getting Started - GCE edition](docs/getting-started-gce.md) for details on how to create a GCP service account for
+minectl 🗺
+
 #### Vultr
 
 ```bash
 export VULTR_API_KEY=xxx
 ```
-
-See [Getting Started - GCE edition](docs/getting-started-gce.md) for details on how to create a GCP service account for
-minectl 🗺
 
 #### Azure
 
