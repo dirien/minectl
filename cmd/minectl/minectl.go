@@ -11,6 +11,7 @@ import (
 var (
 	Version   string
 	GitCommit string
+	Date      string
 )
 
 func init() {
@@ -41,13 +42,15 @@ func parseBaseCommand(_ *cobra.Command, _ []string) {
 
 	fmt.Println("Version:", getVersion())
 	fmt.Println("Git Commit:", GitCommit)
+	fmt.Println("Build date:", Date)
 	os.Exit(0)
 }
 
-func Execute(version, gitCommit string) error {
+func Execute(version, gitCommit, date string) error {
 
 	Version = version
 	GitCommit = gitCommit
+	Date = date
 
 	if err := minectlCmd.Execute(); err != nil {
 		return err
