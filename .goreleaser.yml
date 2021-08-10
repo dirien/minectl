@@ -12,6 +12,9 @@ builds:
     goarch:
       - amd64
       - arm64
+    hooks:
+      post:
+        - upx "{{ .Path }}"
 dockers:
   - image_templates: [ "ghcr.io/dirien/{{ .ProjectName }}:{{ .Version }}-amd64" ]
     dockerfile: Dockerfile
