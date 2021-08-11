@@ -29,6 +29,7 @@ jobs:
     needs: build
     env:
       DOCKER_CLI_EXPERIMENTAL: "enabled"
+      UPX_VERSION: "3.96"
     runs-on: ubuntu-latest
     if: success() && startsWith(github.ref, 'refs/tags/')
     steps:
@@ -50,10 +51,9 @@ jobs:
           go-version: 1.16
       - name: download upx
         run: |
-          wget https://github.com/upx/upx/releases/download/v3.96/upx-3.96-amd64_linux.tar.xz
-          tar xvf upx-3.96-amd64_linux.tar.xz
-          mv upx-3.96-amd64_linux/upx $GITHUB_WORKSPACE/bin/
-          upx
+          wget https://github.com/upx/upx/releases/download/v$UPX_VERSION/upx-$UPX_VERSION-amd64_linux.tar.xz
+          tar xvf upx-$UPX_VERSION-amd64_linux.tar.xz
+          sudo mv upx-$UPX_VERSION-amd64_linux/upx /usr/local/sbin
         shell: bash
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
