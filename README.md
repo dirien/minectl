@@ -1,5 +1,10 @@
 + [Supported cloud provider ☁](#supported-cloud-provider-)
 + [TL;DR 🚀](#tldr-)
+    - [Installing `minectl 🗺`](#installing-minectl-)
+        * [Installation Script](#installation-script)
+        * [Mac OS X](#mac-os-x)
+        * [Windows](#windows)
+        * [Source install](#source-install)
 + [Usage ⚙](#usage-)
     - [Access Token 🔑](#access-token-)
         * [Civo](#civo)
@@ -35,7 +40,7 @@
 + [Libraries & Tools 🔥](#libraries--tools-)
 + [Legal Disclaimer 👮](#legal-disclaimer-)
 
-# minectl 🗺
+# `minectl 🗺`
 
 ![Minecraft](https://img.shields.io/badge/Minecraft-62B47A?style=for-the-badge&logo=Minecraft&logoColor=white)
 ![Go](https://img.shields.io/badge/go-00ADD8?style=for-the-badge&logo=go&logoColor=white)
@@ -57,9 +62,9 @@
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/dirien/minectl?style=for-the-badge)
 
-`minectl`️️ is a cli for creating Minecraft (java or bedrock) server on different cloud provider.
+`minectl 🗺`️️ is a cli for creating Minecraft server on different cloud provider.
 
-It is a private side project of me, to learn more about Go, CLI and multi cloud.
+It is a private side project of me, to learn more about Go, CLI and multi-cloud environments.
 
 ### Supported cloud provider ☁
 
@@ -75,15 +80,58 @@ It is a private side project of me, to learn more about Go, CLI and multi cloud.
 
 ### TL;DR 🚀
 
-Install via homebrew:
+#### Installing `minectl 🗺`
+
+Download the latest binary executable for your operating system.
+
+##### Installation Script
 
 ```bash
-brew tap dirien/homebrew-dirien
-brew install minectl
+curl -sLS https://get.minectl.dev | sudo sh
 ```
 
-Linux or Windows user, can directly download (or use `curl`/`wget`) the binary via
-the [release page](https://github.com/dirien/minectl/releases).
+or without `sudo`
+
+```bash
+curl -sLS https://get.minectl.dev | sh
+```
+
+This will install the `minectl 🗺` to `~/.minctl/` and add it to your path. When it can’t automatically add `minectl 🗺`
+to your path, you will be prompted to add it manually.
+
+##### Mac OS X
+
+- Use [Homebrew](https://brew.sh/)
+  ```bash
+  brew tap dirien/homebrew-dirien
+  brew install minectl
+  ```
+
+##### Windows
+
+- Use Powershell
+
+  ```powershell
+  #Create directory
+  New-Item -Path "$HOME/minectl/cli" -Type Directory
+  # Download file
+  Start-BitsTransfer -Source https://github.com/dirien/minectl/releases/download/v0.7.0/minectl_0.7.0_windows_amd64.zip -Destination "$HOME/minectl/cli/."
+  # Uncompress zip file
+  Expand-Archive $HOME/minectl/cli/*.zip -DestinationPath C:\Users\Developer\minectl\cli\.
+  #Add to Windows `Environment Variables`
+  [Environment]::SetEnvironmentVariable("Path",$($env:Path + ";$Home\minectl\cli"),'User')
+  ```
+
+##### Source install
+
+You need to have [go](https://golang.org/) installed, and need to checkout
+the [Git repository](https://github.com/dirien/minectl) and run the following commands:
+
+```bash
+make build
+ ```
+
+This will output the `minectl 🗺` binary in the `bin/minectl` folder.
 
 ### Architectural overview
 
@@ -93,7 +141,7 @@ You can find a high level architectural overview [here](docs/architecture.md)
 
 #### Access Token 🔑
 
-`minectl` is completely build on zero-trust. It does not save any API Tokens, instead it looks them up in the ENV
+`minectl 🗺` is completely build on zero-trust. It does not save any API Tokens, instead it looks them up in the ENV
 variables.
 
 ##### Civo
@@ -133,7 +181,7 @@ export LINODE_TOKEN=xxxx
 You need to create API keys per endpoint. For an overview of available endpoint
 check [supported-apis](https://github.com/ovh/go-ovh#supported-apis) documentation
 
-For, example, Europe visit https://eu.api.ovh.com/createToken to create your API keys for minectl 🗺
+For, example, Europe visit https://eu.api.ovh.com/createToken to create your API keys for `minectl 🗺`
 
 ![img.png](docs/img/ovh_create_token.png)
 
@@ -161,7 +209,7 @@ export GCE_KEY=<pathto>/key.json
 ```
 
 See [Getting Started - GCE edition](docs/getting-started-gce.md) for details on how to create a GCP service account for
-minectl 🗺
+minectl 🗺`
 
 #### Vultr
 
@@ -490,7 +538,7 @@ spec:
 ...
 ```
 
-Every instance of minectl 🗺, has following monitoring components included:
+Every instance of `minectl 🗺, has following monitoring components included:
 
 - Prometheus (https://github.com/prometheus/prometheus)
 - Node exporter (https://github.com/prometheus/node_exporter)
@@ -512,7 +560,7 @@ With the `volumeSize` property, you can provision an extra volume during the cre
 It is always recommended using the provided volume of the server, but in some cases (large mod packs, community server,
 etc.) it makes sense to provision a bigger volume separately.
 
-When a separate volume is defined, `minectl` is automatically installing the Minecraft binaries on this volume.
+When a separate volume is defined, `minectl 🗺` is automatically installing the Minecraft binaries on this volume.
 
 ```yaml
 apiVersion: ediri.io/minectl/v1alpha1
@@ -542,7 +590,7 @@ spec:
 
 ### Known Limitation 😵
 
-`minectl` is still under development. There will be the possibility for breaking changes.
+`minectl 🗺` is still under development. There will be the possibility for breaking changes.
 
 ### Contributing 🤝
 
