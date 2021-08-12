@@ -23,7 +23,7 @@ var listCmd = &cobra.Command{
 	Example: `mincetl list  \
     --provider civo \
     --region LON1`,
-	RunE:          runList,
+	RunE:          RunFunc(runList),
 	SilenceUsage:  true,
 	SilenceErrors: true,
 }
@@ -62,7 +62,7 @@ func runList(cmd *cobra.Command, _ []string) error {
 		table.SetBorder(false)
 		table.Render()
 	} else {
-		fmt.Println("🤷 No server found")
+		return errors.New("🤷 No server found")
 	}
 	return nil
 }

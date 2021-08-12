@@ -1,8 +1,6 @@
 package minectl
 
 import (
-	"log"
-
 	"github.com/minectl/pkg/provisioner"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -39,7 +37,7 @@ var pluginCmd = &cobra.Command{
     --id xxx-xxx-xxx-xxx
 	--plugin plugin.jar
     --destination /minecraft/mods`,
-	RunE:          runPlugin,
+	RunE:          RunFunc(runPlugin),
 	SilenceUsage:  true,
 	SilenceErrors: true,
 }
@@ -71,7 +69,7 @@ func runPlugin(cmd *cobra.Command, _ []string) error {
 	}
 	p, err := provisioner.NewProvisioner(filename, id)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	plugin, _ := cmd.Flags().GetString("plugin")
 	destination, _ := cmd.Flags().GetString("destination")

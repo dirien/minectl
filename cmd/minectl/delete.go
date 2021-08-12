@@ -22,7 +22,7 @@ var deleteCmd = &cobra.Command{
     --filename server-do.yaml
     --id xxx-xxx-xxx-xxx
 	`,
-	RunE:          runDelete,
+	RunE:          RunFunc(runDelete),
 	SilenceUsage:  true,
 	SilenceErrors: true,
 }
@@ -48,5 +48,8 @@ func runDelete(cmd *cobra.Command, _ []string) error {
 		return err
 	}
 	err = newProvisioner.DeleteServer()
-	return err
+	if err != nil {
+		return err
+	}
+	return nil
 }

@@ -1,8 +1,6 @@
 package minectl
 
 import (
-	"log"
-
 	"github.com/minectl/pkg/provisioner"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -20,7 +18,7 @@ var updateCmd = &cobra.Command{
 	Example: `mincetl update  \
     --filename server-do.yaml
     --id xxx-xxx-xxx-xxx`,
-	RunE:          runUpdate,
+	RunE:          RunFunc(runUpdate),
 	SilenceUsage:  true,
 	SilenceErrors: true,
 }
@@ -42,7 +40,7 @@ func runUpdate(cmd *cobra.Command, _ []string) error {
 	}
 	p, err := provisioner.NewProvisioner(filename, id)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	err = p.UpdateServer()
 	if err != nil {
