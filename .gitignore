@@ -11,3 +11,4 @@ revive.log
 /minectl
 **/azure.auth
 **/ssh/
+**/cosign.key

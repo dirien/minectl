@@ -12,7 +12,7 @@ require (
 	github.com/Masterminds/semver v1.5.0 // indirect
 	github.com/Masterminds/sprig v2.22.0+incompatible
 	github.com/Tnze/go-mc v1.17.0
-	github.com/blang/semver/v4 v4.0.0 // indirect
+	github.com/blang/semver/v4 v4.0.0
 	github.com/briandowns/spinner v1.16.0
 	github.com/c-bata/go-prompt v0.2.6
 	github.com/civo/civogo v0.2.49
@@ -42,7 +42,7 @@ require (
 	github.com/sethvargo/go-password v0.2.0
 	github.com/spf13/cobra v1.2.1
 	github.com/stretchr/testify v1.7.0
-	github.com/tcnksm/go-latest v0.0.0-20170313132115-e3007ae9052e // indirect
+	github.com/tcnksm/go-latest v0.0.0-20170313132115-e3007ae9052e
 	github.com/vultr/govultr/v2 v2.7.1
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
 	github.com/xeipuuv/gojsonschema v1.2.0

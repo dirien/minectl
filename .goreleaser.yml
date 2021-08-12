@@ -1,4 +1,6 @@
 project_name: minectl
+snapshot:
+  name_template: '{{ .Tag }}-SNAPSHOT'
 before:
   hooks:
     - go mod tidy
@@ -15,6 +17,7 @@ builds:
     hooks:
       post:
         - upx "{{ .Path }}"
+        - sh -c "cosign sign-blob -key $COSIGN_KEY_LOCATION {{ .Path }} > dist/{{ .ProjectName }}_{{ .Version }}_{{ .Target }}.sig"
 dockers:
   - image_templates: [ "ghcr.io/dirien/{{ .ProjectName }}:{{ .Version }}-amd64" ]
     dockerfile: Dockerfile
@@ -25,7 +28,7 @@ dockers:
       - --label=org.opencontainers.image.version={{ .Version }}
       - --label=org.opencontainers.image.title={{ .ProjectName }}
       - --label=org.opencontainers.image.source=https://github.com/dirien/{{ .ProjectName }}
-  - image_templates: [ "ghcr.io/dirien/{{ .ProjectName }}:{{ .Version }}-arm64v8" ]
+  - image_templates: [ "ghcr.io/dirien/{{ .ProjectName }}:{{ .Version }}-arm64" ]
     goarch: arm64
     dockerfile: Dockerfile
     use: buildx
@@ -35,15 +38,6 @@ dockers:
       - --label=org.opencontainers.image.version={{ .Version }}
       - --label=org.opencontainers.image.title={{ .ProjectName }}
       - --label=org.opencontainers.image.source=https://github.com/dirien/{{ .ProjectName }}
-docker_manifests:
-  - name_template: ghcr.io/dirien/{{ .ProjectName }}:{{ .Version }}
-    image_templates:
-      - ghcr.io/dirien/{{ .ProjectName }}:{{ .Version }}-amd64
-      - ghcr.io/dirien/{{ .ProjectName }}:{{ .Version }}-arm64v8
-  - name_template: ghcr.io/dirien/{{ .ProjectName }}:latest
-    image_templates:
-      - ghcr.io/dirien/{{ .ProjectName }}:{{ .Version }}-amd64
-      - ghcr.io/dirien/{{ .ProjectName }}:{{ .Version }}-arm64v8
 brews:
   - tap:
       owner: dirien
@@ -54,7 +48,6 @@ brews:
       email: engin.diri@mail.schwarz
 
     folder: Formula
-
     homepage: "https://github.com/dirien/minectl"
     description: "minectl️️ 🗺️ is a cli for creating Minecraft (java or bedrock) server on different cloud provider."
     license: "Apache License 2.0"
@@ -63,3 +56,6 @@ archives:
   - format_overrides:
       - goos: windows
         format: zip
+release:
+  extra_files:
+    - glob: dist/*.sig
