@@ -7,7 +7,7 @@ import (
 )
 
 func init() {
-	minectlCmd.AddCommand(pluginCmd)
+
 	pluginCmd.Flags().StringP("filename", "f", "", "Contains the configuration for minectl")
 	pluginCmd.Flags().String("id", "", "contains the server id")
 	pluginCmd.Flags().StringP("plugin", "p", "", "Local plugin file location")
@@ -67,7 +67,10 @@ func runPlugin(cmd *cobra.Command, _ []string) error {
 	if len(id) == 0 {
 		return errors.New("Please provide a valid id")
 	}
-	p, err := provisioner.NewProvisioner(filename, id)
+	p, err := provisioner.NewProvisioner(&provisioner.MinectlProvisionerOpts{
+		ManifestPath: filename,
+		Id:           id,
+	}, minectlLog)
 	if err != nil {
 		return err
 	}

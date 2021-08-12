@@ -9,6 +9,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"go.uber.org/zap"
+
 	"github.com/pkg/errors"
 
 	"github.com/Azure/azure-sdk-for-go/services/compute/mgmt/2021-04-01/compute"
@@ -43,6 +45,7 @@ func NewAzure(authFile string) (*Azure, error) {
 	if err != nil {
 		return nil, err
 	}
+	zap.S().Infow("Azure set cloud-config template", "name", tmpl.Template.Name())
 	return &Azure{
 		subscriptionID: (*authInfo)["subscriptionId"].(string),
 		authorizer:     authorizer,
@@ -79,7 +82,7 @@ func (a *Azure) CreateServer(args automation.ServerArgs) (*automation.RessourceR
 	groupsClient := resources.NewGroupsClient(a.subscriptionID)
 	groupsClient.Authorizer = a.authorizer
 
-	goup, err := groupsClient.CreateOrUpdate(
+	group, err := groupsClient.CreateOrUpdate(
 		context.Background(),
 		fmt.Sprintf("%s-rg", args.MinecraftResource.GetName()),
 		resources.Group{
@@ -91,13 +94,14 @@ func (a *Azure) CreateServer(args automation.ServerArgs) (*automation.RessourceR
 	if err != nil {
 		return nil, err
 	}
+	zap.S().Infow("Azure resource group created", "name", group.Name)
 
 	virtualNetworksClient := network.NewVirtualNetworksClient(a.subscriptionID)
 	virtualNetworksClient.Authorizer = a.authorizer
 
 	virtualNetworksCreateOrUpdateFuture, err := virtualNetworksClient.CreateOrUpdate(
 		context.Background(),
-		to.String(goup.Name),
+		to.String(group.Name),
 		fmt.Sprintf("%s-vnet", args.MinecraftResource.GetName()),
 		network.VirtualNetwork{
 			Name:     to.StringPtr(fmt.Sprintf("%s-vnet", args.MinecraftResource.GetName())),
@@ -120,12 +124,13 @@ func (a *Azure) CreateServer(args automation.ServerArgs) (*automation.RessourceR
 	if err != nil {
 		return nil, err
 	}
+	zap.S().Infow("Azure virtual network created", "name", vnet.Name)
 
 	subnetsClient := network.NewSubnetsClient(a.subscriptionID)
 	subnetsClient.Authorizer = a.authorizer
 	subnetsCreateOrUpdateFuture, err := subnetsClient.CreateOrUpdate(
 		context.Background(),
-		to.String(goup.Name),
+		to.String(group.Name),
 		to.String(vnet.Name),
 		fmt.Sprintf("%s-snet", args.MinecraftResource.GetName()),
 		network.Subnet{
@@ -145,12 +150,13 @@ func (a *Azure) CreateServer(args automation.ServerArgs) (*automation.RessourceR
 	if err != nil {
 		return nil, err
 	}
+	zap.S().Infow("Azure subnetwork created", "name", subnet.Name)
 
 	ipClient := network.NewPublicIPAddressesClient(a.subscriptionID)
 	ipClient.Authorizer = a.authorizer
 	publicIPAddressesCreateOrUpdateFuture, err := ipClient.CreateOrUpdate(
 		context.Background(),
-		to.String(goup.Name),
+		to.String(group.Name),
 		fmt.Sprintf("%s-ip", args.MinecraftResource.GetName()),
 		network.PublicIPAddress{
 			Name:     to.StringPtr(fmt.Sprintf("%s-ip", args.MinecraftResource.GetName())),
@@ -175,16 +181,17 @@ func (a *Azure) CreateServer(args automation.ServerArgs) (*automation.RessourceR
 	if err != nil {
 		return nil, err
 	}
+	zap.S().Infow("Azure public ip created", "name", ip.Name)
 
 	nicClient := network.NewInterfacesClient(a.subscriptionID)
 	nicClient.Authorizer = a.authorizer
 	interfacesCreateOrUpdateFuture, err := nicClient.CreateOrUpdate(
 		context.Background(),
-		to.String(goup.Name),
+		to.String(group.Name),
 		fmt.Sprintf("%s-nic", args.MinecraftResource.GetName()),
 		network.Interface{
 			Name:     to.StringPtr(fmt.Sprintf("%s-nic", args.MinecraftResource.GetName())),
-			Location: goup.Location,
+			Location: group.Location,
 			InterfacePropertiesFormat: &network.InterfacePropertiesFormat{
 				IPConfigurations: &[]network.InterfaceIPConfiguration{
 					{
@@ -210,6 +217,7 @@ func (a *Azure) CreateServer(args automation.ServerArgs) (*automation.RessourceR
 	if err != nil {
 		return nil, err
 	}
+	zap.S().Infow("Azure network interface controller created", "name", nic.Name)
 
 	var mount string
 	var diskID *string
@@ -218,10 +226,10 @@ func (a *Azure) CreateServer(args automation.ServerArgs) (*automation.RessourceR
 		disksClient.Authorizer = a.authorizer
 		disksCreateOrUpdateFuture, err := disksClient.CreateOrUpdate(
 			context.Background(),
-			to.String(goup.Name),
+			to.String(group.Name),
 			fmt.Sprintf("%s-vol", args.MinecraftResource.GetName()),
 			compute.Disk{
-				Location: goup.Location,
+				Location: group.Location,
 				DiskProperties: &compute.DiskProperties{
 					CreationData: &compute.CreationData{
 						CreateOption: compute.DiskCreateOptionEmpty,
@@ -243,6 +251,7 @@ func (a *Azure) CreateServer(args automation.ServerArgs) (*automation.RessourceR
 		}
 		diskID = disk.ID
 		mount = "sda"
+		zap.S().Infow("Azure managed disk created", "name", disk.Name)
 	}
 	vmClient := compute.NewVirtualMachinesClient(a.subscriptionID)
 	vmClient.Authorizer = a.authorizer
@@ -257,7 +266,7 @@ func (a *Azure) CreateServer(args automation.ServerArgs) (*automation.RessourceR
 	}
 
 	vmOptions := compute.VirtualMachine{
-		Location: goup.Location,
+		Location: group.Location,
 		VirtualMachineProperties: &compute.VirtualMachineProperties{
 			HardwareProfile: &compute.HardwareProfile{
 				VMSize: compute.VirtualMachineSizeTypes(args.MinecraftResource.GetSize()),
@@ -311,7 +320,7 @@ func (a *Azure) CreateServer(args automation.ServerArgs) (*automation.RessourceR
 
 	virtualMachinesCreateOrUpdateFuture, err := vmClient.CreateOrUpdate(
 		context.Background(),
-		to.String(goup.Name),
+		to.String(group.Name),
 		args.MinecraftResource.GetName(),
 		vmOptions)
 	if err != nil {
@@ -325,7 +334,9 @@ func (a *Azure) CreateServer(args automation.ServerArgs) (*automation.RessourceR
 	if err != nil {
 		return nil, err
 	}
-	virtualMachinesStartFuture, err := vmClient.Start(context.Background(), to.String(goup.Name), to.String(instance.Name))
+	zap.S().Infow("Azure virtual machine created", "name", instance.Name)
+
+	virtualMachinesStartFuture, err := vmClient.Start(context.Background(), to.String(group.Name), to.String(instance.Name))
 	if err != nil {
 		return nil, err
 	}
@@ -334,11 +345,12 @@ func (a *Azure) CreateServer(args automation.ServerArgs) (*automation.RessourceR
 	if err != nil {
 		return nil, err
 	}
+	zap.S().Infow("Azure virtual machine started", "name", instance.Name, "ip", ip.IPAddress, "id", instance.Name)
 
 	return &automation.RessourceResults{
 		ID:       to.String(instance.Name),
 		Name:     to.String(instance.Name),
-		Region:   to.String(goup.Location),
+		Region:   to.String(group.Location),
 		PublicIP: to.String(ip.IPAddress),
 		Tags:     strings.Join(getTagKeys(instance.Tags), ","),
 	}, err
@@ -346,6 +358,7 @@ func (a *Azure) CreateServer(args automation.ServerArgs) (*automation.RessourceR
 
 func (a *Azure) DeleteServer(id string, args automation.ServerArgs) error {
 	resourceGroupName := fmt.Sprintf("%s-rg", args.MinecraftResource.GetName())
+	zap.S().Infow("Azure delete resource group", "name", resourceGroupName)
 	groupsClient := resources.NewGroupsClient(a.subscriptionID)
 	groupsClient.Authorizer = a.authorizer
 	groupsDeleteFuture, err := groupsClient.Delete(context.Background(), resourceGroupName)
@@ -356,6 +369,7 @@ func (a *Azure) DeleteServer(id string, args automation.ServerArgs) error {
 	if err != nil {
 		return err
 	}
+	zap.S().Infow("Azure resource group deleted", "name", resourceGroupName)
 	return nil
 }
 
@@ -391,6 +405,11 @@ func (a *Azure) ListServer() ([]automation.RessourceResults, error) {
 			}
 		}
 	}
+	if len(result) > 0 {
+		zap.S().Infow("Azure list all minectl vms", "list", result)
+	} else {
+		zap.S().Infow("No minectl vms found")
+	}
 	return result, nil
 }
 
@@ -404,6 +423,7 @@ func (a *Azure) UpdateServer(id string, args automation.ServerArgs) error {
 	if err != nil {
 		return err
 	}
+	zap.S().Infow("minectl server updated", "name", server.Name)
 	return nil
 }
 
@@ -424,6 +444,7 @@ func (a *Azure) UploadPlugin(id string, args automation.ServerArgs, plugin, dest
 	if err != nil {
 		return err
 	}
+	zap.S().Infow("Minecraft plugin uploaded", "plugin", plugin, "server", server.Name)
 	return nil
 }
 
@@ -451,7 +472,7 @@ func (a *Azure) GetServer(id string, args automation.ServerArgs) (*automation.Re
 	if err != nil {
 		return nil, err
 	}
-
+	zap.S().Infow("Get Azure minctl server", "name", instance.Name, "ip", publicIPAddress.IPAddress)
 	return &automation.RessourceResults{
 		ID:       to.String(instance.Name),
 		Name:     to.String(instance.Name),

@@ -11,6 +11,9 @@ import (
 	"strings"
 
 	"github.com/Azure/go-autorest/autorest/to"
+	"go.uber.org/zap"
+
+	"github.com/minectl/pkg/logging"
 
 	"github.com/blang/semver/v4"
 	"github.com/morikuni/aec"
@@ -24,48 +27,6 @@ var (
 	GitCommit string
 	Date      string
 )
-
-func init() {
-	minectlCmd.AddCommand(versionCmd)
-}
-
-var updateCheckResult chan *string
-
-var minectlCmd = &cobra.Command{
-	Use:   "minectl",
-	Short: "Create Minecraft Server on different cloud provider.",
-	Run:   runMineCtl,
-	CompletionOptions: cobra.CompletionOptions{
-		DisableDefaultCmd: false,
-	},
-	PersistentPostRun: func(cmd *cobra.Command, args []string) {
-		fmt.Println("PersistentPostRun")
-	},
-	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-		var waitForUpdateCheck bool
-		defer func() {
-			if !waitForUpdateCheck {
-				close(updateCheckResult)
-			}
-		}()
-
-		updateCheckResult = make(chan *string)
-		waitForUpdateCheck = true
-		go func() {
-			updateCheckResult <- checkForUpdate()
-			close(updateCheckResult)
-		}()
-		return nil
-	},
-	PersistentPostRunE: func(cmd *cobra.Command, args []string) error {
-		checkVersionMsg, ok := <-updateCheckResult
-		if ok && checkVersionMsg != nil {
-			fmt.Println()
-			fmt.Println(to.String(checkVersionMsg))
-		}
-		return nil
-	},
-}
 
 func isDevVersion(s semver.Version) bool {
 	if len(s.Pre) == 0 {
@@ -143,9 +104,9 @@ func runPostCommandHooks(c *cobra.Command, args []string) error {
 func RunFunc(run func(cmd *cobra.Command, args []string) error) func(*cobra.Command, []string) error {
 	return func(cmd *cobra.Command, args []string) error {
 		if res := run(cmd, args); res != nil {
-			fmt.Println(res)
+			minectlLog.Error(res)
 			if postRunErr := runPostCommandHooks(cmd, args); postRunErr != nil {
-				fmt.Println(res)
+				minectlLog.Error(postRunErr)
 			}
 			os.Exit(1)
 		}
@@ -231,7 +192,7 @@ func getVersion() string {
 	if len(Version) != 0 {
 		return Version
 	}
-	return "0.1.0-dev"
+	return "0.1.0"
 }
 
 func parseBaseCommand(_ *cobra.Command, _ []string) {
@@ -241,8 +202,75 @@ func parseBaseCommand(_ *cobra.Command, _ []string) {
 	fmt.Println("Build date:", Date)
 }
 
-func Execute(version, gitCommit, date string) error {
+var (
+	headless          bool
+	minectlLog        *logging.MinectlLogging
+	updateCheckResult chan *string
+)
 
+var minectlCmd = &cobra.Command{
+	Use:   "minectl",
+	Short: "Create Minecraft Server on different cloud provider.",
+	Run:   runMineCtl,
+	CompletionOptions: cobra.CompletionOptions{
+		DisableDefaultCmd: false,
+	},
+	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+		headless, _ = cmd.Flags().GetBool("headless")
+		verbose, _ := cmd.Flags().GetString("verbose")
+		logEncoding, _ := cmd.Flags().GetString("log-encoding")
+		if headless && len(verbose) == 0 {
+			verbose = "info"
+		}
+		var err error
+		minectlLog, err = logging.NewLogging(verbose, logEncoding, headless)
+		if err != nil {
+			os.Exit(0)
+		}
+		var waitForUpdateCheck bool
+		defer func() {
+			if !waitForUpdateCheck {
+				close(updateCheckResult)
+			}
+		}()
+
+		updateCheckResult = make(chan *string)
+		waitForUpdateCheck = true
+		go func() {
+			updateCheckResult <- checkForUpdate()
+			close(updateCheckResult)
+		}()
+		return nil
+	},
+	PersistentPostRunE: func(cmd *cobra.Command, args []string) error {
+		checkVersionMsg, ok := <-updateCheckResult
+		if ok && checkVersionMsg != nil {
+			zap.S().Infof("Warning(%v)", checkVersionMsg)
+			fmt.Println()
+			fmt.Println(to.String(checkVersionMsg))
+		}
+		return nil
+	},
+}
+
+func init() {
+
+	minectlCmd.PersistentFlags().String("verbose", "",
+		"Enable verbose logging: debug|info|warn|error|dpanic|panic|fatal")
+	minectlCmd.PersistentFlags().String("log-encoding", "console",
+		"Set the log encoding: console|json (default: console)")
+	minectlCmd.PersistentFlags().Bool("headless", false,
+		"Set this value to if mincetl is called by a CI system. Enables logging and disables human-friendly output rendering (default: false)")
+	minectlCmd.AddCommand(versionCmd)
+	minectlCmd.AddCommand(createCmd)
+	minectlCmd.AddCommand(deleteCmd)
+	minectlCmd.AddCommand(listCmd)
+	minectlCmd.AddCommand(pluginCmd)
+	minectlCmd.AddCommand(rconCmd)
+	minectlCmd.AddCommand(updateCmd)
+}
+
+func Execute(version, gitCommit, date string) error {
 	Version = version
 	GitCommit = gitCommit
 	Date = date
