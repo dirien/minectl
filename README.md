@@ -644,6 +644,8 @@ Apache License, Version 2.0
 - https://github.com/c-bata/go-prompt
 - https://github.com/vultr/govultr
 - https://github.com/Azure/azure-sdk-for-go
+- https://github.com/blang/semver
+- https://github.com/tcnksm/go-latest
 
 ### Legal Disclaimer 👮
 

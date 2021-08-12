@@ -6,9 +6,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"path/filepath"
 	"strings"
+
+	"github.com/pkg/errors"
 
 	"github.com/Azure/azure-sdk-for-go/services/compute/mgmt/2021-04-01/compute"
 	"github.com/Azure/azure-sdk-for-go/services/network/mgmt/2021-02-01/network"
@@ -36,7 +37,7 @@ func NewAzure(authFile string) (*Azure, error) {
 	}
 	authInfo, err := readJSON(authFile)
 	if err != nil {
-		log.Fatalf("Failed to read JSON: %+v", err)
+		return nil, errors.Wrap(err, "Failed to read JSON")
 	}
 	tmpl, err := minctlTemplate.NewTemplateCloudConfig()
 	if err != nil {
@@ -52,7 +53,7 @@ func NewAzure(authFile string) (*Azure, error) {
 func readJSON(path string) (*map[string]interface{}, error) {
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
-		log.Fatalf("failed to read file: %v", err)
+		return nil, errors.Wrap(err, "Failed to read file")
 	}
 	contents := make(map[string]interface{})
 	_ = json.Unmarshal(data, &contents)

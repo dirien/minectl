@@ -2,7 +2,6 @@ package minectl
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/minectl/pkg/common"
@@ -24,7 +23,7 @@ var createCmd = &cobra.Command{
 	Short: "Create an Minecraft Server.",
 	Example: `mincetl create  \
     --filename server-do.yaml`,
-	RunE:          runCreate,
+	RunE:          RunFunc(runCreate),
 	SilenceUsage:  true,
 	SilenceErrors: true,
 }
@@ -39,7 +38,7 @@ func runCreate(cmd *cobra.Command, _ []string) error {
 	}
 	p, err := provisioner.NewProvisioner(filename)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 	}
 	wait := true
 	if cmd.Flags().Changed("wait") {
@@ -47,7 +46,8 @@ func runCreate(cmd *cobra.Command, _ []string) error {
 	}
 	res, err := p.CreateServer(wait)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
+		return nil
 	}
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{"ID", "NAME", "REGION", "TAGS", "IP"})
@@ -64,5 +64,5 @@ func runCreate(cmd *cobra.Command, _ []string) error {
 	common.PrintMixedGreen("⤴️ To upload a plugin type:\n\n %s",
 		fmt.Sprintf("minectl plugins -f %s --id %s --plugin <folder>/x.jar --destination /minecraft/plugins\n", filename, res.ID))
 	common.PrintMixedGreen("\n🔌 Connected to RCON type:\n\n %s", fmt.Sprintf("minectl rcon -f %s --id %s\n", filename, res.ID))
-	return err
+	return nil
 }

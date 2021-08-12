@@ -1,8 +1,6 @@
 package minectl
 
 import (
-	"log"
-
 	"github.com/minectl/pkg/provisioner"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -20,7 +18,7 @@ var rconCmd = &cobra.Command{
 	Example: `mincetl rcon  \
     --filename server-do.yaml \
     --id xxxx`,
-	RunE:          runRCON,
+	RunE:          RunFunc(runRCON),
 	SilenceUsage:  true,
 	SilenceErrors: true,
 }
@@ -42,11 +40,11 @@ func runRCON(cmd *cobra.Command, _ []string) error {
 	}
 	p, err := provisioner.NewProvisioner(filename, id)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	err = p.DoRCON()
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	return nil
 }
