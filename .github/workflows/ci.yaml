@@ -30,6 +30,7 @@ jobs:
     env:
       DOCKER_CLI_EXPERIMENTAL: "enabled"
       UPX_VERSION: "3.96"
+      COSIGN_KEY_LOCATION: "/tmp/cosign.key"
     runs-on: ubuntu-latest
     if: success() && startsWith(github.ref, 'refs/tags/')
     steps:
@@ -51,10 +52,19 @@ jobs:
           go-version: 1.16
       - name: download upx
         run: |
+          cd /tmp
           wget https://github.com/upx/upx/releases/download/v$UPX_VERSION/upx-$UPX_VERSION-amd64_linux.tar.xz
           tar xvf upx-$UPX_VERSION-amd64_linux.tar.xz
           sudo mv upx-$UPX_VERSION-amd64_linux/upx /usr/local/sbin
         shell: bash
+      - uses: sigstore/cosign-installer@main
+        with:
+          cosign-release: 'v1.0.0'
+      - name: install cosign private key
+        run: 'echo "$COSIGN_KEY" > $COSIGN_KEY_LOCATION'
+        shell: bash
+        env:
+          COSIGN_KEY: ${{secrets.COSIGN_KEY}}
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
         with:
@@ -62,3 +72,12 @@ jobs:
           args: release --rm-dist
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+      - name: set version as env
+        run: |
+          tag=$(git describe --tags --abbrev=0 | tr --delete v)
+          echo "version=$tag" >> $GITHUB_ENV
+      - name: Sign the image
+        run: |
+          echo -n "${{secrets.COSIGN_PASSWORD}}" | cosign sign -key $COSIGN_KEY_LOCATION ghcr.io/dirien/minectl:${{ env.version }}-arm64
+          echo -n "${{secrets.COSIGN_PASSWORD}}" | cosign sign -key $COSIGN_KEY_LOCATION ghcr.io/dirien/minectl:${{ env.version }}-amd64
