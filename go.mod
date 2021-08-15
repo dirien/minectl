@@ -13,7 +13,6 @@ require (
 	github.com/Masterminds/sprig v2.22.0+incompatible
 	github.com/Tnze/go-mc v1.17.0
 	github.com/blang/semver/v4 v4.0.0
-	github.com/briandowns/spinner v1.16.0
 	github.com/c-bata/go-prompt v0.2.6
 	github.com/civo/civogo v0.2.49
 	github.com/digitalocean/godo v1.65.0
@@ -46,6 +45,7 @@ require (
 	github.com/vultr/govultr/v2 v2.7.1
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
 	github.com/xeipuuv/gojsonschema v1.2.0
+	go.uber.org/zap v1.17.0
 	golang.org/x/crypto v0.0.0-20210813211128-0a44fdfbc16e
 	golang.org/x/net v0.0.0-20210726213435-c6fcb2dbf985 // indirect
 	golang.org/x/oauth2 v0.0.0-20210810183815-faf39c7919d5

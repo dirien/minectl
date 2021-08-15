@@ -625,7 +625,6 @@ Apache License, Version 2.0
 - https://github.com/melbahja/goph
 - https://github.com/spf13/cobra
 - https://github.com/goreleaser
-- https://github.com/briandowns/spinner
 - https://github.com/civo/civogo
 - https://github.com/digitalocean/godo
 - https://github.com/scaleway/scaleway-sdk-go
@@ -646,6 +645,7 @@ Apache License, Version 2.0
 - https://github.com/Azure/azure-sdk-for-go
 - https://github.com/blang/semver
 - https://github.com/tcnksm/go-latest
+- https://github.com/uber-go/zap
 
 ### Legal Disclaimer 👮
 

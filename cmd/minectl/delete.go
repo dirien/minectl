@@ -8,8 +8,6 @@ import (
 
 func init() {
 
-	minectlCmd.AddCommand(deleteCmd)
-
 	deleteCmd.Flags().StringP("filename", "f", "", "that contains the configuration for minectl")
 	deleteCmd.Flags().String("id", "", "contains the server id")
 
@@ -43,7 +41,10 @@ func runDelete(cmd *cobra.Command, _ []string) error {
 	if len(id) == 0 {
 		return errors.New("Please provide a valid id")
 	}
-	newProvisioner, err := provisioner.NewProvisioner(filename, id)
+	newProvisioner, err := provisioner.NewProvisioner(&provisioner.MinectlProvisionerOpts{
+		ManifestPath: filename,
+		Id:           id,
+	}, minectlLog)
 	if err != nil {
 		return err
 	}

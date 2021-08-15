@@ -12,7 +12,6 @@ import (
 
 func init() {
 
-	minectlCmd.AddCommand(listCmd)
 	listCmd.Flags().StringP("provider", "p", "", "The cloud provider - civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr")
 	listCmd.Flags().StringP("region", "r", "", "The region (gce: zone) for your cloud provider - civo|gce")
 }
@@ -42,7 +41,10 @@ func runList(cmd *cobra.Command, _ []string) error {
 		return errors.Wrap(err, "failed to get 'region' value.")
 	}
 
-	newProvisioner, err := provisioner.ListProvisioner(provider, region)
+	newProvisioner, err := provisioner.ListProvisioner(&provisioner.MinectlProvisionerListOpts{
+		Provider: provider,
+		Region:   region,
+	}, minectlLog)
 	if err != nil {
 		return err
 	}
@@ -51,18 +53,20 @@ func runList(cmd *cobra.Command, _ []string) error {
 		return err
 	}
 
-	if len(servers) > 0 {
-		fmt.Println("")
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetHeader([]string{"ID", "NAME", "REGION", "TAGS", "IP"})
+	if !headless {
+		if len(servers) > 0 {
+			fmt.Println("")
+			table := tablewriter.NewWriter(os.Stdout)
+			table.SetHeader([]string{"ID", "NAME", "REGION", "TAGS", "IP"})
 
-		for _, server := range servers {
-			table.Append([]string{server.ID, server.Name, server.Region, server.Tags, server.PublicIP})
+			for _, server := range servers {
+				table.Append([]string{server.ID, server.Name, server.Region, server.Tags, server.PublicIP})
+			}
+			table.SetBorder(false)
+			table.Render()
+		} else {
+			return errors.New("🤷 No server found")
 		}
-		table.SetBorder(false)
-		table.Render()
-	} else {
-		return errors.New("🤷 No server found")
 	}
 	return nil
 }

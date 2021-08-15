@@ -8,6 +8,8 @@ import (
 	"strings"
 	"time"
 
+	"go.uber.org/zap"
+
 	"github.com/minectl/pkg/update"
 
 	"github.com/civo/civogo"
@@ -46,16 +48,18 @@ func (c *Civo) CreateServer(args automation.ServerArgs) (*automation.RessourceRe
 	if err != nil {
 		return nil, err
 	}
-
+	zap.S().Infow("Civo SSH Key created", "id", sshPubKey.ID)
 	network, err := c.client.GetDefaultNetwork()
 	if err != nil {
 		return nil, err
 	}
+	zap.S().Infow("Civo get default network created", "network", network)
 
 	template, err := c.client.FindDiskImage("ubuntu-focal")
 	if err != nil {
 		return nil, err
 	}
+	zap.S().Infow("Civo get disk image", "template", template)
 	config, err := c.client.NewInstanceConfig()
 	if err != nil {
 		return nil, err
@@ -79,6 +83,7 @@ func (c *Civo) CreateServer(args automation.ServerArgs) (*automation.RessourceRe
 	if err != nil {
 		return nil, err
 	}
+	zap.S().Infow("Civo create instance", "instance", instance)
 
 	if args.MinecraftResource.GetEdition() == "bedrock" {
 		firewall, err := c.client.NewFirewall(fmt.Sprintf("%s-fw", args.MinecraftResource.GetName()), network.ID)
@@ -95,6 +100,7 @@ func (c *Civo) CreateServer(args automation.ServerArgs) (*automation.RessourceRe
 			},
 			Label: "Minecraft Bedrock UDP",
 		})
+		zap.S().Infow("Civo create firewall", "firewall", firewall)
 		if err != nil {
 			return nil, err
 		}
@@ -121,6 +127,7 @@ func (c *Civo) CreateServer(args automation.ServerArgs) (*automation.RessourceRe
 	if err != nil {
 		return nil, err
 	}
+	zap.S().Infow("Civo instance ready", "instance", instance)
 	region := c.client.Region
 	if len(instance.Region) > 0 {
 		region = instance.Region
@@ -139,6 +146,7 @@ func (c *Civo) DeleteServer(id string, args automation.ServerArgs) error {
 	if err != nil {
 		return err
 	}
+	zap.S().Infow("Civo delete instance", "id", id)
 	pubKeyFile, err := c.client.FindSSHKey(fmt.Sprintf("%s-ssh", args.MinecraftResource.GetName()))
 	if err != nil {
 		return err
@@ -147,6 +155,7 @@ func (c *Civo) DeleteServer(id string, args automation.ServerArgs) error {
 	if err != nil {
 		return err
 	}
+	zap.S().Infow("Civo delete ssh key", "pubKeyFile", pubKeyFile)
 	if args.MinecraftResource.GetEdition() == "bedrock" {
 		firewall, err := c.client.FindFirewall(fmt.Sprintf("%s-fw", args.MinecraftResource.GetName()))
 		if err != nil {
@@ -156,6 +165,7 @@ func (c *Civo) DeleteServer(id string, args automation.ServerArgs) error {
 		if err != nil {
 			return err
 		}
+		zap.S().Infow("Civo delete firewall", "firewall", firewall)
 	}
 	return nil
 }
@@ -185,6 +195,11 @@ func (c *Civo) ListServer() ([]automation.RessourceResults, error) {
 			}
 		}
 	}
+	if len(result) > 0 {
+		zap.S().Infow("Civo list all instances", "list", result)
+	} else {
+		zap.S().Infow("No minectl instances found")
+	}
 	return result, nil
 }
 
@@ -199,6 +214,7 @@ func (c *Civo) UpdateServer(id string, args automation.ServerArgs) error {
 	if err != nil {
 		return err
 	}
+	zap.S().Infow("Civo minectl server updated", "instance", instance)
 	return nil
 }
 
@@ -217,6 +233,7 @@ func (c *Civo) UploadPlugin(id string, args automation.ServerArgs, plugin, desti
 	if err != nil {
 		return err
 	}
+	zap.S().Infow("Minecraft plugin uploaded", "plugin", plugin, "instance", instance)
 	return nil
 }
 

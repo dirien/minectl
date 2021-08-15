@@ -7,7 +7,7 @@ import (
 )
 
 func init() {
-	minectlCmd.AddCommand(updateCmd)
+
 	updateCmd.Flags().StringP("filename", "f", "", "Contains the configuration for minectl")
 	updateCmd.Flags().String("id", "", "contains the server id")
 }
@@ -38,7 +38,10 @@ func runUpdate(cmd *cobra.Command, _ []string) error {
 	if len(id) == 0 {
 		return errors.New("Please provide a valid id")
 	}
-	p, err := provisioner.NewProvisioner(filename, id)
+	p, err := provisioner.NewProvisioner(&provisioner.MinectlProvisionerOpts{
+		ManifestPath: filename,
+		Id:           id,
+	}, minectlLog)
 	if err != nil {
 		return err
 	}

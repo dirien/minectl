@@ -6,6 +6,10 @@ import (
 	"os"
 	"time"
 
+	"github.com/minectl/pkg/progress"
+
+	"github.com/minectl/pkg/logging"
+
 	"github.com/minectl/pkg/cloud/azure"
 
 	"github.com/minectl/pkg/rcon"
@@ -20,7 +24,6 @@ import (
 
 	"github.com/minectl/pkg/cloud/linode"
 
-	"github.com/briandowns/spinner"
 	"github.com/minectl/pkg/automation"
 	"github.com/minectl/pkg/cloud"
 	"github.com/minectl/pkg/cloud/civo"
@@ -32,9 +35,20 @@ import (
 	"github.com/pkg/errors"
 )
 
-type PulumiProvisioner struct {
-	auto automation.Automation
-	args automation.ServerArgs
+type MinectlProvisionerOpts struct {
+	ManifestPath string
+	Id           string
+}
+
+type MinectlProvisionerListOpts struct {
+	Provider string
+	Region   string
+}
+
+type MinectlProvisioner struct {
+	auto    automation.Automation
+	args    automation.ServerArgs
+	logging *logging.MinectlLogging
 }
 
 type Provisioner interface {
@@ -47,19 +61,11 @@ type Provisioner interface {
 	DoRCON() error
 }
 
-func (p *PulumiProvisioner) startSpinner(prefix string) *spinner.Spinner {
-	spinner := spinner.New(spinner.CharSets[11], 100*time.Millisecond)
-	spinner.Prefix = prefix
-	spinner.HideCursor = true
-	spinner.Start()
-	return spinner
-}
-
-func (p *PulumiProvisioner) GetServer() (*automation.RessourceResults, error) {
+func (p *MinectlProvisioner) GetServer() (*automation.RessourceResults, error) {
 	return p.auto.GetServer(p.args.ID, p.args)
 }
 
-func (p *PulumiProvisioner) DoRCON() error {
+func (p *MinectlProvisioner) DoRCON() error {
 	server, err := p.GetServer()
 	if err != nil {
 		return err
@@ -69,33 +75,35 @@ func (p *PulumiProvisioner) DoRCON() error {
 	return nil
 }
 
-func (p *PulumiProvisioner) UploadPlugin(plugin, destination string) error {
-	fmt.Println("🚧 Plugins feature is still in beta...")
-	spinner := p.startSpinner(
-		fmt.Sprintf("⤴️ Upload plugin to server (%s)... ", common.Green(p.args.MinecraftResource.GetName())))
+func (p *MinectlProvisioner) UploadPlugin(plugin, destination string) error {
+	p.logging.RawMessage("🚧 Plugins feature is still in beta...")
+	indicator := progress.NewIndicator(fmt.Sprintf("⤴️ Upload plugin to server (%s)...", common.Green(p.args.MinecraftResource.GetName())), p.logging)
+	indicator.FinalMessage = fmt.Sprintf("✅ Plugin (%s) uploaded.", common.Green(p.args.MinecraftResource.GetName()))
+	indicator.ErrorMessage = fmt.Sprintf("❌ Plugin (%s) not uploaded.", common.Green(p.args.MinecraftResource.GetName()))
+	indicator.Start()
 	err := p.auto.UploadPlugin(p.args.ID, p.args, plugin, destination)
-	if err == nil {
-		fmt.Printf("\n✅ Plugin (%s) uploaded\n", common.Green(p.args.MinecraftResource.GetName()))
-	}
-	spinner.Stop()
+	indicator.StopE(err)
 	return err
 }
 
-func (p *PulumiProvisioner) UpdateServer() error {
-	spinner := p.startSpinner(
-		fmt.Sprintf("🆙 Update server (%s)... ", common.Green(p.args.MinecraftResource.GetName())))
+func (p *MinectlProvisioner) UpdateServer() error {
+	indicator := progress.NewIndicator(fmt.Sprintf("🆙 Update server (%s)...", common.Green(p.args.MinecraftResource.GetName())), p.logging)
+	indicator.FinalMessage = fmt.Sprintf("✅ Server (%s) updated.", common.Green(p.args.MinecraftResource.GetName()))
+	indicator.ErrorMessage = fmt.Sprintf("❌ Server (%s) update failed.", common.Green(p.args.MinecraftResource.GetName()))
+	indicator.Start()
 	err := p.auto.UpdateServer(p.args.ID, p.args)
-	if err == nil {
-		fmt.Printf("\n✅ Server (%s) updated\n", common.Green(p.args.MinecraftResource.GetName()))
-	}
-	spinner.Stop()
+	indicator.StopE(err)
 	return err
 }
 
 //wait that server is ready... Currently on for Java based Editions (TCP), as Bedrock is UDP
-func (p *PulumiProvisioner) waitForMinecraftServerReady(server *automation.RessourceResults) {
+func (p *MinectlProvisioner) waitForMinecraftServerReady(server *automation.RessourceResults) error {
 	if p.args.MinecraftResource.GetEdition() != "bedrock" {
-		spinner := p.startSpinner("🕹 Starting Minecraft server... ")
+		indicator := progress.NewIndicator("🕹 Starting Minecraft server...", p.logging)
+		defer indicator.StopE(nil)
+		indicator.FinalMessage = "✅ Minecraft server successfully started."
+		indicator.ErrorMessage = "❌ Minecraft server failed starting."
+		indicator.Start()
 		check := fmt.Sprintf("%s:%d", server.PublicIP, p.args.MinecraftResource.GetPort())
 		checkCounter := 0
 
@@ -108,65 +116,59 @@ func (p *PulumiProvisioner) waitForMinecraftServerReady(server *automation.Resso
 			if timeout != nil {
 				err = timeout.Close()
 				if err != nil {
-					fmt.Printf("Timeout error: %s\n", err)
-					spinner.Stop()
+					return errors.Errorf("Timeout error: %s\n", err)
 				}
 				break
 			}
 		}
-		spinner.Stop()
 	}
-	fmt.Println("\n✅ Minecraft successfully started.")
+	return nil
 }
 
-func (p *PulumiProvisioner) CreateServer(wait bool) (*automation.RessourceResults, error) {
-	spinner := p.startSpinner(
-		fmt.Sprintf("🏗 Creating server (%s)... ", common.Green(p.args.MinecraftResource.GetName())))
+func (p *MinectlProvisioner) CreateServer(wait bool) (*automation.RessourceResults, error) {
+	indicator := progress.NewIndicator(fmt.Sprintf("🏗 Creating server (%s)...", common.Green(p.args.MinecraftResource.GetName())), p.logging)
+	indicator.FinalMessage = fmt.Sprintf("✅ Server (%s) created.", common.Green(p.args.MinecraftResource.GetName()))
+	indicator.ErrorMessage = fmt.Sprintf("❌ Server (%s) not created.", common.Green(p.args.MinecraftResource.GetName()))
+	indicator.Start()
 	server, err := p.auto.CreateServer(p.args)
+	indicator.StopE(err)
 	if err != nil {
-		spinner.Stop()
 		return nil, err
 	}
-	spinner.Stop()
-	fmt.Printf("\n✅ Server (%s) created\n", common.Green(p.args.MinecraftResource.GetName()))
+
 	if wait {
-		p.waitForMinecraftServerReady(server)
+		err := p.waitForMinecraftServerReady(server)
+		if err != nil {
+			return nil, err
+		}
 	}
 	return server, err
 }
 
-func (p *PulumiProvisioner) ListServer() ([]automation.RessourceResults, error) {
+func (p *MinectlProvisioner) ListServer() ([]automation.RessourceResults, error) {
 	return p.auto.ListServer()
 }
 
-func (p *PulumiProvisioner) DeleteServer() error {
-	spinner := p.startSpinner(
-		fmt.Sprintf("🪓 Deleting server (%s)... ", common.Green(p.args.MinecraftResource.GetName())))
+func (p *MinectlProvisioner) DeleteServer() error {
+	indicator := progress.NewIndicator(fmt.Sprintf("🪓 Deleting server (%s)...", common.Green(p.args.MinecraftResource.GetName())), p.logging)
+	indicator.FinalMessage = fmt.Sprintf("🗑 Server (%s) deleted.", common.Green(p.args.MinecraftResource.GetName()))
+	indicator.ErrorMessage = fmt.Sprintf("❌ Server (%s) not deleted.", common.Green(p.args.MinecraftResource.GetName()))
+	indicator.Start()
 	err := p.auto.DeleteServer(p.args.ID, p.args)
-	spinner.Stop()
-	if err == nil {
-		fmt.Printf("\n🗑 Server (%s) deleted\n", common.Green(p.args.MinecraftResource.GetName()))
-	}
+	indicator.StopE(err)
 	return err
 }
 
-// NewProvisioner has variable args: only manifest file or manifest file and the id
-func NewProvisioner(args ...string) (*PulumiProvisioner, error) {
-	if len(args) == 2 {
-		return newProvisioner(args[0], args[1])
-	}
-	return newProvisioner(args[0], "")
-}
-
-func ListProvisioner(args ...string) (*PulumiProvisioner, error) {
-	fmt.Println("📒 List all server")
-	cloudProvider, err := getProvisioner(args[0], args[1])
-	common.PrintMixedGreen("🛎 Using cloud provider %s\n", cloud.GetCloudProviderFullName(args[0]))
+func ListProvisioner(options *MinectlProvisionerListOpts, logging ...*logging.MinectlLogging) (*MinectlProvisioner, error) {
+	logging[0].RawMessage("📒 List all server")
+	cloudProvider, err := getProvisioner(options.Provider, options.Region)
+	logging[0].PrintMixedGreen("🛎 Using cloud provider %s", cloud.GetCloudProviderFullName(options.Provider))
 	if err != nil {
 		return nil, err
 	}
-	p := &PulumiProvisioner{
-		auto: cloudProvider,
+	p := &MinectlProvisioner{
+		auto:    cloudProvider,
+		logging: logging[0],
 	}
 	return p, nil
 }
@@ -238,30 +240,34 @@ func getProvisioner(provider, region string) (automation.Automation, error) {
 	}
 }
 
-func newProvisioner(manifestPath, id string) (*PulumiProvisioner, error) {
-	manifest, err := manifest.NewMinecraftResource(manifestPath)
+func NewProvisioner(options *MinectlProvisionerOpts, logging ...*logging.MinectlLogging) (*MinectlProvisioner, error) {
+	var cloudProvider automation.Automation
+
+	minecraftResource, err := manifest.NewMinecraftResource(options.ManifestPath)
 	if err != nil {
 		return nil, err
 	}
 	args := automation.ServerArgs{
-		MinecraftResource: manifest,
-		ID:                id,
+		MinecraftResource: minecraftResource,
+		ID:                options.Id,
 	}
-	cloudProvider, err := getProvisioner(args.MinecraftResource.GetCloud(), args.MinecraftResource.GetRegion())
-	common.PrintMixedGreen("🛎 Using cloud provider %s\n", cloud.GetCloudProviderFullName(args.MinecraftResource.GetCloud()))
+	cloudProvider, err = getProvisioner(args.MinecraftResource.GetCloud(), args.MinecraftResource.GetRegion())
 	if err != nil {
 		return nil, err
 	}
 
+	logging[0].PrintMixedGreen("🛎 Using cloud provider %s\n", cloud.GetCloudProviderFullName(args.MinecraftResource.GetCloud()))
+
 	if args.MinecraftResource.IsProxyServer() {
-		common.PrintMixedGreen("📡 Minecraft %s Proxy \n", args.MinecraftResource.GetEdition())
+		logging[0].PrintMixedGreen("📡 Minecraft %s Proxy \n", args.MinecraftResource.GetEdition())
 	} else {
-		common.PrintMixedGreen("🗺 Minecraft %s edition\n", args.MinecraftResource.GetEdition())
+		logging[0].PrintMixedGreen("🗺 Minecraft %s edition\n", args.MinecraftResource.GetEdition())
 	}
 
-	p := &PulumiProvisioner{
-		auto: cloudProvider,
-		args: args,
+	p := &MinectlProvisioner{
+		auto:    cloudProvider,
+		args:    args,
+		logging: logging[0],
 	}
 	return p, nil
 }
