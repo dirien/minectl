@@ -31,6 +31,7 @@
     - [RCON Minecraft Server 🔌](#rcon-minecraft-server-)
     - [Monitoring 📊](#monitoring-)
     - [Volumes 💽](#volumes-)
+    - [Headless Mode 👻](#headless-mode-)
     - [Getting Started 🎫](#getting-started-)
 + [Known Limitation 😵](#known-limitation-)
 + [Contributing 🤝](#contributing-)
@@ -401,7 +402,12 @@ mincetl create  \
 Flags:
   -f, --filename string   Contains the configuration for minectl
   -h, --help              help for create
-  -w, --wait              Wait for Minecraft Server is started (default true)  
+  -w, --wait              Wait for Minecraft Server is started (default true)
+
+Global Flags:
+      --headless              Set this value to if mincetl is called by a CI system. Enables logging and disables human-readable output rendering (default: false)
+      --log-encoding string   Set the log encoding: console|json (default: console) (default "console")
+      --verbose string        Enable verbose logging: debug|info|warn|error|dpanic|panic|fatal   
 ```
 
 #### Delete Minecraft Server 🗑
@@ -424,6 +430,11 @@ Flags:
   -f, --filename string   that contains the configuration for minectl
   -h, --help              help for delete
       --id string         contains the server id
+
+Global Flags:
+      --headless              Set this value to if mincetl is called by a CI system. Enables logging and disables human-readable output rendering (default: false)
+      --log-encoding string   Set the log encoding: console|json (default: console) (default "console")
+      --verbose string        Enable verbose logging: debug|info|warn|error|dpanic|panic|fatal
 ```
 
 #### List Minecraft Server 📒
@@ -445,6 +456,11 @@ Flags:
   -h, --help              help for list
   -p, --provider string   The cloud provider - civo|scaleway|do|hetzner|linode|ovh|equinix|gce
   -r, --region string     The region for your cloud provider
+  
+Global Flags:
+      --headless              Set this value to if mincetl is called by a CI system. Enables logging and disables human-readable output rendering (default: false)
+      --log-encoding string   Set the log encoding: console|json (default: console) (default "console")
+      --verbose string        Enable verbose logging: debug|info|warn|error|dpanic|panic|fatal  
 ```
 
 #### Update Minecraft Server 🆙
@@ -467,6 +483,11 @@ Flags:
   -f, --filename string   Contains the configuration for minectl
   -h, --help              help for update
       --id string         contains the server id
+
+Global Flags:
+      --headless              Set this value to if mincetl is called by a CI system. Enables logging and disables human-readable output rendering (default: false)
+      --log-encoding string   Set the log encoding: console|json (default: console) (default "console")
+      --verbose string        Enable verbose logging: debug|info|warn|error|dpanic|panic|fatal      
 ```
 
 #### RCON Minecraft Server 🔌
@@ -518,6 +539,11 @@ Flags:
   -h, --help                 help for plugins
       --id string            contains the server id
   -p, --plugin string        Local plugin file location
+
+Global Flags:
+      --headless              Set this value to if mincetl is called by a CI system. Enables logging and disables human-readable output rendering (default: false)
+      --log-encoding string   Set the log encoding: console|json (default: console) (default "console")
+      --verbose string        Enable verbose logging: debug|info|warn|error|dpanic|panic|fatal  
 ```
 
 #### Monitoring 📊
@@ -538,7 +564,7 @@ spec:
 ...
 ```
 
-Every instance of `minectl 🗺, has following monitoring components included:
+Every instance of `minectl 🗺`, has following monitoring components included:
 
 - Prometheus (https://github.com/prometheus/prometheus)
 - Node exporter (https://github.com/prometheus/node_exporter)
@@ -578,6 +604,14 @@ spec:
   minecraft:
 ...
 ```
+
+#### Headless Mode 👻
+
+With the global flag `headless`, it is now possible to run `minectl 🗺` in a less human-readable output version. This is
+very helpful, if you want to run `minectl 🗺` in workflow.
+
+The flag `verbose` sets the level of logging and with `log-encoding` you can decide between `json` and `console` as
+encoding format.
 
 #### Getting Started 🎫
 
