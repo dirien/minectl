@@ -260,7 +260,7 @@ func init() {
 	minectlCmd.PersistentFlags().String("log-encoding", "console",
 		"Set the log encoding: console|json (default: console)")
 	minectlCmd.PersistentFlags().Bool("headless", false,
-		"Set this value to if mincetl is called by a CI system. Enables logging and disables human-friendly output rendering (default: false)")
+		"Set this value to if mincetl is called by a CI system. Enables logging and disables human-readable output rendering (default: false)")
 	minectlCmd.AddCommand(versionCmd)
 	minectlCmd.AddCommand(createCmd)
 	minectlCmd.AddCommand(deleteCmd)
