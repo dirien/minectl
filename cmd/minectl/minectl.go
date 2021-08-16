@@ -192,7 +192,7 @@ func getVersion() string {
 	if len(Version) != 0 {
 		return Version
 	}
-	return "0.1.0"
+	return "0.1.0-dev"
 }
 
 func parseBaseCommand(_ *cobra.Command, _ []string) {
