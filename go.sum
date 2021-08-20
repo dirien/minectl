@@ -288,6 +288,8 @@ github.com/hetznercloud/hcloud-go v1.29.1 h1:UiV+GZVEOFramb49ASbXfpJGjXa6FmJe3Hh
 github.com/hetznercloud/hcloud-go v1.29.1/go.mod h1:2C5uMtBiMoFr3m7lBFPf7wXTdh33CevmZpQIIDPGYJI=
 github.com/hetznercloud/hcloud-go v1.31.0 h1:p5Irqrki5KdoNe4usT5okvVlCTARlD/BRX92mf2ktxU=
 github.com/hetznercloud/hcloud-go v1.31.0/go.mod h1:Gevl2WnfGL4Z7Th6dB3BrPYWG3NpefmjkIXeToYGDJs=
+github.com/hetznercloud/hcloud-go v1.31.1 h1:xYErtJUYghEUp1IltE5pe476Fq4OXnIaZJnEIByIv34=
+github.com/hetznercloud/hcloud-go v1.31.1/go.mod h1:Gevl2WnfGL4Z7Th6dB3BrPYWG3NpefmjkIXeToYGDJs=
 github.com/hpcloud/tail v1.0.0/go.mod h1:ab1qPbhIpdTxEkNHXyeSf5vhxWSCs/tWer42PpOxQnU=
 github.com/huandu/xstrings v1.3.2 h1:L18LIDzqlW6xN2rEkpdV8+oL/IXWJ1APd+vsdYy4Wdw=
 github.com/huandu/xstrings v1.3.2/go.mod h1:y5/lhBue+AyNmUVz9RLU9xbLR0o4KIIExikq4ovT0aE=
