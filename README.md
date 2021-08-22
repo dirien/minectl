@@ -240,11 +240,11 @@ Example:
 cat  /Users/user/.oci/config
 
 [DEFAULT]
-user==<OIDC>
+user=<ocid>
 fingerprint=<SSH fingerprint>
 key_file=>path to PEM file>
-tenancy=<OIDC>
-region=eu-frankfurt-1
+tenancy=<ocid>
+region=<region>
 ```
 
 Please follow the instructions under -> https://docs.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm
