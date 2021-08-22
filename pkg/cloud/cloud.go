@@ -12,6 +12,7 @@ var cloudProvider = map[string]string{
 	"gce":      "Google Compute Engine",
 	"vultr":    "vultr",
 	"azure":    "Azure",
+	"oci":      "Oracle Cloud Infrastructure",
 }
 
 func GetCloudProviderFullName(cloud string) string {

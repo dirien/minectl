@@ -1,6 +1,6 @@
 {{- define "bash" -}}
 #!/bin/bash
-
+iptables -I INPUT -j ACCEPT
 tee /tmp/server.properties <<EOF
 server-port={{.Spec.Server.Port}}
 {{ .Spec.Minecraft.Properties }}

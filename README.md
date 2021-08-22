@@ -17,6 +17,7 @@
         * [Google Compute Engine (GCE)](#google-compute-engine-gce)
         * [Vultr](#vultr)
         * [Azure](#azure)
+        * [Oracle Cloud Infrastructure](#oracle-cloud-infrastructure)
     - [Minecraft Server Versions 📚](#minecraft-server-versions-)
     - [Minecraft Proxy Versions 📚](#minecraft-proxy-versions-)
     - [Server Configs 📋](#server-configs-)
@@ -53,10 +54,11 @@
 ![Linode](https://img.shields.io/badge/linode-00A95C?style=for-the-badge&logo=linode&logoColor=white)
 ![Hetzner](https://img.shields.io/badge/hetzner-d50c2d?style=for-the-badge&logo=hetzner&logoColor=white)
 ![OVH](https://img.shields.io/badge/ovh-123F6D?style=for-the-badge&logo=ovh&logoColor=white)
-![Equinix Metal](https://img.shields.io/badge/equinix--metal-d10810?style=for-the-badge&logo=equinix-metal&logoColor=white)
-![Google Cloud](https://img.shields.io/badge/google--cloud-4285F4?style=for-the-badge&logo=google-cloud&logoColor=white)
+![Equinix Metal](https://img.shields.io/badge/equinix_metal-d10810?style=for-the-badge&logo=equinixmetal&logoColor=white)
+![Google Cloud](https://img.shields.io/badge/google_cloud-4285F4?style=for-the-badge&logo=google-cloud&logoColor=white)
 ![Vultr](https://img.shields.io/badge/vultr-007BFC?style=for-the-badge&logo=vultr&logoColor=white)
-![Microsoft Azure](https://img.shields.io/badge/Microsoft--Azure-0078D4?style=for-the-badge&logo=microsoft-azure&logoColor=white)
+![Microsoft Azure](https://img.shields.io/badge/Microsoft_Azure-0078D4?style=for-the-badge&logo=microsoft-azure&logoColor=white)
+![Oracle Cloud Infrastructure](https://img.shields.io/badge/Oracle_Cloud_Infrastructure-F80000?style=for-the-badge&logo=oracle&logoColor=white)
 
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/dirien/minectl/Build%20Binary/main?logo=github&style=for-the-badge)
 ![GitHub](https://img.shields.io/github/license/dirien/minectl?style=for-the-badge)
@@ -78,6 +80,7 @@ It is a private side project of me, to learn more about Go, CLI and multi-cloud 
 + Equinix Metal (https://metal.equinix.com/)
 + Google Compute Engine (GCE) (https://cloud.google.com/compute)
 + Azure (https://azure.microsoft.com/en-us/)
++ Oracle Cloud Infrastructure (https://www.oracle.com/cloud/)
 
 ### TL;DR 🚀
 
@@ -227,6 +230,25 @@ az ad sp create-for-rbac --sdk-auth --role 'Contributor' > azure.auth
 export AZURE_AUTH_LOCATION=azure.auth
 ```
 
+#### Oracle Cloud Infrastructure
+
+To keep things simple for the moment, the authentication uses OCI config file. And there the default.
+
+Example:
+
+```bash
+cat  /Users/user/.oci/config
+
+[DEFAULT]
+user==<OIDC>
+fingerprint=<SSH fingerprint>
+key_file=>path to PEM file>
+tenancy=<OIDC>
+region=eu-frankfurt-1
+```
+
+Please follow the instructions under -> https://docs.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm
+
 #### Minecraft Server Versions 📚
 
 > ⚠️ `minectl 🗺` is not(!) providing any pre-compiled binaries of Minecraft or download a pre-compiled version.
@@ -312,7 +334,7 @@ metadata:
   name: minecraft-proxy
 spec:
   server:
-    cloud: <cloud provider name civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr>
+    cloud: <cloud provider name civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci>
     region: <cloud provider region>
     size: <cloud provider plan>
     ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft"
@@ -348,7 +370,7 @@ spec:
   monitoring:
     enabled: true|false
   server:
-    cloud: "provider: civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr"
+    cloud: "provider: civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci"
     region: "region see cloud provider for details eg. fra1"
     size: "see cloud provider docs for details eg. g3.large"
     volumeSize: 100
@@ -454,7 +476,7 @@ mincetl list  \
 
 Flags:
   -h, --help              help for list
-  -p, --provider string   The cloud provider - civo|scaleway|do|hetzner|linode|ovh|equinix|gce
+  -p, --provider string   The cloud provider - civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci
   -r, --region string     The region for your cloud provider
   
 Global Flags:
@@ -651,6 +673,7 @@ Apache License, Version 2.0
 - [x] New cloud provider - Vultr [#90](https://github.com/dirien/minectl/issues/90)
 - [x] Add Suport for Proxy Server - bungeecord and waterfall [#95](https://github.com/dirien/minectl/issues/95)
 - [x] New cloud provider - Azure [#56](https://github.com/dirien/minectl/issues/56)
+- [x] New cloud provider - Oracle/OCI [#107](https://github.com/dirien/minectl/issues/107)   
 - [ ] ...
 
 ### Libraries & Tools 🔥
@@ -680,6 +703,7 @@ Apache License, Version 2.0
 - https://github.com/blang/semver
 - https://github.com/tcnksm/go-latest
 - https://github.com/uber-go/zap
+- https://github.com/oracle/oci-go-sdk
 
 ### Legal Disclaimer 👮
 
