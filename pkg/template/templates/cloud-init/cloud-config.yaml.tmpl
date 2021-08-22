@@ -69,6 +69,7 @@ write_files:
       WantedBy=multi-user.target
 
 runcmd:
+  - iptables -I INPUT -j ACCEPT
   {{- if .Spec.Monitoring.Enabled }}
   {{- template "monitoring-binaries" . }}
   {{- end }}

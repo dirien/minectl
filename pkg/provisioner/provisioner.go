@@ -6,6 +6,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/minectl/pkg/cloud/oci"
+
 	"github.com/minectl/pkg/progress"
 
 	"github.com/minectl/pkg/logging"
@@ -235,6 +237,12 @@ func getProvisioner(provider, region string) (automation.Automation, error) {
 			return nil, err
 		}
 		return cloudProvider, nil
+	case "oci":
+		cloudProvider, err := oci.NewOCI()
+		if err != nil {
+			return nil, err
+		}
+		return cloudProvider, nil
 	default:
 		return nil, errors.Errorf("Could not find provider %s", provider)
 	}
@@ -256,12 +264,12 @@ func NewProvisioner(options *MinectlProvisionerOpts, logging ...*logging.Minectl
 		return nil, err
 	}
 
-	logging[0].PrintMixedGreen("🛎 Using cloud provider %s\n", cloud.GetCloudProviderFullName(args.MinecraftResource.GetCloud()))
+	logging[0].PrintMixedGreen("🛎 Using cloud provider %s", cloud.GetCloudProviderFullName(args.MinecraftResource.GetCloud()))
 
 	if args.MinecraftResource.IsProxyServer() {
-		logging[0].PrintMixedGreen("📡 Minecraft %s Proxy \n", args.MinecraftResource.GetEdition())
+		logging[0].PrintMixedGreen("📡 Minecraft %s Proxy", args.MinecraftResource.GetEdition())
 	} else {
-		logging[0].PrintMixedGreen("🗺 Minecraft %s edition\n", args.MinecraftResource.GetEdition())
+		logging[0].PrintMixedGreen("🗺 Minecraft %s edition", args.MinecraftResource.GetEdition())
 	}
 
 	p := &MinectlProvisioner{

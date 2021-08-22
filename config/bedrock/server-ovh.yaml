@@ -11,7 +11,7 @@ spec:
     port: 19132
   minecraft:
     edition: bedrock
-    version: 1.17.10.04
+    version: 1.17.11.01
     eula: true
     properties: |
       server-name=OVHcloud Minecraft

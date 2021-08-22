@@ -12,3 +12,4 @@ revive.log
 **/azure.auth
 **/ssh/
 **/cosign.key
+**/oracleidentitycloudservice_*.pem

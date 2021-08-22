@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"go.uber.org/zap"
+
 	minctlTemplate "github.com/minectl/pkg/template"
 
 	"github.com/melbahja/goph"
@@ -66,11 +68,12 @@ func (r *RemoteServer) UpdateServer(args *model.MinecraftResource) error {
 
 	cmd := `
 cd /minecraft
-sudo systemctl stop minecraft.service` + update +
-		`ls -la
+sudo systemctl stop minecraft.service
+sudo bash -c '` + update + `'
+ls -la
 sudo systemctl start minecraft.service
 	`
-
+	zap.S().Infof("server updated cmd %s", cmd)
 	_, err = r.ExecuteCommand(strings.TrimSpace(cmd))
 	if err != nil {
 		return err

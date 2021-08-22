@@ -124,6 +124,18 @@ func (m *MinecraftResource) GetRCONPort() int {
 	}
 	return m.Spec.Minecraft.Java.Rcon.Port
 }
+
+func (m *MinecraftResource) HasRCON() bool {
+	if m.IsProxyServer() {
+		return m.Spec.Proxy.Java.Rcon.Enabled
+	}
+	return m.Spec.Minecraft.Java.Rcon.Enabled
+}
+
+func (m *MinecraftResource) HasMonitoring() bool {
+	return m.Spec.Monitoring.Enabled
+}
+
 func (m *MinecraftResource) GetRCONPassword() string {
 	if m.IsProxyServer() {
 		return m.Spec.Proxy.Java.Rcon.Password

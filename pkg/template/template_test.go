@@ -260,7 +260,7 @@ var (
 	}
 
 	bedrockBashWant = `#!/bin/bash
-
+iptables -I INPUT -j ACCEPT
 tee /tmp/server.properties <<EOF
 server-port=19132
 level-seed=stackitminecraftrocks
@@ -384,7 +384,7 @@ systemctl restart minecraft.service
 systemctl enable minecraft.service`
 
 	javaBashWant = `#!/bin/bash
-
+iptables -I INPUT -j ACCEPT
 tee /tmp/server.properties <<EOF
 server-port=25565
 level-seed=stackitminecraftrocks
@@ -634,6 +634,7 @@ write_files:
       WantedBy=multi-user.target
 
 runcmd:
+  - iptables -I INPUT -j ACCEPT
   - export PROM_VERSION=2.28.1
   - mkdir /etc/prometheus
   - mkdir /var/lib/prometheus
@@ -796,6 +797,7 @@ write_files:
       WantedBy=multi-user.target
 
 runcmd:
+  - iptables -I INPUT -j ACCEPT
   - export PROM_VERSION=2.28.1
   - mkdir /etc/prometheus
   - mkdir /var/lib/prometheus
@@ -962,6 +964,7 @@ write_files:
       WantedBy=multi-user.target
 
 runcmd:
+  - iptables -I INPUT -j ACCEPT
   - export PROM_VERSION=2.28.1
   - mkdir /etc/prometheus
   - mkdir /var/lib/prometheus
@@ -1010,7 +1013,7 @@ runcmd:
   - systemctl enable minecraft.service`
 
 	bedrockBashMountWant = `#!/bin/bash
-
+iptables -I INPUT -j ACCEPT
 tee /tmp/server.properties <<EOF
 server-port=19132
 level-seed=stackitminecraftrocks
@@ -1137,7 +1140,7 @@ systemctl restart minecraft.service
 systemctl enable minecraft.service`
 
 	javaBashMountWant = `#!/bin/bash
-
+iptables -I INPUT -j ACCEPT
 tee /tmp/server.properties <<EOF
 server-port=25565
 level-seed=stackitminecraftrocks
@@ -1295,7 +1298,7 @@ systemctl restart minecraft.service
 systemctl enable minecraft.service`
 
 	javaBashAdditionalOptionsMountWant = `#!/bin/bash
-
+iptables -I INPUT -j ACCEPT
 tee /tmp/server.properties <<EOF
 server-port=25565
 level-seed=stackitminecraftrocks
@@ -1453,7 +1456,7 @@ systemctl restart minecraft.service
 systemctl enable minecraft.service`
 
 	paperMCBashMountWant = `#!/bin/bash
-
+iptables -I INPUT -j ACCEPT
 tee /tmp/server.properties <<EOF
 server-port=25565
 level-seed=stackitminecraftrocks
@@ -1729,6 +1732,7 @@ write_files:
       WantedBy=multi-user.target
 
 runcmd:
+  - iptables -I INPUT -j ACCEPT
   - export PROM_VERSION=2.28.1
   - mkdir /etc/prometheus
   - mkdir /var/lib/prometheus
@@ -1787,7 +1791,7 @@ runcmd:
   - systemctl enable minecraft.service`
 
 	craftbukkitBashWant = `#!/bin/bash
-
+iptables -I INPUT -j ACCEPT
 tee /tmp/server.properties <<EOF
 server-port=25565
 level-seed=stackitminecraftrocks
@@ -2070,6 +2074,7 @@ write_files:
       WantedBy=multi-user.target
 
 runcmd:
+  - iptables -I INPUT -j ACCEPT
   - export PROM_VERSION=2.28.1
   - mkdir /etc/prometheus
   - mkdir /var/lib/prometheus
@@ -2125,7 +2130,7 @@ runcmd:
   - systemctl enable minecraft.service`
 
 	fabricBashWant = `#!/bin/bash
-
+iptables -I INPUT -j ACCEPT
 tee /tmp/server.properties <<EOF
 server-port=25565
 level-seed=stackitminecraftrocks
@@ -2408,6 +2413,7 @@ write_files:
       WantedBy=multi-user.target
 
 runcmd:
+  - iptables -I INPUT -j ACCEPT
   - export PROM_VERSION=2.28.1
   - mkdir /etc/prometheus
   - mkdir /var/lib/prometheus
@@ -2462,7 +2468,7 @@ runcmd:
   - systemctl enable minecraft.service`
 
 	forgeBashWant = `#!/bin/bash
-
+iptables -I INPUT -j ACCEPT
 tee /tmp/server.properties <<EOF
 server-port=25565
 level-seed=stackitminecraftrocks
@@ -2744,6 +2750,7 @@ write_files:
       WantedBy=multi-user.target
 
 runcmd:
+  - iptables -I INPUT -j ACCEPT
   - export PROM_VERSION=2.28.1
   - mkdir /etc/prometheus
   - mkdir /var/lib/prometheus
@@ -2802,7 +2809,7 @@ runcmd:
   - systemctl enable minecraft.service`
 
 	spigotBashWant = `#!/bin/bash
-
+iptables -I INPUT -j ACCEPT
 tee /tmp/server.properties <<EOF
 server-port=25565
 level-seed=stackitminecraftrocks
@@ -2967,7 +2974,7 @@ systemctl restart minecraft.service
 systemctl enable minecraft.service`
 
 	bedrockBashNoMonWant = `#!/bin/bash
-
+iptables -I INPUT -j ACCEPT
 tee /tmp/server.properties <<EOF
 server-port=19132
 level-seed=stackitminecraftrocks
@@ -3061,6 +3068,7 @@ write_files:
       WantedBy=multi-user.target
 
 runcmd:
+  - iptables -I INPUT -j ACCEPT
   - ufw allow ssh
   - ufw allow 5201
   - ufw allow proto udp to 0.0.0.0/0 port 25565
@@ -3084,7 +3092,7 @@ runcmd:
   - systemctl enable minecraft.service`
 
 	fabricBashNoMonWant = `#!/bin/bash
-
+iptables -I INPUT -j ACCEPT
 tee /tmp/server.properties <<EOF
 server-port=25565
 level-seed=stackitminecraftrocks

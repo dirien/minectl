@@ -4,9 +4,9 @@ metadata:
   name: minecraft-server-be
 spec:
   server:
-    cloud: equinix
-    region: fr
-    size: c3.small.x86
+    cloud: oci
+    region: eu-frankfurt-1
+    size: VM.Standard2.2
     ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft-be"
     port: 19132
   minecraft:
@@ -14,7 +14,7 @@ spec:
     version: 1.17.11.01
     eula: true
     properties: |
-      server-name=Equinix Minecraft
+      server-name=Civo Minecraft
       gamemode=survival
       force-gamemode=false
       difficulty=normal
