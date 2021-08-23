@@ -23,7 +23,7 @@ require (
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
 	github.com/hashicorp/go-retryablehttp v0.7.0
 	github.com/hashicorp/go-version v1.3.0 // indirect
-	github.com/hetznercloud/hcloud-go v1.31.1
+	github.com/hetznercloud/hcloud-go v1.32.0
 	github.com/huandu/xstrings v1.3.2 // indirect
 	github.com/imdario/mergo v0.3.11 // indirect
 	github.com/kr/pretty v0.2.1 // indirect
@@ -35,7 +35,7 @@ require (
 	github.com/mitchellh/copystructure v1.2.0 // indirect
 	github.com/morikuni/aec v1.0.0
 	github.com/olekukonko/tablewriter v0.0.5
-	github.com/oracle/oci-go-sdk/v46 v46.0.0 // indirect
+	github.com/oracle/oci-go-sdk/v46 v46.0.0
 	github.com/packethost/packngo v0.19.0
 	github.com/pkg/errors v0.9.1
 	github.com/scaleway/scaleway-sdk-go v1.0.0-beta.7
@@ -51,6 +51,5 @@ require (
 	golang.org/x/net v0.0.0-20210726213435-c6fcb2dbf985 // indirect
 	golang.org/x/oauth2 v0.0.0-20210819190943-2bc19b11175f
 	google.golang.org/api v0.54.0
-	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	sigs.k8s.io/yaml v1.2.0
 )
