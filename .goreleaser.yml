@@ -38,6 +38,10 @@ dockers:
       - --label=org.opencontainers.image.version={{ .Version }}
       - --label=org.opencontainers.image.title={{ .ProjectName }}
       - --label=org.opencontainers.image.source=https://github.com/dirien/{{ .ProjectName }}
+docker_signs:
+  - artifacts: all
+    args: [ "sign", "-key=$COSIGN_KEY_LOCATION", "${artifact}" ]
+    stdin: '{{ .Env.COSIGN_PASSWORD }}'
 brews:
   - tap:
       owner: dirien

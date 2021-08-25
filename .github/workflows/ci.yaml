@@ -73,11 +73,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-      - name: set version as env
-        run: |
-          tag=$(git describe --tags --abbrev=0 | tr --delete v)
-          echo "version=$tag" >> $GITHUB_ENV
-      - name: Sign the image
-        run: |
-          echo -n "${{secrets.COSIGN_PASSWORD}}" | cosign sign -key $COSIGN_KEY_LOCATION ghcr.io/dirien/minectl:${{ env.version }}-arm64
-          echo -n "${{secrets.COSIGN_PASSWORD}}" | cosign sign -key $COSIGN_KEY_LOCATION ghcr.io/dirien/minectl:${{ env.version }}-amd64
