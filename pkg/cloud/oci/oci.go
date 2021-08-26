@@ -312,6 +312,14 @@ func (o *OCI) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 			},
 		},
 	}
+
+	if strings.Contains(args.MinecraftResource.GetSize(), "Flex") {
+		launchInstanceRequest.ShapeConfig = &core.LaunchInstanceShapeConfigDetails{
+			Ocpus:       common.Float32(1),
+			MemoryInGBs: common.Float32(6),
+		}
+	}
+
 	launchInstance, err := o.compute.LaunchInstance(ctx, launchInstanceRequest)
 	if err != nil {
 		return nil, err
