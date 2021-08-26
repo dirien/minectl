@@ -6,9 +6,9 @@ spec:
   monitoring:
     enabled: true
   server:
-    cloud: do
-    region: fra1
-    size: s-4vcpu-8gb
+    cloud: civo
+    region: LON1
+    size: g3.large
     ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft"
     port: 25565
   minecraft:
@@ -30,7 +30,7 @@ spec:
       enable-jmx-monitoring=false
       server-ip=
       resource-pack-prompt=
-      gamemode=survival
+      gamemode=survival25565
       allow-nether=true
       enable-command-block=false
       sync-chunk-writes=true
@@ -41,7 +41,7 @@ spec:
       entity-broadcast-range-percentage=100
       level-name=world
       player-idle-timeout=0
-      motd=\u00A7bDigitalOcean \u00A7rMinecraft --- \u00A76PaperMC \u00A7redition
+      motd=\u00A7bCivo \u00A7rMinecraft --- \u00A76PaperMC \u00A7redition
       query.port=25565
       force-gamemode=false
       rate-limit=0
@@ -67,4 +67,4 @@ spec:
       online-mode=true
       enable-status=true
       allow-flight=false
-      max-world-size=
+      max-world-size=29999984
