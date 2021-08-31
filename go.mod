@@ -35,7 +35,7 @@ require (
 	github.com/mitchellh/copystructure v1.2.0 // indirect
 	github.com/morikuni/aec v1.0.0
 	github.com/olekukonko/tablewriter v0.0.5
-	github.com/oracle/oci-go-sdk/v46 v46.1.0
+	github.com/oracle/oci-go-sdk/v46 v46.2.0
 	github.com/packethost/packngo v0.19.0
 	github.com/pkg/errors v0.9.1
 	github.com/scaleway/scaleway-sdk-go v1.0.0-beta.7
