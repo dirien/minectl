@@ -50,6 +50,6 @@ require (
 	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5
 	golang.org/x/net v0.0.0-20210726213435-c6fcb2dbf985 // indirect
 	golang.org/x/oauth2 v0.0.0-20210819190943-2bc19b11175f
-	google.golang.org/api v0.54.0
+	google.golang.org/api v0.55.0
 	sigs.k8s.io/yaml v1.2.0
 )
