@@ -19,9 +19,11 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.16
+          go-version: 1.17
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v2.5.2
+        with:
+          args: --timeout=5m
       - name: Tests
         run: |
           make all
@@ -49,7 +51,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.16
+          go-version: 1.17
       - name: download upx
         run: |
           cd /tmp
