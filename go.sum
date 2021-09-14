@@ -413,8 +413,8 @@ github.com/onsi/ginkgo v1.6.0/go.mod h1:lLunBs/Ym6LB5Z9jYTR76FiuTmxDTDusOGeTQH+W
 github.com/onsi/ginkgo v1.11.0/go.mod h1:lLunBs/Ym6LB5Z9jYTR76FiuTmxDTDusOGeTQH+WWjE=
 github.com/onsi/gomega v0.0.0-20170829124025-dcabb60a477c/go.mod h1:C1qb7wdrVGGVU+Z6iS04AVkA3Q65CEZX59MT0QO5uiA=
 github.com/onsi/gomega v1.7.0/go.mod h1:ex+gbHU/CVuBBDIJjb2X0qEXbFg53c61hWP/1CpauHY=
-github.com/oracle/oci-go-sdk/v47 v47.0.0 h1:6oRw0cS+1TwvVQuTvDd1BQqMgg+mPICcIkrd+0Pgt+k=
-github.com/oracle/oci-go-sdk/v47 v47.0.0/go.mod h1:kO/m5/YgYWrCnLqdudqvhKEUxexwGR2hc6Mogu+8QZw=
+github.com/oracle/oci-go-sdk/v47 v47.1.0 h1:oXkuD18OpcE2bsl6AHMJWKcoPcQrsFq7TiNzCuDiRU8=
+github.com/oracle/oci-go-sdk/v47 v47.1.0/go.mod h1:kO/m5/YgYWrCnLqdudqvhKEUxexwGR2hc6Mogu+8QZw=
 github.com/ovh/go-ovh v1.1.0 h1:bHXZmw8nTgZin4Nv7JuaLs0KG5x54EQR7migYTd1zrk=
 github.com/ovh/go-ovh v1.1.0/go.mod h1:AxitLZ5HBRPyUd+Zl60Ajaag+rNTdVXWIkzfrVuTXWA=
 github.com/packethost/packngo v0.19.1 h1:zuZasgaV4qHMeQ+djENj21w8vhgpoZO2h1a09buVjD8=
