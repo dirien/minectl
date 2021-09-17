@@ -61,7 +61,7 @@ jobs:
         shell: bash
       - uses: sigstore/cosign-installer@main
         with:
-          cosign-release: 'v1.0.0'
+          cosign-release: 'v1.2.0'
       - name: install cosign private key
         run: 'echo "$COSIGN_KEY" > $COSIGN_KEY_LOCATION'
         shell: bash
