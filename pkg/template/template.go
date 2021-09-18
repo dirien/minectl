@@ -34,6 +34,7 @@ const (
 	TemplateForgeBinary        TemplateName = "forge-binary"
 	TemplatePaperMCBinary      TemplateName = "papermc-binary"
 	TemplateProxyCloudConfig   TemplateName = "proxy-cloud-config"
+	TemplateProxyBash          TemplateName = "proxy-bash"
 	TemplateBungeeCordBinary   TemplateName = "bungeecord-binary"
 	TemplateWaterfallBinary    TemplateName = "waterfall-binary"
 	TemplateNukkitBinary       TemplateName = "nukkit-binary"
@@ -74,7 +75,7 @@ func GetTemplateCloudConfigName(isProxy bool) TemplateName {
 
 func GetTemplateBashName(isProxy bool) TemplateName {
 	if isProxy {
-		return TemplateProxyCloudConfig
+		return TemplateProxyBash
 	}
 	return TemplateBash
 }
