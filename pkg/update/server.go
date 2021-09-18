@@ -59,6 +59,8 @@ func (r *RemoteServer) UpdateServer(args *model.MinecraftResource) error {
 		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplateWaterfallBinary)
 	case "nukkit":
 		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplateNukkitBinary)
+	case "powernukkit":
+		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplatePowerNukkitBinary)
 	}
 
 	if args.GetEdition() != "bedrock" {
