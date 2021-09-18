@@ -100,7 +100,7 @@ func (p *MinectlProvisioner) UpdateServer() error {
 
 //wait that server is ready... Currently on for Java based Editions (TCP), as Bedrock is UDP
 func (p *MinectlProvisioner) waitForMinecraftServerReady(server *automation.RessourceResults) error {
-	if p.args.MinecraftResource.GetEdition() != "bedrock" {
+	if p.args.MinecraftResource.GetEdition() != "bedrock" && p.args.MinecraftResource.GetEdition() != "nukkit" {
 		indicator := progress.NewIndicator("🕹 Starting Minecraft server...", p.logging)
 		defer indicator.StopE(nil)
 		indicator.FinalMessage = "✅ Minecraft server successfully started."
