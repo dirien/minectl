@@ -59,7 +59,7 @@ write_files:
       WorkingDirectory=/minecraft
       Type=simple
       {{- if ne .Spec.Minecraft.Edition "bedrock" }}
-      ExecStart=/usr/bin/java -Xmx{{.Spec.Minecraft.Java.Xmx}} -Xms{{.Spec.Minecraft.Java.Xms}}{{range .Spec.Minecraft.Java.Options }} {{.}}{{end}} -jar server.jar nogui
+      ExecStart=/usr/bin/java -Xmx{{.Spec.Minecraft.Java.Xmx}} -Xms{{.Spec.Minecraft.Java.Xms}}{{range .Spec.Minecraft.Java.Options }} {{.}}{{end}} -jar server.jar nogui {{- if eq .Spec.Minecraft.Edition "nukkit" }} --language eng {{- end }}
       {{ else if eq .Spec.Minecraft.Edition "bedrock" }}
       ExecStart=/bin/sh -c "LD_LIBRARY_PATH=. ./bedrock_server"
       {{- end }}
@@ -78,9 +78,9 @@ runcmd:
   {{- end }}
   - ufw allow ssh
   - ufw allow 5201
-  {{ if ne .Spec.Minecraft.Edition "bedrock" -}}
-  - ufw allow proto udp to 0.0.0.0/0 port {{.Spec.Server.Port}}
-  {{ else if eq .Spec.Minecraft.Edition "bedrock" -}}
+  {{ if and (ne .Spec.Minecraft.Edition "bedrock") (ne .Spec.Minecraft.Edition "nukkit") -}}
+  - ufw allow proto tcp to 0.0.0.0/0 port {{.Spec.Server.Port}}
+  {{ else -}}
   - ufw allow proto udp to 0.0.0.0/0 port {{.Spec.Server.Port}}
   {{ end -}}
   - echo [DEFAULT] | sudo tee -a /etc/fail2ban/jail.local
@@ -100,6 +100,8 @@ runcmd:
     {{- template "fabric-binary" . }}
   {{- else if eq .Spec.Minecraft.Edition "forge" }}
     {{- template "forge-binary" . }}
+  {{- else if eq .Spec.Minecraft.Edition "nukkit" }}
+    {{- template "nukkit-binary" . }}
   {{- end }}
   - echo "eula={{ .Spec.Minecraft.Eula }}" > /minecraft/eula.txt
   - mv /tmp/server.properties /minecraft/server.properties

@@ -85,7 +85,7 @@ func (c *Civo) CreateServer(args automation.ServerArgs) (*automation.RessourceRe
 	}
 	zap.S().Infow("Civo create instance", "instance", instance)
 
-	if args.MinecraftResource.GetEdition() == "bedrock" {
+	if args.MinecraftResource.GetEdition() == "bedrock" || args.MinecraftResource.GetEdition() == "nukkit" {
 		firewall, err := c.client.NewFirewall(fmt.Sprintf("%s-fw", args.MinecraftResource.GetName()), network.ID)
 		if err != nil {
 			return nil, err
@@ -156,7 +156,7 @@ func (c *Civo) DeleteServer(id string, args automation.ServerArgs) error {
 		return err
 	}
 	zap.S().Infow("Civo delete ssh key", "pubKeyFile", pubKeyFile)
-	if args.MinecraftResource.GetEdition() == "bedrock" {
+	if args.MinecraftResource.GetEdition() == "bedrock" || args.MinecraftResource.GetEdition() == "nukkit" {
 		firewall, err := c.client.FindFirewall(fmt.Sprintf("%s-fw", args.MinecraftResource.GetName()))
 		if err != nil {
 			return err

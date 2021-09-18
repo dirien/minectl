@@ -36,6 +36,7 @@ const (
 	TemplateProxyCloudConfig   TemplateName = "proxy-cloud-config"
 	TemplateBungeeCordBinary   TemplateName = "bungeecord-binary"
 	TemplateWaterfallBinary    TemplateName = "waterfall-binary"
+	TemplateNukkitBinary       TemplateName = "nukkit-binary"
 )
 
 func GetUpdateTemplate() *Template {

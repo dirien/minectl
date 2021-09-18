@@ -153,7 +153,7 @@ func (o *OCI) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 			},
 		},
 	}
-	if args.MinecraftResource.GetEdition() == "bedrock" {
+	if args.MinecraftResource.GetEdition() == "bedrock" || args.MinecraftResource.GetEdition() == "nukkit" {
 		//Options are supported only for ICMP ("1"), TCP ("6"), UDP ("17"), and ICMPv6 ("58").
 		minecraftIngressSecurityRule.Protocol = common.String("17")
 		minecraftIngressSecurityRule.TcpOptions = nil

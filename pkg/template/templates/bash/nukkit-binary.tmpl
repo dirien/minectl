@@ -1,0 +1,4 @@
+{{- define "nukkit-binary" }}
+URL="https://ci.opencollab.dev/job/NukkitX/job/Nukkit/job/master/lastSuccessfulBuild/artifact/target/nukkit-{{ .Spec.Minecraft.Version }}.jar"
+curl -sLSf $URL > /minecraft/server.jar
+{{- end }}

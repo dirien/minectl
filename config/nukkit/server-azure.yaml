@@ -1,0 +1,51 @@
+apiVersion: ediri.io/minectl/v1alpha1
+kind: MinecraftServer
+metadata:
+  name: minecraft-server
+spec:
+  server:
+    cloud: azure
+    region: westeurope
+    size: Standard_D2_v2
+    ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft"
+    port: 19132
+  minecraft:
+    java:
+      openjdk: 8
+      xmx: 2G
+      xms: 2G
+      rcon:
+        password: test
+        port: 25575
+        enabled: true
+        broadcast: true
+    edition: nukkit
+    version: 1.0-SNAPSHOT
+    eula: true
+    properties: |
+      motd=Azure Minecraft --- Nukkitx edition
+      sub-motd=https://nukkitx.com
+      server-ip=0.0.0.0
+      view-distance=10
+      white-list=off
+      achievements=on
+      announce-player-achievements=on
+      spawn-protection=16
+      max-players=20
+      allow-flight=off
+      spawn-animals=on
+      spawn-mobs=on
+      gamemode=0
+      force-gamemode=off
+      hardcore=off
+      pvp=on
+      difficulty=1
+      generator-settings=
+      level-name=world
+      level-seed=
+      level-type=DEFAULT
+      allow-nether=on
+      enable-query=on
+      auto-save=on
+      force-resources=off
+      xbox-auth=on
