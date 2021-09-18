@@ -287,6 +287,34 @@ var (
 		},
 	}
 
+	powerNukkit = model.MinecraftResource{
+		Spec: model.Spec{
+			Server: model.Server{
+				Port: 19132,
+			},
+			Minecraft: model.Minecraft{
+				Java: model.Java{
+					Xms:     "2G",
+					Xmx:     "2G",
+					OpenJDK: 8,
+					Rcon: model.Rcon{
+						Port:      2,
+						Password:  "test",
+						Enabled:   true,
+						Broadcast: true,
+					},
+				},
+				Edition:    "powernukkit",
+				Properties: "level-seed=stackitminecraftrocks\nview-distance=10\nenable-jmx-monitoring=false\n",
+				Version:    "1.5.1.0-PN",
+				Eula:       true,
+			},
+			Monitoring: model.Monitoring{
+				Enabled: false,
+			},
+		},
+	}
+
 	bedrockBashWant = `#!/bin/bash
 iptables -I INPUT -j ACCEPT
 tee /tmp/server.properties <<EOF
@@ -3356,6 +3384,123 @@ runcmd:
   - mv /tmp/server.properties /minecraft/server.properties
   - systemctl restart minecraft.service
   - systemctl enable minecraft.service`
+
+	powerNukkitBashWant = `#!/bin/bash
+iptables -I INPUT -j ACCEPT
+tee /tmp/server.properties <<EOF
+server-port=19132
+level-seed=stackitminecraftrocks
+view-distance=10
+enable-jmx-monitoring=false
+
+broadcast-rcon-to-ops=true
+rcon.port=2
+enable-rcon=true
+rcon.password=test
+EOF
+tee /etc/systemd/system/minecraft.service <<EOF
+[Unit]
+Description=Minecraft Server
+Documentation=https://www.minecraft.net/en-us/download/server
+
+[Service]
+WorkingDirectory=/minecraft
+Type=simple
+ExecStart=/usr/bin/java -Xmx2G -Xms2G -jar server.jar nogui --language eng
+
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+apt update
+apt-get install -y apt-transport-https ca-certificates curl openjdk-8-jre-headless fail2ban
+ufw allow ssh
+ufw allow 5201
+ufw allow proto udp to 0.0.0.0/0 port 19132
+
+echo [DEFAULT] | sudo tee -a /etc/fail2ban/jail.local
+echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
+echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
+echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
+sudo systemctl restart fail2ban
+mkdir /minecraft
+mkfs.ext4  /dev/sda
+mount /dev/sda /minecraft
+echo "/dev/sda /minecraft ext4 defaults,noatime,nofail 0 2" >> /etc/fstab
+URL="https://github.com/PowerNukkit/PowerNukkit/releases/download/v1.5.1.0-PN/powernukkit-1.5.1.0-PN-shaded.jar"
+curl -sLSf $URL > /minecraft/server.jar
+echo "eula=true" > /minecraft/eula.txt
+mv /tmp/server.properties /minecraft/server.properties
+systemctl restart minecraft.service
+systemctl enable minecraft.service`
+
+	powerNukkitCloudInitWant = `#cloud-config
+users:
+  - default
+package_update: true
+
+packages:
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - openjdk-8-jre-headless
+  - fail2ban
+fs_setup:
+  - label: minecraft
+    device: /dev/sda
+    filesystem: xfs
+    overwrite: false
+
+mounts:
+  - [/dev/sda, /minecraft]
+# Enable ipv4 forwarding, required on CIS hardened machines
+write_files:
+  - path: /etc/sysctl.d/enabled_ipv4_forwarding.conf
+    content: |
+      net.ipv4.conf.all.forwarding=1
+  - path: /tmp/server.properties
+    content: |
+       level-seed=stackitminecraftrocks
+       view-distance=10
+       enable-jmx-monitoring=false
+       broadcast-rcon-to-ops=true
+       rcon.port=2
+       enable-rcon=true
+       rcon.password=test
+       server-port=19132
+  - path: /etc/systemd/system/minecraft.service
+    content: |
+      [Unit]
+      Description=Minecraft Server
+      Documentation=https://www.minecraft.net/en-us/download/server
+      [Service]
+      WorkingDirectory=/minecraft
+      Type=simple
+      ExecStart=/usr/bin/java -Xmx2G -Xms2G -jar server.jar nogui --language eng
+      
+      Restart=on-failure
+      RestartSec=5
+      [Install]
+      WantedBy=multi-user.target
+
+runcmd:
+  - iptables -I INPUT -j ACCEPT
+  - ufw allow ssh
+  - ufw allow 5201
+  - ufw allow proto udp to 0.0.0.0/0 port 19132
+  - echo [DEFAULT] | sudo tee -a /etc/fail2ban/jail.local
+  - echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
+  - echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
+  - echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
+  - sudo systemctl restart fail2ban
+  - URL="https://github.com/PowerNukkit/PowerNukkit/releases/download/v1.5.1.0-PN/powernukkit-1.5.1.0-PN-shaded.jar"
+  - curl -sLSf $URL > /minecraft/server.jar
+  - echo "eula=true" > /minecraft/eula.txt
+  - mv /tmp/server.properties /minecraft/server.properties
+  - systemctl restart minecraft.service
+  - systemctl enable minecraft.service`
 )
 
 func TestCivoBedrockTemplate(t *testing.T) {
@@ -3686,5 +3831,35 @@ func TestCloudInitNukkitTemplate(t *testing.T) {
 		}
 
 		assert.Equal(t, nukkitCloudInitWant, got)
+	})
+}
+
+func TestBashPowerNukkitTemplate(t *testing.T) {
+	t.Run("Test Template powernukkit for Bash", func(t *testing.T) {
+		bash, err := NewTemplateBash()
+		if err != nil {
+			t.Fatal(err)
+		}
+		got, err := bash.GetTemplate(&powerNukkit, "sda", TemplateBash)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		assert.Equal(t, powerNukkitBashWant, got)
+	})
+}
+
+func TestCloudInitPowerNukkitTemplate(t *testing.T) {
+	t.Run("Test Template powernukkit for Cloud Config", func(t *testing.T) {
+		cloudConfig, err := NewTemplateCloudConfig()
+		if err != nil {
+			t.Fatal(err)
+		}
+		got, err := cloudConfig.GetTemplate(&powerNukkit, "sda", TemplateCloudConfig)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		assert.Equal(t, powerNukkitCloudInitWant, got)
 	})
 }

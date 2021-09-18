@@ -38,6 +38,7 @@ const (
 	TemplateBungeeCordBinary   TemplateName = "bungeecord-binary"
 	TemplateWaterfallBinary    TemplateName = "waterfall-binary"
 	TemplateNukkitBinary       TemplateName = "nukkit-binary"
+	TemplatePowerNukkitBinary  TemplateName = "powernukkit-binary"
 )
 
 func GetUpdateTemplate() *Template {

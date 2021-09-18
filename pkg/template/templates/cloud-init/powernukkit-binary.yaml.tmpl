@@ -1,0 +1,4 @@
+{{- define "powernukkit-binary" }}
+  - URL="https://github.com/PowerNukkit/PowerNukkit/releases/download/v{{ .Spec.Minecraft.Version }}/powernukkit-{{ .Spec.Minecraft.Version }}-shaded.jar"
+  - curl -sLSf $URL > /minecraft/server.jar
+{{- end }}
