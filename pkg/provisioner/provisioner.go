@@ -6,6 +6,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/minectl/pkg/cloud/alicloud"
+
 	"github.com/minectl/pkg/cloud/oci"
 
 	"github.com/minectl/pkg/progress"
@@ -196,7 +198,8 @@ func getProvisioner(provider, region string) (automation.Automation, error) {
 		}
 		return cloudProvider, nil
 	case "scaleway":
-		cloudProvider, err := scaleway.NewScaleway(os.Getenv("ACCESS_KEY"), os.Getenv("SECRET_KEY"), os.Getenv("ORGANISATION_ID"), region)
+		cloudProvider, err := scaleway.NewScaleway(os.Getenv("ACCESS_KEY"), os.Getenv("SECRET_KEY"),
+			os.Getenv("ORGANISATION_ID"), region)
 		if err != nil {
 			return nil, err
 		}
@@ -208,13 +211,15 @@ func getProvisioner(provider, region string) (automation.Automation, error) {
 		}
 		return cloudProvider, nil
 	case "ovh":
-		cloudProvider, err := ovh.NewOVHcloud(os.Getenv("OVH_ENDPOINT"), os.Getenv("APPLICATION_KEY"), os.Getenv("APPLICATION_SECRET"), os.Getenv("CONSUMER_KEY"), os.Getenv("SERVICENAME"), region)
+		cloudProvider, err := ovh.NewOVHcloud(os.Getenv("OVH_ENDPOINT"), os.Getenv("APPLICATION_KEY"),
+			os.Getenv("APPLICATION_SECRET"), os.Getenv("CONSUMER_KEY"), os.Getenv("SERVICENAME"), region)
 		if err != nil {
 			return nil, err
 		}
 		return cloudProvider, nil
 	case "equinix":
-		cloudProvider, err := equinix.NewEquinix(os.Getenv("PACKET_AUTH_TOKEN"), os.Getenv("EQUINIX_PROJECT"))
+		cloudProvider, err := equinix.NewEquinix(os.Getenv("PACKET_AUTH_TOKEN"),
+			os.Getenv("EQUINIX_PROJECT"))
 		if err != nil {
 			return nil, err
 		}
@@ -239,6 +244,14 @@ func getProvisioner(provider, region string) (automation.Automation, error) {
 		return cloudProvider, nil
 	case "oci":
 		cloudProvider, err := oci.NewOCI()
+		if err != nil {
+			return nil, err
+		}
+		return cloudProvider, nil
+	case "alicloud":
+		cloudProvider, err := alicloud.NewAliCloud(os.Getenv("ALIBABA_CLOUD_ACCESS_KEY_ID"),
+			os.Getenv("ALIBABA_CLOUD_ACCESS_KEY_SECRET"),
+			region)
 		if err != nil {
 			return nil, err
 		}
