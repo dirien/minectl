@@ -11,6 +11,9 @@ builds:
       - linux
       - windows
       - darwin
+    ignore:
+      - goos: windows
+        goarch: arm64
     goarch:
       - amd64
       - arm64
@@ -63,3 +66,23 @@ archives:
 release:
   extra_files:
     - glob: dist/*.sig
+nfpms:
+  - file_name_template: "minectl-{{.Version}}_{{.Os}}-{{.Arch}}"
+    homepage: https://github.com/dirien/minectl
+    description: "minectl️️ 🗺️ is a cli for creating Minecraft (java or bedrock) server on different cloud provider."
+    maintainer: "Engin Diri engin.diri@mail.schwarz"
+    license: "Apache License 2.0"
+    vendor: minectl️️ Developers
+    formats:
+      - rpm
+      - deb
+      - apk
+    bindir: /usr/bin
+    replacements:
+      amd64: 64bit
+      386: 32bit
+      arm: ARM
+      arm64: ARM64
+      darwin: macOS
+      linux: Linux
+      windows: Windows
