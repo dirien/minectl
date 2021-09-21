@@ -13,7 +13,7 @@ require (
 	github.com/blang/semver/v4 v4.0.0
 	github.com/c-bata/go-prompt v0.2.6
 	github.com/civo/civogo v0.2.53
-	github.com/digitalocean/godo v1.65.0
+	github.com/digitalocean/godo v1.66.0
 	github.com/dirien/ovh-go-sdk v0.1.1
 	github.com/fatih/color v1.12.0
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
