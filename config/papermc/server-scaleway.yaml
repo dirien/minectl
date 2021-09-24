@@ -6,7 +6,7 @@ spec:
   server:
     cloud: scaleway
     region: fr-par-1
-    size: GP1-XS
+    size: DEV1-M
     ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft"
     port: 25565
   minecraft:
@@ -20,7 +20,7 @@ spec:
         enabled: true
         broadcast: true
     edition: papermc
-    version: 1.17.1-157
+    version: 1.17.1-266
     eula: true
     properties: |
       level-seed=stackitminecraftrocks
@@ -59,7 +59,7 @@ spec:
       max-tick-time=60000
       enforce-whitelist=false
       use-native-transport=true
-      max-players=100
+      max-players=20
       resource-pack-sha1=
       spawn-protection=16
       online-mode=true

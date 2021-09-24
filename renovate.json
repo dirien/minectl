@@ -9,5 +9,6 @@
   "dependencyDashboard": false,
   "labels": [
     "dependencies"
-  ]
+  ],
+  "semanticCommits": true
 }
