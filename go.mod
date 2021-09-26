@@ -11,6 +11,7 @@ require (
 	github.com/Azure/go-autorest/autorest/validation v0.3.1 // indirect
 	github.com/Masterminds/sprig/v3 v3.2.2
 	github.com/Tnze/go-mc v1.17.0
+	github.com/aws/aws-sdk-go v1.40.15
 	github.com/blang/semver/v4 v4.0.0
 	github.com/c-bata/go-prompt v0.2.6
 	github.com/civo/civogo v0.2.55
@@ -19,7 +20,8 @@ require (
 	github.com/fatih/color v1.13.0
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/google/go-github v17.0.0+incompatible // indirect
-	github.com/google/uuid v1.3.0 // indirect
+	github.com/google/go-querystring v1.1.0 // indirect
+	github.com/google/uuid v1.3.0
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
 	github.com/hashicorp/go-retryablehttp v0.7.0
 	github.com/hashicorp/go-version v1.3.0 // indirect
@@ -73,9 +75,9 @@ require (
 	github.com/form3tech-oss/jwt-go v3.2.2+incompatible // indirect
 	github.com/go-resty/resty/v2 v2.1.1-0.20191201195748-d7b97669fe48 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
-	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/googleapis/gax-go/v2 v2.1.1 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
+	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
 	github.com/kr/fs v0.1.0 // indirect
 	github.com/mattn/go-colorable v0.1.9 // indirect

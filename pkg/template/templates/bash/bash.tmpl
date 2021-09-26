@@ -19,6 +19,8 @@ tee /etc/systemd/system/minecraft.service <<EOF
 [Unit]
 Description=Minecraft Server
 Documentation=https://www.minecraft.net/en-us/download/server
+DefaultDependencies=no
+After=network.target
 
 [Service]
 WorkingDirectory=/minecraft
@@ -52,7 +54,7 @@ echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
 echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
 echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
 sudo systemctl restart fail2ban
-mkdir /minecraft
+mkdir -p /minecraft
 
 {{- if .Mount }}
 mkfs.ext4  /dev/{{ .Mount }}
@@ -78,6 +80,7 @@ echo "/dev/{{ .Mount }} /minecraft ext4 defaults,noatime,nofail 0 2" >> /etc/fst
 {{- end }}
 echo "eula={{ .Spec.Minecraft.Eula }}" > /minecraft/eula.txt
 mv /tmp/server.properties /minecraft/server.properties
+chmod a+rwx /minecraft
 systemctl restart minecraft.service
 systemctl enable minecraft.service
 {{- end -}}

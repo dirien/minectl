@@ -376,6 +376,8 @@ tee /etc/systemd/system/minecraft.service <<EOF
 [Unit]
 Description=Minecraft Server
 Documentation=https://www.minecraft.net/en-us/download/server
+DefaultDependencies=no
+After=network.target
 
 [Service]
 WorkingDirectory=/minecraft
@@ -433,13 +435,14 @@ echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
 echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
 echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
 sudo systemctl restart fail2ban
-mkdir /minecraft
+mkdir -p /minecraft
 URL=$(curl -s https://bedrock-version.minectl.ediri.online/binary/1.17.10.04)
 curl -sLSf $URL > /tmp/bedrock-server.zip
 unzip -o /tmp/bedrock-server.zip -d /minecraft
 chmod +x /minecraft/bedrock_server
 echo "eula=false" > /minecraft/eula.txt
 mv /tmp/server.properties /minecraft/server.properties
+chmod a+rwx /minecraft
 systemctl restart minecraft.service
 systemctl enable minecraft.service`
 
@@ -527,6 +530,8 @@ tee /etc/systemd/system/minecraft.service <<EOF
 [Unit]
 Description=Minecraft Server
 Documentation=https://www.minecraft.net/en-us/download/server
+DefaultDependencies=no
+After=network.target
 
 [Service]
 WorkingDirectory=/minecraft
@@ -594,11 +599,12 @@ echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
 echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
 echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
 sudo systemctl restart fail2ban
-mkdir /minecraft
+mkdir -p /minecraft
 URL=$(curl -s https://java-version.minectl.ediri.online/binary/1.17)
 curl -sLSf $URL > /minecraft/server.jar
 echo "eula=true" > /minecraft/eula.txt
 mv /tmp/server.properties /minecraft/server.properties
+chmod a+rwx /minecraft
 systemctl restart minecraft.service
 systemctl enable minecraft.service`
 
@@ -688,6 +694,8 @@ write_files:
       [Unit]
       Description=Minecraft Server
       Documentation=https://www.minecraft.net/en-us/download/server
+      DefaultDependencies=no
+      After=network.target
       [Service]
       WorkingDirectory=/minecraft
       Type=simple
@@ -742,6 +750,7 @@ runcmd:
   - chmod +x /minecraft/bedrock_server
   - echo "eula=false" > /minecraft/eula.txt
   - mv /tmp/server.properties /minecraft/server.properties
+  - chmod a+rwx /minecraft
   - systemctl restart minecraft.service
   - systemctl enable minecraft.service`
 
@@ -853,6 +862,8 @@ write_files:
       [Unit]
       Description=Minecraft Server
       Documentation=https://www.minecraft.net/en-us/download/server
+      DefaultDependencies=no
+      After=network.target
       [Service]
       WorkingDirectory=/minecraft
       Type=simple
@@ -912,6 +923,7 @@ runcmd:
   - curl -sLSf $URL > /minecraft/server.jar
   - echo "eula=true" > /minecraft/eula.txt
   - mv /tmp/server.properties /minecraft/server.properties
+  - chmod a+rwx /minecraft
   - systemctl restart minecraft.service
   - systemctl enable minecraft.service`
 
@@ -1023,6 +1035,8 @@ write_files:
       [Unit]
       Description=Minecraft Server
       Documentation=https://www.minecraft.net/en-us/download/server
+      DefaultDependencies=no
+      After=network.target
       [Service]
       WorkingDirectory=/minecraft
       Type=simple
@@ -1082,6 +1096,7 @@ runcmd:
   - curl -sLSf $URL > /minecraft/server.jar
   - echo "eula=true" > /minecraft/eula.txt
   - mv /tmp/server.properties /minecraft/server.properties
+  - chmod a+rwx /minecraft
   - systemctl restart minecraft.service
   - systemctl enable minecraft.service`
 
@@ -1146,6 +1161,8 @@ tee /etc/systemd/system/minecraft.service <<EOF
 [Unit]
 Description=Minecraft Server
 Documentation=https://www.minecraft.net/en-us/download/server
+DefaultDependencies=no
+After=network.target
 
 [Service]
 WorkingDirectory=/minecraft
@@ -1203,7 +1220,7 @@ echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
 echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
 echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
 sudo systemctl restart fail2ban
-mkdir /minecraft
+mkdir -p /minecraft
 mkfs.ext4  /dev/sdc
 mount /dev/sdc /minecraft
 echo "/dev/sdc /minecraft ext4 defaults,noatime,nofail 0 2" >> /etc/fstab
@@ -1213,6 +1230,7 @@ unzip -o /tmp/bedrock-server.zip -d /minecraft
 chmod +x /minecraft/bedrock_server
 echo "eula=false" > /minecraft/eula.txt
 mv /tmp/server.properties /minecraft/server.properties
+chmod a+rwx /minecraft
 systemctl restart minecraft.service
 systemctl enable minecraft.service`
 
@@ -1300,6 +1318,8 @@ tee /etc/systemd/system/minecraft.service <<EOF
 [Unit]
 Description=Minecraft Server
 Documentation=https://www.minecraft.net/en-us/download/server
+DefaultDependencies=no
+After=network.target
 
 [Service]
 WorkingDirectory=/minecraft
@@ -1367,7 +1387,7 @@ echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
 echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
 echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
 sudo systemctl restart fail2ban
-mkdir /minecraft
+mkdir -p /minecraft
 mkfs.ext4  /dev/sdc
 mount /dev/sdc /minecraft
 echo "/dev/sdc /minecraft ext4 defaults,noatime,nofail 0 2" >> /etc/fstab
@@ -1375,6 +1395,7 @@ URL=$(curl -s https://java-version.minectl.ediri.online/binary/1.17)
 curl -sLSf $URL > /minecraft/server.jar
 echo "eula=true" > /minecraft/eula.txt
 mv /tmp/server.properties /minecraft/server.properties
+chmod a+rwx /minecraft
 systemctl restart minecraft.service
 systemctl enable minecraft.service`
 
@@ -1462,6 +1483,8 @@ tee /etc/systemd/system/minecraft.service <<EOF
 [Unit]
 Description=Minecraft Server
 Documentation=https://www.minecraft.net/en-us/download/server
+DefaultDependencies=no
+After=network.target
 
 [Service]
 WorkingDirectory=/minecraft
@@ -1529,7 +1552,7 @@ echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
 echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
 echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
 sudo systemctl restart fail2ban
-mkdir /minecraft
+mkdir -p /minecraft
 mkfs.ext4  /dev/sdc
 mount /dev/sdc /minecraft
 echo "/dev/sdc /minecraft ext4 defaults,noatime,nofail 0 2" >> /etc/fstab
@@ -1537,6 +1560,7 @@ URL=$(curl -s https://java-version.minectl.ediri.online/binary/1.17)
 curl -sLSf $URL > /minecraft/server.jar
 echo "eula=true" > /minecraft/eula.txt
 mv /tmp/server.properties /minecraft/server.properties
+chmod a+rwx /minecraft
 systemctl restart minecraft.service
 systemctl enable minecraft.service`
 
@@ -1624,6 +1648,8 @@ tee /etc/systemd/system/minecraft.service <<EOF
 [Unit]
 Description=Minecraft Server
 Documentation=https://www.minecraft.net/en-us/download/server
+DefaultDependencies=no
+After=network.target
 
 [Service]
 WorkingDirectory=/minecraft
@@ -1691,7 +1717,7 @@ echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
 echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
 echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
 sudo systemctl restart fail2ban
-mkdir /minecraft
+mkdir -p /minecraft
 mkfs.ext4  /dev/sdc
 mount /dev/sdc /minecraft
 echo "/dev/sdc /minecraft ext4 defaults,noatime,nofail 0 2" >> /etc/fstab
@@ -1699,6 +1725,7 @@ URL="https://papermc.io/api/v2/projects/paper/versions/1.17.1/builds/157/downloa
 curl -sLSf $URL > /minecraft/server.jar
 echo "eula=true" > /minecraft/eula.txt
 mv /tmp/server.properties /minecraft/server.properties
+chmod a+rwx /minecraft
 systemctl restart minecraft.service
 systemctl enable minecraft.service`
 
@@ -1810,6 +1837,8 @@ write_files:
       [Unit]
       Description=Minecraft Server
       Documentation=https://www.minecraft.net/en-us/download/server
+      DefaultDependencies=no
+      After=network.target
       [Service]
       WorkingDirectory=/minecraft
       Type=simple
@@ -1879,6 +1908,7 @@ runcmd:
   - rm -rf /tmp/build
   - echo "eula=true" > /minecraft/eula.txt
   - mv /tmp/server.properties /minecraft/server.properties
+  - chmod a+rwx /minecraft
   - systemctl restart minecraft.service
   - systemctl enable minecraft.service`
 
@@ -1966,6 +1996,8 @@ tee /etc/systemd/system/minecraft.service <<EOF
 [Unit]
 Description=Minecraft Server
 Documentation=https://www.minecraft.net/en-us/download/server
+DefaultDependencies=no
+After=network.target
 
 [Service]
 WorkingDirectory=/minecraft
@@ -2033,7 +2065,7 @@ echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
 echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
 echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
 sudo systemctl restart fail2ban
-mkdir /minecraft
+mkdir -p /minecraft
 mkfs.ext4  /dev/sda
 mount /dev/sda /minecraft
 echo "/dev/sda /minecraft ext4 defaults,noatime,nofail 0 2" >> /etc/fstab
@@ -2048,6 +2080,7 @@ cp craftbukkit-1.17.1-138.jar /minecraft/server.jar
 rm -rf /tmp/build
 echo "eula=true" > /minecraft/eula.txt
 mv /tmp/server.properties /minecraft/server.properties
+chmod a+rwx /minecraft
 systemctl restart minecraft.service
 systemctl enable minecraft.service`
 
@@ -2159,6 +2192,8 @@ write_files:
       [Unit]
       Description=Minecraft Server
       Documentation=https://www.minecraft.net/en-us/download/server
+      DefaultDependencies=no
+      After=network.target
       [Service]
       WorkingDirectory=/minecraft
       Type=simple
@@ -2225,6 +2260,7 @@ runcmd:
   - rm -rf /tmp/build
   - echo "eula=true" > /minecraft/eula.txt
   - mv /tmp/server.properties /minecraft/server.properties
+  - chmod a+rwx /minecraft
   - systemctl restart minecraft.service
   - systemctl enable minecraft.service`
 
@@ -2312,6 +2348,8 @@ tee /etc/systemd/system/minecraft.service <<EOF
 [Unit]
 Description=Minecraft Server
 Documentation=https://www.minecraft.net/en-us/download/server
+DefaultDependencies=no
+After=network.target
 
 [Service]
 WorkingDirectory=/minecraft
@@ -2379,7 +2417,7 @@ echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
 echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
 echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
 sudo systemctl restart fail2ban
-mkdir /minecraft
+mkdir -p /minecraft
 mkfs.ext4  /dev/sda
 mount /dev/sda /minecraft
 echo "/dev/sda /minecraft ext4 defaults,noatime,nofail 0 2" >> /etc/fstab
@@ -2394,6 +2432,7 @@ cp /tmp/build/server.jar /minecraft/minecraft-server.jar
 rm -rf /tmp/build
 echo "eula=true" > /minecraft/eula.txt
 mv /tmp/server.properties /minecraft/server.properties
+chmod a+rwx /minecraft
 systemctl restart minecraft.service
 systemctl enable minecraft.service`
 
@@ -2505,6 +2544,8 @@ write_files:
       [Unit]
       Description=Minecraft Server
       Documentation=https://www.minecraft.net/en-us/download/server
+      DefaultDependencies=no
+      After=network.target
       [Service]
       WorkingDirectory=/minecraft
       Type=simple
@@ -2570,6 +2611,7 @@ runcmd:
   - rm -rf /tmp/build
   - echo "eula=true" > /minecraft/eula.txt
   - mv /tmp/server.properties /minecraft/server.properties
+  - chmod a+rwx /minecraft
   - systemctl restart minecraft.service
   - systemctl enable minecraft.service`
 
@@ -2657,6 +2699,8 @@ tee /etc/systemd/system/minecraft.service <<EOF
 [Unit]
 Description=Minecraft Server
 Documentation=https://www.minecraft.net/en-us/download/server
+DefaultDependencies=no
+After=network.target
 
 [Service]
 WorkingDirectory=/minecraft
@@ -2724,7 +2768,7 @@ echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
 echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
 echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
 sudo systemctl restart fail2ban
-mkdir /minecraft
+mkdir -p /minecraft
 mkfs.ext4  /dev/sda
 mount /dev/sda /minecraft
 echo "/dev/sda /minecraft ext4 defaults,noatime,nofail 0 2" >> /etc/fstab
@@ -2738,6 +2782,7 @@ cp /minecraft/forge-1.17.1-138.jar /minecraft/server.jar
 rm -rf /tmp/build
 echo "eula=true" > /minecraft/eula.txt
 mv /tmp/server.properties /minecraft/server.properties
+chmod a+rwx /minecraft
 systemctl restart minecraft.service
 systemctl enable minecraft.service`
 
@@ -2849,6 +2894,8 @@ write_files:
       [Unit]
       Description=Minecraft Server
       Documentation=https://www.minecraft.net/en-us/download/server
+      DefaultDependencies=no
+      After=network.target
       [Service]
       WorkingDirectory=/minecraft
       Type=simple
@@ -2918,6 +2965,7 @@ runcmd:
   - rm -rf /tmp/build
   - echo "eula=true" > /minecraft/eula.txt
   - mv /tmp/server.properties /minecraft/server.properties
+  - chmod a+rwx /minecraft
   - systemctl restart minecraft.service
   - systemctl enable minecraft.service`
 
@@ -3005,6 +3053,8 @@ tee /etc/systemd/system/minecraft.service <<EOF
 [Unit]
 Description=Minecraft Server
 Documentation=https://www.minecraft.net/en-us/download/server
+DefaultDependencies=no
+After=network.target
 
 [Service]
 WorkingDirectory=/minecraft
@@ -3072,7 +3122,7 @@ echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
 echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
 echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
 sudo systemctl restart fail2ban
-mkdir /minecraft
+mkdir -p /minecraft
 mkfs.ext4  /dev/sda
 mount /dev/sda /minecraft
 echo "/dev/sda /minecraft ext4 defaults,noatime,nofail 0 2" >> /etc/fstab
@@ -3087,6 +3137,7 @@ cp spigot-1.17.1-138.jar /minecraft/server.jar
 rm -rf /tmp/build
 echo "eula=true" > /minecraft/eula.txt
 mv /tmp/server.properties /minecraft/server.properties
+chmod a+rwx /minecraft
 systemctl restart minecraft.service
 systemctl enable minecraft.service`
 
@@ -3103,6 +3154,8 @@ tee /etc/systemd/system/minecraft.service <<EOF
 [Unit]
 Description=Minecraft Server
 Documentation=https://www.minecraft.net/en-us/download/server
+DefaultDependencies=no
+After=network.target
 
 [Service]
 WorkingDirectory=/minecraft
@@ -3125,13 +3178,14 @@ echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
 echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
 echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
 sudo systemctl restart fail2ban
-mkdir /minecraft
+mkdir -p /minecraft
 URL=$(curl -s https://bedrock-version.minectl.ediri.online/binary/1.17.10.04)
 curl -sLSf $URL > /tmp/bedrock-server.zip
 unzip -o /tmp/bedrock-server.zip -d /minecraft
 chmod +x /minecraft/bedrock_server
 echo "eula=false" > /minecraft/eula.txt
 mv /tmp/server.properties /minecraft/server.properties
+chmod a+rwx /minecraft
 systemctl restart minecraft.service
 systemctl enable minecraft.service`
 
@@ -3174,6 +3228,8 @@ write_files:
       [Unit]
       Description=Minecraft Server
       Documentation=https://www.minecraft.net/en-us/download/server
+      DefaultDependencies=no
+      After=network.target
       [Service]
       WorkingDirectory=/minecraft
       Type=simple
@@ -3205,6 +3261,7 @@ runcmd:
   - rm -rf /tmp/build
   - echo "eula=true" > /minecraft/eula.txt
   - mv /tmp/server.properties /minecraft/server.properties
+  - chmod a+rwx /minecraft
   - systemctl restart minecraft.service
   - systemctl enable minecraft.service`
 
@@ -3225,6 +3282,8 @@ tee /etc/systemd/system/minecraft.service <<EOF
 [Unit]
 Description=Minecraft Server
 Documentation=https://www.minecraft.net/en-us/download/server
+DefaultDependencies=no
+After=network.target
 
 [Service]
 WorkingDirectory=/minecraft
@@ -3250,7 +3309,7 @@ echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
 echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
 echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
 sudo systemctl restart fail2ban
-mkdir /minecraft
+mkdir -p /minecraft
 mkfs.ext4  /dev/sda
 mount /dev/sda /minecraft
 echo "/dev/sda /minecraft ext4 defaults,noatime,nofail 0 2" >> /etc/fstab
@@ -3265,6 +3324,7 @@ cp /tmp/build/server.jar /minecraft/minecraft-server.jar
 rm -rf /tmp/build
 echo "eula=true" > /minecraft/eula.txt
 mv /tmp/server.properties /minecraft/server.properties
+chmod a+rwx /minecraft
 systemctl restart minecraft.service
 systemctl enable minecraft.service`
 
@@ -3285,6 +3345,8 @@ tee /etc/systemd/system/minecraft.service <<EOF
 [Unit]
 Description=Minecraft Server
 Documentation=https://www.minecraft.net/en-us/download/server
+DefaultDependencies=no
+After=network.target
 
 [Service]
 WorkingDirectory=/minecraft
@@ -3308,7 +3370,7 @@ echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
 echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
 echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
 sudo systemctl restart fail2ban
-mkdir /minecraft
+mkdir -p /minecraft
 mkfs.ext4  /dev/sda
 mount /dev/sda /minecraft
 echo "/dev/sda /minecraft ext4 defaults,noatime,nofail 0 2" >> /etc/fstab
@@ -3316,6 +3378,7 @@ URL="https://ci.opencollab.dev/job/NukkitX/job/Nukkit/job/master/lastSuccessfulB
 curl -sLSf $URL > /minecraft/server.jar
 echo "eula=true" > /minecraft/eula.txt
 mv /tmp/server.properties /minecraft/server.properties
+chmod a+rwx /minecraft
 systemctl restart minecraft.service
 systemctl enable minecraft.service`
 
@@ -3358,6 +3421,8 @@ write_files:
       [Unit]
       Description=Minecraft Server
       Documentation=https://www.minecraft.net/en-us/download/server
+      DefaultDependencies=no
+      After=network.target
       [Service]
       WorkingDirectory=/minecraft
       Type=simple
@@ -3382,6 +3447,7 @@ runcmd:
   - curl -sLSf $URL > /minecraft/server.jar
   - echo "eula=true" > /minecraft/eula.txt
   - mv /tmp/server.properties /minecraft/server.properties
+  - chmod a+rwx /minecraft
   - systemctl restart minecraft.service
   - systemctl enable minecraft.service`
 
@@ -3402,6 +3468,8 @@ tee /etc/systemd/system/minecraft.service <<EOF
 [Unit]
 Description=Minecraft Server
 Documentation=https://www.minecraft.net/en-us/download/server
+DefaultDependencies=no
+After=network.target
 
 [Service]
 WorkingDirectory=/minecraft
@@ -3425,7 +3493,7 @@ echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
 echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
 echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
 sudo systemctl restart fail2ban
-mkdir /minecraft
+mkdir -p /minecraft
 mkfs.ext4  /dev/sda
 mount /dev/sda /minecraft
 echo "/dev/sda /minecraft ext4 defaults,noatime,nofail 0 2" >> /etc/fstab
@@ -3433,6 +3501,7 @@ URL="https://github.com/PowerNukkit/PowerNukkit/releases/download/v1.5.1.0-PN/po
 curl -sLSf $URL > /minecraft/server.jar
 echo "eula=true" > /minecraft/eula.txt
 mv /tmp/server.properties /minecraft/server.properties
+chmod a+rwx /minecraft
 systemctl restart minecraft.service
 systemctl enable minecraft.service`
 
@@ -3475,6 +3544,8 @@ write_files:
       [Unit]
       Description=Minecraft Server
       Documentation=https://www.minecraft.net/en-us/download/server
+      DefaultDependencies=no
+      After=network.target
       [Service]
       WorkingDirectory=/minecraft
       Type=simple
@@ -3499,6 +3570,7 @@ runcmd:
   - curl -sLSf $URL > /minecraft/server.jar
   - echo "eula=true" > /minecraft/eula.txt
   - mv /tmp/server.properties /minecraft/server.properties
+  - chmod a+rwx /minecraft
   - systemctl restart minecraft.service
   - systemctl enable minecraft.service`
 )

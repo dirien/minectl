@@ -41,11 +41,11 @@ type Monitoring struct {
 // Server
 type Server struct {
 	Size       string `yaml:"size"`
-	VolumeSize int    `yaml:"volumeSize"`
 	Ssh        string `yaml:"ssh"`
 	Cloud      string `yaml:"cloud"`
 	Region     string `yaml:"region"`
 	Port       int    `yaml:"port"`
+	VolumeSize int    `yaml:"volumeSize"`
 }
 
 // Minecraft

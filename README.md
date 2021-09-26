@@ -20,6 +20,7 @@
         * [Azure](#azure)
         * [Oracle Cloud Infrastructure](#oracle-cloud-infrastructure)
         * [Ionos Cloud](#ionos-cloud)
+        * [Amazon AWS](#amazon-aws)
     - [Minecraft Server Versions 📚](#minecraft-server-versions-)
     - [Minecraft Proxy Versions 📚](#minecraft-proxy-versions-)
     - [Server Configs 📋](#server-configs-)
@@ -63,6 +64,7 @@
 ![Microsoft Azure](https://img.shields.io/badge/Microsoft_Azure-0078D4?style=for-the-badge&logo=microsoft-azure&logoColor=white)
 ![Oracle Cloud Infrastructure](https://img.shields.io/badge/Oracle_Cloud_Infrastructure-F80000?style=for-the-badge&logo=oracle&logoColor=white)
 ![Ionos Cloud](https://img.shields.io/badge/ionos--cloud-003D8F?style=for-the-badge&logo=ionos&logoColor=white)
+![Amazon AWS](https://img.shields.io/badge/Amazon_AWS-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white)
 
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/dirien/minectl/Build%20Binary/main?logo=github&style=for-the-badge)
 ![GitHub](https://img.shields.io/github/license/dirien/minectl?style=for-the-badge)
@@ -86,6 +88,7 @@ It is a private side project of me, to learn more about Go, CLI and multi-cloud 
 + Azure (https://azure.microsoft.com/en-us/)
 + Oracle Cloud Infrastructure (https://www.oracle.com/cloud/)
 + Ionos Cloud (https://cloud.ionos.de/)
++ Amazon AWS (https://aws.amazon.com/)
 
 ### TL;DR 🚀
 
@@ -276,6 +279,14 @@ export IONOS_PASSWORD=yyy
 export IONOS_TOKEN=<optional>
 ```
 
+#### Amazon AWS
+
+```bash
+export AWS_ACCESS_KEY_ID=<aws_access_key_id>
+export AWS_SECRET_ACCESS_KEY=<aws_secret_access_key>
+export AWS_REGION=<aws_region>
+```
+
 #### Minecraft Server Versions 📚
 
 > ⚠️ `minectl 🗺` is not(!) providing any pre-compiled binaries of Minecraft or download a pre-compiled version.
@@ -361,7 +372,7 @@ metadata:
   name: minecraft-proxy
 spec:
   server:
-    cloud: <cloud provider name civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci>
+    cloud: <cloud provider name civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci|aws>
     region: <cloud provider region>
     size: <cloud provider plan>
     ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft"
@@ -397,7 +408,7 @@ spec:
   monitoring:
     enabled: true|false
   server:
-    cloud: "provider: civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci"
+    cloud: "provider: civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci|aws"
     region: "region see cloud provider for details eg. fra1"
     size: "see cloud provider docs for details eg. g3.large"
     volumeSize: 100
@@ -479,7 +490,7 @@ Flags:
 Global Flags:
       --headless              Set this value to if mincetl is called by a CI system. Enables logging and disables human-readable output rendering (default: false)
       --log-encoding string   Set the log encoding: console|json (default: console) (default "console")
-      --verbose string        Enable verbose logging: debug|info|warn|error|dpanic|panic|fatal   
+      --verbose string        Enable verbose logging: debug|info|warn|error|dpanic|panic|fatal
 ```
 
 #### Delete Minecraft Server 🗑
@@ -496,7 +507,7 @@ Examples:
 mincetl delete  \
     --filename server-do.yaml
     --id xxx-xxx-xxx-xxx
-        
+
 
 Flags:
   -f, --filename string   that contains the configuration for minectl
@@ -528,11 +539,11 @@ Flags:
   -h, --help              help for list
   -p, --provider string   The cloud provider - civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci
   -r, --region string     The region for your cloud provider
-  
+
 Global Flags:
       --headless              Set this value to if mincetl is called by a CI system. Enables logging and disables human-readable output rendering (default: false)
       --log-encoding string   Set the log encoding: console|json (default: console) (default "console")
-      --verbose string        Enable verbose logging: debug|info|warn|error|dpanic|panic|fatal  
+      --verbose string        Enable verbose logging: debug|info|warn|error|dpanic|panic|fatal
 ```
 
 #### Update Minecraft Server 🆙
@@ -559,7 +570,7 @@ Flags:
 Global Flags:
       --headless              Set this value to if mincetl is called by a CI system. Enables logging and disables human-readable output rendering (default: false)
       --log-encoding string   Set the log encoding: console|json (default: console) (default "console")
-      --verbose string        Enable verbose logging: debug|info|warn|error|dpanic|panic|fatal      
+      --verbose string        Enable verbose logging: debug|info|warn|error|dpanic|panic|fatal
 ```
 
 #### RCON Minecraft Server 🔌
@@ -615,7 +626,7 @@ Flags:
 Global Flags:
       --headless              Set this value to if mincetl is called by a CI system. Enables logging and disables human-readable output rendering (default: false)
       --log-encoding string   Set the log encoding: console|json (default: console) (default "console")
-      --verbose string        Enable verbose logging: debug|info|warn|error|dpanic|panic|fatal  
+      --verbose string        Enable verbose logging: debug|info|warn|error|dpanic|panic|fatal
 ```
 
 #### Monitoring 📊
@@ -725,6 +736,7 @@ Apache License, Version 2.0
 - [x] New cloud provider - Azure [#56](https://github.com/dirien/minectl/issues/56)
 - [x] New cloud provider - Oracle/OCI [#107](https://github.com/dirien/minectl/issues/107)
 - [x] New cloud provider - Ionos Cloud [#218](https://github.com/dirien/minectl/issues/218)
+- [x] New cloud provider - AWS [#210](https://github.com/dirien/minectl/pull/210)
 - [ ] ...
 
 ### Libraries & Tools 🔥
@@ -757,6 +769,7 @@ Apache License, Version 2.0
 - https://github.com/oracle/oci-go-sdk
 - https://github.com/ionos-cloud/sdk-go
 - https://github.com/AlecAivazis/survey
+- https://github.com/aws/aws-sdk-go
 
 ### Legal Disclaimer 👮
 
