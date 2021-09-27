@@ -6,6 +6,7 @@
   "postUpdateOptions": [
     "gomodTidy"
   ],
+  "commitBody": "Signed-off-by: {{{gitAuthor}}}",
   "dependencyDashboard": false,
   "labels": [
     "dependencies"
