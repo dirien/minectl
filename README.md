@@ -5,6 +5,7 @@
         * [Mac OS X](#mac-os-x)
         * [Windows](#windows)
         * [Source install](#source-install)
+        * [GoFish](#gofish)
 + [Usage ⚙](#usage-)
     - [Access Token 🔑](#access-token-)
         * [Civo](#civo)
@@ -139,6 +140,20 @@ make build
  ```
 
 This will output the `minectl 🗺` binary in the `bin/minectl` folder.
+
+##### GoFish
+
+GoFish works across all three major operating systems (Windows, MacOS, and Linux). It installs packages into its own
+directory and symlinks their files into /usr/local (or C:\ProgramData for Windows). You can think of it as the
+cross-platform Homebrew.
+
+To install `minectl 🗺` just type
+
+```
+gofish install minectl
+```
+
+As `minectl 🗺` is already in the main [rig](https://github.com/fishworks/fish-food) of Gofish.
 
 ### Architectural overview
 
@@ -684,7 +699,7 @@ Apache License, Version 2.0
 - [x] New cloud provider - Vultr [#90](https://github.com/dirien/minectl/issues/90)
 - [x] Add Suport for Proxy Server - bungeecord and waterfall [#95](https://github.com/dirien/minectl/issues/95)
 - [x] New cloud provider - Azure [#56](https://github.com/dirien/minectl/issues/56)
-- [x] New cloud provider - Oracle/OCI [#107](https://github.com/dirien/minectl/issues/107)   
+- [x] New cloud provider - Oracle/OCI [#107](https://github.com/dirien/minectl/issues/107)
 - [x] New cloud provider - Ionos Cloud [#218](https://github.com/dirien/minectl/issues/218)
 - [ ] ...
 
