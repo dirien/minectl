@@ -18,6 +18,7 @@
         * [Vultr](#vultr)
         * [Azure](#azure)
         * [Oracle Cloud Infrastructure](#oracle-cloud-infrastructure)
+        * [Ionos Cloud](#ionos-cloud)
     - [Minecraft Server Versions 📚](#minecraft-server-versions-)
     - [Minecraft Proxy Versions 📚](#minecraft-proxy-versions-)
     - [Server Configs 📋](#server-configs-)
@@ -59,6 +60,7 @@
 ![Vultr](https://img.shields.io/badge/vultr-007BFC?style=for-the-badge&logo=vultr&logoColor=white)
 ![Microsoft Azure](https://img.shields.io/badge/Microsoft_Azure-0078D4?style=for-the-badge&logo=microsoft-azure&logoColor=white)
 ![Oracle Cloud Infrastructure](https://img.shields.io/badge/Oracle_Cloud_Infrastructure-F80000?style=for-the-badge&logo=oracle&logoColor=white)
+![Ionos Cloud](https://img.shields.io/badge/ionos--cloud-003D8F?style=for-the-badge&logo=ionos&logoColor=white)
 
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/dirien/minectl/Build%20Binary/main?logo=github&style=for-the-badge)
 ![GitHub](https://img.shields.io/github/license/dirien/minectl?style=for-the-badge)
@@ -81,6 +83,7 @@ It is a private side project of me, to learn more about Go, CLI and multi-cloud 
 + Google Compute Engine (GCE) (https://cloud.google.com/compute)
 + Azure (https://azure.microsoft.com/en-us/)
 + Oracle Cloud Infrastructure (https://www.oracle.com/cloud/)
++ Ionos Cloud (https://cloud.ionos.de/)
 
 ### TL;DR 🚀
 
@@ -248,6 +251,14 @@ region=<region>
 ```
 
 Please follow the instructions under -> https://docs.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm
+
+#### Ionos Cloud
+
+```bash
+export IONOS_USERNAME=xxx
+export IONOS_PASSWORD=yyy
+export IONOS_TOKEN=<optional>
+```
 
 #### Minecraft Server Versions 📚
 
@@ -674,6 +685,7 @@ Apache License, Version 2.0
 - [x] Add Suport for Proxy Server - bungeecord and waterfall [#95](https://github.com/dirien/minectl/issues/95)
 - [x] New cloud provider - Azure [#56](https://github.com/dirien/minectl/issues/56)
 - [x] New cloud provider - Oracle/OCI [#107](https://github.com/dirien/minectl/issues/107)   
+- [x] New cloud provider - Ionos Cloud [#218](https://github.com/dirien/minectl/issues/218)
 - [ ] ...
 
 ### Libraries & Tools 🔥
@@ -704,6 +716,7 @@ Apache License, Version 2.0
 - https://github.com/tcnksm/go-latest
 - https://github.com/uber-go/zap
 - https://github.com/oracle/oci-go-sdk
+- https://github.com/ionos-cloud/sdk-go
 
 ### Legal Disclaimer 👮
 
