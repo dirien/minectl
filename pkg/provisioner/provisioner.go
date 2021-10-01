@@ -6,6 +6,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/minectl/pkg/cloud/ionos"
+
 	"github.com/minectl/pkg/cloud/oci"
 
 	"github.com/minectl/pkg/progress"
@@ -239,6 +241,12 @@ func getProvisioner(provider, region string) (automation.Automation, error) {
 		return cloudProvider, nil
 	case "oci":
 		cloudProvider, err := oci.NewOCI()
+		if err != nil {
+			return nil, err
+		}
+		return cloudProvider, nil
+	case "ionos":
+		cloudProvider, err := ionos.NewIONOS(os.Getenv("IONOS_USERNAME"), os.Getenv("IONOS_PASSWORD"), os.Getenv("IONOS_TOKEN"))
 		if err != nil {
 			return nil, err
 		}

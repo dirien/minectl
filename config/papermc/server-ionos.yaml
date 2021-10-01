@@ -1,0 +1,68 @@
+apiVersion: ediri.io/minectl/v1alpha1
+kind: MinecraftServer
+metadata:
+  name: minecraft-server
+spec:
+  server:
+    cloud: ionos
+    region: de/txl
+    size: 1-4096-INTEL_SKYLAKE
+    ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft"
+    port: 25565
+  minecraft:
+    java:
+      openjdk: 16
+      xmx: 2G
+      xms: 2G
+      rcon:
+        password: test
+        port: 25575
+        enabled: true
+        broadcast: true
+    edition: papermc
+    version: 1.17.1-157
+    eula: true
+    properties: |
+      level-seed=stackitminecraftrocks
+      view-distance=10
+      enable-jmx-monitoring=false
+      server-ip=
+      resource-pack-prompt=
+      gamemode=survival
+      allow-nether=true
+      enable-command-block=false
+      sync-chunk-writes=true
+      enable-query=false
+      op-permission-level=4
+      prevent-proxy-connections=false
+      resource-pack=
+      entity-broadcast-range-percentage=100
+      level-name=world
+      player-idle-timeout=0
+      motd=\u00A7bIonos \u00A7rMinecraft --- \u00A76PaperMC \u00A7redition
+      query.port=25565
+      force-gamemode=false
+      rate-limit=0
+      hardcore=false
+      white-list=false
+      broadcast-console-to-ops=true
+      pvp=true
+      spawn-npcs=true
+      spawn-animals=true
+      snooper-enabled=true
+      difficulty=easy
+      function-permission-level=2
+      network-compression-threshold=256
+      text-filtering-config=
+      require-resource-pack=false
+      spawn-monsters=true
+      max-tick-time=60000
+      enforce-whitelist=false
+      use-native-transport=true
+      max-players=100
+      resource-pack-sha1=
+      spawn-protection=16
+      online-mode=true
+      enable-status=true
+      allow-flight=false
+      max-world-size=

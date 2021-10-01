@@ -13,6 +13,7 @@ var cloudProvider = map[string]string{
 	"vultr":    "vultr",
 	"azure":    "Azure",
 	"oci":      "Oracle Cloud Infrastructure",
+	"ionos":    "IONOS Cloud",
 }
 
 func GetCloudProviderFullName(cloud string) string {
