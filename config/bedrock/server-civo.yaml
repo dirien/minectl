@@ -11,10 +11,10 @@ spec:
     port: 19132
   minecraft:
     edition: bedrock
-    version: 1.17.11.01
+    version: 1.17.32.02
     eula: true
     properties: |
-      server-name=Oracle Cloud Infrastructure Minecraft - Bedrock edition
+      server-name=Civo Minecraft - Bedrock edition
       gamemode=survival
       force-gamemode=false
       difficulty=normal
