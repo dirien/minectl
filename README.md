@@ -26,6 +26,7 @@
         * [MinecraftProxy Config 📡](#minecraftproxy-config-)
         * [MinecraftServer Config 🕹](#mincraftserver-config-)
     - [EULA ⚖️️](#eula-)
+    - [`minectl 🗺` Configuration File Wizard 🧙](#minectl--configuration-file-wizard-)
     - [Create Minecraft Server 🏗](#create-minecraft-server-)
     - [Delete Minecraft Server 🗑](#delete-minecraft-server-)
     - [List Minecraft Server 📒](#list-minecraft-server-)
