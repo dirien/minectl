@@ -2,6 +2,22 @@ package model
 
 import "reflect"
 
+// Wizard
+type Wizard struct {
+	Name       string
+	Provider   string
+	Plan       string
+	Region     string
+	SSH        string `survey:"ssh"`
+	Features   []string
+	Java       string
+	Heap       string
+	RconPw     string `survey:"rconpw"`
+	Edition    string
+	Version    string
+	Properties string
+}
+
 // Spec
 type Spec struct {
 	Monitoring Monitoring `json:"monitoring"`

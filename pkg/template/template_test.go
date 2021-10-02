@@ -3863,3 +3863,212 @@ func TestCloudInitPowerNukkitTemplate(t *testing.T) {
 		assert.Equal(t, powerNukkitCloudInitWant, got)
 	})
 }
+
+var (
+	fullFeatureJava = `apiVersion: ediri.io/minectl/v1alpha1
+kind: MinecraftServer
+metadata:
+  name: minecraft
+spec:
+  monitoring:
+    enabled: true
+  server:
+    cloud: do
+    region: xxx
+    size: xxx
+    ssh: xxx
+    port: 25565
+  minecraft:
+    java:
+      openjdk: 8
+      xmx: 2G
+      xms: 2G
+      rcon:
+        password: xxx
+        port: 25575
+        enabled: true
+        broadcast: true
+    edition: java
+    version: xx
+    eula: true
+    properties: |
+      level-seed=stackitminecraftrocks
+      view-distance=10
+      enable-jmx-monitoring=false`
+
+	JavaWithoutRcon = `apiVersion: ediri.io/minectl/v1alpha1
+kind: MinecraftServer
+metadata:
+  name: minecraft
+spec:
+  monitoring:
+    enabled: true
+  server:
+    cloud: do
+    region: xxx
+    size: xxx
+    ssh: xxx
+    port: 25565
+  minecraft:
+    java:
+      openjdk: 8
+      xmx: 2G
+      xms: 2G
+    edition: java
+    version: xx
+    eula: true
+    properties: |
+      level-seed=stackitminecraftrocks
+      view-distance=10
+      enable-jmx-monitoring=false`
+
+	plainJavaNoThrill = `apiVersion: ediri.io/minectl/v1alpha1
+kind: MinecraftServer
+metadata:
+  name: minecraft
+spec:
+  server:
+    cloud: do
+    region: xxx
+    size: xxx
+    ssh: xxx
+    port: 25565
+  minecraft:
+    java:
+      openjdk: 8
+      xmx: 2G
+      xms: 2G
+    edition: java
+    version: xx
+    eula: true
+    properties: |
+      level-seed=stackitminecraftrocks
+      view-distance=10
+      enable-jmx-monitoring=false`
+
+	bedrockConfig = `apiVersion: ediri.io/minectl/v1alpha1
+kind: MinecraftServer
+metadata:
+  name: minecraft
+spec:
+  server:
+    cloud: do
+    region: xxx
+    size: xxx
+    ssh: xxx
+    port: 19132
+  minecraft:
+    edition: bedrock
+    version: xx
+    eula: true
+    properties: |
+      level-seed=stackitminecraftrocks
+      view-distance=10
+      enable-jmx-monitoring=false`
+
+	nukkitConfig = `apiVersion: ediri.io/minectl/v1alpha1
+kind: MinecraftServer
+metadata:
+  name: minecraft
+spec:
+  monitoring:
+    enabled: true
+  server:
+    cloud: do
+    region: xxx
+    size: xxx
+    ssh: xxx
+    port: 19132
+  minecraft:
+    java:
+      openjdk: 8
+      xmx: 2G
+      xms: 2G
+      rcon:
+        password: xxx
+        port: 25575
+        enabled: true
+        broadcast: true
+    edition: nukkit
+    version: xx
+    eula: true
+    properties: |
+      level-seed=stackitminecraftrocks
+      view-distance=10
+      enable-jmx-monitoring=false`
+)
+
+func crateWizardMock() model.Wizard {
+	return model.Wizard{
+		Name:       "minecraft",
+		Provider:   "DigitalOcean",
+		Plan:       "xxx",
+		Region:     "xxx",
+		SSH:        "xxx",
+		Features:   []string{"Monitoring", "RCON"},
+		Java:       "8",
+		Heap:       "2G",
+		RconPw:     "xxx",
+		Edition:    "java",
+		Version:    "xx",
+		Properties: "level-seed=stackitminecraftrocks\nview-distance=10\nenable-jmx-monitoring=false",
+	}
+}
+
+func TestConfigTemplate(t *testing.T) {
+	t.Run("Test Config", func(t *testing.T) {
+		got, err := NewTemplateConfig(crateWizardMock())
+		if err != nil {
+			t.Fatal(err)
+		}
+		assert.Equal(t, fullFeatureJava, got)
+	})
+}
+
+func TestConfigMonTemplate(t *testing.T) {
+	t.Run("Test Config", func(t *testing.T) {
+		wizard := crateWizardMock()
+		wizard.Features = []string{"Monitoring"}
+		got, err := NewTemplateConfig(wizard)
+		if err != nil {
+			t.Fatal(err)
+		}
+		assert.Equal(t, JavaWithoutRcon, got)
+	})
+}
+
+func TestConfigNoMonRconTemplate(t *testing.T) {
+	t.Run("Test Config", func(t *testing.T) {
+		wizard := crateWizardMock()
+		wizard.Features = []string{}
+		got, err := NewTemplateConfig(wizard)
+		if err != nil {
+			t.Fatal(err)
+		}
+		assert.Equal(t, plainJavaNoThrill, got)
+	})
+}
+
+func TestConfigBedrockTemplate(t *testing.T) {
+	t.Run("Test Config", func(t *testing.T) {
+		wizard := crateWizardMock()
+		wizard.Edition = "bedrock"
+		got, err := NewTemplateConfig(wizard)
+		if err != nil {
+			t.Fatal(err)
+		}
+		assert.Equal(t, bedrockConfig, got)
+	})
+}
+
+func TestConfigNukkitTemplate(t *testing.T) {
+	t.Run("Test Config", func(t *testing.T) {
+		wizard := crateWizardMock()
+		wizard.Edition = "nukkit"
+		got, err := NewTemplateConfig(wizard)
+		if err != nil {
+			t.Fatal(err)
+		}
+		assert.Equal(t, nukkitConfig, got)
+	})
+}

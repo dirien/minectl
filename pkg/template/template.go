@@ -7,6 +7,8 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/minectl/pkg/cloud"
+
 	"github.com/Masterminds/sprig/v3"
 	"github.com/minectl/pkg/model"
 )
@@ -101,4 +103,18 @@ func NewTemplateCloudConfig() (*Template, error) {
 		Template: cloudInit,
 		Values:   &templateValues{},
 	}, nil
+}
+
+//go:embed templates
+var templateConfig embed.FS
+
+func NewTemplateConfig(value model.Wizard) (string, error) {
+	var buff bytes.Buffer
+	value.Provider = cloud.GetCloudProviderCode(value.Provider)
+	config := template.Must(template.New("config").Funcs(sprig.TxtFuncMap()).ParseFS(templateConfig, "templates/config/*"))
+	err := config.ExecuteTemplate(&buff, "config", value)
+	if err != nil {
+		return "", err
+	}
+	return buff.String(), nil
 }

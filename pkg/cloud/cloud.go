@@ -19,3 +19,12 @@ var cloudProvider = map[string]string{
 func GetCloudProviderFullName(cloud string) string {
 	return cloudProvider[cloud]
 }
+
+func GetCloudProviderCode(fullName string) string {
+	for code, name := range cloudProvider {
+		if name == fullName {
+			return code
+		}
+	}
+	return ""
+}
