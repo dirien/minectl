@@ -95,7 +95,6 @@
       },
       "required": [
         "edition",
-        "properties",
         "version",
         "eula"
       ],

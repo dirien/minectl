@@ -433,6 +433,29 @@ editions.
 You need to set explicitly the EULA as new property in the MinecraftServer manifest to indicate your agreement with the
 Minecraft End User License. See -> https://minecraft.net/terms for the details.
 
+#### `minectl 🗺` Configuration File Wizard 🧙
+
+```bash
+Calls the minectl wizard to create interactively a minectl 🗺 config
+
+Usage:
+  minectl wizard [flags]
+
+Examples:
+mincetl wizard
+
+Flags:
+  -h, --help            help for wizard
+  -o, --output string   output folder for the configuration file for minectl 🗺 (default: /Users/dirien/.minectl)
+
+Global Flags:
+      --headless              Set this value to if mincetl is called by a CI system. Enables logging and disables human-readable output rendering (default: false)
+      --log-encoding string   Set the log encoding: console|json (default: console) (default "console")
+      --verbose string        Enable verbose logging: debug|info|warn|error|dpanic|panic|fatal
+```
+Watch the demo, for more details
+[![asciicast](https://asciinema.org/a/439572.svg)](https://asciinema.org/a/439572)
+
 #### Create Minecraft Server 🏗
 
 ```bash
@@ -732,6 +755,7 @@ Apache License, Version 2.0
 - https://github.com/uber-go/zap
 - https://github.com/oracle/oci-go-sdk
 - https://github.com/ionos-cloud/sdk-go
+- https://github.com/AlecAivazis/survey
 
 ### Legal Disclaimer 👮
 

@@ -10,6 +10,8 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/mitchellh/go-homedir"
+
 	"github.com/Azure/go-autorest/autorest/to"
 	"go.uber.org/zap"
 
@@ -253,8 +255,31 @@ var minectlCmd = &cobra.Command{
 	},
 }
 
-func init() {
+func makeAppDirectoryIfNotExists() {
+	dir, err := homedir.Dir()
+	if err != nil {
+		fmt.Printf("error determining the home directory: %s", err)
+	}
+	path := fmt.Sprintf("%s/.minectl", dir)
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		err := os.Mkdir(path, os.ModeDir|0755)
+		if err != nil {
+			fmt.Printf("error while creating the minectl directory: %s", err)
+		}
+	}
+}
 
+func GetHomeFolder() string {
+	dir, err := homedir.Dir()
+	if err != nil {
+		fmt.Printf("error determining the home directory: %s", err)
+	}
+	path := fmt.Sprintf("%s/.minectl", dir)
+	return path
+}
+
+func init() {
+	makeAppDirectoryIfNotExists()
 	minectlCmd.PersistentFlags().String("verbose", "",
 		"Enable verbose logging: debug|info|warn|error|dpanic|panic|fatal")
 	minectlCmd.PersistentFlags().String("log-encoding", "console",
@@ -265,6 +290,7 @@ func init() {
 	minectlCmd.AddCommand(createCmd)
 	minectlCmd.AddCommand(deleteCmd)
 	minectlCmd.AddCommand(listCmd)
+	minectlCmd.AddCommand(wizardCmd)
 	minectlCmd.AddCommand(pluginCmd)
 	minectlCmd.AddCommand(rconCmd)
 	minectlCmd.AddCommand(updateCmd)
