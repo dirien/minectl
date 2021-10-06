@@ -35,7 +35,7 @@ var wizardQuestions = []*survey.Question{
 		Validate: survey.Required,
 		Prompt: &survey.Select{
 			Message:  "Choose a cloud provider:",
-			Options:  []string{"DigitalOcean", "Civo", "Scaleway", "Hetzner", "Linode", "OVHcloud", "Equinix Metal", "Google Compute Engine", "vultr", "Azure", "Oracle Cloud Infrastructure", "IONOS Cloud"},
+			Options:  []string{"DigitalOcean", "Civo", "Scaleway", "Hetzner", "Linode", "OVHcloud", "Equinix Metal", "Google Compute Engine", "vultr", "Azure", "Oracle Cloud Infrastructure", "IONOS Cloud", "Amazon WebServices"},
 			PageSize: 15,
 		},
 	},

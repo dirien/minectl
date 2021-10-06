@@ -60,10 +60,10 @@ func runCreate(cmd *cobra.Command, _ []string) error {
 
 		minectlLog.PrintMixedGreen("\n🪓 To delete the server type:\n\n %s", fmt.Sprintf("minectl delete -f %s --id %s\n", filename, res.ID))
 		minectlLog.PrintMixedGreen("\n🆙 To update the server type:\n\n %s", fmt.Sprintf("minectl update -f %s --id %s\n", filename, res.ID))
+		minectlLog.PrintMixedGreen("\n🔌 Connected to RCON type:\n\n %s", fmt.Sprintf("minectl rcon -f %s --id %s\n", filename, res.ID))
 		minectlLog.RawMessage("🚧 Beta features:")
 		minectlLog.PrintMixedGreen("⤴️ To upload a plugin type:\n\n %s",
 			fmt.Sprintf("minectl plugins -f %s --id %s --plugin <folder>/x.jar --destination /minecraft/plugins\n", filename, res.ID))
-		minectlLog.PrintMixedGreen("\n🔌 Connected to RCON type:\n\n %s", fmt.Sprintf("minectl rcon -f %s --id %s\n", filename, res.ID))
 	}
 	return nil
 }

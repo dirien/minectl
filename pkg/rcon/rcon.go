@@ -24,18 +24,26 @@ func (r *rcon) RunPrompt() {
 }
 
 func (r *rcon) executor(t string) {
-	conn, _ := mcnet.DialRCON(fmt.Sprintf("%s:%d", r.server, r.port), r.password)
+	conn, err := mcnet.DialRCON(fmt.Sprintf("%s:%d", r.server, r.port), r.password)
+	if err != nil {
+		fmt.Printf("Error dialing to rcon: %s\n", err.Error())
+		return
+	}
 	defer func(conn mcnet.RCONClientConn) {
 		err := conn.Close()
 		if err != nil {
-			fmt.Printf("Error closing RCON client: %s", err.Error())
+			fmt.Printf("Error closing RCON client: %s\n", err.Error())
 		}
 	}(conn)
-	err := conn.Cmd(t)
+	err = conn.Cmd(t)
 	if err != nil {
-		fmt.Printf("Error executing command: %s", err.Error())
+		fmt.Printf("Error executing command: %s\n", err.Error())
 	}
-	resp, _ := conn.Resp()
+	resp, err := conn.Resp()
+	if err != nil {
+		fmt.Printf("Error retrieving rcon response: %s\n", err.Error())
+		return
+	}
 	fmt.Println(resp)
 }
 

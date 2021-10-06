@@ -113,6 +113,8 @@ func (a *Aws) ListServer() ([]automation.RessourceResults, error) {
 }
 
 func (a *Aws) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Minute)
+	defer cancel()
 	image, err := a.lookupAMI("ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-20210621")
 	if err != nil {
 		return nil, err
@@ -131,16 +133,70 @@ func (a *Aws) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 		return nil, err
 	}
 
+	vpc, err := a.client.CreateVpc(&ec2.CreateVpcInput{
+		CidrBlock: aws.String("172.16.0.0/16"),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	subnet, err := a.client.CreateSubnet(&ec2.CreateSubnetInput{
+		CidrBlock: aws.String("172.16.10.0/24"),
+		VpcId:     vpc.Vpc.VpcId,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	internetGateway, err := a.client.CreateInternetGateway(&ec2.CreateInternetGatewayInput{})
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = a.client.AttachInternetGateway(&ec2.AttachInternetGatewayInput{
+		VpcId:             vpc.Vpc.VpcId,
+		InternetGatewayId: internetGateway.InternetGateway.InternetGatewayId,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	routeTable, err := a.client.CreateRouteTable(&ec2.CreateRouteTableInput{
+		VpcId: vpc.Vpc.VpcId,
+	})
+	if err != nil {
+		return nil, err
+	}
+	_, err = a.client.CreateRoute(&ec2.CreateRouteInput{
+		DestinationCidrBlock: aws.String("0.0.0.0/0"),
+		GatewayId:            internetGateway.InternetGateway.InternetGatewayId,
+		RouteTableId:         routeTable.RouteTable.RouteTableId,
+	})
+	if err != nil {
+		return nil, err
+	}
+	_, err = a.client.AssociateRouteTable(&ec2.AssociateRouteTableInput{
+		SubnetId:     subnet.Subnet.SubnetId,
+		RouteTableId: routeTable.RouteTable.RouteTableId,
+	})
+	if err != nil {
+		return nil, err
+	}
 	instanceInput := &ec2.RunInstancesInput{
 		ImageId:      image,
 		KeyName:      key.KeyName,
 		InstanceType: aws.String(args.MinecraftResource.GetSize()),
 		MinCount:     aws.Int64(1),
 		MaxCount:     aws.Int64(1),
+
 		TagSpecifications: []*ec2.TagSpecification{
 			{
 				ResourceType: aws.String("instance"),
 				Tags: []*ec2.Tag{
+					{
+						Key:   aws.String("edition"),
+						Value: aws.String(args.MinecraftResource.GetEdition()),
+					},
 					{
 						Key:   aws.String("Name"),
 						Value: aws.String(args.MinecraftResource.GetName()),
@@ -174,17 +230,17 @@ func (a *Aws) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 	var secGroups []*string
 	var groupID *string
 	if args.MinecraftResource.GetEdition() == "bedrock" || args.MinecraftResource.GetEdition() == "nukkit" || args.MinecraftResource.GetEdition() == "powernukkit" {
-		groupID, _, err = a.createEC2SecurityGroup("", "udp", args.MinecraftResource.GetPort())
+		groupID, _, err = a.createEC2SecurityGroup(vpc.Vpc.VpcId, "udp", args.MinecraftResource.GetPort())
 		if err != nil {
 			return nil, err
 		}
 	} else {
-		groupID, _, err = a.createEC2SecurityGroup("", "tcp", args.MinecraftResource.GetPort())
+		groupID, _, err = a.createEC2SecurityGroup(vpc.Vpc.VpcId, "tcp", args.MinecraftResource.GetPort())
 		if err != nil {
 			return nil, err
 		}
 		if args.MinecraftResource.HasRCON() {
-			rconID, _, err := a.createEC2SecurityGroup("", "tcp", args.MinecraftResource.GetRCONPort())
+			rconID, _, err := a.createEC2SecurityGroup(vpc.Vpc.VpcId, "tcp", args.MinecraftResource.GetRCONPort())
 			if err != nil {
 				return nil, err
 			}
@@ -193,27 +249,26 @@ func (a *Aws) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 	}
 	secGroups = append(secGroups, groupID)
 	if args.MinecraftResource.HasMonitoring() {
-		promGroupID, _, err := a.createEC2SecurityGroup("", "tcp", 9090)
+		promGroupID, _, err := a.createEC2SecurityGroup(vpc.Vpc.VpcId, "tcp", 9090)
 		if err != nil {
 			return nil, err
 		}
 		secGroups = append(secGroups, promGroupID)
 	}
-	sshGroupID, _, err := a.createEC2SecurityGroup("", "tcp", 22)
+	sshGroupID, _, err := a.createEC2SecurityGroup(vpc.Vpc.VpcId, "tcp", 22)
 	if err != nil {
 		return nil, err
 	}
 	secGroups = append(secGroups, sshGroupID)
 
-	var networkSpec = ec2.InstanceNetworkInterfaceSpecification{
-		DeviceIndex:              aws.Int64(int64(0)),
-		AssociatePublicIpAddress: aws.Bool(true),
-		DeleteOnTermination:      aws.Bool(true),
-		Groups:                   secGroups,
-	}
-
 	instanceInput.NetworkInterfaces = []*ec2.InstanceNetworkInterfaceSpecification{
-		&networkSpec,
+		{
+			Description:              aws.String("the primary device eth0"),
+			DeviceIndex:              aws.Int64(0),
+			AssociatePublicIpAddress: aws.Bool(true),
+			SubnetId:                 subnet.Subnet.SubnetId,
+			Groups:                   secGroups,
+		},
 	}
 
 	result, err := a.client.RunInstances(instanceInput)
@@ -228,8 +283,6 @@ func (a *Aws) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 		}
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Minute)
-	defer cancel()
 	for {
 		select {
 		case <-ctx.Done():
@@ -302,44 +355,104 @@ func (a *Aws) DeleteServer(id string, args automation.ServerArgs) error {
 		return err
 	}
 
-	results, err := a.ListServer()
+	i, err := a.client.DescribeInstances(&ec2.DescribeInstancesInput{
+		InstanceIds: aws.StringSlice([]string{id}),
+	})
+	if err != nil {
+		return err
+	}
+	// we have only on instance
+	instance := i.Reservations[0].Instances[0]
+
+	_, err = a.client.TerminateInstances(&ec2.TerminateInstancesInput{
+		InstanceIds: aws.StringSlice([]string{id}),
+	})
 	if err != nil {
 		return err
 	}
 
-	for _, result := range results {
-		i, err := a.client.DescribeInstances(&ec2.DescribeInstancesInput{
-			InstanceIds: aws.StringSlice([]string{result.ID}),
+	err = a.client.WaitUntilInstanceTerminated(&ec2.DescribeInstancesInput{
+		InstanceIds: aws.StringSlice([]string{id}),
+	})
+	if err != nil {
+		return err
+	}
+
+	groups := instance.SecurityGroups
+
+	for _, group := range groups {
+		_, err := a.client.DeleteSecurityGroup(&ec2.DeleteSecurityGroupInput{
+			GroupId: group.GroupId,
 		})
 		if err != nil {
 			return err
 		}
-		groups := i.Reservations[0].Instances[0].SecurityGroups
+	}
 
-		_, err = a.client.TerminateInstances(&ec2.TerminateInstancesInput{
-			InstanceIds: aws.StringSlice([]string{result.ID}),
+	VpcId := instance.VpcId
+	SubnetId := instance.SubnetId
+	_, err = a.client.DeleteSubnet(&ec2.DeleteSubnetInput{
+		SubnetId: SubnetId,
+	})
+	if err != nil {
+		return err
+	}
+
+	internetGateways, err := a.client.DescribeInternetGateways(&ec2.DescribeInternetGatewaysInput{
+		Filters: []*ec2.Filter{
+			{
+				Name:   aws.String("attachment.vpc-id"),
+				Values: []*string{VpcId},
+			},
+		},
+	})
+	if err != nil {
+		return err
+	}
+
+	for _, internetGateway := range internetGateways.InternetGateways {
+		_, err := a.client.DetachInternetGateway(&ec2.DetachInternetGatewayInput{
+			InternetGatewayId: internetGateway.InternetGatewayId,
+			VpcId:             VpcId,
 		})
 		if err != nil {
 			return err
 		}
-
-		err = a.client.WaitUntilInstanceTerminated(&ec2.DescribeInstancesInput{
-			InstanceIds: aws.StringSlice([]string{result.ID}),
+		_, err = a.client.DeleteInternetGateway(&ec2.DeleteInternetGatewayInput{
+			InternetGatewayId: internetGateway.InternetGatewayId,
 		})
 		if err != nil {
 			return err
 		}
+	}
 
-		for _, group := range groups {
-			_, err := a.client.DeleteSecurityGroup(&ec2.DeleteSecurityGroupInput{
-				GroupId: group.GroupId,
+	routeTables, err := a.client.DescribeRouteTables(&ec2.DescribeRouteTablesInput{
+		Filters: []*ec2.Filter{
+			{
+				Name:   aws.String("vpc-id"),
+				Values: []*string{VpcId},
+			},
+		},
+	})
+	if err != nil {
+		return err
+	}
+	for _, routeTable := range routeTables.RouteTables {
+		if routeTable.Associations == nil {
+			_, err := a.client.DeleteRouteTable(&ec2.DeleteRouteTableInput{
+				RouteTableId: routeTable.RouteTableId,
 			})
 			if err != nil {
 				return err
 			}
 		}
 	}
-
+	_, err = a.client.DeleteVpc(&ec2.DeleteVpcInput{
+		VpcId: VpcId,
+	})
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -393,15 +506,15 @@ func (a *Aws) GetServer(id string, _ automation.ServerArgs) (*automation.Ressour
 	}, err
 }
 
-func (a *Aws) createEC2SecurityGroup(vpcID, protocol string, controlPort int) (*string, *string, error) {
+func (a *Aws) createEC2SecurityGroup(vpcID *string, protocol string, controlPort int) (*string, *string, error) {
 	groupName := "minecraft-" + uuid.New().String()
 	var input = &ec2.CreateSecurityGroupInput{
 		Description: aws.String("minecraft security group"),
 		GroupName:   aws.String(groupName),
 	}
 
-	if len(vpcID) > 0 {
-		input.VpcId = aws.String(vpcID)
+	if vpcID != nil {
+		input.VpcId = vpcID
 	}
 
 	group, err := a.client.CreateSecurityGroup(input)

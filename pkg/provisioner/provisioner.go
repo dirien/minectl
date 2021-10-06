@@ -32,22 +32,12 @@ import (
 	"github.com/minectl/pkg/automation"
 	"github.com/minectl/pkg/cloud"
 	"github.com/minectl/pkg/cloud/aws"
-	"github.com/minectl/pkg/cloud/azure"
 	"github.com/minectl/pkg/cloud/civo"
 	"github.com/minectl/pkg/cloud/do"
-	"github.com/minectl/pkg/cloud/equinix"
-	"github.com/minectl/pkg/cloud/gce"
 	"github.com/minectl/pkg/cloud/hetzner"
-	"github.com/minectl/pkg/cloud/linode"
-	"github.com/minectl/pkg/cloud/oci"
-	"github.com/minectl/pkg/cloud/ovh"
 	"github.com/minectl/pkg/cloud/scaleway"
-	"github.com/minectl/pkg/cloud/vultr"
 	"github.com/minectl/pkg/common"
-	"github.com/minectl/pkg/logging"
 	"github.com/minectl/pkg/manifest"
-	"github.com/minectl/pkg/progress"
-	"github.com/minectl/pkg/rcon"
 )
 
 type MinectlProvisionerOpts struct {
@@ -256,13 +246,14 @@ func getProvisioner(provider, region string) (automation.Automation, error) {
 			return nil, err
 		}
 		return cloudProvider, nil
-<<<<<<< HEAD
 	case "ionos":
 		cloudProvider, err := ionos.NewIONOS(os.Getenv("IONOS_USERNAME"), os.Getenv("IONOS_PASSWORD"), os.Getenv("IONOS_TOKEN"))
-=======
+		if err != nil {
+			return nil, err
+		}
+		return cloudProvider, nil
 	case "aws":
 		cloudProvider, err := aws.NewAWS(region, os.Getenv("AWS_ACCESS_KEY_ID"), os.Getenv("AWS_SECRET_ACCESS_KEY"), os.Getenv("AWS_SESSION_TOKEN"))
->>>>>>> d5873b2 (feat: introduce aws to minectl)
 		if err != nil {
 			return nil, err
 		}
