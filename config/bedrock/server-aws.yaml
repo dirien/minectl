@@ -1,0 +1,41 @@
+apiVersion: ediri.io/minectl/v1alpha1
+kind: MinecraftServer
+metadata:
+  name: minecraft-server-be
+spec:
+  server:
+    cloud: aws
+    region: eu-central-1
+    size: t3.xlarge
+    ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft-be"
+    port: 19132
+  minecraft:
+    edition: bedrock
+    version: 1.17.32.02
+    eula: true
+    properties: |
+      server-name=Azure Minecraft - Bedrock edition
+      gamemode=survival
+      force-gamemode=false
+      difficulty=normal
+      allow-cheats=false
+      max-players=100
+      online-mode=true
+      white-list=false
+      server-portv6=19133
+      view-distance=32
+      tick-distance=4
+      player-idle-timeout=30
+      max-threads=8
+      level-name=Bedrock level
+      level-seed=
+      default-player-permission-level=member
+      texturepack-required=false
+      content-log-file-enabled=false
+      compression-threshold=1
+      server-authoritative-movement=server-auth
+      player-movement-score-threshold=20
+      player-movement-distance-threshold=0.3
+      player-movement-duration-threshold-in-ms=500
+      correct-player-movement=false
+      server-authoritative-block-breaking=false

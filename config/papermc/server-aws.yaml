@@ -3,8 +3,6 @@ kind: MinecraftServer
 metadata:
   name: minecraft-server
 spec:
-  monitoring:
-    enabled: false
   server:
     cloud: aws
     region: eu-central-1
@@ -21,8 +19,8 @@ spec:
         port: 25575
         enabled: true
         broadcast: true
-    edition: java
-    version: 1.17.1
+    edition: papermc
+    version: 1.17.1-311
     eula: true
     properties: |
       level-seed=stackitminecraftrocks
@@ -41,7 +39,7 @@ spec:
       entity-broadcast-range-percentage=100
       level-name=world
       player-idle-timeout=0
-      motd=\u00A76AWS \u00A7rMinecraft --- \u00A76Java \u00A7redition
+      motd=\u00A76AWS \u00A7rMinecraft --- \u00A76PaperMC \u00A7redition
       query.port=25565
       force-gamemode=false
       rate-limit=0
@@ -67,4 +65,4 @@ spec:
       online-mode=true
       enable-status=true
       allow-flight=false
-      max-world-size=29999984
+      max-world-size=
