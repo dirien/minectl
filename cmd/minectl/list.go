@@ -12,7 +12,7 @@ import (
 
 func init() {
 
-	listCmd.Flags().StringP("provider", "p", "", "The cloud provider - civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci|ionos")
+	listCmd.Flags().StringP("provider", "p", "", "The cloud provider - civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci|ionos|aws")
 	listCmd.Flags().StringP("region", "r", "", "The region (gce: zone) for your cloud provider - civo|gce")
 }
 

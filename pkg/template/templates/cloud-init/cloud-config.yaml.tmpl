@@ -55,6 +55,8 @@ write_files:
       [Unit]
       Description=Minecraft Server
       Documentation=https://www.minecraft.net/en-us/download/server
+      DefaultDependencies=no
+      After=network.target
       [Service]
       WorkingDirectory=/minecraft
       Type=simple
@@ -74,7 +76,7 @@ runcmd:
   {{- template "monitoring-binaries" . }}
   {{- end }}
   {{- if not .Mount }}
-  - mkdir /minecraft
+  - mkdir -p /minecraft
   {{- end }}
   - ufw allow ssh
   - ufw allow 5201
@@ -107,6 +109,7 @@ runcmd:
   {{- end }}
   - echo "eula={{ .Spec.Minecraft.Eula }}" > /minecraft/eula.txt
   - mv /tmp/server.properties /minecraft/server.properties
+  - chmod a+rwx /minecraft
   - systemctl restart minecraft.service
   - systemctl enable minecraft.service
 {{- end -}}
