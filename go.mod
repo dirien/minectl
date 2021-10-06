@@ -39,7 +39,7 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/morikuni/aec v1.0.0
 	github.com/olekukonko/tablewriter v0.0.5
-	github.com/oracle/oci-go-sdk/v48 v48.0.0
+	github.com/oracle/oci-go-sdk/v49 v49.0.0
 	github.com/packethost/packngo v0.19.1
 	github.com/pkg/errors v0.9.1
 	github.com/scaleway/scaleway-sdk-go v1.0.0-beta.7
