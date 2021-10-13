@@ -389,8 +389,8 @@ github.com/mwitkow/go-conntrack v0.0.0-20161129095857-cc309e4a2223/go.mod h1:qRW
 github.com/mwitkow/go-conntrack v0.0.0-20190716064945-2f068394615f/go.mod h1:qRWi+5nqEBWmkhHvq77mSJWrCKwh8bxhgT7d/eI7P4U=
 github.com/olekukonko/tablewriter v0.0.5 h1:P2Ga83D34wi1o9J6Wh1mRuqd4mF/x/lgBS7N7AbDhec=
 github.com/olekukonko/tablewriter v0.0.5/go.mod h1:hPp6KlRPjbx+hW8ykQs1w3UBbZlj6HuIJcUGPhkA7kY=
-github.com/oracle/oci-go-sdk/v49 v49.0.0 h1:Hm81VzXH/P/w3mX8DCQLqZCHBF9pSCIFQ4gAHlGZcss=
-github.com/oracle/oci-go-sdk/v49 v49.0.0/go.mod h1:a73341zd+PThjefFMCR7tJZoFy7hqfXx72I1OUPs/pI=
+github.com/oracle/oci-go-sdk/v49 v49.1.0 h1:hUjdP+BZahIBTjJmdio3/yGCJrcRd+mj06gHx5wnrHo=
+github.com/oracle/oci-go-sdk/v49 v49.1.0/go.mod h1:a73341zd+PThjefFMCR7tJZoFy7hqfXx72I1OUPs/pI=
 github.com/ovh/go-ovh v1.1.0 h1:bHXZmw8nTgZin4Nv7JuaLs0KG5x54EQR7migYTd1zrk=
 github.com/ovh/go-ovh v1.1.0/go.mod h1:AxitLZ5HBRPyUd+Zl60Ajaag+rNTdVXWIkzfrVuTXWA=
 github.com/packethost/packngo v0.19.1 h1:zuZasgaV4qHMeQ+djENj21w8vhgpoZO2h1a09buVjD8=
