@@ -21,6 +21,7 @@
         * [Oracle Cloud Infrastructure](#oracle-cloud-infrastructure)
         * [Ionos Cloud](#ionos-cloud)
         * [Amazon AWS](#amazon-aws)
+        * [VEXXHOST](#vexxhost)
     - [Minecraft Server Versions 📚](#minecraft-server-versions-)
     - [Minecraft Proxy Versions 📚](#minecraft-proxy-versions-)
     - [Server Configs 📋](#server-configs-)
@@ -65,6 +66,7 @@
 ![Oracle Cloud Infrastructure](https://img.shields.io/badge/Oracle_Cloud_Infrastructure-F80000?style=for-the-badge&logo=oracle&logoColor=white)
 ![Ionos Cloud](https://img.shields.io/badge/ionos--cloud-003D8F?style=for-the-badge&logo=ionos&logoColor=white)
 ![Amazon AWS](https://img.shields.io/badge/Amazon_AWS-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white)
+![VEXXHOST](https://img.shields.io/badge/VEXXHOST-2A1659?style=for-the-badge&logo=vexxhost&logoColor=white)
 
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/dirien/minectl/Build%20Binary/main?logo=github&style=for-the-badge)
 ![GitHub](https://img.shields.io/github/license/dirien/minectl?style=for-the-badge)
@@ -89,6 +91,7 @@ It is a private side project of me, to learn more about Go, CLI and multi-cloud 
 + Oracle Cloud Infrastructure (https://www.oracle.com/cloud/)
 + Ionos Cloud (https://cloud.ionos.de/)
 + Amazon AWS (https://aws.amazon.com/)
++ VEXXHOST (https://vexxhost.com/)
 
 ### TL;DR 🚀
 
@@ -287,6 +290,18 @@ export AWS_SECRET_ACCESS_KEY=<aws_secret_access_key>
 export AWS_REGION=<aws_region>
 ```
 
+#### VEXXHOST
+
+It is recommended to store OpenStack credentials as environment variables because it decouples credential information
+from source code:
+
+So download the `OpenStack RC File` from the Horizon UI by click on the "Download OpenStack RC File" button at the top
+right-hand corner.
+
+To execute the file, run source `xxxx-openrc.sh` and you will be prompted for your password.
+
+Thats all.
+
 #### Minecraft Server Versions 📚
 
 > ⚠️ `minectl 🗺` is not(!) providing any pre-compiled binaries of Minecraft or download a pre-compiled version.
@@ -372,7 +387,7 @@ metadata:
   name: minecraft-proxy
 spec:
   server:
-    cloud: <cloud provider name civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci|aws>
+    cloud: <cloud provider name civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci|ionos|aws|vexxhost>
     region: <cloud provider region>
     size: <cloud provider plan>
     ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft"
@@ -408,7 +423,7 @@ spec:
   monitoring:
     enabled: true|false
   server:
-    cloud: "provider: civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci|aws"
+    cloud: "provider: civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci|ionos|aws|vexxhost"
     region: "region see cloud provider for details eg. fra1"
     size: "see cloud provider docs for details eg. g3.large"
     volumeSize: 100
@@ -465,6 +480,7 @@ Global Flags:
       --log-encoding string   Set the log encoding: console|json (default: console) (default "console")
       --verbose string        Enable verbose logging: debug|info|warn|error|dpanic|panic|fatal
 ```
+
 Watch the demo, for more details
 [![asciicast](https://asciinema.org/a/439572.svg)](https://asciinema.org/a/439572)
 
@@ -537,7 +553,7 @@ mincetl list  \
 
 Flags:
   -h, --help              help for list
-  -p, --provider string   The cloud provider - civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci
+  -p, --provider string   The cloud provider - civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci|ionos|aws|vexxhost
   -r, --region string     The region for your cloud provider
 
 Global Flags:
@@ -770,6 +786,7 @@ Apache License, Version 2.0
 - https://github.com/ionos-cloud/sdk-go
 - https://github.com/AlecAivazis/survey
 - https://github.com/aws/aws-sdk-go
+- https://github.com/gophercloud/gophercloud
 
 ### Legal Disclaimer 👮
 

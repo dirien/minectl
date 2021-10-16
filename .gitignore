@@ -16,3 +16,4 @@ revive.log
 **/cosign-*
 **/cosign-*.sig
 **/*-cosign.pub
+**/*-openrc.sh
