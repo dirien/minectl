@@ -15,6 +15,7 @@ var cloudProvider = map[string]string{
 	"oci":      "Oracle Cloud Infrastructure",
 	"ionos":    "IONOS Cloud",
 	"aws":      "Amazon WebServices",
+	"vexxhost": "VEXXHOST",
 }
 
 func GetCloudProviderFullName(cloud string) string {
