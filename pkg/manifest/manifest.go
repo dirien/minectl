@@ -5,7 +5,10 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"regexp"
 	"strings"
+
+	"github.com/minectl/pkg/common"
 
 	"github.com/minectl/pkg/model"
 	"github.com/xeipuuv/gojsonschema"
@@ -55,6 +58,14 @@ func validate(manifest []byte) error {
 	return nil
 }
 
+func checkNamePattern(serverName string) error {
+	match, _ := regexp.MatchString(common.NameRegex, serverName)
+	if !match {
+		return errors.New("the name of your Minecraft server must consist of lower case alphanumeric characters or '-'")
+	}
+	return nil
+}
+
 func NewMinecraftResource(manifestPath string) (*model.MinecraftResource, error) {
 	var server model.MinecraftResource
 	manifestFile, err := ioutil.ReadFile(manifestPath)
@@ -66,6 +77,10 @@ func NewMinecraftResource(manifestPath string) (*model.MinecraftResource, error)
 		return nil, err
 	}
 	err = yaml.Unmarshal(manifestFile, &server)
+	if err != nil {
+		return nil, err
+	}
+	err = checkNamePattern(server.GetName())
 	if err != nil {
 		return nil, err
 	}

@@ -7,6 +7,8 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/minectl/pkg/common"
+
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/minectl/pkg/model"
 	"github.com/minectl/pkg/template"
@@ -22,7 +24,7 @@ var wizardQuestions = []*survey.Question{
 			if !err {
 				return errors.New("please enter a the name of your Minecraft server")
 			}
-			match, _ := regexp.MatchString("[a-z-]+", str)
+			match, _ := regexp.MatchString(common.NameRegex, str)
 			if !match {
 				return errors.New("the name of your Minecraft server must consist of lower case alphanumeric characters or '-'")
 			}
