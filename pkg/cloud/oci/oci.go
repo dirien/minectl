@@ -13,10 +13,10 @@ import (
 	common2 "github.com/minectl/pkg/common"
 	minctlTemplate "github.com/minectl/pkg/template"
 	"github.com/minectl/pkg/update"
-	"github.com/oracle/oci-go-sdk/v49/common"
-	"github.com/oracle/oci-go-sdk/v49/core"
-	"github.com/oracle/oci-go-sdk/v49/example/helpers"
-	"github.com/oracle/oci-go-sdk/v49/identity"
+	"github.com/oracle/oci-go-sdk/v50/common"
+	"github.com/oracle/oci-go-sdk/v50/core"
+	"github.com/oracle/oci-go-sdk/v50/example/helpers"
+	"github.com/oracle/oci-go-sdk/v50/identity"
 	"go.uber.org/zap"
 )
 
