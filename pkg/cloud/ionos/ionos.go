@@ -24,8 +24,10 @@ type IONOS struct {
 	tmpl   *minctlTemplate.Template
 }
 
+const defaultAPI = "https://api.ionos.com/cloudapi/v5"
+
 func NewIONOS(username, password, token string) (*IONOS, error) {
-	client := ionoscloud.NewAPIClient(ionoscloud.NewConfiguration(username, password, token))
+	client := ionoscloud.NewAPIClient(ionoscloud.NewConfiguration(username, password, token, defaultAPI))
 	tmpl, err := minctlTemplate.NewTemplateCloudConfig()
 	if err != nil {
 		return nil, err
