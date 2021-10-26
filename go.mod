@@ -22,13 +22,14 @@ require (
 	github.com/google/go-github v17.0.0+incompatible // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/uuid v1.3.0
+	github.com/gophercloud/gophercloud v0.22.0
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
 	github.com/hashicorp/go-retryablehttp v0.7.0
 	github.com/hashicorp/go-version v1.3.0 // indirect
 	github.com/hetznercloud/hcloud-go v1.32.0
 	github.com/huandu/xstrings v1.3.2 // indirect
 	github.com/imdario/mergo v0.3.12 // indirect
-	github.com/ionos-cloud/sdk-go/v5 v5.1.7
+	github.com/ionos-cloud/sdk-go/v5 v5.1.9
 	github.com/kr/pretty v0.2.1 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/linode/linodego v1.1.0
@@ -57,8 +58,6 @@ require (
 	google.golang.org/api v0.59.0
 	sigs.k8s.io/yaml v1.3.0
 )
-
-require github.com/gophercloud/gophercloud v0.22.0
 
 require (
 	cloud.google.com/go v0.97.0 // indirect
