@@ -34,7 +34,7 @@ jobs:
           args: --timeout=5m
       - name: Tests
         run: |
-          make all
+          make test coverage
   release:
     needs: build
     env:
