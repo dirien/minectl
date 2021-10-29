@@ -28,13 +28,9 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: 1.17
-      - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v2.5.2
-        with:
-          args: --timeout=5m
       - name: Tests
         run: |
-          make all
+          make test coverage
   release:
     needs: build
     env:
