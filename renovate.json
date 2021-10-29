@@ -1,15 +1,15 @@
 {
   "extends": [
     "config:base",
-    ":semanticCommitTypeAll(chore)"
+    ":semanticCommits",
+    ":semanticCommitTypeAll(chore)",
+    ":gitSignOff"
   ],
   "postUpdateOptions": [
     "gomodTidy"
   ],
-  "commitBody": "Signed-off-by: {{{gitAuthor}}}",
   "dependencyDashboard": false,
   "labels": [
     "dependencies"
-  ],
-  "semanticCommits": true
+  ]
 }
