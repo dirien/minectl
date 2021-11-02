@@ -6,7 +6,8 @@
     ":gitSignOff"
   ],
   "postUpdateOptions": [
-    "gomodTidy"
+    "gomodTidy",
+    "gomodUpdateImportPaths"
   ],
   "dependencyDashboard": false,
   "labels": [
