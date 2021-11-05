@@ -26,7 +26,7 @@ require (
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
 	github.com/hashicorp/go-retryablehttp v0.7.0
 	github.com/hashicorp/go-version v1.3.0 // indirect
-	github.com/hetznercloud/hcloud-go v1.32.0
+	github.com/hetznercloud/hcloud-go v1.33.0
 	github.com/huandu/xstrings v1.3.2 // indirect
 	github.com/imdario/mergo v0.3.12 // indirect
 	github.com/ionos-cloud/sdk-go/v5 v5.1.9
