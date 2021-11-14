@@ -32,7 +32,7 @@ require (
 	github.com/ionos-cloud/sdk-go/v5 v5.1.10
 	github.com/kr/pretty v0.2.1 // indirect
 	github.com/kr/text v0.2.0 // indirect
-	github.com/linode/linodego v1.1.0
+	github.com/linode/linodego v1.2.0
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/melbahja/goph v1.3.0
