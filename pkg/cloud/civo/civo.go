@@ -1,9 +1,8 @@
 package civo
 
 import (
-	_ "embed"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strings"
 	"time"
@@ -23,8 +22,8 @@ type Civo struct {
 	tmpl   *minctlTemplate.Template
 }
 
-func NewCivo(APIKey, region string) (*Civo, error) {
-	client, err := civogo.NewClient(APIKey, region)
+func NewCivo(apiKey, region string) (*Civo, error) {
+	client, err := civogo.NewClient(apiKey, region)
 	if err != nil {
 		return nil, err
 	}
@@ -40,7 +39,7 @@ func NewCivo(APIKey, region string) (*Civo, error) {
 }
 
 func (c *Civo) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
-	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
+	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
 	if err != nil {
 		return nil, err
 	}

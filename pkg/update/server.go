@@ -96,7 +96,7 @@ func (r *RemoteServer) TransferFile(src, dstPath string) error {
 		Addr:     r.ip,
 		Port:     22,
 		Auth:     auth,
-		Callback: ssh.InsecureIgnoreHostKey(),
+		Callback: ssh.InsecureIgnoreHostKey(), //nolint:gosec
 	})
 	if err != nil {
 		return err
@@ -111,7 +111,6 @@ func (r *RemoteServer) TransferFile(src, dstPath string) error {
 }
 
 func (r *RemoteServer) ExecuteCommand(cmd string) (string, error) {
-	//fmt.Printf("Running remote command %s\n", color.GreenString(cmd))
 	auth, err := goph.Key(r.privateSSHKey, "")
 	if err != nil {
 		return "", err
@@ -121,7 +120,7 @@ func (r *RemoteServer) ExecuteCommand(cmd string) (string, error) {
 		Addr:     r.ip,
 		Port:     22,
 		Auth:     auth,
-		Callback: ssh.InsecureIgnoreHostKey(),
+		Callback: ssh.InsecureIgnoreHostKey(), //nolint:gosec
 	})
 	if err != nil {
 		return "", err

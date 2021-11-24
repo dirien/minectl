@@ -11,7 +11,6 @@ import (
 )
 
 func init() {
-
 	listCmd.Flags().StringP("provider", "p", "", "The cloud provider - civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci|ionos|aws|vexxhost")
 	listCmd.Flags().StringP("region", "r", "", "The region (gce: zone) for your cloud provider - civo|gce")
 }
@@ -28,7 +27,6 @@ var listCmd = &cobra.Command{
 }
 
 func runList(cmd *cobra.Command, _ []string) error {
-
 	provider, err := cmd.Flags().GetString("provider")
 	if err != nil {
 		return errors.Wrap(err, "failed to get 'provider' value.")

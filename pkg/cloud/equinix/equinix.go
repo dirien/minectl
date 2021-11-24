@@ -2,7 +2,7 @@ package equinix
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strings"
 	"time"
@@ -22,22 +22,21 @@ type Equinix struct {
 	tmpl    *minctlTemplate.Template
 }
 
-func NewEquinix(APIKey, project string) (*Equinix, error) {
-
+func NewEquinix(apiKey, project string) (*Equinix, error) {
 	httpClient := retryablehttp.NewClient().HTTPClient
 	tmpl, err := minctlTemplate.NewTemplateBash()
 	if err != nil {
 		return nil, err
 	}
 	return &Equinix{
-		client:  packngo.NewClientWithAuth("", APIKey, httpClient),
+		client:  packngo.NewClientWithAuth("", apiKey, httpClient),
 		project: project,
 		tmpl:    tmpl,
 	}, nil
 }
 
 func (e *Equinix) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
-	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
+	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
 	if err != nil {
 		return nil, err
 	}
@@ -132,12 +131,12 @@ func (e *Equinix) ListServer() ([]automation.RessourceResults, error) {
 		return nil, err
 	}
 	var result []automation.RessourceResults
-	for _, server := range list {
+	for i, server := range list {
 		result = append(result, automation.RessourceResults{
 			ID:       server.ID,
 			Name:     server.Hostname,
 			Region:   server.Metro.Code,
-			PublicIP: getIP4(&server),
+			PublicIP: getIP4(&list[i]),
 			Tags:     strings.Join(server.Tags, ","),
 		})
 	}

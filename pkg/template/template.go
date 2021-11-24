@@ -24,7 +24,7 @@ type templateValues struct {
 	Properties []string
 }
 
-type TemplateName string
+type TemplateName string //nolint:revive
 
 const (
 	TemplateBash               TemplateName = "bash"

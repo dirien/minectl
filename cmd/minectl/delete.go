@@ -7,10 +7,8 @@ import (
 )
 
 func init() {
-
 	deleteCmd.Flags().StringP("filename", "f", "", "that contains the configuration for minectl")
 	deleteCmd.Flags().String("id", "", "contains the server id")
-
 }
 
 var deleteCmd = &cobra.Command{
@@ -26,7 +24,6 @@ var deleteCmd = &cobra.Command{
 }
 
 func runDelete(cmd *cobra.Command, _ []string) error {
-
 	filename, err := cmd.Flags().GetString("filename")
 	if err != nil {
 		return errors.Wrap(err, "failed to get 'filename' value.")
@@ -43,7 +40,7 @@ func runDelete(cmd *cobra.Command, _ []string) error {
 	}
 	newProvisioner, err := provisioner.NewProvisioner(&provisioner.MinectlProvisionerOpts{
 		ManifestPath: filename,
-		Id:           id,
+		ID:           id,
 	}, minectlLog)
 	if err != nil {
 		return err

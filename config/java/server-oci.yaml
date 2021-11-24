@@ -4,9 +4,9 @@ metadata:
   name: minecraft-server
 spec:
   server:
-    cloud: hetzner
-    region: nbg1
-    size: cpx31
+    cloud: oci
+    region: eu-frankfurt-1
+    size: VM.Standard2.2
     ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft"
     port: 25565
   minecraft:
@@ -39,7 +39,7 @@ spec:
       entity-broadcast-range-percentage=100
       level-name=world
       player-idle-timeout=0
-      motd=\u00A7cHetzner \u00A7rMinecraft --- \u00A76Java \u00A7redition
+      motd=\u00A7bOracle Cloud Infrastructure \u00A7rMinecraft --- \u00A76Java \u00A7reditio
       query.port=25565
       force-gamemode=false
       rate-limit=0
@@ -65,4 +65,4 @@ spec:
       online-mode=true
       enable-status=true
       allow-flight=false
-      max-world-size=
+      max-world-size=29999984

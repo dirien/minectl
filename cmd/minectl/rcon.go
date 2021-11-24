@@ -7,7 +7,6 @@ import (
 )
 
 func init() {
-
 	rconCmd.Flags().StringP("filename", "f", "", "Contains the configuration for minectl")
 	rconCmd.Flags().String("id", "", "contains the server id")
 }
@@ -40,7 +39,7 @@ func runRCON(cmd *cobra.Command, _ []string) error {
 	}
 	p, err := provisioner.NewProvisioner(&provisioner.MinectlProvisionerOpts{
 		ManifestPath: filename,
-		Id:           id,
+		ID:           id,
 	}, minectlLog)
 	if err != nil {
 		return err

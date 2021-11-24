@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/base64"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -64,7 +64,7 @@ func (i *IONOS) CreateServer(args automation.ServerArgs) (*automation.RessourceR
 	if err != nil {
 		return nil, err
 	}
-	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
+	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
 	if err != nil {
 		return nil, err
 	}
@@ -79,7 +79,7 @@ func (i *IONOS) CreateServer(args automation.ServerArgs) (*automation.RessourceR
 	if err != nil {
 		return nil, err
 	}
-	lanID, _ := strconv.Atoi(*lan.GetId())
+	lanID, _ := strconv.ParseInt(*lan.GetId(), 10, 0)
 	userData, err := i.tmpl.GetTemplate(args.MinecraftResource, "", minctlTemplate.GetTemplateCloudConfigName(args.MinecraftResource.IsProxyServer()))
 	if err != nil {
 		return nil, err
@@ -97,8 +97,8 @@ func (i *IONOS) CreateServer(args automation.ServerArgs) (*automation.RessourceR
 		}
 	}
 	plan := strings.Split(args.MinecraftResource.GetSize(), "-")
-	cpu, _ := strconv.Atoi(plan[0])
-	ram, _ := strconv.Atoi(plan[1])
+	cpu, _ := strconv.ParseInt(plan[0], 10, 0)
+	ram, _ := strconv.ParseInt(plan[1], 10, 0)
 	cpuFamiliy := plan[2]
 	request := ionoscloud.Server{
 		Properties: &ionoscloud.ServerProperties{
@@ -146,9 +146,8 @@ func (i *IONOS) CreateServer(args automation.ServerArgs) (*automation.RessourceR
 		if err != nil {
 			if resp.StatusCode != 404 {
 				return nil, err
-			} else {
-				time.Sleep(2 * time.Second)
 			}
+			time.Sleep(2 * time.Second)
 		} else {
 			if *server.Metadata.GetState() == "AVAILABLE" {
 				stillCreating = false
@@ -261,8 +260,9 @@ func (i *IONOS) GetServer(id string, _ automation.ServerArgs) (*automation.Resso
 		server, _, err := i.client.ServerApi.DatacentersServersFindById(ctx, *datacenter.GetId(), *serverItem.Id).Execute()
 		if err != nil {
 			return nil, err
-		} else {
-			ips := *(*server.Entities.Nics.Items)[0].Properties.Ips
+		}
+		ips := *(*server.Entities.Nics.Items)[0].Properties.Ips
+		if len(ips) > 0 {
 			return &automation.RessourceResults{
 				ID:       *datacenter.GetId(),
 				Name:     *server.Properties.GetName(),
