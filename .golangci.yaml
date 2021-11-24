@@ -1,0 +1,29 @@
+linters:
+  enable:
+    - thelper
+    - gofumpt
+    - tparallel
+    - unconvert
+    - unparam
+    - wastedassign
+    - revive
+    - forbidigo
+    - tagliatelle
+    - typecheck
+    - goconst
+    - gocritic
+    - gocyclo
+    - govet
+    - errcheck
+    - gosec
+
+linters-settings:
+  forbidigo:
+    forbid:
+      - 'ioutil\.*'
+  tagliatelle:
+    case:
+      use-field-name: false
+      rules:
+        yaml: goCamel
+        json: snake
