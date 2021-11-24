@@ -31,7 +31,6 @@ func NewIndicator(message string, logging *logging.MinectlLogging) *Indicator {
 }
 
 func (i *Indicator) Start() {
-
 	i.mu.Lock()
 	if i.active {
 		i.mu.Unlock()

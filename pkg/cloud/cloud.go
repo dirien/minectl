@@ -1,6 +1,6 @@
 package cloud
 
-//CloudProvider
+// CloudProvider mapping cloud provider from short name to full name
 var cloudProvider = map[string]string{
 	"do":       "DigitalOcean",
 	"civo":     "Civo",

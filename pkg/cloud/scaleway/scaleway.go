@@ -2,7 +2,7 @@ package scaleway
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strings"
 	"time"
@@ -24,7 +24,6 @@ type Scaleway struct {
 }
 
 func NewScaleway(accessKey, secretKey, organizationID, region string) (*Scaleway, error) {
-
 	zone, err := scw.ParseZone(region)
 	if err != nil {
 		return nil, err
@@ -50,7 +49,7 @@ func NewScaleway(accessKey, secretKey, organizationID, region string) (*Scaleway
 }
 
 func (s *Scaleway) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
-	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
+	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +67,6 @@ func (s *Scaleway) CreateServer(args automation.ServerArgs) (*automation.Ressour
 		Tags:              []string{"minectl"},
 		DynamicIPRequired: scw.BoolPtr(true),
 	})
-
 	if err != nil {
 		return nil, err
 	}

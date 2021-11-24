@@ -3,7 +3,6 @@ package vexxhost
 import (
 	"encoding/base64"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -42,6 +41,7 @@ func getTags(edition string) map[string]string {
 		edition:            "true",
 	}
 }
+
 func getTagKeys(tags map[string]string) []string {
 	var keys []string
 	for key := range tags {
@@ -51,7 +51,6 @@ func getTagKeys(tags map[string]string) []string {
 }
 
 func NewVEXXHOST() (*VEXXHOST, error) {
-
 	tmpl, err := minctlTemplate.NewTemplateCloudConfig()
 	if err != nil {
 		return nil, err
@@ -94,8 +93,9 @@ func NewVEXXHOST() (*VEXXHOST, error) {
 	}, nil
 }
 
-func (v *VEXXHOST) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
-	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
+// CreateServer TODO: https://github.com/dirien/minectl/issues/299
+func (v *VEXXHOST) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) { // nolint: gocyclo
+	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
 	if err != nil {
 		return nil, err
 	}
@@ -254,7 +254,7 @@ func (v *VEXXHOST) CreateServer(args automation.ServerArgs) (*automation.Ressour
 			SecurityGroups: []string{
 				group.ID,
 			},
-			FlavorRef: string(flavor.ID),
+			FlavorRef: flavor.ID,
 			ImageRef:  image.ID,
 			Networks: []servers.Network{
 				{
@@ -333,7 +333,7 @@ func (v *VEXXHOST) DeleteServer(id string, args automation.ServerArgs) error {
 	if err != nil {
 		return err
 	}
-	floatingIP, err := v.getFloatingIPByInstanceId(server.ID)
+	floatingIP, err := v.getFloatingIPByInstanceID(server.ID)
 	if err != nil {
 		return err
 	}
@@ -414,9 +414,9 @@ func (v *VEXXHOST) getRouterByName(args automation.ServerArgs) (*routers.Router,
 		if err != nil {
 			return false, err
 		}
-		for _, i := range routerList {
-			if i.Name == fmt.Sprintf("%s-router", args.MinecraftResource.GetName()) {
-				router = &i
+		for i, routerItem := range routerList {
+			if routerItem.Name == fmt.Sprintf("%s-router", args.MinecraftResource.GetName()) {
+				router = &routerList[i]
 				break
 			}
 		}
@@ -428,7 +428,7 @@ func (v *VEXXHOST) getRouterByName(args automation.ServerArgs) (*routers.Router,
 	return router, nil
 }
 
-func (v *VEXXHOST) getFloatingIPByInstanceId(id string) (*floatingips.FloatingIP, error) {
+func (v *VEXXHOST) getFloatingIPByInstanceID(id string) (*floatingips.FloatingIP, error) {
 	var floatingIP *floatingips.FloatingIP
 	pager := floatingips.List(v.computeClient)
 	err := pager.EachPage(func(page pagination.Page) (bool, error) {
@@ -436,9 +436,9 @@ func (v *VEXXHOST) getFloatingIPByInstanceId(id string) (*floatingips.FloatingIP
 		if err != nil {
 			return false, err
 		}
-		for _, i := range list {
-			if i.InstanceID == id {
-				floatingIP = &i
+		for i, item := range list {
+			if item.InstanceID == id {
+				floatingIP = &list[i]
 				break
 			}
 		}
@@ -458,9 +458,9 @@ func (v *VEXXHOST) getSecurityGroupByName(args automation.ServerArgs) (*secgroup
 		if err != nil {
 			return false, err
 		}
-		for _, i := range list {
-			if i.Name == fmt.Sprintf("%s-sg", args.MinecraftResource.GetName()) {
-				securityGroup = &i
+		for i, item := range list {
+			if item.Name == fmt.Sprintf("%s-sg", args.MinecraftResource.GetName()) {
+				securityGroup = &list[i]
 				break
 			}
 		}
@@ -482,9 +482,9 @@ func (v *VEXXHOST) getSubNetByName(args automation.ServerArgs) (*subnets.Subnet,
 		if err != nil {
 			return false, err
 		}
-		for _, i := range list {
-			if i.Name == fmt.Sprintf("%s-subnet", args.MinecraftResource.GetName()) {
-				subnet = &i
+		for i, item := range list {
+			if item.Name == fmt.Sprintf("%s-subnet", args.MinecraftResource.GetName()) {
+				subnet = &list[i]
 				break
 			}
 		}
@@ -506,9 +506,9 @@ func (v *VEXXHOST) getNetworkByName(args automation.ServerArgs) (*networks.Netwo
 		if err != nil {
 			return false, err
 		}
-		for _, i := range list {
-			if i.Name == fmt.Sprintf("%s-net", args.MinecraftResource.GetName()) {
-				network = &i
+		for i, networkItem := range list {
+			if networkItem.Name == fmt.Sprintf("%s-net", args.MinecraftResource.GetName()) {
+				network = &list[i]
 				break
 			}
 		}
@@ -531,7 +531,7 @@ func (v *VEXXHOST) ListServer() ([]automation.RessourceResults, error) {
 		for _, i := range list {
 			for key := range i.Metadata {
 				if key == common.InstanceTag {
-					floatingIP, err := v.getFloatingIPByInstanceId(i.ID)
+					floatingIP, err := v.getFloatingIPByInstanceID(i.ID)
 					if err != nil {
 						return false, err
 					}
@@ -593,7 +593,7 @@ func (v *VEXXHOST) GetServer(id string, _ automation.ServerArgs) (*automation.Re
 	if err != nil {
 		return nil, err
 	}
-	floatingIP, err := v.getFloatingIPByInstanceId(server.ID)
+	floatingIP, err := v.getFloatingIPByInstanceID(server.ID)
 	if err != nil {
 		return nil, err
 	}

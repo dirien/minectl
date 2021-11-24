@@ -2,7 +2,7 @@ package model
 
 import "reflect"
 
-// Wizard
+// Wizard represents a wizard configuration.
 type Wizard struct {
 	Name       string
 	Provider   string
@@ -18,7 +18,7 @@ type Wizard struct {
 	Properties string
 }
 
-// Spec
+// Spec represents a specification configuration.
 type Spec struct {
 	Monitoring Monitoring `json:"monitoring"`
 	Server     Server     `yaml:"server"`
@@ -26,29 +26,29 @@ type Spec struct {
 	Proxy      Proxy      `yaml:"proxy"`
 }
 
-// Proxy
+// Proxy represents a proxy configuration.
 type Proxy struct {
 	Java    Java   `yaml:"java"`
 	Type    string `yaml:"type"`
 	Version string `yaml:"version"`
 }
 
-// Monitoring
+// Monitoring represents a monitoring configuration.
 type Monitoring struct {
 	Enabled bool `json:"enabled"`
 }
 
-// Server
+// Server represents a server configuration.
 type Server struct {
 	Size       string `yaml:"size"`
-	Ssh        string `yaml:"ssh"`
+	SSH        string `yaml:"ssh"`
 	Cloud      string `yaml:"cloud"`
 	Region     string `yaml:"region"`
 	Port       int    `yaml:"port"`
 	VolumeSize int    `yaml:"volumeSize"`
 }
 
-// Minecraft
+// Minecraft represents a minecraft configuration.
 type Minecraft struct {
 	Java       Java   `yaml:"java"`
 	Properties string `yaml:"properties"`
@@ -57,7 +57,7 @@ type Minecraft struct {
 	Eula       bool   `yaml:"eula"`
 }
 
-// Java
+// Java represents a java configuration.
 type Java struct {
 	Xmx     string   `yaml:"xmx"`
 	Xms     string   `yaml:"xms"`
@@ -66,7 +66,7 @@ type Java struct {
 	Rcon    Rcon     `yaml:"rcon"`
 }
 
-// Rcon
+// Rcon represents a rcon configuration.
 type Rcon struct {
 	Password  string `yaml:"password"`
 	Enabled   bool   `yaml:"enabled"`
@@ -74,15 +74,15 @@ type Rcon struct {
 	Broadcast bool   `yaml:"broadcast"`
 }
 
-// Metadata
+// Metadata represents a metadata configuration.
 type Metadata struct {
 	Name string `yaml:"name"`
 }
 
-// MinecraftResource
+// MinecraftResource represents a minecraft resource.
 type MinecraftResource struct {
 	Spec       Spec     `yaml:"spec"`
-	ApiVersion string   `yaml:"apiVersion"`
+	APIVersion string   `yaml:"apiVersion"`
 	Kind       string   `yaml:"kind"`
 	Metadata   Metadata `yaml:"metadata"`
 }
@@ -100,7 +100,7 @@ func (m *MinecraftResource) GetCloud() string {
 }
 
 func (m *MinecraftResource) GetSSH() string {
-	return m.Spec.Server.Ssh
+	return m.Spec.Server.SSH
 }
 
 func (m *MinecraftResource) GetRegion() string {

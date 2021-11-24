@@ -4,7 +4,7 @@ import (
 	_ "embed"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"regexp"
 	"strings"
 
@@ -68,7 +68,7 @@ func checkNamePattern(serverName string) error {
 
 func NewMinecraftResource(manifestPath string) (*model.MinecraftResource, error) {
 	var server model.MinecraftResource
-	manifestFile, err := ioutil.ReadFile(manifestPath)
+	manifestFile, err := os.ReadFile(manifestPath)
 	if err != nil {
 		return nil, err
 	}

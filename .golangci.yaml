@@ -16,6 +16,8 @@ linters:
     - govet
     - errcheck
     - gosec
+    - goimports
+    - nolintlint
 
 linters-settings:
   forbidigo:

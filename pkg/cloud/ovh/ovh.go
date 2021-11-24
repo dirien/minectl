@@ -3,7 +3,7 @@ package ovh
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strings"
 	"time"
@@ -41,21 +41,19 @@ func createOVHID(instanceName, label string) (id string) {
 	return fmt.Sprintf("%s|%s", instanceName, label)
 }
 
-func getOVHFieldsFromID(id string) (instanceName, label string, err error) {
+func getOVHFieldsFromID(id string) (label string, err error) {
 	fields := strings.Split(id, "|")
-	err = nil
 	if len(fields) == 3 {
-		instanceName = fields[0]
 		label = strings.Join([]string{fields[1], fields[2]}, ",")
 	} else {
 		err = fmt.Errorf("could not get fields from custom ID: fields: %v", fields)
-		return "", "", err
+		return "", err
 	}
-	return instanceName, label, nil
+	return label, nil
 }
 
 func (o *OVHcloud) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
-	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
+	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
 	if err != nil {
 		return nil, err
 	}
@@ -157,7 +155,7 @@ func (o *OVHcloud) CreateServer(args automation.ServerArgs) (*automation.Ressour
 		}
 	}
 
-	_, labels, err := getOVHFieldsFromID(instance.Name)
+	labels, err := getOVHFieldsFromID(instance.Name)
 	if err != nil {
 		return nil, err
 	}
@@ -232,11 +230,11 @@ func (o *OVHcloud) ListServer() ([]automation.RessourceResults, error) {
 		return nil, err
 	}
 	var result []automation.RessourceResults
-	for _, instance := range instances {
+	for i, instance := range instances {
 		// no error checking. could be server in the region which don't belong to minectl
-		_, labels, _ := getOVHFieldsFromID(instance.Name)
+		labels, _ := getOVHFieldsFromID(instance.Name)
 		if strings.Contains(labels, common.InstanceTag) {
-			ip4, err := ovhsdk.IPv4(&instance)
+			ip4, err := ovhsdk.IPv4(&instances[i])
 			if err != nil {
 				return nil, err
 			}
@@ -305,7 +303,7 @@ func (o *OVHcloud) GetServer(id string, args automation.ServerArgs) (*automation
 	if err != nil {
 		return nil, err
 	}
-	_, labels, err := getOVHFieldsFromID(instance.Name)
+	labels, err := getOVHFieldsFromID(instance.Name)
 	if err != nil {
 		return nil, err
 	}

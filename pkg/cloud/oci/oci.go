@@ -5,7 +5,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -58,6 +58,7 @@ func getTags(edition string) map[string]string {
 		edition:             "true",
 	}
 }
+
 func getTagKeys(tags map[string]string) []string {
 	var keys []string
 	for key := range tags {
@@ -141,7 +142,7 @@ func (o *OCI) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 
 	var ingressSecurityRules []core.IngressSecurityRule
 	minecraftIngressSecurityRule := core.IngressSecurityRule{
-		//Options are supported only for ICMP ("1"), TCP ("6"), UDP ("17"), and ICMPv6 ("58").
+		// Options are supported only for ICMP ("1"), TCP ("6"), UDP ("17"), and ICMPv6 ("58").
 		Description: common.String("Minecraft Server Port"),
 		Protocol:    common.String("6"),
 		IsStateless: common.Bool(true),
@@ -154,7 +155,7 @@ func (o *OCI) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 		},
 	}
 	if args.MinecraftResource.GetEdition() == "bedrock" || args.MinecraftResource.GetEdition() == "nukkit" || args.MinecraftResource.GetEdition() == "powernukkit" {
-		//Options are supported only for ICMP ("1"), TCP ("6"), UDP ("17"), and ICMPv6 ("58").
+		// Options are supported only for ICMP ("1"), TCP ("6"), UDP ("17"), and ICMPv6 ("58").
 		minecraftIngressSecurityRule.Protocol = common.String("17")
 		minecraftIngressSecurityRule.TcpOptions = nil
 		minecraftIngressSecurityRule.UdpOptions = &core.UdpOptions{
@@ -164,23 +165,21 @@ func (o *OCI) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 			},
 		}
 		zap.S().Info("Oracle bedrock server protocol set")
-	} else {
-		//RCON
-		if args.MinecraftResource.HasRCON() {
-			ingressSecurityRules = append(ingressSecurityRules, core.IngressSecurityRule{
-				Description: common.String("RCON Port"),
-				Protocol:    common.String("6"),
-				IsStateless: common.Bool(true),
-				Source:      common.String("0.0.0.0/0"),
-				TcpOptions: &core.TcpOptions{
-					DestinationPortRange: &core.PortRange{
-						Max: common.Int(args.MinecraftResource.GetRCONPort()),
-						Min: common.Int(args.MinecraftResource.GetRCONPort()),
-					},
+	} else if args.MinecraftResource.HasRCON() {
+		// RCON
+		ingressSecurityRules = append(ingressSecurityRules, core.IngressSecurityRule{
+			Description: common.String("RCON Port"),
+			Protocol:    common.String("6"),
+			IsStateless: common.Bool(true),
+			Source:      common.String("0.0.0.0/0"),
+			TcpOptions: &core.TcpOptions{
+				DestinationPortRange: &core.PortRange{
+					Max: common.Int(args.MinecraftResource.GetRCONPort()),
+					Min: common.Int(args.MinecraftResource.GetRCONPort()),
 				},
-			})
-			zap.S().Info("Oracle RCON ingress security ruleset created")
-		}
+			},
+		})
+		zap.S().Info("Oracle RCON ingress security ruleset created")
 	}
 	ingressSecurityRules = append(ingressSecurityRules, minecraftIngressSecurityRule)
 	if args.MinecraftResource.HasMonitoring() {
@@ -286,7 +285,7 @@ func (o *OCI) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 	if err != nil {
 		return nil, err
 	}
-	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
+	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
 	if err != nil {
 		return nil, err
 	}
@@ -527,18 +526,17 @@ func (o *OCI) ListServer() ([]automation.RessourceResults, error) {
 	listCompartments, err := o.identity.ListCompartments(ctx, identity.ListCompartmentsRequest{
 		CompartmentId: common.String(tenancyOCID),
 	})
-
 	if err != nil {
 		return nil, err
 	}
 	var result []automation.RessourceResults
 	for _, compartment := range listCompartments.Items {
-		for key := range compartment.FreeformTags {
+		freeFormTags := compartment.FreeformTags
+		for key := range freeFormTags {
 			if key == common2.InstanceTag && compartment.LifecycleState == identity.CompartmentLifecycleStateActive {
 				listInstances, err := o.compute.ListInstances(ctx, core.ListInstancesRequest{
 					CompartmentId: compartment.Id,
 				})
-
 				if err != nil {
 					return nil, err
 				}
@@ -547,7 +545,6 @@ func (o *OCI) ListServer() ([]automation.RessourceResults, error) {
 						CompartmentId: compartment.Id,
 						InstanceId:    instance.Id,
 					})
-
 					if err != nil {
 						return nil, err
 					}

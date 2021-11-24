@@ -262,7 +262,7 @@ func makeAppDirectoryIfNotExists() {
 	}
 	path := fmt.Sprintf("%s/.minectl", dir)
 	if _, err := os.Stat(path); os.IsNotExist(err) {
-		err := os.Mkdir(path, os.ModeDir|0755)
+		err := os.Mkdir(path, os.ModeDir|0o755)
 		if err != nil {
 			fmt.Printf("error while creating the minectl directory: %s", err)
 		}
@@ -301,10 +301,7 @@ func Execute(version, gitCommit, date string) error {
 	GitCommit = gitCommit
 	Date = date
 
-	if err := minectlCmd.Execute(); err != nil {
-		return err
-	}
-	return nil
+	return minectlCmd.Execute()
 }
 
 func runMineCtl(cmd *cobra.Command, args []string) {

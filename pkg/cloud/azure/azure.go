@@ -5,7 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -54,7 +54,7 @@ func NewAzure(authFile string) (*Azure, error) {
 }
 
 func readJSON(path string) (*map[string]interface{}, error) {
-	data, err := ioutil.ReadFile(path)
+	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil, errors.Wrap(err, "Failed to read file")
 	}
@@ -90,7 +90,6 @@ func (a *Azure) CreateServer(args automation.ServerArgs) (*automation.RessourceR
 			Location: to.StringPtr(args.MinecraftResource.GetRegion()),
 			Tags:     getTags(args.MinecraftResource.GetEdition()),
 		})
-
 	if err != nil {
 		return nil, err
 	}
@@ -168,7 +167,6 @@ func (a *Azure) CreateServer(args automation.ServerArgs) (*automation.RessourceR
 			Tags: getTags(args.MinecraftResource.GetEdition()),
 		},
 	)
-
 	if err != nil {
 		return nil, err
 	}
@@ -256,7 +254,7 @@ func (a *Azure) CreateServer(args automation.ServerArgs) (*automation.RessourceR
 	vmClient := compute.NewVirtualMachinesClient(a.subscriptionID)
 	vmClient.Authorizer = a.authorizer
 
-	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
+	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
 	if err != nil {
 		return nil, err
 	}

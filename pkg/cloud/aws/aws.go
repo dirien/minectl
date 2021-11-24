@@ -2,10 +2,9 @@ package aws
 
 import (
 	"context"
-	_ "embed"
 	"encoding/base64"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strings"
 	"time"
@@ -22,6 +21,8 @@ import (
 	"github.com/minectl/pkg/update"
 	"github.com/pkg/errors"
 )
+
+const instanceNameTag = "Name"
 
 type Aws struct {
 	client *ec2.EC2
@@ -89,8 +90,7 @@ func (a *Aws) ListServer() ([]automation.RessourceResults, error) {
 					var instanceName string
 					for _, v := range i.Tags {
 						tags = append(tags, fmt.Sprintf("%s=%s", *v.Key, *v.Value))
-
-						if *v.Key == "Name" {
+						if *v.Key == instanceNameTag {
 							instanceName = *v.Value
 						}
 					}
@@ -112,7 +112,8 @@ func (a *Aws) ListServer() ([]automation.RessourceResults, error) {
 	return result, nil
 }
 
-func (a *Aws) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
+// CreateServer TODO: https://github.com/dirien/minectl/issues/298
+func (a *Aws) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) { // nolint: gocyclo
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Minute)
 	defer cancel()
 	image, err := a.lookupAMI("ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-20210621")
@@ -120,7 +121,7 @@ func (a *Aws) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 		return nil, err
 	}
 
-	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
+	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
 	if err != nil {
 		return nil, err
 	}
@@ -198,7 +199,7 @@ func (a *Aws) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 						Value: aws.String(args.MinecraftResource.GetEdition()),
 					},
 					{
-						Key:   aws.String("Name"),
+						Key:   aws.String(instanceNameTag),
 						Value: aws.String(args.MinecraftResource.GetName()),
 					},
 					{
@@ -230,17 +231,17 @@ func (a *Aws) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 	var secGroups []*string
 	var groupID *string
 	if args.MinecraftResource.GetEdition() == "bedrock" || args.MinecraftResource.GetEdition() == "nukkit" || args.MinecraftResource.GetEdition() == "powernukkit" {
-		groupID, _, err = a.createEC2SecurityGroup(vpc.Vpc.VpcId, "udp", args.MinecraftResource.GetPort())
+		groupID, err = a.createEC2SecurityGroup(vpc.Vpc.VpcId, "udp", args.MinecraftResource.GetPort())
 		if err != nil {
 			return nil, err
 		}
 	} else {
-		groupID, _, err = a.createEC2SecurityGroup(vpc.Vpc.VpcId, "tcp", args.MinecraftResource.GetPort())
+		groupID, err = a.createEC2SecurityGroup(vpc.Vpc.VpcId, "tcp", args.MinecraftResource.GetPort())
 		if err != nil {
 			return nil, err
 		}
 		if args.MinecraftResource.HasRCON() {
-			rconID, _, err := a.createEC2SecurityGroup(vpc.Vpc.VpcId, "tcp", args.MinecraftResource.GetRCONPort())
+			rconID, err := a.createEC2SecurityGroup(vpc.Vpc.VpcId, "tcp", args.MinecraftResource.GetRCONPort())
 			if err != nil {
 				return nil, err
 			}
@@ -249,13 +250,13 @@ func (a *Aws) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 	}
 	secGroups = append(secGroups, groupID)
 	if args.MinecraftResource.HasMonitoring() {
-		promGroupID, _, err := a.createEC2SecurityGroup(vpc.Vpc.VpcId, "tcp", 9090)
+		promGroupID, err := a.createEC2SecurityGroup(vpc.Vpc.VpcId, "tcp", 9090)
 		if err != nil {
 			return nil, err
 		}
 		secGroups = append(secGroups, promGroupID)
 	}
-	sshGroupID, _, err := a.createEC2SecurityGroup(vpc.Vpc.VpcId, "tcp", 22)
+	sshGroupID, err := a.createEC2SecurityGroup(vpc.Vpc.VpcId, "tcp", 22)
 	if err != nil {
 		return nil, err
 	}
@@ -274,13 +275,9 @@ func (a *Aws) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 	result, err := a.client.RunInstances(instanceInput)
 	if err != nil {
 		if aerr, ok := err.(awserr.Error); ok {
-			switch aerr.Code() {
-			default:
-				return nil, aerr
-			}
-		} else {
-			return nil, err
+			return nil, aerr
 		}
+		return nil, err
 	}
 
 	for {
@@ -306,7 +303,7 @@ func (a *Aws) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 				for _, v := range i.Reservations[0].Instances[0].Tags {
 					tags = append(tags, fmt.Sprintf("%s=%s", *v.Key, *v.Value))
 
-					if *v.Key == "Name" {
+					if *v.Key == instanceNameTag {
 						instanceName = *v.Value
 					}
 				}
@@ -389,10 +386,10 @@ func (a *Aws) DeleteServer(id string, args automation.ServerArgs) error {
 		}
 	}
 
-	VpcId := instance.VpcId
-	SubnetId := instance.SubnetId
+	vpcID := instance.VpcId
+	subnetID := instance.SubnetId
 	_, err = a.client.DeleteSubnet(&ec2.DeleteSubnetInput{
-		SubnetId: SubnetId,
+		SubnetId: subnetID,
 	})
 	if err != nil {
 		return err
@@ -402,7 +399,7 @@ func (a *Aws) DeleteServer(id string, args automation.ServerArgs) error {
 		Filters: []*ec2.Filter{
 			{
 				Name:   aws.String("attachment.vpc-id"),
-				Values: []*string{VpcId},
+				Values: []*string{vpcID},
 			},
 		},
 	})
@@ -413,7 +410,7 @@ func (a *Aws) DeleteServer(id string, args automation.ServerArgs) error {
 	for _, internetGateway := range internetGateways.InternetGateways {
 		_, err := a.client.DetachInternetGateway(&ec2.DetachInternetGatewayInput{
 			InternetGatewayId: internetGateway.InternetGatewayId,
-			VpcId:             VpcId,
+			VpcId:             vpcID,
 		})
 		if err != nil {
 			return err
@@ -430,7 +427,7 @@ func (a *Aws) DeleteServer(id string, args automation.ServerArgs) error {
 		Filters: []*ec2.Filter{
 			{
 				Name:   aws.String("vpc-id"),
-				Values: []*string{VpcId},
+				Values: []*string{vpcID},
 			},
 		},
 	})
@@ -448,7 +445,7 @@ func (a *Aws) DeleteServer(id string, args automation.ServerArgs) error {
 		}
 	}
 	_, err = a.client.DeleteVpc(&ec2.DeleteVpcInput{
-		VpcId: VpcId,
+		VpcId: vpcID,
 	})
 	if err != nil {
 		return err
@@ -492,7 +489,7 @@ func (a *Aws) GetServer(id string, _ automation.ServerArgs) (*automation.Ressour
 	for _, v := range i.Reservations[0].Instances[0].Tags {
 		tags = append(tags, fmt.Sprintf("%s=%s", *v.Key, *v.Value))
 
-		if *v.Key == "Name" {
+		if *v.Key == instanceNameTag {
 			instanceName = *v.Value
 		}
 	}
@@ -506,9 +503,9 @@ func (a *Aws) GetServer(id string, _ automation.ServerArgs) (*automation.Ressour
 	}, err
 }
 
-func (a *Aws) createEC2SecurityGroup(vpcID *string, protocol string, controlPort int) (*string, *string, error) {
+func (a *Aws) createEC2SecurityGroup(vpcID *string, protocol string, controlPort int) (*string, error) {
 	groupName := "minecraft-" + uuid.New().String()
-	var input = &ec2.CreateSecurityGroupInput{
+	input := &ec2.CreateSecurityGroupInput{
 		Description: aws.String("minecraft security group"),
 		GroupName:   aws.String(groupName),
 	}
@@ -519,15 +516,15 @@ func (a *Aws) createEC2SecurityGroup(vpcID *string, protocol string, controlPort
 
 	group, err := a.client.CreateSecurityGroup(input)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	err = a.createEC2SecurityGroupRule(*group.GroupId, protocol, controlPort, controlPort)
 	if err != nil {
-		return group.GroupId, &groupName, err
+		return group.GroupId, err
 	}
 
-	return group.GroupId, &groupName, nil
+	return group.GroupId, nil
 }
 
 func (a *Aws) createEC2SecurityGroupRule(groupID, protocol string, fromPort, toPort int) error {

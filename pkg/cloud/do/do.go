@@ -2,9 +2,8 @@ package do
 
 import (
 	"context"
-	_ "embed"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -37,9 +36,9 @@ func (t *TokenSource) Token() (*oauth2.Token, error) {
 	return token, nil
 }
 
-func NewDigitalOcean(APIKey string) (*DigitalOcean, error) {
+func NewDigitalOcean(apiKey string) (*DigitalOcean, error) {
 	tokenSource := &TokenSource{
-		AccessToken: APIKey,
+		AccessToken: apiKey,
 	}
 	oauthClient := oauth2.NewClient(context.Background(), tokenSource)
 	client := godo.NewClient(oauthClient)
@@ -93,7 +92,7 @@ func (d *DigitalOcean) UpdateServer(id string, args automation.ServerArgs) error
 }
 
 func (d *DigitalOcean) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
-	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
+	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
 	if err != nil {
 		return nil, err
 	}
@@ -213,7 +212,6 @@ func (d *DigitalOcean) DeleteServer(id string, args automation.ServerArgs) error
 	volumes, _, err := d.client.Storage.ListVolumes(context.Background(), &godo.ListVolumeParams{
 		Name: fmt.Sprintf("%s-vol", args.MinecraftResource.GetName()),
 	})
-
 	if err != nil {
 		return err
 	}

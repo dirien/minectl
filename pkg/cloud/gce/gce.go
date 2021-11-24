@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -21,10 +21,12 @@ import (
 	"google.golang.org/api/oslogin/v1"
 )
 
+const doneStatus = "DONE"
+
 type Credentials struct {
 	ProjectID   string `json:"project_id"`
 	ClientEmail string `json:"client_email"`
-	ClientId    string `json:"client_id"`
+	ClientID    string `json:"client_id"`
 }
 
 type GCE struct {
@@ -38,8 +40,7 @@ type GCE struct {
 }
 
 func NewGCE(keyfile, zone string) (*GCE, error) {
-
-	file, err := ioutil.ReadFile(keyfile)
+	file, err := os.ReadFile(keyfile)
 	if err != nil {
 		return nil, err
 	}
@@ -66,7 +67,7 @@ func NewGCE(keyfile, zone string) (*GCE, error) {
 		projectID:          cred.ProjectID,
 		user:               userService,
 		serviceAccountName: cred.ClientEmail,
-		serviceAccountID:   cred.ClientId,
+		serviceAccountID:   cred.ClientID,
 		zone:               zone,
 		tmpl:               tmpl,
 	}, nil
@@ -75,7 +76,7 @@ func NewGCE(keyfile, zone string) (*GCE, error) {
 func (g *GCE) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
 	imageURL := "projects/ubuntu-os-cloud/global/images/ubuntu-2004-focal-v20210720"
 
-	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
+	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
 	if err != nil {
 		return nil, err
 	}
@@ -108,7 +109,7 @@ func (g *GCE) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 			if err != nil {
 				return nil, err
 			}
-			if diskInsertOps.Status == "DONE" {
+			if diskInsertOps.Status == doneStatus {
 				stillCreating = false
 			} else {
 				time.Sleep(2 * time.Second)
@@ -200,7 +201,7 @@ func (g *GCE) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 		if err != nil {
 			return nil, err
 		}
-		if insertInstanceOp.Status == "DONE" {
+		if insertInstanceOp.Status == doneStatus {
 			stillCreating = false
 		} else {
 			time.Sleep(2 * time.Second)
@@ -243,10 +244,8 @@ func (g *GCE) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 			PublicIP: ip,
 			Tags:     strings.Join(instance.Tags.Items, ","),
 		}, err
-	} else {
-		return nil, errors.New("no instances created")
 	}
-
+	return nil, errors.New("no instances created")
 }
 
 func (g *GCE) DeleteServer(id string, args automation.ServerArgs) error {
@@ -280,13 +279,13 @@ func (g *GCE) DeleteServer(id string, args automation.ServerArgs) error {
 		if err != nil {
 			return err
 		}
-		var stillDeleting = true
+		stillDeleting := true
 		for stillDeleting {
 			instanceDeleteOp, err := g.client.ZoneOperations.Get(g.projectID, args.MinecraftResource.GetRegion(), instanceDeleteOp.Name).Context(context.Background()).Do()
 			if err != nil {
 				return err
 			}
-			if instanceDeleteOp.Status == "DONE" {
+			if instanceDeleteOp.Status == doneStatus {
 				stillDeleting = false
 			} else {
 				time.Sleep(2 * time.Second)
@@ -344,7 +343,6 @@ func (g *GCE) ListServer() ([]automation.RessourceResults, error) {
 }
 
 func (g *GCE) UpdateServer(id string, args automation.ServerArgs) error {
-
 	instancesListOp, err := g.client.Instances.List(g.projectID, args.MinecraftResource.GetRegion()).
 		Filter(fmt.Sprintf("(id=%s)", id)).
 		Context(context.Background()).

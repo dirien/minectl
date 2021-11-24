@@ -59,7 +59,7 @@ func (l *MinectlLogging) Error(msg error) {
 
 func (l *MinectlLogging) RawMessage(msg string) {
 	if l.headless {
-		zap.S().Infow(strings.Replace(msg, "\n", "", -1))
+		zap.S().Infow(strings.ReplaceAll(msg, "\n", ""))
 	} else {
 		fmt.Println(msg)
 	}
@@ -67,7 +67,7 @@ func (l *MinectlLogging) RawMessage(msg string) {
 
 func (l *MinectlLogging) PrintMixedGreen(format string, value string) {
 	if l.headless {
-		zap.S().Infow(strings.Replace(fmt.Sprintf(format, value), "\n", "", -1))
+		zap.S().Infow(strings.ReplaceAll(fmt.Sprintf(format, value), "\n", ""))
 	} else {
 		green := color.New(color.FgGreen).SprintFunc()
 		fmt.Println(fmt.Sprintf(format, green(value)))

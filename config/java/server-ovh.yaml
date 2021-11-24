@@ -39,7 +39,7 @@ spec:
       entity-broadcast-range-percentage=100
       level-name=world
       player-idle-timeout=0
-      motd=\u00A7cOVHcloud \u00A7rMinecraft --- \u00A76Java \u00A7reditio
+      motd=\u00A7cOVHcloud \u00A7rMinecraft --- \u00A76Java \u00A7redition
       query.port=25565
       force-gamemode=false
       rate-limit=0

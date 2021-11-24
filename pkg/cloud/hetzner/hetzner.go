@@ -3,7 +3,7 @@ package hetzner
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -22,9 +22,8 @@ type Hetzner struct {
 	tmpl   *minctlTemplate.Template
 }
 
-func NewHetzner(APIKey string) (*Hetzner, error) {
-
-	client := hcloud.NewClient(hcloud.WithToken(APIKey))
+func NewHetzner(apiKey string) (*Hetzner, error) {
+	client := hcloud.NewClient(hcloud.WithToken(apiKey))
 	tmpl, err := minctlTemplate.NewTemplateCloudConfig()
 	if err != nil {
 		return nil, err
@@ -37,7 +36,7 @@ func NewHetzner(APIKey string) (*Hetzner, error) {
 }
 
 func (h *Hetzner) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
-	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
+	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +97,6 @@ func (h *Hetzner) CreateServer(args automation.ServerArgs) (*automation.Ressourc
 	}
 
 	serverCreateReq, _, err := h.client.Server.Create(context.Background(), requestOpts)
-
 	if err != nil {
 		return nil, err
 	}

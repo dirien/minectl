@@ -3,7 +3,7 @@ package minectl
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"regexp"
 	"strings"
 
@@ -143,7 +143,6 @@ func init() {
 }
 
 func runWizard(cmd *cobra.Command, _ []string) error {
-
 	minectlLog.RawMessage("🧙 minectl configuration file wizard\n")
 	wizard := model.Wizard{}
 	err := survey.Ask(wizardQuestions, &wizard)
@@ -166,7 +165,7 @@ func runWizard(cmd *cobra.Command, _ []string) error {
 
 	filename := fmt.Sprintf("%s/config-%s.yaml", outputFolder, wizard.Name)
 	minectlLog.PrintMixedGreen("\n📄 Writing configuration file to %s", filename)
-	err = ioutil.WriteFile(filename, []byte(config), 0644)
+	err = os.WriteFile(filename, []byte(config), 0o600)
 	if err != nil {
 		return err
 	}

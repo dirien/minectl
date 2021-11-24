@@ -3,8 +3,8 @@ package linode
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
 	"net/http"
+	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -25,9 +25,8 @@ type Linode struct {
 	tmpl   *minctlTemplate.Template
 }
 
-func NewLinode(APItoken string) (*Linode, error) {
-
-	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: APItoken})
+func NewLinode(apiToken string) (*Linode, error) {
+	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: apiToken})
 
 	oauth2Client := &http.Client{
 		Transport: &oauth2.Transport{
@@ -48,8 +47,8 @@ func NewLinode(APItoken string) (*Linode, error) {
 }
 
 func (l *Linode) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
-	os := "linode/ubuntu20.04"
-	pubKeyFile, err := ioutil.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
+	ubuntuImage := "linode/ubuntu20.04"
+	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
 	if err != nil {
 		return nil, err
 	}
@@ -83,7 +82,7 @@ func (l *Linode) CreateServer(args automation.ServerArgs) (*automation.Ressource
 	stackscript, err := l.client.CreateStackscript(context.Background(), linodego.StackscriptCreateOptions{
 		IsPublic: false,
 		Label:    fmt.Sprintf("%s-stackscript", args.MinecraftResource.GetName()),
-		Images:   []string{os},
+		Images:   []string{ubuntuImage},
 		Script:   userData,
 	})
 	if err != nil {
@@ -96,7 +95,7 @@ func (l *Linode) CreateServer(args automation.ServerArgs) (*automation.Ressource
 	instance, err := l.client.CreateInstance(context.Background(), linodego.InstanceCreateOptions{
 		Label:          args.MinecraftResource.GetName(),
 		Region:         args.MinecraftResource.GetRegion(),
-		Image:          os,
+		Image:          ubuntuImage,
 		Type:           args.MinecraftResource.GetSize(),
 		AuthorizedKeys: []string{key.SSHKey},
 		StackScriptID:  stackscript.ID,
@@ -152,7 +151,7 @@ func (l *Linode) DeleteServer(id string, args automation.ServerArgs) error {
 			if err != nil {
 				return err
 			}
-			//wait 40 secs for detach volume, to be sure.
+			// wait 40 secs for detach volume, to be sure.
 			time.Sleep(40 * time.Second)
 			err = l.client.DeleteVolume(context.Background(), volume.ID)
 			if err != nil {

@@ -44,7 +44,7 @@ import (
 
 type MinectlProvisionerOpts struct {
 	ManifestPath string
-	Id           string
+	ID           string
 }
 
 type MinectlProvisionerListOpts struct {
@@ -103,7 +103,7 @@ func (p *MinectlProvisioner) UpdateServer() error {
 	return err
 }
 
-//wait that server is ready... Currently on for Java based Editions (TCP), as Bedrock is UDP
+// wait that server is ready... Currently, on for Java based Editions (TCP), as Bedrock is UDP
 func (p *MinectlProvisioner) waitForMinecraftServerReady(server *automation.RessourceResults) error {
 	if p.args.MinecraftResource.GetEdition() != "bedrock" && p.args.MinecraftResource.GetEdition() != "nukkit" && p.args.MinecraftResource.GetEdition() != "powernukkit" {
 		indicator := progress.NewIndicator("🕹 Starting Minecraft server...", p.logging)
@@ -280,7 +280,7 @@ func NewProvisioner(options *MinectlProvisionerOpts, logging ...*logging.Minectl
 	}
 	args := automation.ServerArgs{
 		MinecraftResource: minecraftResource,
-		ID:                options.Id,
+		ID:                options.ID,
 	}
 	cloudProvider, err = getProvisioner(args.MinecraftResource.GetCloud(), args.MinecraftResource.GetRegion())
 	if err != nil {

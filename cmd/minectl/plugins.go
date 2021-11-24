@@ -7,7 +7,6 @@ import (
 )
 
 func init() {
-
 	pluginCmd.Flags().StringP("filename", "f", "", "Contains the configuration for minectl")
 	pluginCmd.Flags().String("id", "", "contains the server id")
 	pluginCmd.Flags().StringP("plugin", "p", "", "Local plugin file location")
@@ -25,7 +24,7 @@ type Plugin struct {
 	Name        string
 	Mod         ModType
 	Version     []string
-	DownloadUrl string
+	DownloadURL string
 	Destination string
 }
 
@@ -47,7 +46,7 @@ var _ = []Plugin{
 		Name:        "Fabric API",
 		Mod:         Fabric,
 		Version:     []string{"0.37.1+1.16", "0.37.1+1.17"},
-		DownloadUrl: "https://github.com/FabricMC/fabric/releases/download/{{ .Version }}/fabric-api-{{ .Version }}.jar",
+		DownloadURL: "https://github.com/FabricMC/fabric/releases/download/{{ .Version }}/fabric-api-{{ .Version }}.jar",
 		Destination: "/mincraft/mods",
 	},
 }
@@ -69,7 +68,7 @@ func runPlugin(cmd *cobra.Command, _ []string) error {
 	}
 	p, err := provisioner.NewProvisioner(&provisioner.MinectlProvisionerOpts{
 		ManifestPath: filename,
-		Id:           id,
+		ID:           id,
 	}, minectlLog)
 	if err != nil {
 		return err
