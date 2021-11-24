@@ -3,6 +3,8 @@ kind: MinecraftServer
 metadata:
   name: minecraft-server
 spec:
+  monitoring:
+    enabled: true
   server:
     cloud: scaleway
     region: fr-par-1
