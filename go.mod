@@ -41,7 +41,7 @@ require (
 	github.com/morikuni/aec v1.0.0
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/oracle/oci-go-sdk/v50 v50.1.0
-	github.com/packethost/packngo v0.19.1
+	github.com/packethost/packngo v0.20.0
 	github.com/pkg/errors v0.9.1
 	github.com/scaleway/scaleway-sdk-go v1.0.0-beta.7
 	github.com/sethvargo/go-password v0.2.0
