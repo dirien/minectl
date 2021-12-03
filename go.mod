@@ -14,7 +14,7 @@ require (
 	github.com/aws/aws-sdk-go v1.42.15
 	github.com/blang/semver/v4 v4.0.0
 	github.com/c-bata/go-prompt v0.2.6
-	github.com/civo/civogo v0.2.57
+	github.com/civo/civogo v0.2.58
 	github.com/digitalocean/godo v1.72.0
 	github.com/dirien/ovh-go-sdk v0.1.1
 	github.com/fatih/color v1.13.0
