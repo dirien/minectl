@@ -4,9 +4,9 @@ metadata:
   name: minecraft-proxy
 spec:
   server:
-    cloud: do
-    region: fra1
-    size: s-1vcpu-1gb
+    cloud: gce
+    region: europe-west6-a
+    size: e2-standard-2
     ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft"
     port: 25577
   proxy:
