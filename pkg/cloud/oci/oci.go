@@ -281,7 +281,7 @@ func (o *OCI) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 	}
 	zap.S().Infow("Oracle Route Table updated", "updateRouteTable", updateRouteTable)
 
-	userData, err := o.tmpl.GetTemplate(args.MinecraftResource, "", minctlTemplate.GetTemplateCloudConfigName(args.MinecraftResource.IsProxyServer()))
+	userData, err := o.tmpl.GetTemplate(args.MinecraftResource, &minctlTemplate.CreateUpdateTemplateArgs{Name: minctlTemplate.GetTemplateCloudConfigName(args.MinecraftResource.IsProxyServer())})
 	if err != nil {
 		return nil, err
 	}

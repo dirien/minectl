@@ -14,5 +14,10 @@ spec:
       openjdk: 16
       xmx: 512M
       xms: 512M
+      rcon:
+        password: test
+        port: 25575
+        enabled: true
+        broadcast: true
     type: velocity
     version: 3.1.1-98

@@ -258,7 +258,7 @@ func (a *Azure) CreateServer(args automation.ServerArgs) (*automation.RessourceR
 	if err != nil {
 		return nil, err
 	}
-	userData, err := a.tmpl.GetTemplate(args.MinecraftResource, mount, minctlTemplate.GetTemplateCloudConfigName(args.MinecraftResource.IsProxyServer()))
+	userData, err := a.tmpl.GetTemplate(args.MinecraftResource, &minctlTemplate.CreateUpdateTemplateArgs{Mount: mount, Name: minctlTemplate.GetTemplateCloudConfigName(args.MinecraftResource.IsProxyServer())})
 	if err != nil {
 		return nil, err
 	}

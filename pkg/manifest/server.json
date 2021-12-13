@@ -40,7 +40,7 @@
       ],
       "title": "Metadata"
     },
-    "Monitoring":{
+    "Monitoring": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -176,11 +176,7 @@
         }
       },
       "required": [
-        "cloud",
-        "region",
-        "size",
-        "ssh",
-        "port"
+        "cloud"
       ],
       "title": "Server"
     }

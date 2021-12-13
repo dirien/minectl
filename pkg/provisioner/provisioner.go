@@ -6,40 +6,29 @@ import (
 	"os"
 	"time"
 
-	"github.com/minectl/pkg/cloud/vexxhost"
-
-	"github.com/minectl/pkg/cloud/ionos"
-
-	"github.com/minectl/pkg/cloud/oci"
-
-	"github.com/minectl/pkg/progress"
-
-	"github.com/minectl/pkg/logging"
-
-	"github.com/minectl/pkg/cloud/azure"
-
-	"github.com/minectl/pkg/rcon"
-
-	"github.com/minectl/pkg/cloud/vultr"
-
-	"github.com/minectl/pkg/cloud/gce"
-
-	"github.com/minectl/pkg/cloud/equinix"
-
-	"github.com/minectl/pkg/cloud/ovh"
-
-	"github.com/minectl/pkg/cloud/linode"
-	"github.com/pkg/errors"
-
 	"github.com/minectl/pkg/automation"
 	"github.com/minectl/pkg/cloud"
 	"github.com/minectl/pkg/cloud/aws"
+	"github.com/minectl/pkg/cloud/azure"
 	"github.com/minectl/pkg/cloud/civo"
 	"github.com/minectl/pkg/cloud/do"
+	"github.com/minectl/pkg/cloud/equinix"
+	"github.com/minectl/pkg/cloud/gce"
 	"github.com/minectl/pkg/cloud/hetzner"
+	"github.com/minectl/pkg/cloud/ionos"
+	"github.com/minectl/pkg/cloud/linode"
+	"github.com/minectl/pkg/cloud/multipass"
+	"github.com/minectl/pkg/cloud/oci"
+	"github.com/minectl/pkg/cloud/ovh"
 	"github.com/minectl/pkg/cloud/scaleway"
+	"github.com/minectl/pkg/cloud/vexxhost"
+	"github.com/minectl/pkg/cloud/vultr"
 	"github.com/minectl/pkg/common"
+	"github.com/minectl/pkg/logging"
 	"github.com/minectl/pkg/manifest"
+	"github.com/minectl/pkg/progress"
+	"github.com/minectl/pkg/rcon"
+	"github.com/pkg/errors"
 )
 
 const (
@@ -205,7 +194,7 @@ func ListProvisioner(options *MinectlProvisionerListOpts, logging ...*logging.Mi
 	return p, nil
 }
 
-func getProvisioner(provider, region string) (automation.Automation, error) {
+func getProvisioner(provider, region string) (automation.Automation, error) { //nolint: gocyclo
 	switch provider {
 	case "hetzner":
 		cloudProvider, err := hetzner.NewHetzner(os.Getenv("HCLOUD_TOKEN"))
@@ -291,6 +280,13 @@ func getProvisioner(provider, region string) (automation.Automation, error) {
 			return nil, err
 		}
 		return cloudProvider, nil
+	case "multipass":
+		cloudProvider, err := multipass.NewMultipass()
+		if err != nil {
+			return nil, err
+		}
+		return cloudProvider, nil
+
 	default:
 		return nil, errors.Errorf("Could not find provider %s", provider)
 	}

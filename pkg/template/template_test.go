@@ -3581,7 +3581,7 @@ func TestCivoBedrockTemplate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := civo.GetTemplate(&bedrock, "", TemplateBash)
+		got, err := civo.GetTemplate(&bedrock, &CreateUpdateTemplateArgs{Name: TemplateBash})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3596,7 +3596,7 @@ func TestCivoBedrockNoMonTemplate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := civo.GetTemplate(&bedrockNoMon, "", TemplateBash)
+		got, err := civo.GetTemplate(&bedrockNoMon, &CreateUpdateTemplateArgs{Name: TemplateBash})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3611,7 +3611,7 @@ func TestCivoJavaTemplate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := civo.GetTemplate(&java, "", TemplateBash)
+		got, err := civo.GetTemplate(&java, &CreateUpdateTemplateArgs{Name: TemplateBash})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3626,7 +3626,7 @@ func TestCloudInitBedrockTemplate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := civo.GetTemplate(&bedrock, "sda", TemplateCloudConfig)
+		got, err := civo.GetTemplate(&bedrock, &CreateUpdateTemplateArgs{Mount: "sda", Name: TemplateCloudConfig})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3641,7 +3641,7 @@ func TestCloudInitJavaTemplate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := civo.GetTemplate(&java, "sda", TemplateCloudConfig)
+		got, err := civo.GetTemplate(&java, &CreateUpdateTemplateArgs{Mount: "sda", Name: TemplateCloudConfig})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3656,7 +3656,7 @@ func TestBedrockBashMountTemplate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := civo.GetTemplate(&bedrock, "sdc", TemplateBash)
+		got, err := civo.GetTemplate(&bedrock, &CreateUpdateTemplateArgs{Mount: "sdc", Name: TemplateBash})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3671,7 +3671,7 @@ func TestJavaBashMountTemplate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := civo.GetTemplate(&java, "sdc", TemplateBash)
+		got, err := civo.GetTemplate(&java, &CreateUpdateTemplateArgs{Mount: "sdc", Name: TemplateBash})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3687,7 +3687,7 @@ func TestJavaAdditionalOptionsMountTemplate(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		got, err := civo.GetTemplate(&javaAdditionalOptions, "sdc", TemplateBash)
+		got, err := civo.GetTemplate(&javaAdditionalOptions, &CreateUpdateTemplateArgs{Mount: "sdc", Name: TemplateBash})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3702,7 +3702,7 @@ func TestCloudInitPaperMCTemplate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := paper.GetTemplate(&papermc, "sda", TemplateCloudConfig)
+		got, err := paper.GetTemplate(&papermc, &CreateUpdateTemplateArgs{Mount: "sda", Name: TemplateCloudConfig})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3717,7 +3717,7 @@ func TestBashPaperMCTemplate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := paper.GetTemplate(&papermc, "sdc", TemplateBash)
+		got, err := paper.GetTemplate(&papermc, &CreateUpdateTemplateArgs{Mount: "sdc", Name: TemplateBash})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3732,7 +3732,7 @@ func TestCloudInitCraftBukkitTemplate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := paper.GetTemplate(&craftbukkit, "sda", TemplateCloudConfig)
+		got, err := paper.GetTemplate(&craftbukkit, &CreateUpdateTemplateArgs{Mount: "sda", Name: TemplateCloudConfig})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3747,7 +3747,7 @@ func TestBashCraftBukkitTemplate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := paper.GetTemplate(&craftbukkit, "sda", TemplateBash)
+		got, err := paper.GetTemplate(&craftbukkit, &CreateUpdateTemplateArgs{Mount: "sda", Name: TemplateBash})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3762,7 +3762,7 @@ func TestCloudInitFabricTemplate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := paper.GetTemplate(&fabric, "sda", TemplateCloudConfig)
+		got, err := paper.GetTemplate(&fabric, &CreateUpdateTemplateArgs{Mount: "sda", Name: TemplateCloudConfig})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3777,7 +3777,7 @@ func TestCloudInitFabricNoMonTemplate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := paper.GetTemplate(&fabricNoMon, "sda", TemplateCloudConfig)
+		got, err := paper.GetTemplate(&fabricNoMon, &CreateUpdateTemplateArgs{Mount: "sda", Name: TemplateCloudConfig})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3792,7 +3792,7 @@ func TestBashFabricTemplate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := paper.GetTemplate(&fabric, "sda", TemplateBash)
+		got, err := paper.GetTemplate(&fabric, &CreateUpdateTemplateArgs{Mount: "sda", Name: TemplateBash})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3807,7 +3807,7 @@ func TestBashFabricNoMonTemplate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := paper.GetTemplate(&fabricNoMon, "sda", TemplateBash)
+		got, err := paper.GetTemplate(&fabricNoMon, &CreateUpdateTemplateArgs{Mount: "sda", Name: TemplateBash})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3822,7 +3822,7 @@ func TestCloudInitForgeTemplate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := paper.GetTemplate(&forge, "sda", TemplateCloudConfig)
+		got, err := paper.GetTemplate(&forge, &CreateUpdateTemplateArgs{Mount: "sda", Name: TemplateCloudConfig})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3837,7 +3837,7 @@ func TestBashForgeTemplate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := paper.GetTemplate(&forge, "sda", TemplateBash)
+		got, err := paper.GetTemplate(&forge, &CreateUpdateTemplateArgs{Mount: "sda", Name: TemplateBash})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3852,7 +3852,7 @@ func TestCloudInitSpigotTemplate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := paper.GetTemplate(&spigot, "sda", TemplateCloudConfig)
+		got, err := paper.GetTemplate(&spigot, &CreateUpdateTemplateArgs{Mount: "sda", Name: TemplateCloudConfig})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3867,7 +3867,7 @@ func TestBashSpigotTemplate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := paper.GetTemplate(&spigot, "sda", TemplateBash)
+		got, err := paper.GetTemplate(&spigot, &CreateUpdateTemplateArgs{Mount: "sda", Name: TemplateBash})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3882,7 +3882,7 @@ func TestBashNukkitTemplate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := bash.GetTemplate(&nukkit, "sda", TemplateBash)
+		got, err := bash.GetTemplate(&nukkit, &CreateUpdateTemplateArgs{Mount: "sda", Name: TemplateBash})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3897,7 +3897,7 @@ func TestCloudInitNukkitTemplate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := cloudConfig.GetTemplate(&nukkit, "sda", TemplateCloudConfig)
+		got, err := cloudConfig.GetTemplate(&nukkit, &CreateUpdateTemplateArgs{Mount: "sda", Name: TemplateCloudConfig})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3912,7 +3912,7 @@ func TestBashPowerNukkitTemplate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := bash.GetTemplate(&powerNukkit, "sda", TemplateBash)
+		got, err := bash.GetTemplate(&powerNukkit, &CreateUpdateTemplateArgs{Mount: "sda", Name: TemplateBash})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -3927,7 +3927,7 @@ func TestCloudInitPowerNukkitTemplate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		got, err := cloudConfig.GetTemplate(&powerNukkit, "sda", TemplateCloudConfig)
+		got, err := cloudConfig.GetTemplate(&powerNukkit, &CreateUpdateTemplateArgs{Mount: "sda", Name: TemplateCloudConfig})
 		if err != nil {
 			t.Fatal(err)
 		}

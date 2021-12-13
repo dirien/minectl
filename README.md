@@ -22,6 +22,7 @@
         * [Ionos Cloud](#ionos-cloud)
         * [Amazon AWS](#amazon-aws)
         * [VEXXHOST](#vexxhost)
+        * [MULTIPASS](#multipass)
     - [Minecraft Server Versions 📚](#minecraft-server-versions-)
     - [Minecraft Proxy Versions 📚](#minecraft-proxy-versions-)
     - [Server Configs 📋](#server-configs-)
@@ -67,6 +68,7 @@
 ![Ionos Cloud](https://img.shields.io/badge/ionos--cloud-003D8F?style=for-the-badge&logo=ionos&logoColor=white)
 ![Amazon AWS](https://img.shields.io/badge/Amazon_AWS-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white)
 ![VEXXHOST](https://img.shields.io/badge/VEXXHOST-2A1659?style=for-the-badge&logo=vexxhost&logoColor=white)
+![Multipass](https://img.shields.io/badge/Multipass-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
 
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/dirien/minectl/Build%20Binary/main?logo=github&style=for-the-badge)
 ![GitHub](https://img.shields.io/github/license/dirien/minectl?style=for-the-badge)
@@ -302,6 +304,15 @@ To execute the file, run source `xxxx-openrc.sh` and you will be prompted for yo
 
 Thats all.
 
+#### Multipass
+
+Multipass is a mini-cloud on your workstation using native hypervisors of all the supported platforms (Windows, macOS
+and Linux), it will give you an Ubuntu command line in just a click (“Open shell”) or a simple multipass shell command,
+or even a keyboard shortcut. Find what images are available with multipass find and create new instances with multipass
+launch.
+
+To install multipass, just follow the instructions on [multipass.run](https://multipass.run/) for your platform.
+
 #### Minecraft Server Versions 📚
 
 > ⚠️ `minectl 🗺` is not(!) providing any pre-compiled binaries of Minecraft or download a pre-compiled version.
@@ -376,14 +387,16 @@ Waterfall focuses on three main areas:
 
 #### Velocity
 
-A Minecraft server proxy with unparalleled server support, scalability, and flexibility.
-Velocity is licensed under the GPLv3 license.
+A Minecraft server proxy with unparalleled server support, scalability, and flexibility. Velocity is licensed under the
+GPLv3 license.
 
-- A codebase that is easy to dive into and consistently follows best practices for Java projects as much as reasonably possible.
+- A codebase that is easy to dive into and consistently follows best practices for Java projects as much as reasonably
+  possible.
 - High performance: handle thousands of players on one proxy.
-- A new, refreshing API built from the ground up to be flexible and powerful whilst avoiding design mistakes and suboptimal designs from other proxies.
-- First-class support for Paper, Sponge, and Forge. (Other implementations may work, but we make every endeavor to support these server implementations specifically.)
-
+- A new, refreshing API built from the ground up to be flexible and powerful whilst avoiding design mistakes and
+  suboptimal designs from other proxies.
+- First-class support for Paper, Sponge, and Forge. (Other implementations may work, but we make every endeavor to
+  support these server implementations specifically.)
 
 #### Server Configs 📋
 

@@ -80,7 +80,7 @@ func (i *IONOS) CreateServer(args automation.ServerArgs) (*automation.RessourceR
 		return nil, err
 	}
 	lanID, _ := strconv.ParseInt(*lan.GetId(), 10, 0)
-	userData, err := i.tmpl.GetTemplate(args.MinecraftResource, "", minctlTemplate.GetTemplateCloudConfigName(args.MinecraftResource.IsProxyServer()))
+	userData, err := i.tmpl.GetTemplate(args.MinecraftResource, &minctlTemplate.CreateUpdateTemplateArgs{Name: minctlTemplate.GetTemplateCloudConfigName(args.MinecraftResource.IsProxyServer())})
 	if err != nil {
 		return nil, err
 	}
