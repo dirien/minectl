@@ -249,7 +249,7 @@ func (g *GCE) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 }
 
 func (g *GCE) DeleteServer(id string, args automation.ServerArgs) error {
-	profileGetOp, err := g.user.Users.GetLoginProfile("users/minctl@minectl-fn.iam.gserviceaccount.com").Context(context.Background()).Do()
+	profileGetOp, err := g.user.Users.GetLoginProfile(fmt.Sprintf("users/%s", g.serviceAccountName)).Context(context.Background()).Do()
 	if err != nil {
 		return err
 	}

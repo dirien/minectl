@@ -39,6 +39,7 @@ const (
 	TemplateProxyBash          TemplateName = "proxy-bash"
 	TemplateBungeeCordBinary   TemplateName = "bungeecord-binary"
 	TemplateWaterfallBinary    TemplateName = "waterfall-binary"
+	TemplateVelocityBinary     TemplateName = "velocity-binary"
 	TemplateNukkitBinary       TemplateName = "nukkit-binary"
 	TemplatePowerNukkitBinary  TemplateName = "powernukkit-binary"
 )

@@ -1,0 +1,18 @@
+apiVersion: ediri.io/minectl/v1alpha1
+kind: MinecraftProxy
+metadata:
+  name: minecraft-proxy
+spec:
+  server:
+    cloud: do
+    region: fra1
+    size: s-1vcpu-1gb
+    ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft"
+    port: 25577
+  proxy:
+    java:
+      openjdk: 16
+      xmx: 512M
+      xms: 512M
+    type: velocity
+    version: 3.1.1-98
