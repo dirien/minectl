@@ -1,0 +1,5 @@
+{{- define "velocity-binary" }}
+{{- $X:= splitList "-" .Spec.Proxy.Version }}
+URL="https://papermc.io/api/v2/projects/velocity/versions/{{index $X 0}}/builds/{{index $X 1}}/downloads/velocity-{{ .Spec.Proxy.Version }}.jar"
+curl -sLSf $URL > /minecraft/proxy.jar
+{{- end }}

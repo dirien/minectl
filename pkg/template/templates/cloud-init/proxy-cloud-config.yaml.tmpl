@@ -36,7 +36,10 @@ runcmd:
     {{- template "bungeecord-binary" . }}
   {{- else if eq .Spec.Proxy.Type "waterfall" }}
     {{- template "waterfall-binary" . }}
+  {{- else if eq .Spec.Proxy.Type "velocity" }}
+    {{- template "velocity-binary" . }}
   {{- end }}
+
   - systemctl restart minecraft.service
   - systemctl enable minecraft.service
 {{- end -}}
