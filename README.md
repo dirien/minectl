@@ -22,7 +22,7 @@
         * [Ionos Cloud](#ionos-cloud)
         * [Amazon AWS](#amazon-aws)
         * [VEXXHOST](#vexxhost)
-        * [MULTIPASS](#multipass)
+        * [Multipass](#multipass)
     - [Minecraft Server Versions 📚](#minecraft-server-versions-)
     - [Minecraft Proxy Versions 📚](#minecraft-proxy-versions-)
     - [Server Configs 📋](#server-configs-)
@@ -94,6 +94,7 @@ It is a private side project of me, to learn more about Go, CLI and multi-cloud 
 + Ionos Cloud (https://cloud.ionos.de/)
 + Amazon AWS (https://aws.amazon.com/)
 + VEXXHOST (https://vexxhost.com/)
++ Multipass (https://multipass.run/)
 
 ### TL;DR 🚀
 

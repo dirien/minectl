@@ -19,8 +19,14 @@ builds:
       - arm64
     hooks:
       post:
-        - upx "{{ .Path }}"
-        - sh -c "cosign sign-blob -key $COSIGN_KEY_LOCATION {{ .Path }} > dist/{{ .ProjectName }}_{{ .Version }}_{{ .Target }}.sig"
+        #- upx "{{ .Path }}"
+
+signs:
+  - cmd: cosign
+    stdin: '{{ .Env.COSIGN_PASSWORD }}'
+    args: [ "sign-blob", "-key=cosign.key", "-output=${signature}", "${artifact}" ]
+    artifacts: checksum
+
 dockers:
   - image_templates: [ "ghcr.io/dirien/{{ .ProjectName }}:{{ .Version }}-amd64" ]
     dockerfile: Dockerfile
@@ -43,8 +49,9 @@ dockers:
       - --label=org.opencontainers.image.source=https://github.com/dirien/{{ .ProjectName }}
 docker_signs:
   - artifacts: all
-    args: [ "sign", "-key=$COSIGN_KEY_LOCATION", "${artifact}" ]
+    args: [ "sign", "-key=cosign.key", "${artifact}" ]
     stdin: '{{ .Env.COSIGN_PASSWORD }}'
+
 brews:
   - tap:
       owner: dirien
@@ -63,9 +70,11 @@ archives:
   - format_overrides:
       - goos: windows
         format: zip
+
 release:
   extra_files:
-    - glob: dist/*.sig
+    - glob: ./cosign.pub
+
 nfpms:
   - file_name_template: "minectl-{{.Version}}_{{.Os}}-{{.Arch}}"
     homepage: https://github.com/dirien/minectl
@@ -86,3 +95,24 @@ nfpms:
       darwin: macOS
       linux: Linux
       windows: Windows
+
+changelog:
+  sort: asc
+  use: github
+  filters:
+    exclude:
+      - '^test:'
+      - '^chore'
+      - Merge pull request
+      - Merge remote-tracking branch
+      - Merge branch
+      - go mod tidy
+  groups:
+    - title: 'New Features'
+      regexp: "^.*feat[(\\w)]*:+.*$"
+      order: 0
+    - title: 'Bug fixes'
+      regexp: "^.*fix[(\\w)]*:+.*$"
+      order: 10
+    - title: Other work
+      order: 999

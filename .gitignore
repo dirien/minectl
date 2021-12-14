@@ -11,9 +11,5 @@ revive.log
 /minectl
 **/azure.auth
 **/ssh/
-**/cosign.key
 **/oracleidentitycloudservice_*.pem
-**/cosign-*
-**/cosign-*.sig
-**/*-cosign.pub
 **/*-openrc.sh
