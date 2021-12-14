@@ -37,7 +37,7 @@ var wizardQuestions = []*survey.Question{
 		Validate: survey.Required,
 		Prompt: &survey.Select{
 			Message:  "Choose a cloud provider:",
-			Options:  []string{"DigitalOcean", "Civo", "Scaleway", "Hetzner", "Linode", "OVHcloud", "Equinix Metal", "Google Compute Engine", "vultr", "Azure", "Oracle Cloud Infrastructure", "IONOS Cloud", "Amazon WebServices", "VEXXHOST"},
+			Options:  []string{"DigitalOcean", "Civo", "Scaleway", "Hetzner", "Linode", "OVHcloud", "Equinix Metal", "Google Compute Engine", "vultr", "Azure", "Oracle Cloud Infrastructure", "IONOS Cloud", "Amazon WebServices", "VEXXHOST", "Ubuntu Multipass"},
 			PageSize: 15,
 		},
 	},
@@ -46,7 +46,7 @@ var wizardQuestions = []*survey.Question{
 		Validate: survey.Required,
 		Prompt: &survey.Input{
 			Message: "Enter the plan/size for the server:",
-			Help:    "Plans could have dedicated names, like s-4vcpu-8gb for DO or e2-standard-2 for GCE. Check your provider for details",
+			Help:    "Plans could have dedicated names, like s-4vcpu-8gb for DO or e2-standard-2 for GCE. Check your provider for details.",
 		},
 	},
 	{

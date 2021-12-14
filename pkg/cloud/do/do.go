@@ -123,7 +123,7 @@ func (d *DigitalOcean) CreateServer(args automation.ServerArgs) (*automation.Res
 		mount = "sda"
 	}
 
-	userData, err := d.tmpl.GetTemplate(args.MinecraftResource, mount, minctlTemplate.GetTemplateCloudConfigName(args.MinecraftResource.IsProxyServer()))
+	userData, err := d.tmpl.GetTemplate(args.MinecraftResource, &minctlTemplate.CreateUpdateTemplateArgs{Mount: mount, Name: minctlTemplate.GetTemplateCloudConfigName(args.MinecraftResource.IsProxyServer())})
 	if err != nil {
 		return nil, err
 	}

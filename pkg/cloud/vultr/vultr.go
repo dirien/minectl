@@ -51,7 +51,7 @@ func (v *Vultr) CreateServer(args automation.ServerArgs) (*automation.RessourceR
 		return nil, err
 	}
 
-	script, err := v.tmpl.GetTemplate(args.MinecraftResource, "", minctlTemplate.GetTemplateBashName(args.MinecraftResource.IsProxyServer()))
+	script, err := v.tmpl.GetTemplate(args.MinecraftResource, &minctlTemplate.CreateUpdateTemplateArgs{Name: minctlTemplate.GetTemplateBashName(args.MinecraftResource.IsProxyServer())})
 	if err != nil {
 		return nil, err
 	}

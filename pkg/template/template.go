@@ -20,8 +20,9 @@ type Template struct {
 
 type templateValues struct {
 	*model.MinecraftResource
-	Mount      string
-	Properties []string
+	Mount        string
+	SSHPublicKey string
+	Properties   []string
 }
 
 type TemplateName string //nolint:revive
@@ -52,18 +53,26 @@ func GetUpdateTemplate() *Template {
 	}
 }
 
-func (t *Template) DoUpdate(model *model.MinecraftResource, name TemplateName) (string, error) {
-	return t.GetTemplate(model, "", name)
+func (t *Template) DoUpdate(model *model.MinecraftResource, args *CreateUpdateTemplateArgs) (string, error) {
+	return t.GetTemplate(model, args)
 }
 
-func (t *Template) GetTemplate(model *model.MinecraftResource, mount string, name TemplateName) (string, error) {
+type CreateUpdateTemplateArgs struct {
+	Mount        string
+	SSHPublicKey string
+	Name         TemplateName
+}
+
+func (t *Template) GetTemplate(model *model.MinecraftResource, args *CreateUpdateTemplateArgs) (string, error) {
 	var buff bytes.Buffer
 
 	t.Values.MinecraftResource = model
-	t.Values.Mount = mount
 	t.Values.Properties = strings.Split(model.GetProperties(), "\n")
 
-	err := t.Template.ExecuteTemplate(&buff, string(name), t.Values)
+	t.Values.Mount = args.Mount
+	t.Values.SSHPublicKey = args.SSHPublicKey
+
+	err := t.Template.ExecuteTemplate(&buff, string(args.Name), t.Values)
 	if err != nil {
 		return "", err
 	}

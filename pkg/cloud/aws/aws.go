@@ -222,7 +222,7 @@ func (a *Aws) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 		}
 	}
 
-	userData, err := a.tmpl.GetTemplate(args.MinecraftResource, "", minctlTemplate.GetTemplateCloudConfigName(args.MinecraftResource.IsProxyServer()))
+	userData, err := a.tmpl.GetTemplate(args.MinecraftResource, &minctlTemplate.CreateUpdateTemplateArgs{Name: minctlTemplate.GetTemplateCloudConfigName(args.MinecraftResource.IsProxyServer())})
 	if err != nil {
 		return nil, err
 	}

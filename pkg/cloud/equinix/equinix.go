@@ -49,7 +49,7 @@ func (e *Equinix) CreateServer(args automation.ServerArgs) (*automation.Ressourc
 		return nil, err
 	}
 
-	userData, err := e.tmpl.GetTemplate(args.MinecraftResource, "", minctlTemplate.GetTemplateBashName(args.MinecraftResource.IsProxyServer()))
+	userData, err := e.tmpl.GetTemplate(args.MinecraftResource, &minctlTemplate.CreateUpdateTemplateArgs{Name: minctlTemplate.GetTemplateBashName(args.MinecraftResource.IsProxyServer())})
 	if err != nil {
 		return nil, err
 	}

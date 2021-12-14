@@ -4,13 +4,12 @@ import (
 	"fmt"
 	"strings"
 
-	"go.uber.org/zap"
-
-	minctlTemplate "github.com/minectl/pkg/template"
-
 	"github.com/melbahja/goph"
-	"github.com/minectl/pkg/model"
+	minctlTemplate "github.com/minectl/pkg/template"
+	"go.uber.org/zap"
 	"golang.org/x/crypto/ssh"
+
+	"github.com/minectl/pkg/model"
 )
 
 type ServerOperations interface {
@@ -39,30 +38,30 @@ func (r *RemoteServer) UpdateServer(args *model.MinecraftResource) error {
 
 	switch args.GetEdition() {
 	case "java":
-		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplateJavaBinary)
+		update, err = tmpl.DoUpdate(args, &minctlTemplate.CreateUpdateTemplateArgs{Name: minctlTemplate.TemplateJavaBinary})
 	case "bedrock":
-		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplateBedrockBinary)
+		update, err = tmpl.DoUpdate(args, &minctlTemplate.CreateUpdateTemplateArgs{Name: minctlTemplate.TemplateBedrockBinary})
 	case "craftbukkit":
-		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplateSpigotBukkitBinary)
+		update, err = tmpl.DoUpdate(args, &minctlTemplate.CreateUpdateTemplateArgs{Name: minctlTemplate.TemplateSpigotBukkitBinary})
 	case "spigot":
-		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplateSpigotBukkitBinary)
+		update, err = tmpl.DoUpdate(args, &minctlTemplate.CreateUpdateTemplateArgs{Name: minctlTemplate.TemplateSpigotBukkitBinary})
 	case "fabric":
-		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplateFabricBinary)
+		update, err = tmpl.DoUpdate(args, &minctlTemplate.CreateUpdateTemplateArgs{Name: minctlTemplate.TemplateFabricBinary})
 		update = fmt.Sprintf("\nrm -rf /minecraft/minecraft-server.jar%s", update)
 	case "forge":
-		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplateForgeBinary)
+		update, err = tmpl.DoUpdate(args, &minctlTemplate.CreateUpdateTemplateArgs{Name: minctlTemplate.TemplateForgeBinary})
 	case "papermc":
-		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplatePaperMCBinary)
+		update, err = tmpl.DoUpdate(args, &minctlTemplate.CreateUpdateTemplateArgs{Name: minctlTemplate.TemplatePaperMCBinary})
 	case "bungeecord":
-		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplateBungeeCordBinary)
+		update, err = tmpl.DoUpdate(args, &minctlTemplate.CreateUpdateTemplateArgs{Name: minctlTemplate.TemplateBungeeCordBinary})
 	case "waterfall":
-		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplateWaterfallBinary)
+		update, err = tmpl.DoUpdate(args, &minctlTemplate.CreateUpdateTemplateArgs{Name: minctlTemplate.TemplateWaterfallBinary})
 	case "nukkit":
-		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplateNukkitBinary)
+		update, err = tmpl.DoUpdate(args, &minctlTemplate.CreateUpdateTemplateArgs{Name: minctlTemplate.TemplateNukkitBinary})
 	case "powernukkit":
-		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplatePowerNukkitBinary)
+		update, err = tmpl.DoUpdate(args, &minctlTemplate.CreateUpdateTemplateArgs{Name: minctlTemplate.TemplatePowerNukkitBinary})
 	case "velocity":
-		update, err = tmpl.DoUpdate(args, minctlTemplate.TemplateVelocityBinary)
+		update, err = tmpl.DoUpdate(args, &minctlTemplate.CreateUpdateTemplateArgs{Name: minctlTemplate.TemplateVelocityBinary})
 	}
 
 	if args.GetEdition() != "bedrock" {

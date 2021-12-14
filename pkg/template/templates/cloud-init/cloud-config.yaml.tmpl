@@ -1,5 +1,9 @@
 {{- define "cloud-config" -}}
 #cloud-config
+{{- if eq .Spec.Server.Cloud "multipass" }}
+ssh_authorized_keys:
+- {{.SSHPublicKey}}
+{{- end }}
 users:
   - default
   {{- if .Spec.Monitoring.Enabled }}

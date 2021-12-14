@@ -243,7 +243,7 @@ func (v *VEXXHOST) CreateServer(args automation.ServerArgs) (*automation.Ressour
 	routers.AddInterface(v.networkClient, router.ID, &routers.AddInterfaceOpts{
 		SubnetID: subnet.ID,
 	})
-	userData, err := v.tmpl.GetTemplate(args.MinecraftResource, "", minctlTemplate.GetTemplateCloudConfigName(args.MinecraftResource.IsProxyServer()))
+	userData, err := v.tmpl.GetTemplate(args.MinecraftResource, &minctlTemplate.CreateUpdateTemplateArgs{Name: minctlTemplate.GetTemplateCloudConfigName(args.MinecraftResource.IsProxyServer())})
 	if err != nil {
 		return nil, err
 	}

@@ -2,20 +2,21 @@ package cloud
 
 // CloudProvider mapping cloud provider from short name to full name
 var cloudProvider = map[string]string{
-	"do":       "DigitalOcean",
-	"civo":     "Civo",
-	"scaleway": "Scaleway",
-	"hetzner":  "Hetzner",
-	"linode":   "Linode",
-	"ovh":      "OVHcloud",
-	"equinix":  "Equinix Metal",
-	"gce":      "Google Compute Engine",
-	"vultr":    "vultr",
-	"azure":    "Azure",
-	"oci":      "Oracle Cloud Infrastructure",
-	"ionos":    "IONOS Cloud",
-	"aws":      "Amazon WebServices",
-	"vexxhost": "VEXXHOST",
+	"do":        "DigitalOcean",
+	"civo":      "Civo",
+	"scaleway":  "Scaleway",
+	"hetzner":   "Hetzner",
+	"linode":    "Linode",
+	"ovh":       "OVHcloud",
+	"equinix":   "Equinix Metal",
+	"gce":       "Google Compute Engine",
+	"vultr":     "vultr",
+	"azure":     "Azure",
+	"oci":       "Oracle Cloud Infrastructure",
+	"ionos":     "IONOS Cloud",
+	"aws":       "Amazon WebServices",
+	"vexxhost":  "VEXXHOST",
+	"multipass": "Ubuntu Multipass",
 }
 
 func GetCloudProviderFullName(cloud string) string {
