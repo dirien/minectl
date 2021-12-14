@@ -306,7 +306,7 @@ Thats all.
 
 #### Multipass
 
-> ⚠️ Set the plan to <cpu>-<mem>G. For example: 1-2G
+> ⚠️ Set the plan to cpu-memG. For example: 1-2G
 
 Multipass is a mini-cloud on your workstation using native hypervisors of all the supported platforms (Windows, macOS
 and Linux), it will give you an Ubuntu command line in just a click (“Open shell”) or a simple multipass shell command,
