@@ -29,7 +29,7 @@ require (
 	github.com/hetznercloud/hcloud-go v1.33.1
 	github.com/huandu/xstrings v1.3.2 // indirect
 	github.com/imdario/mergo v0.3.12 // indirect
-	github.com/ionos-cloud/sdk-go/v5 v5.1.10
+	github.com/ionos-cloud/sdk-go/v5 v5.1.11
 	github.com/kr/pretty v0.2.1 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/linode/linodego v1.2.1
