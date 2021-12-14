@@ -306,6 +306,8 @@ Thats all.
 
 #### Multipass
 
+> ⚠️ Set the plan to <cpu>-<mem>G. For example: 1-2G
+
 Multipass is a mini-cloud on your workstation using native hypervisors of all the supported platforms (Windows, macOS
 and Linux), it will give you an Ubuntu command line in just a click (“Open shell”) or a simple multipass shell command,
 or even a keyboard shortcut. Find what images are available with multipass find and create new instances with multipass
@@ -411,7 +413,7 @@ metadata:
   name: minecraft-proxy
 spec:
   server:
-    cloud: <cloud provider name civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci|ionos|aws|vexxhost>
+    cloud: <cloud provider name civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci|ionos|aws|vexxhost|multipass>
     region: <cloud provider region>
     size: <cloud provider plan>
     ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft"
@@ -447,7 +449,7 @@ spec:
   monitoring:
     enabled: true|false
   server:
-    cloud: "provider: civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci|ionos|aws|vexxhost"
+    cloud: "provider: civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci|ionos|aws|vexxhost|multipass"
     region: "region see cloud provider for details eg. fra1"
     size: "see cloud provider docs for details eg. g3.large"
     volumeSize: 100
@@ -577,7 +579,7 @@ mincetl list  \
 
 Flags:
   -h, --help              help for list
-  -p, --provider string   The cloud provider - civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci|ionos|aws|vexxhost
+  -p, --provider string   The cloud provider - civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci|ionos|aws|vexxhost|multipass
   -r, --region string     The region for your cloud provider
 
 Global Flags:
