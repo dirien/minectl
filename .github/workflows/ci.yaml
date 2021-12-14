@@ -36,7 +36,6 @@ jobs:
     env:
       DOCKER_CLI_EXPERIMENTAL: "enabled"
       UPX_VERSION: "3.96"
-      COSIGN_KEY_LOCATION: "/tmp/cosign.key"
     runs-on: ubuntu-latest
     if: success() && startsWith(github.ref, 'refs/tags/')
     steps:
@@ -73,12 +72,7 @@ jobs:
         shell: bash
       - uses: sigstore/cosign-installer@main
         with:
-          cosign-release: 'v1.2.0'
-      - name: install cosign private key
-        run: 'echo "$COSIGN_KEY" > $COSIGN_KEY_LOCATION'
-        shell: bash
-        env:
-          COSIGN_KEY: ${{secrets.COSIGN_KEY}}
+          cosign-release: 'v1.4.1'
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
         with:
