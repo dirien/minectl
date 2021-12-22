@@ -20,7 +20,7 @@ spec:
         enabled: true
         broadcast: true
     edition: java
-    version: 1.17.1
+    version: 1.18.1
     eula: true
     properties: |
       level-seed=stackitminecraftrocks
