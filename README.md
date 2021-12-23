@@ -403,6 +403,19 @@ GPLv3 license.
 
 #### Server Configs 📋
 
+##### Spot (Preemptible) Instances
+
+When you want to run a Minecraft server on a spot instance, you can use the following configuration options:
+
+``` yaml
+...
+spot: <true |false>
+...
+```
+
+This will enable the server to be run on a spot instance. At the moment, this is only supported by AWS, Azure. In GCP,
+this will be only a preemptible instance and will live for a maximum of 24 hours.
+
 ##### MinecraftProxy Config 📡
 
 If you want to start a server with a Minecraft Proxy, you need to define a MinecraftProxy proxy.
@@ -419,6 +432,7 @@ spec:
     size: <cloud provider plan>
     ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft"
     port: <server port>
+    spot: <true |false>
   proxy:
     java:
       openjdk: <jdk version>
@@ -456,6 +470,7 @@ spec:
     volumeSize: 100
     ssh: "<path to ssh public and private key>/ssh"
     port: "25565|19132 are the defaults for tcp/udp"
+    spot: <true |false>
   minecraft:
     java:
       openjdk: "8|16 use jdk 8 for <1.17 java server version"

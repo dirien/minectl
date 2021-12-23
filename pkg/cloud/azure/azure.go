@@ -263,9 +263,19 @@ func (a *Azure) CreateServer(args automation.ServerArgs) (*automation.RessourceR
 		return nil, err
 	}
 
+	priority := compute.VirtualMachinePriorityTypesRegular
+	var evictionPolicy compute.VirtualMachineEvictionPolicyTypes
+	if args.MinecraftResource.IsSpot() {
+		priority = compute.VirtualMachinePriorityTypesSpot
+		evictionPolicy = compute.VirtualMachineEvictionPolicyTypesDeallocate
+	}
+
 	vmOptions := compute.VirtualMachine{
+
 		Location: group.Location,
 		VirtualMachineProperties: &compute.VirtualMachineProperties{
+			Priority:       priority,
+			EvictionPolicy: evictionPolicy,
 			HardwareProfile: &compute.HardwareProfile{
 				VMSize: compute.VirtualMachineSizeTypes(args.MinecraftResource.GetSize()),
 			},

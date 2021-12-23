@@ -46,6 +46,7 @@ type Server struct {
 	Region     string `yaml:"region"`
 	Port       int    `yaml:"port"`
 	VolumeSize int    `yaml:"volumeSize"`
+	Spot       bool   `yaml:"spot"`
 }
 
 // Minecraft represents a minecraft configuration.
@@ -161,4 +162,8 @@ func (m *MinecraftResource) GetRCONPassword() string {
 
 func (m *MinecraftResource) IsProxyServer() bool {
 	return reflect.DeepEqual(m.Spec.Minecraft, Minecraft{})
+}
+
+func (m *MinecraftResource) IsSpot() bool {
+	return m.Spec.Server.Spot
 }

@@ -20,6 +20,7 @@ import (
 	minctlTemplate "github.com/minectl/pkg/template"
 	"github.com/minectl/pkg/update"
 	"github.com/pkg/errors"
+	"go.uber.org/zap"
 )
 
 const instanceNameTag = "Name"
@@ -112,6 +113,93 @@ func (a *Aws) ListServer() ([]automation.RessourceResults, error) {
 	return result, nil
 }
 
+func addBlockDevice(volumeSize int) []*ec2.BlockDeviceMapping {
+	if volumeSize > 0 {
+		return []*ec2.BlockDeviceMapping{
+			{
+				DeviceName: aws.String("/dev/sda1"),
+				Ebs: &ec2.EbsBlockDevice{
+					VolumeSize: aws.Int64(int64(volumeSize)),
+				},
+			},
+		}
+	}
+	return nil
+}
+
+func (a *Aws) addNetworkInterfaces(vpc *ec2.CreateVpcOutput, args automation.ServerArgs, subnetID *string) ([]*ec2.InstanceNetworkInterfaceSpecification, error) {
+	var secGroups []*string
+	var groupID *string
+	var err error
+	if args.MinecraftResource.GetEdition() == "bedrock" || args.MinecraftResource.GetEdition() == "nukkit" || args.MinecraftResource.GetEdition() == "powernukkit" {
+		groupID, err = a.createEC2SecurityGroup(vpc.Vpc.VpcId, "udp", args.MinecraftResource.GetPort())
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		groupID, err = a.createEC2SecurityGroup(vpc.Vpc.VpcId, "tcp", args.MinecraftResource.GetPort())
+		if err != nil {
+			return nil, err
+		}
+		if args.MinecraftResource.HasRCON() {
+			rconID, err := a.createEC2SecurityGroup(vpc.Vpc.VpcId, "tcp", args.MinecraftResource.GetRCONPort())
+			if err != nil {
+				return nil, err
+			}
+			secGroups = append(secGroups, rconID)
+		}
+	}
+	secGroups = append(secGroups, groupID)
+	if args.MinecraftResource.HasMonitoring() {
+		promGroupID, err := a.createEC2SecurityGroup(vpc.Vpc.VpcId, "tcp", 9090)
+		if err != nil {
+			return nil, err
+		}
+		secGroups = append(secGroups, promGroupID)
+	}
+	sshGroupID, err := a.createEC2SecurityGroup(vpc.Vpc.VpcId, "tcp", 22)
+	if err != nil {
+		return nil, err
+	}
+	secGroups = append(secGroups, sshGroupID)
+
+	return []*ec2.InstanceNetworkInterfaceSpecification{
+		{
+			Description:              aws.String("the primary device eth0"),
+			DeviceIndex:              aws.Int64(0),
+			AssociatePublicIpAddress: aws.Bool(true),
+			SubnetId:                 subnetID,
+			Groups:                   secGroups,
+		},
+	}, nil
+}
+
+func addTags(args automation.ServerArgs) []*ec2.Tag {
+	return []*ec2.Tag{
+		{
+			Key:   aws.String("edition"),
+			Value: aws.String(args.MinecraftResource.GetEdition()),
+		},
+		{
+			Key:   aws.String(instanceNameTag),
+			Value: aws.String(args.MinecraftResource.GetName()),
+		},
+		{
+			Key:   aws.String(common.InstanceTag),
+			Value: aws.String("true"),
+		},
+	}
+}
+
+func addTagSpecifications(args automation.ServerArgs, resourceType string) []*ec2.TagSpecification {
+	return []*ec2.TagSpecification{
+		{
+			ResourceType: aws.String(resourceType),
+			Tags:         addTags(args),
+		},
+	}
+}
+
 // CreateServer TODO: https://github.com/dirien/minectl/issues/298
 func (a *Aws) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) { // nolint: gocyclo
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Minute)
@@ -183,146 +271,169 @@ func (a *Aws) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 	if err != nil {
 		return nil, err
 	}
-	instanceInput := &ec2.RunInstancesInput{
-		ImageId:      image,
-		KeyName:      key.KeyName,
-		InstanceType: aws.String(args.MinecraftResource.GetSize()),
-		MinCount:     aws.Int64(1),
-		MaxCount:     aws.Int64(1),
-
-		TagSpecifications: []*ec2.TagSpecification{
-			{
-				ResourceType: aws.String("instance"),
-				Tags: []*ec2.Tag{
-					{
-						Key:   aws.String("edition"),
-						Value: aws.String(args.MinecraftResource.GetEdition()),
-					},
-					{
-						Key:   aws.String(instanceNameTag),
-						Value: aws.String(args.MinecraftResource.GetName()),
-					},
-					{
-						Key:   aws.String(common.InstanceTag),
-						Value: aws.String("true"),
-					},
-				},
-			},
-		},
-	}
-
-	if args.MinecraftResource.GetVolumeSize() > 0 {
-		instanceInput.BlockDeviceMappings = []*ec2.BlockDeviceMapping{
-			{
-				DeviceName: aws.String("/dev/sda1"),
-				Ebs: &ec2.EbsBlockDevice{
-					VolumeSize: aws.Int64(int64(args.MinecraftResource.Spec.Server.VolumeSize)),
-				},
-			},
-		}
-	}
 
 	userData, err := a.tmpl.GetTemplate(args.MinecraftResource, &minctlTemplate.CreateUpdateTemplateArgs{Name: minctlTemplate.GetTemplateCloudConfigName(args.MinecraftResource.IsProxyServer())})
 	if err != nil {
 		return nil, err
 	}
-	instanceInput.UserData = aws.String(base64.StdEncoding.EncodeToString([]byte(userData)))
 
-	var secGroups []*string
-	var groupID *string
-	if args.MinecraftResource.GetEdition() == "bedrock" || args.MinecraftResource.GetEdition() == "nukkit" || args.MinecraftResource.GetEdition() == "powernukkit" {
-		groupID, err = a.createEC2SecurityGroup(vpc.Vpc.VpcId, "udp", args.MinecraftResource.GetPort())
+	if args.MinecraftResource.IsSpot() {
+		zap.S().Infow("Creating spot instance", "name", args.MinecraftResource.GetName())
+		spotInstance := ec2.RequestSpotInstancesInput{
+			InstanceCount: aws.Int64(1),
+			LaunchSpecification: &ec2.RequestSpotLaunchSpecification{
+				ImageId:             image,
+				KeyName:             key.KeyName,
+				InstanceType:        aws.String(args.MinecraftResource.GetSize()),
+				BlockDeviceMappings: addBlockDevice(args.MinecraftResource.GetVolumeSize()),
+				UserData:            aws.String(base64.StdEncoding.EncodeToString([]byte(userData))),
+			},
+			TagSpecifications: addTagSpecifications(args, "spot-instances-request"),
+		}
+		spotInstance.LaunchSpecification.NetworkInterfaces, err = a.addNetworkInterfaces(vpc, args, subnet.Subnet.SubnetId)
+		if err != nil {
+			if aerr, ok := err.(awserr.Error); ok {
+				return nil, aerr
+			}
+			return nil, err
+		}
+
+		result, err := a.client.RequestSpotInstances(&spotInstance)
 		if err != nil {
 			return nil, err
+		}
+		err = a.client.WaitUntilSpotInstanceRequestFulfilled(&ec2.DescribeSpotInstanceRequestsInput{
+			SpotInstanceRequestIds: []*string{result.SpotInstanceRequests[0].SpotInstanceRequestId},
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		for {
+			select {
+			case <-ctx.Done():
+				return nil, errors.New("timed out while creating the aws instance")
+			case <-time.After(10 * time.Second):
+				spotInstanceRequests, err := a.client.DescribeSpotInstanceRequests(&ec2.DescribeSpotInstanceRequestsInput{
+					SpotInstanceRequestIds: aws.StringSlice([]string{*result.SpotInstanceRequests[0].SpotInstanceRequestId}),
+				})
+				if err != nil {
+					return nil, err
+				}
+				instanceStatus, err := a.client.DescribeInstanceStatus(&ec2.DescribeInstanceStatusInput{
+					InstanceIds: aws.StringSlice([]string{*spotInstanceRequests.SpotInstanceRequests[0].InstanceId}),
+				})
+				if err != nil {
+					return nil, err
+				}
+				_, err = a.client.CreateTags(&ec2.CreateTagsInput{
+					Resources: aws.StringSlice([]string{*spotInstanceRequests.SpotInstanceRequests[0].InstanceId}),
+					Tags:      addTags(args),
+				})
+				if err != nil {
+					return nil, err
+				}
+				if *instanceStatus.InstanceStatuses[0].InstanceState.Name == "running" {
+					i, err := a.client.DescribeInstances(&ec2.DescribeInstancesInput{
+						InstanceIds: aws.StringSlice([]string{*spotInstanceRequests.SpotInstanceRequests[0].InstanceId}),
+					})
+					if err != nil {
+						return nil, err
+					}
+					var tags []string
+					var instanceName string
+					for _, v := range i.Reservations[0].Instances[0].Tags {
+						tags = append(tags, fmt.Sprintf("%s=%s", *v.Key, *v.Value))
+
+						if *v.Key == instanceNameTag {
+							instanceName = *v.Value
+						}
+					}
+
+					return &automation.RessourceResults{
+						ID:       fmt.Sprintf("%s#%s", *i.Reservations[0].Instances[0].InstanceId, *result.SpotInstanceRequests[0].SpotInstanceRequestId),
+						Name:     instanceName,
+						Region:   *a.client.Config.Region,
+						PublicIP: *i.Reservations[0].Instances[0].PublicIpAddress,
+						Tags:     strings.Join(tags, ","),
+					}, nil
+				}
+			}
 		}
 	} else {
-		groupID, err = a.createEC2SecurityGroup(vpc.Vpc.VpcId, "tcp", args.MinecraftResource.GetPort())
+		zap.S().Infow("Creating instance", "name", args.MinecraftResource.GetName())
+		instanceInput := &ec2.RunInstancesInput{
+			ImageId:             image,
+			KeyName:             key.KeyName,
+			InstanceType:        aws.String(args.MinecraftResource.GetSize()),
+			MinCount:            aws.Int64(1),
+			MaxCount:            aws.Int64(1),
+			UserData:            aws.String(base64.StdEncoding.EncodeToString([]byte(userData))),
+			TagSpecifications:   addTagSpecifications(args, "instance"),
+			BlockDeviceMappings: addBlockDevice(args.MinecraftResource.GetVolumeSize()),
+		}
+
+		instanceInput.NetworkInterfaces, err = a.addNetworkInterfaces(vpc, args, subnet.Subnet.SubnetId)
 		if err != nil {
+			if aerr, ok := err.(awserr.Error); ok {
+				return nil, aerr
+			}
 			return nil, err
 		}
-		if args.MinecraftResource.HasRCON() {
-			rconID, err := a.createEC2SecurityGroup(vpc.Vpc.VpcId, "tcp", args.MinecraftResource.GetRCONPort())
-			if err != nil {
-				return nil, err
-			}
-			secGroups = append(secGroups, rconID)
-		}
-	}
-	secGroups = append(secGroups, groupID)
-	if args.MinecraftResource.HasMonitoring() {
-		promGroupID, err := a.createEC2SecurityGroup(vpc.Vpc.VpcId, "tcp", 9090)
+
+		result, err := a.client.RunInstances(instanceInput)
 		if err != nil {
+			if aerr, ok := err.(awserr.Error); ok {
+				return nil, aerr
+			}
 			return nil, err
 		}
-		secGroups = append(secGroups, promGroupID)
-	}
-	sshGroupID, err := a.createEC2SecurityGroup(vpc.Vpc.VpcId, "tcp", 22)
-	if err != nil {
-		return nil, err
-	}
-	secGroups = append(secGroups, sshGroupID)
 
-	instanceInput.NetworkInterfaces = []*ec2.InstanceNetworkInterfaceSpecification{
-		{
-			Description:              aws.String("the primary device eth0"),
-			DeviceIndex:              aws.Int64(0),
-			AssociatePublicIpAddress: aws.Bool(true),
-			SubnetId:                 subnet.Subnet.SubnetId,
-			Groups:                   secGroups,
-		},
-	}
-
-	result, err := a.client.RunInstances(instanceInput)
-	if err != nil {
-		if aerr, ok := err.(awserr.Error); ok {
-			return nil, aerr
-		}
-		return nil, err
-	}
-
-	for {
-		select {
-		case <-ctx.Done():
-			return nil, errors.New("timed out while creating the aws instance")
-		case <-time.After(10 * time.Second):
-			instanceStatus, err := a.client.DescribeInstanceStatus(&ec2.DescribeInstanceStatusInput{
-				InstanceIds: aws.StringSlice([]string{*result.Instances[0].InstanceId}),
-			})
-			if err != nil {
-				return nil, err
-			}
-			if *instanceStatus.InstanceStatuses[0].InstanceState.Name == "running" {
-				i, err := a.client.DescribeInstances(&ec2.DescribeInstancesInput{
+		for {
+			select {
+			case <-ctx.Done():
+				return nil, errors.New("timed out while creating the aws instance")
+			case <-time.After(10 * time.Second):
+				instanceStatus, err := a.client.DescribeInstanceStatus(&ec2.DescribeInstanceStatusInput{
 					InstanceIds: aws.StringSlice([]string{*result.Instances[0].InstanceId}),
 				})
 				if err != nil {
 					return nil, err
 				}
-				var tags []string
-				var instanceName string
-				for _, v := range i.Reservations[0].Instances[0].Tags {
-					tags = append(tags, fmt.Sprintf("%s=%s", *v.Key, *v.Value))
-
-					if *v.Key == instanceNameTag {
-						instanceName = *v.Value
+				if *instanceStatus.InstanceStatuses[0].InstanceState.Name == "running" {
+					i, err := a.client.DescribeInstances(&ec2.DescribeInstancesInput{
+						InstanceIds: aws.StringSlice([]string{*result.Instances[0].InstanceId}),
+					})
+					if err != nil {
+						return nil, err
 					}
-				}
+					var tags []string
+					var instanceName string
+					for _, v := range i.Reservations[0].Instances[0].Tags {
+						tags = append(tags, fmt.Sprintf("%s=%s", *v.Key, *v.Value))
 
-				return &automation.RessourceResults{
-					ID:       *i.Reservations[0].Instances[0].InstanceId,
-					Name:     instanceName,
-					Region:   *a.client.Config.Region,
-					PublicIP: *i.Reservations[0].Instances[0].PublicIpAddress,
-					Tags:     strings.Join(tags, ","),
-				}, nil
+						if *v.Key == instanceNameTag {
+							instanceName = *v.Value
+						}
+					}
+
+					return &automation.RessourceResults{
+						ID:       *i.Reservations[0].Instances[0].InstanceId,
+						Name:     instanceName,
+						Region:   *a.client.Config.Region,
+						PublicIP: *i.Reservations[0].Instances[0].PublicIpAddress,
+						Tags:     strings.Join(tags, ","),
+					}, nil
+				}
 			}
 		}
 	}
 }
 
 func (a *Aws) UpdateServer(id string, args automation.ServerArgs) error {
+	ids := strings.Split(id, "#")
 	i, err := a.client.DescribeInstances(&ec2.DescribeInstancesInput{
-		InstanceIds: aws.StringSlice([]string{id}),
+		InstanceIds: aws.StringSlice([]string{ids[0]}),
 	})
 	if err != nil {
 		return err
@@ -351,9 +462,18 @@ func (a *Aws) DeleteServer(id string, args automation.ServerArgs) error {
 	if err != nil {
 		return err
 	}
+	ids := strings.Split(id, "#")
+	if args.MinecraftResource.IsSpot() {
 
+		_, err := a.client.CancelSpotInstanceRequests(&ec2.CancelSpotInstanceRequestsInput{
+			SpotInstanceRequestIds: aws.StringSlice([]string{ids[1]}),
+		})
+		if err != nil {
+			return err
+		}
+	}
 	i, err := a.client.DescribeInstances(&ec2.DescribeInstancesInput{
-		InstanceIds: aws.StringSlice([]string{id}),
+		InstanceIds: aws.StringSlice([]string{ids[0]}),
 	})
 	if err != nil {
 		return err
@@ -362,14 +482,14 @@ func (a *Aws) DeleteServer(id string, args automation.ServerArgs) error {
 	instance := i.Reservations[0].Instances[0]
 
 	_, err = a.client.TerminateInstances(&ec2.TerminateInstancesInput{
-		InstanceIds: aws.StringSlice([]string{id}),
+		InstanceIds: aws.StringSlice([]string{ids[0]}),
 	})
 	if err != nil {
 		return err
 	}
 
 	err = a.client.WaitUntilInstanceTerminated(&ec2.DescribeInstancesInput{
-		InstanceIds: aws.StringSlice([]string{id}),
+		InstanceIds: aws.StringSlice([]string{ids[0]}),
 	})
 	if err != nil {
 		return err
@@ -454,8 +574,9 @@ func (a *Aws) DeleteServer(id string, args automation.ServerArgs) error {
 }
 
 func (a *Aws) UploadPlugin(id string, args automation.ServerArgs, plugin, destination string) error {
+	ids := strings.Split(id, "#")
 	i, err := a.client.DescribeInstances(&ec2.DescribeInstancesInput{
-		InstanceIds: aws.StringSlice([]string{id}),
+		InstanceIds: aws.StringSlice([]string{ids[0]}),
 	})
 	if err != nil {
 		return err
@@ -477,8 +598,9 @@ func (a *Aws) UploadPlugin(id string, args automation.ServerArgs, plugin, destin
 }
 
 func (a *Aws) GetServer(id string, _ automation.ServerArgs) (*automation.RessourceResults, error) {
+	ids := strings.Split(id, "#")
 	i, err := a.client.DescribeInstances(&ec2.DescribeInstancesInput{
-		InstanceIds: aws.StringSlice([]string{id}),
+		InstanceIds: aws.StringSlice([]string{ids[0]}),
 	})
 	if err != nil {
 		return nil, err

@@ -173,6 +173,9 @@
         },
         "port": {
           "type": "integer"
+        },
+        "spot": {
+          "type": "boolean"
         }
       },
       "required": [

@@ -10,13 +10,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/minectl/pkg/update"
-
 	"github.com/minectl/pkg/automation"
 	"github.com/minectl/pkg/common"
 	minctlTemplate "github.com/minectl/pkg/template"
+	"github.com/minectl/pkg/update"
 	"github.com/pkg/errors"
 	"google.golang.org/api/compute/v1"
+	"google.golang.org/api/googleapi"
 	"google.golang.org/api/option"
 	"google.golang.org/api/oslogin/v1"
 )
@@ -123,8 +123,16 @@ func (g *GCE) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 		return nil, err
 	}
 
-	oslogin := "TRUE"
-	autoRestart := true
+	scheduling := &compute.Scheduling{
+		AutomaticRestart: googleapi.Bool(!args.MinecraftResource.IsSpot()),
+		Preemptible:      args.MinecraftResource.IsSpot(),
+	}
+	if args.MinecraftResource.IsSpot() {
+		scheduling.OnHostMaintenance = "TERMINATE"
+	} else {
+		scheduling.OnHostMaintenance = "MIGRATE"
+	}
+
 	instance := &compute.Instance{
 		Name:        args.MinecraftResource.GetName(),
 		MachineType: fmt.Sprintf("zones/%s/machineTypes/%s", args.MinecraftResource.GetRegion(), args.MinecraftResource.GetSize()),
@@ -143,7 +151,7 @@ func (g *GCE) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 			Items: []*compute.MetadataItems{
 				{
 					Key:   "enable-oslogin",
-					Value: &oslogin,
+					Value: googleapi.String("TRUE"),
 				},
 				{
 					Key:   "startup-script",
@@ -151,11 +159,7 @@ func (g *GCE) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 				},
 			},
 		},
-		Scheduling: &compute.Scheduling{
-			AutomaticRestart:  &autoRestart,
-			OnHostMaintenance: "MIGRATE",
-			Preemptible:       false,
-		},
+		Scheduling: scheduling,
 		NetworkInterfaces: []*compute.NetworkInterface{
 			{
 				AccessConfigs: []*compute.AccessConfig{
