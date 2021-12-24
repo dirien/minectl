@@ -44,7 +44,7 @@ Let us build the parts, so we can deploy our BentoBox SkyBlocks server
 The `minectl` ServerManifest for Hetzner CX21 and PaperMC looks like this:
 
 ```yaml
-apiVersion: ediri.io/minectl/v1alpha1
+apiVersion: minectl.ediri.io/v1alpha1
 kind: MinecraftServer
 metadata:
   name: minecraft-server
