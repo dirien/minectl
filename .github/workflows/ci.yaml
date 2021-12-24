@@ -8,6 +8,11 @@ on:
       - '*'
   pull_request:
 
+permissions:
+  contents: write 
+  id-token: write
+  packages: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -70,9 +75,8 @@ jobs:
           tar xvf upx-$UPX_VERSION-amd64_linux.tar.xz
           sudo mv upx-$UPX_VERSION-amd64_linux/upx /usr/local/sbin
         shell: bash
-      - uses: sigstore/cosign-installer@main
-        with:
-          cosign-release: 'v1.4.1'
+      - uses: sigstore/cosign-installer@v1.4.1
+      - uses: anchore/sbom-action/download-syft@v0.6.0
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
         with:
@@ -80,4 +84,3 @@ jobs:
           args: release --rm-dist
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
-          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}

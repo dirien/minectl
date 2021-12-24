@@ -19,13 +19,31 @@ builds:
       - arm64
     hooks:
       post:
-        #- upx "{{ .Path }}"
+        - upx "{{ .Path }}"
+
+source:
+  enabled: true
+
+sboms:
+  - artifacts: archive
+  - id: source
+    artifacts: source
+
+checksum:
+  name_template: 'checksums.txt'
 
 signs:
   - cmd: cosign
-    stdin: '{{ .Env.COSIGN_PASSWORD }}'
-    args: [ "sign-blob", "-key=cosign.key", "-output=${signature}", "${artifact}" ]
+    env:
+      - COSIGN_EXPERIMENTAL=1
+    certificate: '${artifact}.pem'
+    args:
+      - sign-blob
+      - '--output-certificate=${certificate}'
+      - '--output-signature=${signature}'
+      - '${artifact}'
     artifacts: checksum
+    output: true
 
 dockers:
   - image_templates: [ "ghcr.io/dirien/{{ .ProjectName }}:{{ .Version }}-amd64" ]
@@ -47,10 +65,16 @@ dockers:
       - --label=org.opencontainers.image.version={{ .Version }}
       - --label=org.opencontainers.image.title={{ .ProjectName }}
       - --label=org.opencontainers.image.source=https://github.com/dirien/{{ .ProjectName }}
+
 docker_signs:
-  - artifacts: all
-    args: [ "sign", "-key=cosign.key", "${artifact}" ]
-    stdin: '{{ .Env.COSIGN_PASSWORD }}'
+  - cmd: cosign
+    env:
+      - COSIGN_EXPERIMENTAL=1
+    artifacts: images
+    output: true
+    args:
+      - 'sign'
+      - '${artifact}'
 
 brews:
   - tap:
@@ -70,10 +94,6 @@ archives:
   - format_overrides:
       - goos: windows
         format: zip
-
-release:
-  extra_files:
-    - glob: ./cosign.pub
 
 nfpms:
   - file_name_template: "minectl-{{.Version}}_{{.Os}}-{{.Arch}}"
