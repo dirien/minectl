@@ -30,7 +30,7 @@ ssh-keygen -t rsa -f ./minecraft
 ## Create MinecraftServer config
 
 ```bash
-apiVersion: ediri.io/minectl/v1alpha1
+apiVersion: minectl.ediri.io/v1alpha1
 kind: MinecraftServer
 metadata:
   name: minecraft-server

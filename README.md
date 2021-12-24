@@ -421,7 +421,7 @@ this will be only a preemptible instance and will live for a maximum of 24 hours
 If you want to start a server with a Minecraft Proxy, you need to define a MinecraftProxy proxy.
 
 ```yaml
-apiVersion: ediri.io/minectl/v1alpha1
+apiVersion: minectl.ediri.io/v1alpha1
 kind: MinecraftProxy
 metadata:
   name: minecraft-proxy
@@ -456,7 +456,7 @@ spec:
 You need a MinecraftServer manifest file, to describe the underlying compute instance and the Minecraft Server:
 
 ```yaml
-apiVersion: ediri.io/minectl/v1alpha1
+apiVersion: minectl.ediri.io/v1alpha1
 kind: MinecraftServer
 metadata:
   name: minecraft-server
@@ -694,7 +694,7 @@ MinecraftServer manifest:
 
 ```yaml
 ...
-apiVersion: ediri.io/minectl/v1alpha1
+apiVersion: minectl.ediri.io/v1alpha1
 kind: MinecraftServer
 metadata:
   name: minecraft-server
@@ -730,7 +730,7 @@ etc.) it makes sense to provision a bigger volume separately.
 When a separate volume is defined, `minectl 🗺` is automatically installing the Minecraft binaries on this volume.
 
 ```yaml
-apiVersion: ediri.io/minectl/v1alpha1
+apiVersion: minectl.ediri.io/v1alpha1
 kind: MinecraftServer
 metadata:
   name: minecraft-server

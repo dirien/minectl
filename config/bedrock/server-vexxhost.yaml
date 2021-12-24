@@ -1,4 +1,4 @@
-apiVersion: ediri.io/minectl/v1alpha1
+apiVersion: minectl.ediri.io/v1alpha1
 kind: MinecraftServer
 metadata:
   name: minecraft-server-bedrock

@@ -11,7 +11,7 @@ To setup a bedrock server, just follow [getting started with Civo](getting-start
 ## Create MinecraftServer bedrock config
 
 ```bash
-apiVersion: ediri.io/minectl/v1alpha1
+apiVersion: minectl.ediri.io/v1alpha1
 kind: MinecraftServer
 metadata:
   name: minecraft-server
