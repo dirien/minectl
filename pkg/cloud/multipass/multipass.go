@@ -32,7 +32,7 @@ func NewMultipass() (*Multipass, error) {
 	}, nil
 }
 
-func (m *Multipass) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
+func (m *Multipass) CreateServer(args automation.ServerArgs) (*automation.ResourceResults, error) {
 	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
 	if err != nil {
 		return nil, err
@@ -86,7 +86,7 @@ func (m *Multipass) DeleteServer(id string, args automation.ServerArgs) error {
 	return nil
 }
 
-func (m *Multipass) ListServer() ([]automation.RessourceResults, error) {
+func (m *Multipass) ListServer() ([]automation.ResourceResults, error) {
 	panic("List Server is not possible with Multipass, as it does not support labels")
 }
 
@@ -122,7 +122,7 @@ func (m Multipass) UploadPlugin(id string, args automation.ServerArgs, plugin, d
 	return nil
 }
 
-func (m Multipass) GetServer(id string, args automation.ServerArgs) (*automation.RessourceResults, error) {
+func (m Multipass) GetServer(id string, args automation.ServerArgs) (*automation.ResourceResults, error) {
 	cmd := exec.Command(multipassBinary, "info", "--format", "json", args.MinecraftResource.GetName()) //nolint: gosec
 	cmdOutput := &bytes.Buffer{}
 	cmd.Stdout = cmdOutput
@@ -134,7 +134,7 @@ func (m Multipass) GetServer(id string, args automation.ServerArgs) (*automation
 	err = json.Unmarshal(cmdOutput.Bytes(), &result)
 	server := result["info"].(map[string]interface{})[args.MinecraftResource.GetName()].(map[string]interface{})
 	ip := server["ipv4"].([]interface{})[0].(string)
-	return &automation.RessourceResults{
+	return &automation.ResourceResults{
 		ID:       args.MinecraftResource.GetName(),
 		Name:     args.MinecraftResource.GetName(),
 		Region:   multipassBinary,

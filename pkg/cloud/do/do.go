@@ -53,15 +53,15 @@ func NewDigitalOcean(apiKey string) (*DigitalOcean, error) {
 	return do, nil
 }
 
-func (d *DigitalOcean) ListServer() ([]automation.RessourceResults, error) {
+func (d *DigitalOcean) ListServer() ([]automation.ResourceResults, error) {
 	droplets, _, err := d.client.Droplets.ListByTag(context.Background(), common.InstanceTag, nil)
 	if err != nil {
 		return nil, err
 	}
-	var result []automation.RessourceResults
+	var result []automation.ResourceResults
 	for _, droplet := range droplets {
 		ipv4, _ := droplet.PublicIPv4()
-		result = append(result, automation.RessourceResults{
+		result = append(result, automation.ResourceResults{
 			ID:       strconv.Itoa(droplet.ID),
 			PublicIP: ipv4,
 			Name:     droplet.Name,
@@ -91,7 +91,7 @@ func (d *DigitalOcean) UpdateServer(id string, args automation.ServerArgs) error
 	return nil
 }
 
-func (d *DigitalOcean) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
+func (d *DigitalOcean) CreateServer(args automation.ServerArgs) (*automation.ResourceResults, error) {
 	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
 	if err != nil {
 		return nil, err
@@ -170,7 +170,7 @@ func (d *DigitalOcean) CreateServer(args automation.ServerArgs) (*automation.Res
 	}
 	ipv4, _ := droplet.PublicIPv4()
 
-	return &automation.RessourceResults{
+	return &automation.ResourceResults{
 		ID:       strconv.Itoa(droplet.ID),
 		Name:     droplet.Name,
 		Region:   droplet.Region.Slug,
@@ -247,7 +247,7 @@ func (d *DigitalOcean) UploadPlugin(id string, args automation.ServerArgs, plugi
 	return nil
 }
 
-func (d *DigitalOcean) GetServer(id string, _ automation.ServerArgs) (*automation.RessourceResults, error) {
+func (d *DigitalOcean) GetServer(id string, _ automation.ServerArgs) (*automation.ResourceResults, error) {
 	intID, err := strconv.Atoi(id)
 	if err != nil {
 		return nil, err
@@ -257,7 +257,7 @@ func (d *DigitalOcean) GetServer(id string, _ automation.ServerArgs) (*automatio
 		return nil, err
 	}
 	ipv4, _ := droplet.PublicIPv4()
-	return &automation.RessourceResults{
+	return &automation.ResourceResults{
 		ID:       strconv.Itoa(droplet.ID),
 		Name:     droplet.Name,
 		Region:   droplet.Region.Slug,

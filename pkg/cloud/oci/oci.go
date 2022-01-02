@@ -67,7 +67,7 @@ func getTagKeys(tags map[string]string) []string {
 	return keys
 }
 
-func (o *OCI) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
+func (o *OCI) CreateServer(args automation.ServerArgs) (*automation.ResourceResults, error) {
 	ctx := context.Background()
 
 	tenancyOCID, err := common.DefaultConfigProvider().TenancyOCID()
@@ -359,7 +359,7 @@ func (o *OCI) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 		}
 		zap.S().Infow("Oracle get vnic", "vnic", vnic)
 		if *vnic.IsPrimary {
-			return &automation.RessourceResults{
+			return &automation.ResourceResults{
 				ID:       *instance.Id,
 				Name:     *instance.DisplayName,
 				Region:   *instance.Region,
@@ -516,7 +516,7 @@ func (o *OCI) DeleteServer(id string, args automation.ServerArgs) error {
 	return nil
 }
 
-func (o *OCI) ListServer() ([]automation.RessourceResults, error) {
+func (o *OCI) ListServer() ([]automation.ResourceResults, error) {
 	ctx := context.Background()
 	tenancyOCID, err := common.DefaultConfigProvider().TenancyOCID()
 	if err != nil {
@@ -529,7 +529,7 @@ func (o *OCI) ListServer() ([]automation.RessourceResults, error) {
 	if err != nil {
 		return nil, err
 	}
-	var result []automation.RessourceResults
+	var result []automation.ResourceResults
 	for _, compartment := range listCompartments.Items {
 		freeFormTags := compartment.FreeformTags
 		for key := range freeFormTags {
@@ -560,7 +560,7 @@ func (o *OCI) ListServer() ([]automation.RessourceResults, error) {
 						}
 						zap.S().Infow("Oracle get vnic", "vnic", vnic)
 						if *vnic.IsPrimary {
-							result = append(result, automation.RessourceResults{
+							result = append(result, automation.ResourceResults{
 								ID:       *instance.Id,
 								Name:     *instance.DisplayName,
 								Region:   *instance.Region,
@@ -611,7 +611,7 @@ func (o *OCI) UploadPlugin(id string, args automation.ServerArgs, plugin, destin
 	return nil
 }
 
-func (o *OCI) GetServer(id string, args automation.ServerArgs) (*automation.RessourceResults, error) {
+func (o *OCI) GetServer(id string, args automation.ServerArgs) (*automation.ResourceResults, error) {
 	ctx := context.Background()
 	instance, err := o.compute.GetInstance(ctx, core.GetInstanceRequest{
 		InstanceId: common.String(id),
@@ -636,7 +636,7 @@ func (o *OCI) GetServer(id string, args automation.ServerArgs) (*automation.Ress
 		}
 		zap.S().Infow("Oracle get vnic", "vnic", vnic)
 		if *vnic.IsPrimary {
-			return &automation.RessourceResults{
+			return &automation.ResourceResults{
 				ID:       *instance.Id,
 				Name:     *instance.DisplayName,
 				Region:   *instance.Region,

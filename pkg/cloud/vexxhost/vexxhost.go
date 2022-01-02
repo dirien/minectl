@@ -94,7 +94,7 @@ func NewVEXXHOST() (*VEXXHOST, error) {
 }
 
 // CreateServer TODO: https://github.com/dirien/minectl/issues/299
-func (v *VEXXHOST) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) { // nolint: gocyclo
+func (v *VEXXHOST) CreateServer(args automation.ServerArgs) (*automation.ResourceResults, error) { // nolint: gocyclo
 	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
 	if err != nil {
 		return nil, err
@@ -299,7 +299,7 @@ func (v *VEXXHOST) CreateServer(args automation.ServerArgs) (*automation.Ressour
 		return nil, err
 	}
 
-	return &automation.RessourceResults{
+	return &automation.ResourceResults{
 		ID:       server.ID,
 		Name:     server.Name,
 		Region:   v.region,
@@ -520,8 +520,8 @@ func (v *VEXXHOST) getNetworkByName(args automation.ServerArgs) (*networks.Netwo
 	return network, nil
 }
 
-func (v *VEXXHOST) ListServer() ([]automation.RessourceResults, error) {
-	var result []automation.RessourceResults
+func (v *VEXXHOST) ListServer() ([]automation.ResourceResults, error) {
+	var result []automation.ResourceResults
 	pager := servers.List(v.computeClient, servers.ListOpts{})
 	err := pager.EachPage(func(page pagination.Page) (bool, error) {
 		list, err := servers.ExtractServers(page)
@@ -535,7 +535,7 @@ func (v *VEXXHOST) ListServer() ([]automation.RessourceResults, error) {
 					if err != nil {
 						return false, err
 					}
-					result = append(result, automation.RessourceResults{
+					result = append(result, automation.ResourceResults{
 						ID:       i.ID,
 						Name:     i.Name,
 						Region:   v.region,
@@ -588,7 +588,7 @@ func (v *VEXXHOST) UploadPlugin(id string, args automation.ServerArgs, plugin, d
 	return nil
 }
 
-func (v *VEXXHOST) GetServer(id string, _ automation.ServerArgs) (*automation.RessourceResults, error) {
+func (v *VEXXHOST) GetServer(id string, _ automation.ServerArgs) (*automation.ResourceResults, error) {
 	server, err := servers.Get(v.computeClient, id).Extract()
 	if err != nil {
 		return nil, err
@@ -597,7 +597,7 @@ func (v *VEXXHOST) GetServer(id string, _ automation.ServerArgs) (*automation.Re
 	if err != nil {
 		return nil, err
 	}
-	return &automation.RessourceResults{
+	return &automation.ResourceResults{
 		ID:       server.ID,
 		Name:     server.Name,
 		Region:   v.region,

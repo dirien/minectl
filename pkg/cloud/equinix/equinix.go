@@ -35,7 +35,7 @@ func NewEquinix(apiKey, project string) (*Equinix, error) {
 	}, nil
 }
 
-func (e *Equinix) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
+func (e *Equinix) CreateServer(args automation.ServerArgs) (*automation.ResourceResults, error) {
 	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
 	if err != nil {
 		return nil, err
@@ -83,7 +83,7 @@ func (e *Equinix) CreateServer(args automation.ServerArgs) (*automation.Ressourc
 		}
 	}
 
-	return &automation.RessourceResults{
+	return &automation.ResourceResults{
 		ID:       server.ID,
 		Name:     server.Hostname,
 		Region:   server.Metro.Code,
@@ -123,16 +123,16 @@ func (e *Equinix) DeleteServer(id string, args automation.ServerArgs) error {
 	return nil
 }
 
-func (e *Equinix) ListServer() ([]automation.RessourceResults, error) {
+func (e *Equinix) ListServer() ([]automation.ResourceResults, error) {
 	list, _, err := e.client.Devices.List(e.project, &packngo.ListOptions{
 		Search: common.InstanceTag,
 	})
 	if err != nil {
 		return nil, err
 	}
-	var result []automation.RessourceResults
+	var result []automation.ResourceResults
 	for i, server := range list {
-		result = append(result, automation.RessourceResults{
+		result = append(result, automation.ResourceResults{
 			ID:       server.ID,
 			Name:     server.Hostname,
 			Region:   server.Metro.Code,
@@ -186,13 +186,13 @@ func (e *Equinix) UploadPlugin(id string, args automation.ServerArgs, plugin, de
 	return nil
 }
 
-func (e *Equinix) GetServer(id string, _ automation.ServerArgs) (*automation.RessourceResults, error) {
+func (e *Equinix) GetServer(id string, _ automation.ServerArgs) (*automation.ResourceResults, error) {
 	instance, _, err := e.client.Devices.Get(id, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	return &automation.RessourceResults{
+	return &automation.ResourceResults{
 		ID:       instance.ID,
 		Name:     instance.Hostname,
 		Region:   instance.Metro.Code,

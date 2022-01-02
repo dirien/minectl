@@ -46,7 +46,7 @@ func NewLinode(apiToken string) (*Linode, error) {
 	return linode, nil
 }
 
-func (l *Linode) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
+func (l *Linode) CreateServer(args automation.ServerArgs) (*automation.ResourceResults, error) {
 	ubuntuImage := "linode/ubuntu20.04"
 	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
 	if err != nil {
@@ -119,7 +119,7 @@ func (l *Linode) CreateServer(args automation.ServerArgs) (*automation.Ressource
 	if err != nil {
 		return nil, err
 	}
-	return &automation.RessourceResults{
+	return &automation.ResourceResults{
 		ID:       strconv.Itoa(instance.ID),
 		Name:     instance.Label,
 		Region:   instance.Region,
@@ -183,14 +183,14 @@ func (l *Linode) DeleteServer(id string, args automation.ServerArgs) error {
 	return nil
 }
 
-func (l *Linode) ListServer() ([]automation.RessourceResults, error) {
+func (l *Linode) ListServer() ([]automation.ResourceResults, error) {
 	servers, err := l.client.ListInstances(context.Background(), linodego.NewListOptions(0, "{\"tags\":\"minectl\"}"))
 	if err != nil {
 		return nil, err
 	}
-	var result []automation.RessourceResults
+	var result []automation.ResourceResults
 	for _, server := range servers {
-		result = append(result, automation.RessourceResults{
+		result = append(result, automation.ResourceResults{
 			ID:       strconv.Itoa(server.ID),
 			Name:     server.Label,
 			Region:   server.Region,
@@ -235,13 +235,13 @@ func (l *Linode) UploadPlugin(id string, args automation.ServerArgs, plugin, des
 	return nil
 }
 
-func (l *Linode) GetServer(id string, args automation.ServerArgs) (*automation.RessourceResults, error) {
+func (l *Linode) GetServer(id string, args automation.ServerArgs) (*automation.ResourceResults, error) {
 	intID, _ := strconv.Atoi(id)
 	instance, err := l.client.GetInstance(context.Background(), intID)
 	if err != nil {
 		return nil, err
 	}
-	return &automation.RessourceResults{
+	return &automation.ResourceResults{
 		ID:       strconv.Itoa(instance.ID),
 		Name:     instance.Label,
 		Region:   instance.Region,

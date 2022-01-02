@@ -55,8 +55,8 @@ func NewAWS(region, accessKey, secretKey, token string) (*Aws, error) {
 	}, err
 }
 
-func (a *Aws) ListServer() ([]automation.RessourceResults, error) {
-	var result []automation.RessourceResults
+func (a *Aws) ListServer() ([]automation.ResourceResults, error) {
+	var result []automation.ResourceResults
 	var nextToken *string
 
 	for {
@@ -78,7 +78,7 @@ func (a *Aws) ListServer() ([]automation.RessourceResults, error) {
 		for _, r := range instances.Reservations {
 			for _, i := range r.Instances {
 				if *i.State.Name != ec2.InstanceStateNameTerminated {
-					arr := automation.RessourceResults{
+					arr := automation.ResourceResults{
 						ID:     *i.InstanceId,
 						Region: a.region,
 					}
@@ -201,7 +201,7 @@ func addTagSpecifications(args automation.ServerArgs, resourceType string) []*ec
 }
 
 // CreateServer TODO: https://github.com/dirien/minectl/issues/298
-func (a *Aws) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) { // nolint: gocyclo
+func (a *Aws) CreateServer(args automation.ServerArgs) (*automation.ResourceResults, error) { // nolint: gocyclo
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Minute)
 	defer cancel()
 	image, err := a.lookupAMI("ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-20210621")
@@ -350,7 +350,7 @@ func (a *Aws) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 						}
 					}
 
-					return &automation.RessourceResults{
+					return &automation.ResourceResults{
 						ID:       fmt.Sprintf("%s#%s", *i.Reservations[0].Instances[0].InstanceId, *result.SpotInstanceRequests[0].SpotInstanceRequestId),
 						Name:     instanceName,
 						Region:   *a.client.Config.Region,
@@ -417,7 +417,7 @@ func (a *Aws) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 						}
 					}
 
-					return &automation.RessourceResults{
+					return &automation.ResourceResults{
 						ID:       *i.Reservations[0].Instances[0].InstanceId,
 						Name:     instanceName,
 						Region:   *a.client.Config.Region,
@@ -597,7 +597,7 @@ func (a *Aws) UploadPlugin(id string, args automation.ServerArgs, plugin, destin
 	return nil
 }
 
-func (a *Aws) GetServer(id string, _ automation.ServerArgs) (*automation.RessourceResults, error) {
+func (a *Aws) GetServer(id string, _ automation.ServerArgs) (*automation.ResourceResults, error) {
 	ids := strings.Split(id, "#")
 	i, err := a.client.DescribeInstances(&ec2.DescribeInstancesInput{
 		InstanceIds: aws.StringSlice([]string{ids[0]}),
@@ -616,7 +616,7 @@ func (a *Aws) GetServer(id string, _ automation.ServerArgs) (*automation.Ressour
 		}
 	}
 
-	return &automation.RessourceResults{
+	return &automation.ResourceResults{
 		ID:       *i.Reservations[0].Instances[0].InstanceId,
 		Name:     instanceName,
 		Region:   *a.client.Config.Region,

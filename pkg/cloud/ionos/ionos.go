@@ -38,7 +38,7 @@ func NewIONOS(username, password, token string) (*IONOS, error) {
 	}, nil
 }
 
-func (i *IONOS) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
+func (i *IONOS) CreateServer(args automation.ServerArgs) (*automation.ResourceResults, error) {
 	ctx := context.Background()
 
 	datacenters, _, err := i.client.DataCenterApi.DatacentersGet(ctx).Execute()
@@ -161,7 +161,7 @@ func (i *IONOS) CreateServer(args automation.ServerArgs) (*automation.RessourceR
 		return nil, err
 	}
 	ips := *(*server.Entities.Nics.Items)[0].Properties.Ips
-	return &automation.RessourceResults{
+	return &automation.ResourceResults{
 		ID:       *createdDatacenter.GetId(),
 		Name:     *server.Properties.GetName(),
 		Region:   *createdDatacenter.GetProperties().GetLocation(),
@@ -179,9 +179,9 @@ func (i *IONOS) DeleteServer(id string, _ automation.ServerArgs) error {
 	return nil
 }
 
-func (i *IONOS) ListServer() ([]automation.RessourceResults, error) {
+func (i *IONOS) ListServer() ([]automation.ResourceResults, error) {
 	ctx := context.Background()
-	var result []automation.RessourceResults
+	var result []automation.ResourceResults
 	datacenters, _, err := i.client.DataCenterApi.DatacentersGet(ctx).Execute()
 	if err != nil {
 		return nil, err
@@ -198,7 +198,7 @@ func (i *IONOS) ListServer() ([]automation.RessourceResults, error) {
 					return nil, err
 				}
 				ips := *(*server.Entities.Nics.Items)[0].Properties.Ips
-				result = append(result, automation.RessourceResults{
+				result = append(result, automation.ResourceResults{
 					ID:       *datacenter.GetId(),
 					Name:     *server.Properties.GetName(),
 					Region:   *datacenter.GetProperties().GetLocation(),
@@ -245,7 +245,7 @@ func (i *IONOS) UploadPlugin(id string, args automation.ServerArgs, plugin, dest
 	return nil
 }
 
-func (i *IONOS) GetServer(id string, _ automation.ServerArgs) (*automation.RessourceResults, error) {
+func (i *IONOS) GetServer(id string, _ automation.ServerArgs) (*automation.ResourceResults, error) {
 	ctx := context.Background()
 	datacenter, _, err := i.client.DataCenterApi.DatacentersFindById(ctx, id).Execute()
 	if err != nil {
@@ -263,7 +263,7 @@ func (i *IONOS) GetServer(id string, _ automation.ServerArgs) (*automation.Resso
 		}
 		ips := *(*server.Entities.Nics.Items)[0].Properties.Ips
 		if len(ips) > 0 {
-			return &automation.RessourceResults{
+			return &automation.ResourceResults{
 				ID:       *datacenter.GetId(),
 				Name:     *server.Properties.GetName(),
 				Region:   *datacenter.GetProperties().GetLocation(),

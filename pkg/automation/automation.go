@@ -3,12 +3,12 @@ package automation
 import "github.com/minectl/pkg/model"
 
 type Automation interface {
-	CreateServer(args ServerArgs) (*RessourceResults, error)
+	CreateServer(args ServerArgs) (*ResourceResults, error)
 	DeleteServer(id string, args ServerArgs) error
-	ListServer() ([]RessourceResults, error)
+	ListServer() ([]ResourceResults, error)
 	UpdateServer(id string, args ServerArgs) error
 	UploadPlugin(id string, args ServerArgs, plugin, destination string) error
-	GetServer(id string, args ServerArgs) (*RessourceResults, error)
+	GetServer(id string, args ServerArgs) (*ResourceResults, error)
 }
 
 type Rcon struct {
@@ -23,7 +23,7 @@ type ServerArgs struct {
 	MinecraftResource *model.MinecraftResource
 }
 
-type RessourceResults struct {
+type ResourceResults struct {
 	ID       string
 	Name     string
 	Region   string

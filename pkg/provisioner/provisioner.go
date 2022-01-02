@@ -73,16 +73,16 @@ type MinectlProvisioner struct {
 }
 
 type Provisioner interface {
-	CreateServer(wait bool) (*automation.RessourceResults, error)
+	CreateServer(wait bool) (*automation.ResourceResults, error)
 	DeleteServer() error
 	UpdateServer() error
 	UploadPlugin(plugin, destination string) error
-	ListServer() ([]automation.RessourceResults, error)
-	GetServer() (*automation.RessourceResults, error)
+	ListServer() ([]automation.ResourceResults, error)
+	GetServer() (*automation.ResourceResults, error)
 	DoRCON() error
 }
 
-func (p *MinectlProvisioner) GetServer() (*automation.RessourceResults, error) {
+func (p *MinectlProvisioner) GetServer() (*automation.ResourceResults, error) {
 	return p.auto.GetServer(p.args.ID, p.args)
 }
 
@@ -118,7 +118,7 @@ func (p *MinectlProvisioner) UpdateServer() error {
 }
 
 // wait that server is ready... Currently, on for Java based Editions (TCP), as Bedrock is UDP
-func (p *MinectlProvisioner) waitForMinecraftServerReady(server *automation.RessourceResults) error {
+func (p *MinectlProvisioner) waitForMinecraftServerReady(server *automation.ResourceResults) error {
 	if p.args.MinecraftResource.GetEdition() != "bedrock" && p.args.MinecraftResource.GetEdition() != "nukkit" && p.args.MinecraftResource.GetEdition() != "powernukkit" {
 		indicator := progress.NewIndicator(minecraftServerStartingTitle, p.logging)
 		defer indicator.StopE(nil)
@@ -146,7 +146,7 @@ func (p *MinectlProvisioner) waitForMinecraftServerReady(server *automation.Ress
 	return nil
 }
 
-func (p *MinectlProvisioner) CreateServer(wait bool) (*automation.RessourceResults, error) {
+func (p *MinectlProvisioner) CreateServer(wait bool) (*automation.ResourceResults, error) {
 	indicator := progress.NewIndicator(fmt.Sprintf(minecraftServerCreatingTitle, common.Green(p.args.MinecraftResource.GetName())), p.logging)
 	indicator.FinalMessage = fmt.Sprintf(minecraftServerCreateTitle, common.Green(p.args.MinecraftResource.GetName()))
 	indicator.ErrorMessage = fmt.Sprintf(minecraftServerNotCreateTitle, common.Green(p.args.MinecraftResource.GetName()))
@@ -166,7 +166,7 @@ func (p *MinectlProvisioner) CreateServer(wait bool) (*automation.RessourceResul
 	return server, err
 }
 
-func (p *MinectlProvisioner) ListServer() ([]automation.RessourceResults, error) {
+func (p *MinectlProvisioner) ListServer() ([]automation.ResourceResults, error) {
 	return p.auto.ListServer()
 }
 
