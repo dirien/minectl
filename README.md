@@ -26,6 +26,7 @@
     - [Minecraft Server Versions 📚](#minecraft-server-versions-)
     - [Minecraft Proxy Versions 📚](#minecraft-proxy-versions-)
     - [Server Configs 📋](#server-configs-)
+        * [Spot (Preemptible) Instances](#spot-preemptible-instances)
         * [MinecraftProxy Config 📡](#minecraftproxy-config-)
         * [MinecraftServer Config 🕹](#mincraftserver-config-)
     - [EULA ⚖️️](#eula-)
