@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/minectl/pkg/provisioner"
+	"github.com/minectl/internal/provisioner"
 	"github.com/olekukonko/tablewriter"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"

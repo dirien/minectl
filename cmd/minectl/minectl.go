@@ -15,7 +15,7 @@ import (
 	"github.com/Azure/go-autorest/autorest/to"
 	"go.uber.org/zap"
 
-	"github.com/minectl/pkg/logging"
+	"github.com/minectl/internal/logging"
 
 	"github.com/blang/semver/v4"
 	"github.com/morikuni/aec"
