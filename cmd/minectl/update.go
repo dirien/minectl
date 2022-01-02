@@ -1,7 +1,7 @@
 package minectl
 
 import (
-	"github.com/minectl/pkg/provisioner"
+	"github.com/minectl/internal/provisioner"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
