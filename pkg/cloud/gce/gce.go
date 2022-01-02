@@ -73,7 +73,7 @@ func NewGCE(keyfile, zone string) (*GCE, error) {
 	}, nil
 }
 
-func (g *GCE) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
+func (g *GCE) CreateServer(args automation.ServerArgs) (*automation.ResourceResults, error) {
 	imageURL := "projects/ubuntu-os-cloud/global/images/ubuntu-2004-focal-v20210720"
 
 	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
@@ -241,7 +241,7 @@ func (g *GCE) CreateServer(args automation.ServerArgs) (*automation.RessourceRes
 	if len(instanceListOp.Items) == 1 {
 		instance := instanceListOp.Items[0]
 		ip := instance.NetworkInterfaces[0].AccessConfigs[0].NatIP
-		return &automation.RessourceResults{
+		return &automation.ResourceResults{
 			ID:       strconv.Itoa(int(instance.Id)),
 			Name:     instance.Name,
 			Region:   instance.Zone,
@@ -326,16 +326,16 @@ func (g *GCE) DeleteServer(id string, args automation.ServerArgs) error {
 	return nil
 }
 
-func (g *GCE) ListServer() ([]automation.RessourceResults, error) {
+func (g *GCE) ListServer() ([]automation.ResourceResults, error) {
 	instanceListOp, err := g.client.Instances.List(g.projectID, g.zone).
 		Filter(fmt.Sprintf("(labels.%s=true)", common.InstanceTag)).
 		Context(context.Background()).Do()
 	if err != nil {
 		return nil, err
 	}
-	var result []automation.RessourceResults
+	var result []automation.ResourceResults
 	for _, instance := range instanceListOp.Items {
-		result = append(result, automation.RessourceResults{
+		result = append(result, automation.ResourceResults{
 			ID:       strconv.Itoa(int(instance.Id)),
 			Name:     instance.Name,
 			Region:   instance.Zone,
@@ -393,7 +393,7 @@ func (g *GCE) UploadPlugin(id string, args automation.ServerArgs, plugin, destin
 	return nil
 }
 
-func (g *GCE) GetServer(id string, args automation.ServerArgs) (*automation.RessourceResults, error) {
+func (g *GCE) GetServer(id string, args automation.ServerArgs) (*automation.ResourceResults, error) {
 	instancesListOp, err := g.client.Instances.List(g.projectID, args.MinecraftResource.GetRegion()).
 		Filter(fmt.Sprintf("(id=%s)", id)).
 		Context(context.Background()).
@@ -404,7 +404,7 @@ func (g *GCE) GetServer(id string, args automation.ServerArgs) (*automation.Ress
 	if len(instancesListOp.Items) == 1 {
 		instance := instancesListOp.Items[0]
 		ip := instance.NetworkInterfaces[0].AccessConfigs[0].NatIP
-		return &automation.RessourceResults{
+		return &automation.ResourceResults{
 			ID:       strconv.Itoa(int(instance.Id)),
 			Name:     instance.Name,
 			Region:   instance.Zone,

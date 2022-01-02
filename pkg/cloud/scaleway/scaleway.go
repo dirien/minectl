@@ -48,7 +48,7 @@ func NewScaleway(accessKey, secretKey, organizationID, region string) (*Scaleway
 	}, nil
 }
 
-func (s *Scaleway) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
+func (s *Scaleway) CreateServer(args automation.ServerArgs) (*automation.ResourceResults, error) {
 	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
 	if err != nil {
 		return nil, err
@@ -120,7 +120,7 @@ func (s *Scaleway) CreateServer(args automation.ServerArgs) (*automation.Ressour
 		return nil, err
 	}
 
-	return &automation.RessourceResults{
+	return &automation.ResourceResults{
 		ID:       server.Server.ID,
 		Name:     server.Server.Name,
 		Region:   server.Server.Zone.String(),
@@ -176,16 +176,16 @@ func (s *Scaleway) DeleteServer(id string, args automation.ServerArgs) error {
 	return nil
 }
 
-func (s *Scaleway) ListServer() ([]automation.RessourceResults, error) {
+func (s *Scaleway) ListServer() ([]automation.ResourceResults, error) {
 	servers, err := s.instanceAPI.ListServers(&instance.ListServersRequest{
 		Tags: []string{common.InstanceTag},
 	})
 	if err != nil {
 		return nil, err
 	}
-	var result []automation.RessourceResults
+	var result []automation.ResourceResults
 	for _, server := range servers.Servers {
-		result = append(result, automation.RessourceResults{
+		result = append(result, automation.ResourceResults{
 			ID:       server.ID,
 			PublicIP: server.PublicIP.Address.String(),
 			Name:     server.Name,
@@ -232,14 +232,14 @@ func (s *Scaleway) UploadPlugin(id string, args automation.ServerArgs, plugin, d
 	return nil
 }
 
-func (s *Scaleway) GetServer(id string, args automation.ServerArgs) (*automation.RessourceResults, error) {
+func (s *Scaleway) GetServer(id string, args automation.ServerArgs) (*automation.ResourceResults, error) {
 	instance, err := s.instanceAPI.GetServer(&instance.GetServerRequest{
 		ServerID: id,
 	})
 	if err != nil {
 		return nil, err
 	}
-	return &automation.RessourceResults{
+	return &automation.ResourceResults{
 		ID:       instance.Server.ID,
 		Name:     instance.Server.Name,
 		Region:   instance.Server.Zone.String(),

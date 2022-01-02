@@ -78,7 +78,7 @@ func getTagKeys(tags map[string]*string) []string {
 	return keys
 }
 
-func (a *Azure) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
+func (a *Azure) CreateServer(args automation.ServerArgs) (*automation.ResourceResults, error) {
 	groupsClient := resources.NewGroupsClient(a.subscriptionID)
 	groupsClient.Authorizer = a.authorizer
 
@@ -355,7 +355,7 @@ func (a *Azure) CreateServer(args automation.ServerArgs) (*automation.RessourceR
 	}
 	zap.S().Infow("Azure virtual machine started", "name", instance.Name, "ip", ip.IPAddress, "id", instance.Name)
 
-	return &automation.RessourceResults{
+	return &automation.ResourceResults{
 		ID:       to.String(instance.Name),
 		Name:     to.String(instance.Name),
 		Region:   to.String(group.Location),
@@ -381,7 +381,7 @@ func (a *Azure) DeleteServer(id string, args automation.ServerArgs) error {
 	return nil
 }
 
-func (a *Azure) ListServer() ([]automation.RessourceResults, error) {
+func (a *Azure) ListServer() ([]automation.ResourceResults, error) {
 	vmClient := compute.NewVirtualMachinesClient(a.subscriptionID)
 	vmClient.Authorizer = a.authorizer
 	virtualMachineListResultPage, err := vmClient.ListAll(
@@ -389,7 +389,7 @@ func (a *Azure) ListServer() ([]automation.RessourceResults, error) {
 	if err != nil {
 		return nil, err
 	}
-	var result []automation.RessourceResults
+	var result []automation.ResourceResults
 	for _, instance := range virtualMachineListResultPage.Values() {
 		for key := range instance.Tags {
 			if key == common.InstanceTag {
@@ -403,7 +403,7 @@ func (a *Azure) ListServer() ([]automation.RessourceResults, error) {
 				if err != nil {
 					return nil, err
 				}
-				result = append(result, automation.RessourceResults{
+				result = append(result, automation.ResourceResults{
 					ID:       to.String(instance.Name),
 					Name:     to.String(instance.Name),
 					Region:   to.String(instance.Location),
@@ -456,7 +456,7 @@ func (a *Azure) UploadPlugin(id string, args automation.ServerArgs, plugin, dest
 	return nil
 }
 
-func (a *Azure) GetServer(id string, args automation.ServerArgs) (*automation.RessourceResults, error) {
+func (a *Azure) GetServer(id string, args automation.ServerArgs) (*automation.ResourceResults, error) {
 	vmClient := compute.NewVirtualMachinesClient(a.subscriptionID)
 	vmClient.Authorizer = a.authorizer
 
@@ -481,7 +481,7 @@ func (a *Azure) GetServer(id string, args automation.ServerArgs) (*automation.Re
 		return nil, err
 	}
 	zap.S().Infow("Get Azure minctl server", "name", instance.Name, "ip", publicIPAddress.IPAddress)
-	return &automation.RessourceResults{
+	return &automation.ResourceResults{
 		ID:       to.String(instance.Name),
 		Name:     to.String(instance.Name),
 		Region:   args.MinecraftResource.GetRegion(),

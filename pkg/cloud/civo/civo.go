@@ -38,7 +38,7 @@ func NewCivo(apiKey, region string) (*Civo, error) {
 	return do, nil
 }
 
-func (c *Civo) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
+func (c *Civo) CreateServer(args automation.ServerArgs) (*automation.ResourceResults, error) {
 	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
 	if err != nil {
 		return nil, err
@@ -131,7 +131,7 @@ func (c *Civo) CreateServer(args automation.ServerArgs) (*automation.RessourceRe
 	if len(instance.Region) > 0 {
 		region = instance.Region
 	}
-	return &automation.RessourceResults{
+	return &automation.ResourceResults{
 		ID:       instance.ID,
 		Name:     instance.Hostname,
 		Region:   region,
@@ -169,8 +169,8 @@ func (c *Civo) DeleteServer(id string, args automation.ServerArgs) error {
 	return nil
 }
 
-func (c *Civo) ListServer() ([]automation.RessourceResults, error) {
-	var result []automation.RessourceResults
+func (c *Civo) ListServer() ([]automation.ResourceResults, error) {
+	var result []automation.ResourceResults
 	instances, err := c.client.ListAllInstances()
 	if err != nil {
 		return nil, err
@@ -183,7 +183,7 @@ func (c *Civo) ListServer() ([]automation.RessourceResults, error) {
 					if len(instance.Region) > 0 {
 						region = instance.Region
 					}
-					result = append(result, automation.RessourceResults{
+					result = append(result, automation.ResourceResults{
 						ID:       instance.ID,
 						PublicIP: instance.PublicIP,
 						Name:     instance.Hostname,
@@ -236,7 +236,7 @@ func (c *Civo) UploadPlugin(id string, args automation.ServerArgs, plugin, desti
 	return nil
 }
 
-func (c *Civo) GetServer(id string, _ automation.ServerArgs) (*automation.RessourceResults, error) {
+func (c *Civo) GetServer(id string, _ automation.ServerArgs) (*automation.ResourceResults, error) {
 	instance, err := c.client.GetInstance(id)
 	if err != nil {
 		return nil, err
@@ -245,7 +245,7 @@ func (c *Civo) GetServer(id string, _ automation.ServerArgs) (*automation.Ressou
 	if len(instance.Region) > 0 {
 		region = instance.Region
 	}
-	return &automation.RessourceResults{
+	return &automation.ResourceResults{
 		ID:       instance.ID,
 		Name:     instance.Hostname,
 		Region:   region,

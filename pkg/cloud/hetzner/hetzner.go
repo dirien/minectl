@@ -35,7 +35,7 @@ func NewHetzner(apiKey string) (*Hetzner, error) {
 	return hetzner, nil
 }
 
-func (h *Hetzner) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
+func (h *Hetzner) CreateServer(args automation.ServerArgs) (*automation.ResourceResults, error) {
 	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
 	if err != nil {
 		return nil, err
@@ -114,7 +114,7 @@ func (h *Hetzner) CreateServer(args automation.ServerArgs) (*automation.Ressourc
 			time.Sleep(2 * time.Second)
 		}
 	}
-	return &automation.RessourceResults{
+	return &automation.ResourceResults{
 		ID:       strconv.Itoa(server.ID),
 		Name:     server.Name,
 		Region:   server.Datacenter.Location.Name,
@@ -181,16 +181,16 @@ func hetznerLabelsToTags(label map[string]string) string {
 	return strings.Join(tags, ",")
 }
 
-func (h *Hetzner) ListServer() ([]automation.RessourceResults, error) {
+func (h *Hetzner) ListServer() ([]automation.ResourceResults, error) {
 	servers, err := h.client.Server.All(context.Background())
 	if err != nil {
 		return nil, err
 	}
-	var result []automation.RessourceResults
+	var result []automation.ResourceResults
 	for _, server := range servers {
 		for key := range server.Labels {
 			if key == common.InstanceTag {
-				result = append(result, automation.RessourceResults{
+				result = append(result, automation.ResourceResults{
 					ID:       strconv.Itoa(server.ID),
 					Name:     server.Name,
 					Region:   server.Datacenter.Location.Name,
@@ -237,13 +237,13 @@ func (h *Hetzner) UploadPlugin(id string, args automation.ServerArgs, plugin, de
 	return nil
 }
 
-func (h *Hetzner) GetServer(id string, args automation.ServerArgs) (*automation.RessourceResults, error) {
+func (h *Hetzner) GetServer(id string, args automation.ServerArgs) (*automation.ResourceResults, error) {
 	intID, _ := strconv.Atoi(id)
 	instance, _, err := h.client.Server.GetByID(context.Background(), intID)
 	if err != nil {
 		return nil, err
 	}
-	return &automation.RessourceResults{
+	return &automation.ResourceResults{
 		ID:       strconv.Itoa(instance.ID),
 		Name:     instance.Name,
 		Region:   instance.Datacenter.Location.Name,

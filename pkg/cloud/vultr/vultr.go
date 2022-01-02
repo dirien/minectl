@@ -38,7 +38,7 @@ func NewVultr(apiKey string) (*Vultr, error) {
 	return vultr, nil
 }
 
-func (v *Vultr) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
+func (v *Vultr) CreateServer(args automation.ServerArgs) (*automation.ResourceResults, error) {
 	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
 	if err != nil {
 		return nil, err
@@ -94,7 +94,7 @@ func (v *Vultr) CreateServer(args automation.ServerArgs) (*automation.RessourceR
 			time.Sleep(2 * time.Second)
 		}
 	}
-	return &automation.RessourceResults{
+	return &automation.ResourceResults{
 		ID:       instance.ID,
 		Name:     instance.Label,
 		Region:   instance.Region,
@@ -124,15 +124,15 @@ func (v *Vultr) DeleteServer(id string, args automation.ServerArgs) error {
 	return nil
 }
 
-func (v *Vultr) ListServer() ([]automation.RessourceResults, error) {
+func (v *Vultr) ListServer() ([]automation.ResourceResults, error) {
 	instances, _, err := v.client.Instance.List(context.Background(), nil)
 	if err != nil {
 		return nil, err
 	}
-	var result []automation.RessourceResults
+	var result []automation.ResourceResults
 	for _, instance := range instances {
 		if strings.Contains(instance.Tag, common.InstanceTag) {
-			result = append(result, automation.RessourceResults{
+			result = append(result, automation.ResourceResults{
 				ID:       instance.ID,
 				PublicIP: instance.MainIP,
 				Name:     instance.Label,
@@ -175,13 +175,13 @@ func (v *Vultr) UploadPlugin(id string, args automation.ServerArgs, plugin, dest
 	return nil
 }
 
-func (v *Vultr) GetServer(id string, _ automation.ServerArgs) (*automation.RessourceResults, error) {
+func (v *Vultr) GetServer(id string, _ automation.ServerArgs) (*automation.ResourceResults, error) {
 	instance, err := v.client.Instance.Get(context.Background(), id)
 	if err != nil {
 		return nil, err
 	}
 
-	return &automation.RessourceResults{
+	return &automation.ResourceResults{
 		ID:       instance.ID,
 		Name:     instance.Label,
 		Region:   instance.Region,

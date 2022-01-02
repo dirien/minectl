@@ -52,7 +52,7 @@ func getOVHFieldsFromID(id string) (label string, err error) {
 	return label, nil
 }
 
-func (o *OVHcloud) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
+func (o *OVHcloud) CreateServer(args automation.ServerArgs) (*automation.ResourceResults, error) {
 	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
 	if err != nil {
 		return nil, err
@@ -163,7 +163,7 @@ func (o *OVHcloud) CreateServer(args automation.ServerArgs) (*automation.Ressour
 	if err != nil {
 		return nil, err
 	}
-	return &automation.RessourceResults{
+	return &automation.ResourceResults{
 		ID:       instance.ID,
 		Name:     instance.Name,
 		Region:   instance.Region,
@@ -224,12 +224,12 @@ func (o *OVHcloud) DeleteServer(id string, args automation.ServerArgs) error {
 	return nil
 }
 
-func (o *OVHcloud) ListServer() ([]automation.RessourceResults, error) {
+func (o *OVHcloud) ListServer() ([]automation.ResourceResults, error) {
 	instances, err := o.client.ListInstance(context.Background())
 	if err != nil {
 		return nil, err
 	}
-	var result []automation.RessourceResults
+	var result []automation.ResourceResults
 	for i, instance := range instances {
 		// no error checking. could be server in the region which don't belong to minectl
 		labels, _ := getOVHFieldsFromID(instance.Name)
@@ -238,7 +238,7 @@ func (o *OVHcloud) ListServer() ([]automation.RessourceResults, error) {
 			if err != nil {
 				return nil, err
 			}
-			result = append(result, automation.RessourceResults{
+			result = append(result, automation.ResourceResults{
 				ID:       instance.ID,
 				Name:     instance.Name,
 				Region:   instance.Region,
@@ -293,7 +293,7 @@ func (o *OVHcloud) UploadPlugin(id string, args automation.ServerArgs, plugin, d
 	return nil
 }
 
-func (o *OVHcloud) GetServer(id string, args automation.ServerArgs) (*automation.RessourceResults, error) {
+func (o *OVHcloud) GetServer(id string, args automation.ServerArgs) (*automation.ResourceResults, error) {
 	instance, err := o.client.GetInstance(context.Background(), id)
 	if err != nil {
 		return nil, err
@@ -307,7 +307,7 @@ func (o *OVHcloud) GetServer(id string, args automation.ServerArgs) (*automation
 	if err != nil {
 		return nil, err
 	}
-	return &automation.RessourceResults{
+	return &automation.ResourceResults{
 		ID:       instance.ID,
 		Name:     instance.Name,
 		Region:   instance.Region,
