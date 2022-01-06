@@ -64,7 +64,7 @@ func (i *IONOS) CreateServer(args automation.ServerArgs) (*automation.ResourceRe
 	if err != nil {
 		return nil, err
 	}
-	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
+	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSHKeyFolder()))
 	if err != nil {
 		return nil, err
 	}
@@ -217,7 +217,7 @@ func (i *IONOS) UpdateServer(id string, args automation.ServerArgs) error {
 	if err != nil {
 		return err
 	}
-	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSH(), server.PublicIP, "ubuntu")
+	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSHKeyFolder(), server.PublicIP, "ubuntu")
 	err = remoteCommand.UpdateServer(args.MinecraftResource)
 	if err != nil {
 		return err
@@ -232,12 +232,12 @@ func (i *IONOS) UploadPlugin(id string, args automation.ServerArgs, plugin, dest
 		return err
 	}
 
-	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSH(), server.PublicIP, "ubuntu")
-	err = remoteCommand.TransferFile(plugin, filepath.Join(destination, filepath.Base(plugin)))
+	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSHKeyFolder(), server.PublicIP, "ubuntu")
+	err = remoteCommand.TransferFile(plugin, filepath.Join(destination, filepath.Base(plugin)), args.MinecraftResource.GetSSHPort())
 	if err != nil {
 		return err
 	}
-	_, err = remoteCommand.ExecuteCommand("systemctl restart minecraft.service")
+	_, err = remoteCommand.ExecuteCommand("systemctl restart minecraft.service", args.MinecraftResource.GetSSHPort())
 	if err != nil {
 		return err
 	}

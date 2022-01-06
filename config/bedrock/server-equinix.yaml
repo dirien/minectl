@@ -7,7 +7,12 @@ spec:
     cloud: equinix
     region: fr
     size: c3.small.x86
-    ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft-be"
+    ssh:
+      port: 22
+      keyfolder: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft-be"
+      fail2ban:
+        bantime: 1000
+        maxretry: 3
     port: 19132
   minecraft:
     edition: bedrock

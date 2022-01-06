@@ -53,7 +53,7 @@ func getOVHFieldsFromID(id string) (label string, err error) {
 }
 
 func (o *OVHcloud) CreateServer(args automation.ServerArgs) (*automation.ResourceResults, error) {
-	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
+	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSHKeyFolder()))
 	if err != nil {
 		return nil, err
 	}
@@ -260,7 +260,7 @@ func (o *OVHcloud) UpdateServer(id string, args automation.ServerArgs) error {
 	if err != nil {
 		return err
 	}
-	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSH(), ip4, "ubuntu")
+	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSHKeyFolder(), ip4, "ubuntu")
 	err = remoteCommand.UpdateServer(args.MinecraftResource)
 	if err != nil {
 		return err
@@ -278,15 +278,15 @@ func (o *OVHcloud) UploadPlugin(id string, args automation.ServerArgs, plugin, d
 	if err != nil {
 		return err
 	}
-	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSH(), ip4, "ubuntu")
+	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSHKeyFolder(), ip4, "ubuntu")
 
 	// as we are not allowed to login via root user, we need to add sudo to the command
 	source := filepath.Join("/tmp", filepath.Base(plugin))
-	err = remoteCommand.TransferFile(plugin, source)
+	err = remoteCommand.TransferFile(plugin, source, args.MinecraftResource.GetSSHPort())
 	if err != nil {
 		return err
 	}
-	_, err = remoteCommand.ExecuteCommand(fmt.Sprintf("sudo mv %s %s\nsudo systemctl restart minecraft.service", source, destination))
+	_, err = remoteCommand.ExecuteCommand(fmt.Sprintf("sudo mv %s %s\nsudo systemctl restart minecraft.service", source, destination), args.MinecraftResource.GetSSHPort())
 	if err != nil {
 		return err
 	}

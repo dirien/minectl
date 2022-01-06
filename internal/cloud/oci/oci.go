@@ -197,6 +197,21 @@ func (o *OCI) CreateServer(args automation.ServerArgs) (*automation.ResourceResu
 		})
 		zap.S().Info("Oracle Prometheus ingress security ruleset created")
 	}
+	if args.MinecraftResource.GetSSHPort() != 22 {
+		ingressSecurityRules = append(ingressSecurityRules, core.IngressSecurityRule{
+			Description: common.String("Non Standard SSH Port"),
+			Protocol:    common.String("6"),
+			IsStateless: common.Bool(true),
+			Source:      common.String("0.0.0.0/0"),
+			TcpOptions: &core.TcpOptions{
+				DestinationPortRange: &core.PortRange{
+					Max: common.Int(args.MinecraftResource.GetSSHPort()),
+					Min: common.Int(args.MinecraftResource.GetSSHPort()),
+				},
+			},
+		})
+		zap.S().Info("Oracle Prometheus ingress security ruleset created")
+	}
 
 	securityListRequest := core.CreateSecurityListRequest{
 		CreateSecurityListDetails: core.CreateSecurityListDetails{
@@ -285,7 +300,7 @@ func (o *OCI) CreateServer(args automation.ServerArgs) (*automation.ResourceResu
 	if err != nil {
 		return nil, err
 	}
-	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
+	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSHKeyFolder()))
 	if err != nil {
 		return nil, err
 	}
@@ -581,7 +596,7 @@ func (o *OCI) UpdateServer(id string, args automation.ServerArgs) error {
 	if err != nil {
 		return err
 	}
-	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSH(), server.PublicIP, "ubuntu")
+	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSHKeyFolder(), server.PublicIP, "ubuntu")
 	err = remoteCommand.UpdateServer(args.MinecraftResource)
 	if err != nil {
 		return err
@@ -595,15 +610,15 @@ func (o *OCI) UploadPlugin(id string, args automation.ServerArgs, plugin, destin
 	if err != nil {
 		return err
 	}
-	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSH(), server.PublicIP, "ubuntu")
+	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSHKeyFolder(), server.PublicIP, "ubuntu")
 
 	// as we are not allowed to login via root user, we need to add sudo to the command
 	source := filepath.Join("/tmp", filepath.Base(plugin))
-	err = remoteCommand.TransferFile(plugin, source)
+	err = remoteCommand.TransferFile(plugin, source, args.MinecraftResource.GetSSHPort())
 	if err != nil {
 		return err
 	}
-	_, err = remoteCommand.ExecuteCommand(fmt.Sprintf("sudo mv %s %s\nsudo systemctl restart minecraft.service", source, destination))
+	_, err = remoteCommand.ExecuteCommand(fmt.Sprintf("sudo mv %s %s\nsudo systemctl restart minecraft.service", source, destination), args.MinecraftResource.GetSSHPort())
 	if err != nil {
 		return err
 	}

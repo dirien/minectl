@@ -1,5 +1,5 @@
 {{- define "config" -}}
-apiVersion: ediri.io/minectl/v1alpha1
+apiVersion: minectl.ediri.io/v1alpha1
 kind: MinecraftServer
 metadata:
   name: {{ .Name }}
@@ -16,7 +16,12 @@ spec:
     cloud: {{ .Provider }}
     region: {{ .Region }}
     size: {{ .Plan }}
-    ssh: {{ .SSH }}
+    ssh:
+      port: {{ .SSHPort }}
+      keyfolder: {{ .SSH }}
+      fail2ban:
+        bantime: {{ .BanTime }}
+        maxretry: {{ .MaxRetry }}
     port: {{ if and (ne .Edition "bedrock") (ne .Edition "nukkit") (ne .Edition "powernukkit") }}25565{{ else }}19132{{ end }}
   minecraft:
 {{- if ne .Edition "bedrock" }}

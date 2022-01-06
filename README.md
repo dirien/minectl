@@ -40,6 +40,7 @@
     - [Monitoring 📊](#monitoring-)
     - [Volumes 💽](#volumes-)
     - [Headless Mode 👻](#headless-mode-)
+    - [Security 🔒](#security-)
     - [Getting Started 🎫](#getting-started-)
 + [Known Limitation 😵](#known-limitation-)
 + [Contributing 🤝](#contributing-)
@@ -431,7 +432,12 @@ spec:
     cloud: <cloud provider name civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci|ionos|aws|vexxhost|multipass>
     region: <cloud provider region>
     size: <cloud provider plan>
-    ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft"
+    ssh:
+      port: 22 | or your custom port
+      keyfolder: "<path to ssh public and private key>/ssh"
+      fail2ban:
+        bantime: "<ban time in seconds>"
+        maxretry: "<max retry>"
     port: <server port>
     spot: <true |false>
   proxy:
@@ -448,7 +454,7 @@ spec:
         port: <RCON server port >
         enabled: <RCON enabled true|false>
         broadcast: <RCON broadcase true|false
-    type: "bungeecord|waterfall"
+    type: "bungeecord|waterfall|velocity"
     version: <version>
 ```
 
@@ -469,7 +475,12 @@ spec:
     region: "region see cloud provider for details eg. fra1"
     size: "see cloud provider docs for details eg. g3.large"
     volumeSize: 100
-    ssh: "<path to ssh public and private key>/ssh"
+    ssh:
+      port: 22 | or your custom port
+      keyfolder: "<path to ssh public and private key>/ssh"
+      fail2ban:
+        bantime: "<ban time in seconds>"
+        maxretry: "<max retry>"
     port: "25565|19132 are the defaults for tcp/udp"
     spot: <true |false>
   minecraft:
@@ -741,7 +752,12 @@ spec:
     region: eu-central
     size: g6-standard-4
     volumeSize: 100
-    ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft"
+    ssh:
+      port: 22 | or your custom port
+      keyfolder: "<path to ssh public and private key>/ssh"
+      fail2ban:
+        bantime: "<ban time in seconds>"
+        maxretry: "<max retry>"
     port: 25565
   minecraft:
 ...
@@ -754,6 +770,24 @@ very helpful, if you want to run `minectl 🗺` in workflow.
 
 The flag `verbose` sets the level of logging and with `log-encoding` you can decide between `json` and `console` as
 encoding format.
+
+#### Security 🔒
+
+##### SSH Port
+
+Now you can use the `port` property under the `ssh` object, to define the SSH port of the server. Per default, the SSH
+port is 22. This helps a lot, to avoid hackers to bruteforce your server.
+
+##### SSH Key
+
+With the `keyfolder` property, you can define the location of your SSH public and private key on your local machine.
+
+##### Fail2Ban
+
+Fail2Ban is an intrusion prevention software framework that protects computer servers from brute-force attacks. With the
+property `bantime` you can define the ban time in seconds. With the property `maxretry` you can define the max retry.
+
+If `maxretry` is reached, the IP is banned for the defined time (`bantime`).
 
 #### Getting Started 🎫
 

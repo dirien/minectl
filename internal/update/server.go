@@ -79,14 +79,14 @@ ls -la
 sudo systemctl start minecraft.service
 	`
 	zap.S().Infof("server updated cmd %s", cmd)
-	_, err = r.ExecuteCommand(strings.TrimSpace(cmd))
+	_, err = r.ExecuteCommand(strings.TrimSpace(cmd), args.GetSSHPort())
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (r *RemoteServer) TransferFile(src, dstPath string) error {
+func (r *RemoteServer) TransferFile(src, dstPath string, port int) error {
 	auth, err := goph.Key(r.privateSSHKey, "")
 	if err != nil {
 		return err
@@ -95,7 +95,7 @@ func (r *RemoteServer) TransferFile(src, dstPath string) error {
 	client, err := goph.NewConn(&goph.Config{
 		User:     r.user,
 		Addr:     r.ip,
-		Port:     22,
+		Port:     uint(port),
 		Auth:     auth,
 		Callback: ssh.InsecureIgnoreHostKey(), //nolint:gosec
 	})
@@ -111,7 +111,7 @@ func (r *RemoteServer) TransferFile(src, dstPath string) error {
 	return nil
 }
 
-func (r *RemoteServer) ExecuteCommand(cmd string) (string, error) {
+func (r *RemoteServer) ExecuteCommand(cmd string, port int) (string, error) {
 	auth, err := goph.Key(r.privateSSHKey, "")
 	if err != nil {
 		return "", err
@@ -119,7 +119,7 @@ func (r *RemoteServer) ExecuteCommand(cmd string) (string, error) {
 	client, err := goph.NewConn(&goph.Config{
 		User:     r.user,
 		Addr:     r.ip,
-		Port:     22,
+		Port:     uint(port),
 		Auth:     auth,
 		Callback: ssh.InsecureIgnoreHostKey(), //nolint:gosec
 	})

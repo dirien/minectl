@@ -82,7 +82,7 @@ func (d *DigitalOcean) UpdateServer(id string, args automation.ServerArgs) error
 		return err
 	}
 	ipv4, _ := droplet.PublicIPv4()
-	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSH(), ipv4, "root")
+	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSHKeyFolder(), ipv4, "root")
 	err = remoteCommand.UpdateServer(args.MinecraftResource)
 	if err != nil {
 		return err
@@ -92,7 +92,7 @@ func (d *DigitalOcean) UpdateServer(id string, args automation.ServerArgs) error
 }
 
 func (d *DigitalOcean) CreateServer(args automation.ServerArgs) (*automation.ResourceResults, error) {
-	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
+	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSHKeyFolder()))
 	if err != nil {
 		return nil, err
 	}
@@ -234,13 +234,13 @@ func (d *DigitalOcean) UploadPlugin(id string, args automation.ServerArgs, plugi
 		return err
 	}
 	ipv4, _ := droplet.PublicIPv4()
-	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSH(), ipv4, "root")
+	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSHKeyFolder(), ipv4, "root")
 
-	err = remoteCommand.TransferFile(plugin, filepath.Join(destination, filepath.Base(plugin)))
+	err = remoteCommand.TransferFile(plugin, filepath.Join(destination, filepath.Base(plugin)), args.MinecraftResource.GetSSHPort())
 	if err != nil {
 		return err
 	}
-	_, err = remoteCommand.ExecuteCommand("systemctl restart minecraft.service")
+	_, err = remoteCommand.ExecuteCommand("systemctl restart minecraft.service", args.MinecraftResource.GetSSHPort())
 	if err != nil {
 		return err
 	}

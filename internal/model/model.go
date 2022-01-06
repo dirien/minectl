@@ -9,6 +9,9 @@ type Wizard struct {
 	Plan       string
 	Region     string
 	SSH        string `survey:"ssh"`
+	SSHPort    string `survey:"ssh_port"`
+	BanTime    string `survey:"fail2ban_bantime"`
+	MaxRetry   string `survey:"fail2ban_maxretry"`
 	Features   []string
 	Java       string
 	Heap       string
@@ -41,12 +44,26 @@ type Monitoring struct {
 // Server represents a server configuration.
 type Server struct {
 	Size       string `yaml:"size"`
-	SSH        string `yaml:"ssh"`
+	SSH        SSH    `yaml:"ssh"`
 	Cloud      string `yaml:"cloud"`
 	Region     string `yaml:"region"`
 	Port       int    `yaml:"port"`
 	VolumeSize int    `yaml:"volumeSize"`
 	Spot       bool   `yaml:"spot"`
+}
+
+// SSH represents a SSH configuration.
+type SSH struct {
+	Port      int      `yaml:"port"`
+	KeyFolder string   `yaml:"keyFolder"`
+	Fail2ban  Fail2ban `yaml:"fail2ban"`
+}
+
+// Fail2ban represents a fail2ban configuration.
+type Fail2ban struct {
+	Bantime  int    `yaml:"bantime"`
+	Maxretry int    `yaml:"maxretry"`
+	Ignoreip string `yaml:"ignoreip"`
 }
 
 // Minecraft represents a minecraft configuration.
@@ -100,8 +117,16 @@ func (m *MinecraftResource) GetCloud() string {
 	return m.Spec.Server.Cloud
 }
 
-func (m *MinecraftResource) GetSSH() string {
-	return m.Spec.Server.SSH
+func (m *MinecraftResource) GetSSHPort() int {
+	return m.Spec.Server.SSH.Port
+}
+
+func (m *MinecraftResource) GetSSHKeyFolder() string {
+	return m.Spec.Server.SSH.KeyFolder
+}
+
+func (m *MinecraftResource) GetFail2Ban() Fail2ban {
+	return m.Spec.Server.SSH.Fail2ban
 }
 
 func (m *MinecraftResource) GetRegion() string {

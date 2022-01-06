@@ -7,7 +7,12 @@ spec:
     cloud: linode
     region: eu-central
     size: g6-standard-4
-    ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft"
+    ssh:
+      port: 2223
+      keyfolder: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft"
+      fail2ban:
+        bantime: 1000
+        maxretry: 3
     port: 25565
   minecraft:
     java:
@@ -20,7 +25,7 @@ spec:
         enabled: true
         broadcast: true
     edition: java
-    version: "1.18.1"
+    version: 1.18.1
     eula: true
     properties: |
       level-seed=stackitminecraftrocks

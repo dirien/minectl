@@ -169,7 +169,36 @@
           "type": "integer"
         },
         "ssh": {
-          "type": "string"
+          "type": "object",
+          "required": [
+            "port",
+            "keyfolder",
+            "fail2ban"
+          ],
+          "properties": {
+            "port": {
+              "type": "integer"
+            },
+            "keyfolder": {
+              "type": "string"
+            },
+            "fail2ban": {
+              "type": "object",
+              "properties": {
+                "bantime": {
+                  "type": "integer"
+                },
+                "maxretry": {
+                  "type": "integer"
+                },
+                "ignoreip": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
         },
         "port": {
           "type": "integer"
