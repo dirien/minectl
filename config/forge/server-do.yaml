@@ -27,7 +27,7 @@ spec:
         enabled: true
         broadcast: true
     edition: forge
-    version: 1.16.5-36.2.0
+    version: 1.18.1-39.0.10
     eula: true
     properties: |
       level-seed=stackitminecraftrocks
