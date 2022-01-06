@@ -8,6 +8,7 @@ packages:
   - apt-transport-https
   - ca-certificates
   - curl
+  - fail2ban
   - openjdk-{{.Spec.Proxy.Java.OpenJDK}}-jre-headless
 
 write_files:
@@ -29,6 +30,14 @@ write_files:
       port: {{.Spec.Proxy.Java.Rcon.Port}}
       password: {{.Spec.Proxy.Java.Rcon.Password}}
   {{- end }}
+  - path: /etc/fail2ban/jail.local
+    content: |
+      [sshd]
+      port = {{ .Spec.Server.SSH.Port }}
+      enabled = true
+      maxretry = {{ .Spec.Server.SSH.Fail2ban.Maxretry }}
+      bantime = {{ .Spec.Server.SSH.Fail2ban.Bantime }}
+      ignoreip = {{ .Spec.Server.SSH.Fail2ban.Ignoreip }}
 
 runcmd:
   - mkdir /minecraft
@@ -39,7 +48,9 @@ runcmd:
   {{- else if eq .Spec.Proxy.Type "velocity" }}
     {{- template "velocity-binary" . }}
   {{- end }}
-
+  - sed -i 's/#Port 22/Port {{ .Spec.Server.SSH.Port }}/g' /etc/ssh/sshd_config
+  - service sshd restart
+  - systemctl restart fail2ban
   - systemctl restart minecraft.service
   - systemctl enable minecraft.service
 {{- end -}}

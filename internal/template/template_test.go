@@ -426,15 +426,20 @@ systemctl start node_exporter
 systemctl enable node_exporter
 
 
-ufw allow ssh
-ufw allow 5201
-ufw allow proto udp to 0.0.0.0/0 port 19132
 
-echo [DEFAULT] | sudo tee -a /etc/fail2ban/jail.local
-echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
-echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
-echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
-sudo systemctl restart fail2ban
+sed -i 's/#Port 22/Port 0/g' /etc/ssh/sshd_config
+service sshd restart
+
+tee /etc/fail2ban/jail.local <<EOF
+[sshd]
+port = 0
+enabled = true
+maxretry = 0
+bantime = 0
+ignoreip = 
+EOF
+
+systemctl restart fail2ban
 mkdir -p /minecraft
 URL=$(curl -s https://bedrock-version.minectl.ediri.online/binary/1.17.10.04)
 curl -sLSf $URL > /tmp/bedrock-server.zip
@@ -588,17 +593,20 @@ chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
 systemctl start minecraft-exporter.service
 systemctl enable minecraft-exporter.service
 
-ufw allow ssh
-ufw allow 5201
 
-ufw allow proto tcp to 0.0.0.0/0 port 25565
+sed -i 's/#Port 22/Port 0/g' /etc/ssh/sshd_config
+service sshd restart
 
+tee /etc/fail2ban/jail.local <<EOF
+[sshd]
+port = 0
+enabled = true
+maxretry = 0
+bantime = 0
+ignoreip = 
+EOF
 
-echo [DEFAULT] | sudo tee -a /etc/fail2ban/jail.local
-echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
-echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
-echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
-sudo systemctl restart fail2ban
+systemctl restart fail2ban
 mkdir -p /minecraft
 URL=$(curl -s https://java-version.minectl.ediri.online/binary/1.17)
 curl -sLSf $URL > /minecraft/server.jar
@@ -704,6 +712,14 @@ write_files:
       RestartSec=5
       [Install]
       WantedBy=multi-user.target
+  - path: /etc/fail2ban/jail.local
+    content: |
+      [sshd]
+      port = 0
+      enabled = true
+      maxretry = 0
+      bantime = 0
+      ignoreip = 
 
 runcmd:
   - iptables -I INPUT -j ACCEPT
@@ -736,14 +752,9 @@ runcmd:
   - systemctl daemon-reload
   - systemctl start node_exporter
   - systemctl enable node_exporter
-  - ufw allow ssh
-  - ufw allow 5201
-  - ufw allow proto udp to 0.0.0.0/0 port 19132
-  - echo [DEFAULT] | sudo tee -a /etc/fail2ban/jail.local
-  - echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
-  - echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
-  - echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
-  - sudo systemctl restart fail2ban
+  - sed -i 's/#Port 22/Port 0/g' /etc/ssh/sshd_config
+  - service sshd restart
+  - systemctl restart fail2ban
   - URL=$(curl -s https://bedrock-version.minectl.ediri.online/binary/1.17.10.04)
   - curl -sLSf $URL > /tmp/bedrock-server.zip
   - unzip -o /tmp/bedrock-server.zip -d /minecraft
@@ -873,6 +884,14 @@ write_files:
       RestartSec=5
       [Install]
       WantedBy=multi-user.target
+  - path: /etc/fail2ban/jail.local
+    content: |
+      [sshd]
+      port = 0
+      enabled = true
+      maxretry = 0
+      bantime = 0
+      ignoreip = 
 
 runcmd:
   - iptables -I INPUT -j ACCEPT
@@ -911,14 +930,9 @@ runcmd:
   - chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
   - systemctl start minecraft-exporter.service
   - systemctl enable minecraft-exporter.service
-  - ufw allow ssh
-  - ufw allow 5201
-  - ufw allow proto tcp to 0.0.0.0/0 port 25565
-  - echo [DEFAULT] | sudo tee -a /etc/fail2ban/jail.local
-  - echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
-  - echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
-  - echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
-  - sudo systemctl restart fail2ban
+  - sed -i 's/#Port 22/Port 0/g' /etc/ssh/sshd_config
+  - service sshd restart
+  - systemctl restart fail2ban
   - URL=$(curl -s https://java-version.minectl.ediri.online/binary/1.17)
   - curl -sLSf $URL > /minecraft/server.jar
   - echo "eula=true" > /minecraft/eula.txt
@@ -1046,6 +1060,14 @@ write_files:
       RestartSec=5
       [Install]
       WantedBy=multi-user.target
+  - path: /etc/fail2ban/jail.local
+    content: |
+      [sshd]
+      port = 0
+      enabled = true
+      maxretry = 0
+      bantime = 0
+      ignoreip = 
 
 runcmd:
   - iptables -I INPUT -j ACCEPT
@@ -1084,14 +1106,9 @@ runcmd:
   - chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
   - systemctl start minecraft-exporter.service
   - systemctl enable minecraft-exporter.service
-  - ufw allow ssh
-  - ufw allow 5201
-  - ufw allow proto tcp to 0.0.0.0/0 port 25565
-  - echo [DEFAULT] | sudo tee -a /etc/fail2ban/jail.local
-  - echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
-  - echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
-  - echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
-  - sudo systemctl restart fail2ban
+  - sed -i 's/#Port 22/Port 0/g' /etc/ssh/sshd_config
+  - service sshd restart
+  - systemctl restart fail2ban
   - URL="https://papermc.io/api/v2/projects/paper/versions/1.17.1/builds/157/downloads/paper-1.17.1-157.jar"
   - curl -sLSf $URL > /minecraft/server.jar
   - echo "eula=true" > /minecraft/eula.txt
@@ -1211,15 +1228,20 @@ systemctl start node_exporter
 systemctl enable node_exporter
 
 
-ufw allow ssh
-ufw allow 5201
-ufw allow proto udp to 0.0.0.0/0 port 19132
 
-echo [DEFAULT] | sudo tee -a /etc/fail2ban/jail.local
-echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
-echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
-echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
-sudo systemctl restart fail2ban
+sed -i 's/#Port 22/Port 0/g' /etc/ssh/sshd_config
+service sshd restart
+
+tee /etc/fail2ban/jail.local <<EOF
+[sshd]
+port = 0
+enabled = true
+maxretry = 0
+bantime = 0
+ignoreip = 
+EOF
+
+systemctl restart fail2ban
 mkdir -p /minecraft
 mkfs.ext4  /dev/sdc
 mount /dev/sdc /minecraft
@@ -1376,17 +1398,20 @@ chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
 systemctl start minecraft-exporter.service
 systemctl enable minecraft-exporter.service
 
-ufw allow ssh
-ufw allow 5201
 
-ufw allow proto tcp to 0.0.0.0/0 port 25565
+sed -i 's/#Port 22/Port 0/g' /etc/ssh/sshd_config
+service sshd restart
 
+tee /etc/fail2ban/jail.local <<EOF
+[sshd]
+port = 0
+enabled = true
+maxretry = 0
+bantime = 0
+ignoreip = 
+EOF
 
-echo [DEFAULT] | sudo tee -a /etc/fail2ban/jail.local
-echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
-echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
-echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
-sudo systemctl restart fail2ban
+systemctl restart fail2ban
 mkdir -p /minecraft
 mkfs.ext4  /dev/sdc
 mount /dev/sdc /minecraft
@@ -1541,17 +1566,20 @@ chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
 systemctl start minecraft-exporter.service
 systemctl enable minecraft-exporter.service
 
-ufw allow ssh
-ufw allow 5201
 
-ufw allow proto tcp to 0.0.0.0/0 port 25565
+sed -i 's/#Port 22/Port 0/g' /etc/ssh/sshd_config
+service sshd restart
 
+tee /etc/fail2ban/jail.local <<EOF
+[sshd]
+port = 0
+enabled = true
+maxretry = 0
+bantime = 0
+ignoreip = 
+EOF
 
-echo [DEFAULT] | sudo tee -a /etc/fail2ban/jail.local
-echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
-echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
-echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
-sudo systemctl restart fail2ban
+systemctl restart fail2ban
 mkdir -p /minecraft
 mkfs.ext4  /dev/sdc
 mount /dev/sdc /minecraft
@@ -1706,17 +1734,20 @@ chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
 systemctl start minecraft-exporter.service
 systemctl enable minecraft-exporter.service
 
-ufw allow ssh
-ufw allow 5201
 
-ufw allow proto tcp to 0.0.0.0/0 port 25565
+sed -i 's/#Port 22/Port 0/g' /etc/ssh/sshd_config
+service sshd restart
 
+tee /etc/fail2ban/jail.local <<EOF
+[sshd]
+port = 0
+enabled = true
+maxretry = 0
+bantime = 0
+ignoreip = 
+EOF
 
-echo [DEFAULT] | sudo tee -a /etc/fail2ban/jail.local
-echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
-echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
-echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
-sudo systemctl restart fail2ban
+systemctl restart fail2ban
 mkdir -p /minecraft
 mkfs.ext4  /dev/sdc
 mount /dev/sdc /minecraft
@@ -1848,6 +1879,14 @@ write_files:
       RestartSec=5
       [Install]
       WantedBy=multi-user.target
+  - path: /etc/fail2ban/jail.local
+    content: |
+      [sshd]
+      port = 0
+      enabled = true
+      maxretry = 0
+      bantime = 0
+      ignoreip = 
 
 runcmd:
   - iptables -I INPUT -j ACCEPT
@@ -1886,14 +1925,9 @@ runcmd:
   - chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
   - systemctl start minecraft-exporter.service
   - systemctl enable minecraft-exporter.service
-  - ufw allow ssh
-  - ufw allow 5201
-  - ufw allow proto tcp to 0.0.0.0/0 port 25565
-  - echo [DEFAULT] | sudo tee -a /etc/fail2ban/jail.local
-  - echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
-  - echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
-  - echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
-  - sudo systemctl restart fail2ban
+  - sed -i 's/#Port 22/Port 0/g' /etc/ssh/sshd_config
+  - service sshd restart
+  - systemctl restart fail2ban
   - export HOME=/tmp/
   - apt-get install -y git
   - git config --global user.email "minectl@github.com"
@@ -2054,17 +2088,20 @@ chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
 systemctl start minecraft-exporter.service
 systemctl enable minecraft-exporter.service
 
-ufw allow ssh
-ufw allow 5201
 
-ufw allow proto tcp to 0.0.0.0/0 port 25565
+sed -i 's/#Port 22/Port 0/g' /etc/ssh/sshd_config
+service sshd restart
 
+tee /etc/fail2ban/jail.local <<EOF
+[sshd]
+port = 0
+enabled = true
+maxretry = 0
+bantime = 0
+ignoreip = 
+EOF
 
-echo [DEFAULT] | sudo tee -a /etc/fail2ban/jail.local
-echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
-echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
-echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
-sudo systemctl restart fail2ban
+systemctl restart fail2ban
 mkdir -p /minecraft
 mkfs.ext4  /dev/sda
 mount /dev/sda /minecraft
@@ -2203,6 +2240,14 @@ write_files:
       RestartSec=5
       [Install]
       WantedBy=multi-user.target
+  - path: /etc/fail2ban/jail.local
+    content: |
+      [sshd]
+      port = 0
+      enabled = true
+      maxretry = 0
+      bantime = 0
+      ignoreip = 
 
 runcmd:
   - iptables -I INPUT -j ACCEPT
@@ -2241,14 +2286,9 @@ runcmd:
   - chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
   - systemctl start minecraft-exporter.service
   - systemctl enable minecraft-exporter.service
-  - ufw allow ssh
-  - ufw allow 5201
-  - ufw allow proto tcp to 0.0.0.0/0 port 25565
-  - echo [DEFAULT] | sudo tee -a /etc/fail2ban/jail.local
-  - echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
-  - echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
-  - echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
-  - sudo systemctl restart fail2ban
+  - sed -i 's/#Port 22/Port 0/g' /etc/ssh/sshd_config
+  - service sshd restart
+  - systemctl restart fail2ban
   - URL="https://maven.fabricmc.net/net/fabricmc/fabric-installer/1.17.1-138/fabric-installer-0.7.4.jar"
   - mkdir /tmp/build
   - cd /tmp/build
@@ -2406,17 +2446,20 @@ chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
 systemctl start minecraft-exporter.service
 systemctl enable minecraft-exporter.service
 
-ufw allow ssh
-ufw allow 5201
 
-ufw allow proto tcp to 0.0.0.0/0 port 25565
+sed -i 's/#Port 22/Port 0/g' /etc/ssh/sshd_config
+service sshd restart
 
+tee /etc/fail2ban/jail.local <<EOF
+[sshd]
+port = 0
+enabled = true
+maxretry = 0
+bantime = 0
+ignoreip = 
+EOF
 
-echo [DEFAULT] | sudo tee -a /etc/fail2ban/jail.local
-echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
-echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
-echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
-sudo systemctl restart fail2ban
+systemctl restart fail2ban
 mkdir -p /minecraft
 mkfs.ext4  /dev/sda
 mount /dev/sda /minecraft
@@ -2555,6 +2598,14 @@ write_files:
       RestartSec=5
       [Install]
       WantedBy=multi-user.target
+  - path: /etc/fail2ban/jail.local
+    content: |
+      [sshd]
+      port = 0
+      enabled = true
+      maxretry = 0
+      bantime = 0
+      ignoreip = 
 
 runcmd:
   - iptables -I INPUT -j ACCEPT
@@ -2593,14 +2644,9 @@ runcmd:
   - chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
   - systemctl start minecraft-exporter.service
   - systemctl enable minecraft-exporter.service
-  - ufw allow ssh
-  - ufw allow 5201
-  - ufw allow proto tcp to 0.0.0.0/0 port 25565
-  - echo [DEFAULT] | sudo tee -a /etc/fail2ban/jail.local
-  - echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
-  - echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
-  - echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
-  - sudo systemctl restart fail2ban
+  - sed -i 's/#Port 22/Port 0/g' /etc/ssh/sshd_config
+  - service sshd restart
+  - systemctl restart fail2ban
   - URL="https://maven.minecraftforge.net/net/minecraftforge/forge/1.17.1-138/forge-1.17.1-138-installer.jar"
   - mkdir /tmp/build
   - cd /tmp/build
@@ -2757,17 +2803,20 @@ chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
 systemctl start minecraft-exporter.service
 systemctl enable minecraft-exporter.service
 
-ufw allow ssh
-ufw allow 5201
 
-ufw allow proto tcp to 0.0.0.0/0 port 25565
+sed -i 's/#Port 22/Port 0/g' /etc/ssh/sshd_config
+service sshd restart
 
+tee /etc/fail2ban/jail.local <<EOF
+[sshd]
+port = 0
+enabled = true
+maxretry = 0
+bantime = 0
+ignoreip = 
+EOF
 
-echo [DEFAULT] | sudo tee -a /etc/fail2ban/jail.local
-echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
-echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
-echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
-sudo systemctl restart fail2ban
+systemctl restart fail2ban
 mkdir -p /minecraft
 mkfs.ext4  /dev/sda
 mount /dev/sda /minecraft
@@ -2905,6 +2954,14 @@ write_files:
       RestartSec=5
       [Install]
       WantedBy=multi-user.target
+  - path: /etc/fail2ban/jail.local
+    content: |
+      [sshd]
+      port = 0
+      enabled = true
+      maxretry = 0
+      bantime = 0
+      ignoreip = 
 
 runcmd:
   - iptables -I INPUT -j ACCEPT
@@ -2943,14 +3000,9 @@ runcmd:
   - chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
   - systemctl start minecraft-exporter.service
   - systemctl enable minecraft-exporter.service
-  - ufw allow ssh
-  - ufw allow 5201
-  - ufw allow proto tcp to 0.0.0.0/0 port 25565
-  - echo [DEFAULT] | sudo tee -a /etc/fail2ban/jail.local
-  - echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
-  - echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
-  - echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
-  - sudo systemctl restart fail2ban
+  - sed -i 's/#Port 22/Port 0/g' /etc/ssh/sshd_config
+  - service sshd restart
+  - systemctl restart fail2ban
   - export HOME=/tmp/
   - apt-get install -y git
   - git config --global user.email "minectl@github.com"
@@ -3111,17 +3163,20 @@ chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
 systemctl start minecraft-exporter.service
 systemctl enable minecraft-exporter.service
 
-ufw allow ssh
-ufw allow 5201
 
-ufw allow proto tcp to 0.0.0.0/0 port 25565
+sed -i 's/#Port 22/Port 0/g' /etc/ssh/sshd_config
+service sshd restart
 
+tee /etc/fail2ban/jail.local <<EOF
+[sshd]
+port = 0
+enabled = true
+maxretry = 0
+bantime = 0
+ignoreip = 
+EOF
 
-echo [DEFAULT] | sudo tee -a /etc/fail2ban/jail.local
-echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
-echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
-echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
-sudo systemctl restart fail2ban
+systemctl restart fail2ban
 mkdir -p /minecraft
 mkfs.ext4  /dev/sda
 mount /dev/sda /minecraft
@@ -3169,15 +3224,20 @@ WantedBy=multi-user.target
 EOF
 apt update
 apt-get install -y apt-transport-https ca-certificates curl unzip fail2ban
-ufw allow ssh
-ufw allow 5201
-ufw allow proto udp to 0.0.0.0/0 port 19132
 
-echo [DEFAULT] | sudo tee -a /etc/fail2ban/jail.local
-echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
-echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
-echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
-sudo systemctl restart fail2ban
+sed -i 's/#Port 22/Port 0/g' /etc/ssh/sshd_config
+service sshd restart
+
+tee /etc/fail2ban/jail.local <<EOF
+[sshd]
+port = 0
+enabled = true
+maxretry = 0
+bantime = 0
+ignoreip = 
+EOF
+
+systemctl restart fail2ban
 mkdir -p /minecraft
 URL=$(curl -s https://bedrock-version.minectl.ediri.online/binary/1.17.10.04)
 curl -sLSf $URL > /tmp/bedrock-server.zip
@@ -3239,17 +3299,20 @@ write_files:
       RestartSec=5
       [Install]
       WantedBy=multi-user.target
+  - path: /etc/fail2ban/jail.local
+    content: |
+      [sshd]
+      port = 0
+      enabled = true
+      maxretry = 0
+      bantime = 0
+      ignoreip = 
 
 runcmd:
   - iptables -I INPUT -j ACCEPT
-  - ufw allow ssh
-  - ufw allow 5201
-  - ufw allow proto tcp to 0.0.0.0/0 port 25565
-  - echo [DEFAULT] | sudo tee -a /etc/fail2ban/jail.local
-  - echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
-  - echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
-  - echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
-  - sudo systemctl restart fail2ban
+  - sed -i 's/#Port 22/Port 0/g' /etc/ssh/sshd_config
+  - service sshd restart
+  - systemctl restart fail2ban
   - URL="https://maven.fabricmc.net/net/fabricmc/fabric-installer/1.17.1-138/fabric-installer-0.7.4.jar"
   - mkdir /tmp/build
   - cd /tmp/build
@@ -3298,17 +3361,20 @@ WantedBy=multi-user.target
 EOF
 apt update
 apt-get install -y apt-transport-https ca-certificates curl openjdk-16-jre-headless fail2ban
-ufw allow ssh
-ufw allow 5201
 
-ufw allow proto tcp to 0.0.0.0/0 port 25565
+sed -i 's/#Port 22/Port 0/g' /etc/ssh/sshd_config
+service sshd restart
 
+tee /etc/fail2ban/jail.local <<EOF
+[sshd]
+port = 0
+enabled = true
+maxretry = 0
+bantime = 0
+ignoreip = 
+EOF
 
-echo [DEFAULT] | sudo tee -a /etc/fail2ban/jail.local
-echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
-echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
-echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
-sudo systemctl restart fail2ban
+systemctl restart fail2ban
 mkdir -p /minecraft
 mkfs.ext4  /dev/sda
 mount /dev/sda /minecraft
@@ -3361,15 +3427,20 @@ WantedBy=multi-user.target
 EOF
 apt update
 apt-get install -y apt-transport-https ca-certificates curl openjdk-8-jre-headless fail2ban
-ufw allow ssh
-ufw allow 5201
-ufw allow proto udp to 0.0.0.0/0 port 19132
 
-echo [DEFAULT] | sudo tee -a /etc/fail2ban/jail.local
-echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
-echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
-echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
-sudo systemctl restart fail2ban
+sed -i 's/#Port 22/Port 0/g' /etc/ssh/sshd_config
+service sshd restart
+
+tee /etc/fail2ban/jail.local <<EOF
+[sshd]
+port = 0
+enabled = true
+maxretry = 0
+bantime = 0
+ignoreip = 
+EOF
+
+systemctl restart fail2ban
 mkdir -p /minecraft
 mkfs.ext4  /dev/sda
 mount /dev/sda /minecraft
@@ -3432,17 +3503,20 @@ write_files:
       RestartSec=5
       [Install]
       WantedBy=multi-user.target
+  - path: /etc/fail2ban/jail.local
+    content: |
+      [sshd]
+      port = 0
+      enabled = true
+      maxretry = 0
+      bantime = 0
+      ignoreip = 
 
 runcmd:
   - iptables -I INPUT -j ACCEPT
-  - ufw allow ssh
-  - ufw allow 5201
-  - ufw allow proto udp to 0.0.0.0/0 port 19132
-  - echo [DEFAULT] | sudo tee -a /etc/fail2ban/jail.local
-  - echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
-  - echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
-  - echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
-  - sudo systemctl restart fail2ban
+  - sed -i 's/#Port 22/Port 0/g' /etc/ssh/sshd_config
+  - service sshd restart
+  - systemctl restart fail2ban
   - URL="https://ci.opencollab.dev/job/NukkitX/job/Nukkit/job/master/lastSuccessfulBuild/artifact/target/nukkit-1.0-SNAPSHOT.jar"
   - curl -sLSf $URL > /minecraft/server.jar
   - echo "eula=true" > /minecraft/eula.txt
@@ -3484,15 +3558,20 @@ WantedBy=multi-user.target
 EOF
 apt update
 apt-get install -y apt-transport-https ca-certificates curl openjdk-8-jre-headless fail2ban
-ufw allow ssh
-ufw allow 5201
-ufw allow proto udp to 0.0.0.0/0 port 19132
 
-echo [DEFAULT] | sudo tee -a /etc/fail2ban/jail.local
-echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
-echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
-echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
-sudo systemctl restart fail2ban
+sed -i 's/#Port 22/Port 0/g' /etc/ssh/sshd_config
+service sshd restart
+
+tee /etc/fail2ban/jail.local <<EOF
+[sshd]
+port = 0
+enabled = true
+maxretry = 0
+bantime = 0
+ignoreip = 
+EOF
+
+systemctl restart fail2ban
 mkdir -p /minecraft
 mkfs.ext4  /dev/sda
 mount /dev/sda /minecraft
@@ -3555,17 +3634,20 @@ write_files:
       RestartSec=5
       [Install]
       WantedBy=multi-user.target
+  - path: /etc/fail2ban/jail.local
+    content: |
+      [sshd]
+      port = 0
+      enabled = true
+      maxretry = 0
+      bantime = 0
+      ignoreip = 
 
 runcmd:
   - iptables -I INPUT -j ACCEPT
-  - ufw allow ssh
-  - ufw allow 5201
-  - ufw allow proto udp to 0.0.0.0/0 port 19132
-  - echo [DEFAULT] | sudo tee -a /etc/fail2ban/jail.local
-  - echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
-  - echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
-  - echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
-  - sudo systemctl restart fail2ban
+  - sed -i 's/#Port 22/Port 0/g' /etc/ssh/sshd_config
+  - service sshd restart
+  - systemctl restart fail2ban
   - URL="https://github.com/PowerNukkit/PowerNukkit/releases/download/v1.5.1.0-PN/powernukkit-1.5.1.0-PN-shaded.jar"
   - curl -sLSf $URL > /minecraft/server.jar
   - echo "eula=true" > /minecraft/eula.txt
@@ -3600,7 +3682,6 @@ func TestCivoBedrockNoMonTemplate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-
 		assert.Equal(t, bedrockBashNoMonWant, got)
 	})
 }
@@ -3630,7 +3711,6 @@ func TestCloudInitBedrockTemplate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-
 		assert.Equal(t, bedrockCloudInitWant, got)
 	})
 }
@@ -3937,7 +4017,7 @@ func TestCloudInitPowerNukkitTemplate(t *testing.T) {
 }
 
 var (
-	fullFeatureJava = `apiVersion: ediri.io/minectl/v1alpha1
+	fullFeatureJava = `apiVersion: minectl.ediri.io/v1alpha1
 kind: MinecraftServer
 metadata:
   name: minecraft
@@ -3948,7 +4028,12 @@ spec:
     cloud: do
     region: xxx
     size: xxx
-    ssh: xxx
+    ssh:
+      port: 
+      keyfolder: xxx
+      fail2ban:
+        bantime: 
+        maxretry: 
     port: 25565
   minecraft:
     java:
@@ -3968,7 +4053,7 @@ spec:
       view-distance=10
       enable-jmx-monitoring=false`
 
-	JavaWithoutRcon = `apiVersion: ediri.io/minectl/v1alpha1
+	JavaWithoutRcon = `apiVersion: minectl.ediri.io/v1alpha1
 kind: MinecraftServer
 metadata:
   name: minecraft
@@ -3979,7 +4064,12 @@ spec:
     cloud: do
     region: xxx
     size: xxx
-    ssh: xxx
+    ssh:
+      port: 
+      keyfolder: xxx
+      fail2ban:
+        bantime: 
+        maxretry: 
     port: 25565
   minecraft:
     java:
@@ -3994,7 +4084,7 @@ spec:
       view-distance=10
       enable-jmx-monitoring=false`
 
-	plainJavaNoThrill = `apiVersion: ediri.io/minectl/v1alpha1
+	plainJavaNoThrill = `apiVersion: minectl.ediri.io/v1alpha1
 kind: MinecraftServer
 metadata:
   name: minecraft
@@ -4003,7 +4093,12 @@ spec:
     cloud: do
     region: xxx
     size: xxx
-    ssh: xxx
+    ssh:
+      port: 
+      keyfolder: xxx
+      fail2ban:
+        bantime: 
+        maxretry: 
     port: 25565
   minecraft:
     java:
@@ -4018,7 +4113,7 @@ spec:
       view-distance=10
       enable-jmx-monitoring=false`
 
-	bedrockConfig = `apiVersion: ediri.io/minectl/v1alpha1
+	bedrockConfig = `apiVersion: minectl.ediri.io/v1alpha1
 kind: MinecraftServer
 metadata:
   name: minecraft
@@ -4027,7 +4122,12 @@ spec:
     cloud: do
     region: xxx
     size: xxx
-    ssh: xxx
+    ssh:
+      port: 
+      keyfolder: xxx
+      fail2ban:
+        bantime: 
+        maxretry: 
     port: 19132
   minecraft:
     edition: bedrock
@@ -4038,7 +4138,7 @@ spec:
       view-distance=10
       enable-jmx-monitoring=false`
 
-	nukkitConfig = `apiVersion: ediri.io/minectl/v1alpha1
+	nukkitConfig = `apiVersion: minectl.ediri.io/v1alpha1
 kind: MinecraftServer
 metadata:
   name: minecraft
@@ -4049,7 +4149,12 @@ spec:
     cloud: do
     region: xxx
     size: xxx
-    ssh: xxx
+    ssh:
+      port: 
+      keyfolder: xxx
+      fail2ban:
+        bantime: 
+        maxretry: 
     port: 19132
   minecraft:
     java:
@@ -4093,6 +4198,7 @@ func TestConfigTemplate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+
 		assert.Equal(t, fullFeatureJava, got)
 	})
 }
@@ -4105,6 +4211,7 @@ func TestConfigMonTemplate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+
 		assert.Equal(t, JavaWithoutRcon, got)
 	})
 }
@@ -4117,6 +4224,7 @@ func TestConfigNoMonRconTemplate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+
 		assert.Equal(t, plainJavaNoThrill, got)
 	})
 }
@@ -4129,6 +4237,7 @@ func TestConfigBedrockTemplate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+
 		assert.Equal(t, bedrockConfig, got)
 	})
 }
@@ -4141,6 +4250,7 @@ func TestConfigNukkitTemplate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+
 		assert.Equal(t, nukkitConfig, got)
 	})
 }

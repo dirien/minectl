@@ -66,6 +66,13 @@ func checkNamePattern(serverName string) error {
 	return nil
 }
 
+func checkSSHPort(port int) error {
+	if port != 22 && (port < 1024 || port > 65535) {
+		return errors.New("the port must be between 1024 and 65535")
+	}
+	return nil
+}
+
 func NewMinecraftResource(manifestPath string) (*model.MinecraftResource, error) {
 	var server model.MinecraftResource
 	manifestFile, err := os.ReadFile(manifestPath)
@@ -81,6 +88,10 @@ func NewMinecraftResource(manifestPath string) (*model.MinecraftResource, error)
 		return nil, err
 	}
 	err = checkNamePattern(server.GetName())
+	if err != nil {
+		return nil, err
+	}
+	err = checkSSHPort(server.GetSSHPort())
 	if err != nil {
 		return nil, err
 	}

@@ -36,7 +36,7 @@ func NewEquinix(apiKey, project string) (*Equinix, error) {
 }
 
 func (e *Equinix) CreateServer(args automation.ServerArgs) (*automation.ResourceResults, error) {
-	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
+	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSHKeyFolder()))
 	if err != nil {
 		return nil, err
 	}
@@ -149,7 +149,7 @@ func (e *Equinix) UpdateServer(id string, args automation.ServerArgs) error {
 		return err
 	}
 
-	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSH(), getIP4(instance), "root")
+	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSHKeyFolder(), getIP4(instance), "root")
 	err = remoteCommand.UpdateServer(args.MinecraftResource)
 	if err != nil {
 		return err
@@ -174,12 +174,12 @@ func (e *Equinix) UploadPlugin(id string, args automation.ServerArgs, plugin, de
 		return err
 	}
 
-	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSH(), getIP4(instance), "root")
-	err = remoteCommand.TransferFile(plugin, filepath.Join(destination, filepath.Base(plugin)))
+	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSHKeyFolder(), getIP4(instance), "root")
+	err = remoteCommand.TransferFile(plugin, filepath.Join(destination, filepath.Base(plugin)), args.MinecraftResource.GetSSHPort())
 	if err != nil {
 		return err
 	}
-	_, err = remoteCommand.ExecuteCommand("systemctl restart minecraft.service")
+	_, err = remoteCommand.ExecuteCommand("systemctl restart minecraft.service", args.MinecraftResource.GetSSHPort())
 	if err != nil {
 		return err
 	}

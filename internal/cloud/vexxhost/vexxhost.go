@@ -95,7 +95,7 @@ func NewVEXXHOST() (*VEXXHOST, error) {
 
 // CreateServer TODO: https://github.com/dirien/minectl/issues/299
 func (v *VEXXHOST) CreateServer(args automation.ServerArgs) (*automation.ResourceResults, error) { // nolint: gocyclo
-	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
+	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSHKeyFolder()))
 	if err != nil {
 		return nil, err
 	}
@@ -160,7 +160,7 @@ func (v *VEXXHOST) CreateServer(args automation.ServerArgs) (*automation.Resourc
 		return nil, err
 	}
 
-	err = v.createSecurityGroup(group, 22, "TCP")
+	err = v.createSecurityGroup(group, args.MinecraftResource.GetSSHPort(), "TCP")
 	if err != nil {
 		return nil, err
 	}
@@ -558,7 +558,7 @@ func (v *VEXXHOST) UpdateServer(id string, args automation.ServerArgs) error {
 	if err != nil {
 		return err
 	}
-	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSH(), server.PublicIP, "ubuntu")
+	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSHKeyFolder(), server.PublicIP, "ubuntu")
 	err = remoteCommand.UpdateServer(args.MinecraftResource)
 	if err != nil {
 		return err
@@ -572,15 +572,15 @@ func (v *VEXXHOST) UploadPlugin(id string, args automation.ServerArgs, plugin, d
 	if err != nil {
 		return err
 	}
-	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSH(), server.PublicIP, "ubuntu")
+	remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSHKeyFolder(), server.PublicIP, "ubuntu")
 
 	// as we are not allowed to login via root user, we need to add sudo to the command
 	source := filepath.Join("/tmp", filepath.Base(plugin))
-	err = remoteCommand.TransferFile(plugin, source)
+	err = remoteCommand.TransferFile(plugin, source, args.MinecraftResource.GetSSHPort())
 	if err != nil {
 		return err
 	}
-	_, err = remoteCommand.ExecuteCommand(fmt.Sprintf("sudo mv %s %s\nsudo systemctl restart minecraft.service", source, destination))
+	_, err = remoteCommand.ExecuteCommand(fmt.Sprintf("sudo mv %s %s\nsudo systemctl restart minecraft.service", source, destination), args.MinecraftResource.GetSSHPort())
 	if err != nil {
 		return err
 	}

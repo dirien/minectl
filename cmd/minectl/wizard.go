@@ -66,6 +66,30 @@ var wizardQuestions = []*survey.Question{
 		},
 	},
 	{
+		Name:     "ssh_port",
+		Validate: survey.Required,
+		Prompt: &survey.Input{
+			Message: "Enter the ssh port (default 22)",
+			Default: "22",
+		},
+	},
+	{
+		Name:     "fail2ban_bantime",
+		Validate: survey.Required,
+		Prompt: &survey.Input{
+			Message: "Enter the fail2ban bantime (default 600):",
+			Default: "600",
+		},
+	},
+	{
+		Name:     "fail2ban_maxretry",
+		Validate: survey.Required,
+		Prompt: &survey.Input{
+			Message: "Enter the fail2ban maxretry (default 6):",
+			Default: "6",
+		},
+	},
+	{
 		Name: "features",
 		Prompt: &survey.MultiSelect{
 			Message: "Which additional features do you want for your server?:",
@@ -77,7 +101,7 @@ var wizardQuestions = []*survey.Question{
 		Prompt: &survey.Select{
 			Message: "Choose the Java version:",
 			Help:    "If you are not running bedrock, you have to select the java version.",
-			Options: []string{"8", "16"},
+			Options: []string{"8", "16", "17"},
 			Default: "16",
 		},
 	},

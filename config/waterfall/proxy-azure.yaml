@@ -7,7 +7,10 @@ spec:
     cloud: azure
     region: westeurope
     size: Standard_D2_v2
-    ssh: "ssh/minecraft"
+    ssh:
+      port: 22
+      keyFolder: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft"
+      security: true
     port: 25577
   proxy:
     java:

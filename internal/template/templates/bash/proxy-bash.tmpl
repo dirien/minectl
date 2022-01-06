@@ -21,7 +21,7 @@ RestartSec=5
 WantedBy=multi-user.target
 EOF
 apt update
-apt-get install -y apt-transport-https ca-certificates curl openjdk-{{.Spec.Proxy.Java.OpenJDK}}-jre-headless
+apt-get install -y apt-transport-https ca-certificates curl openjdk-{{.Spec.Proxy.Java.OpenJDK}}-jre-headless fail2ban
 mkdir /minecraft
 {{- if eq .Spec.Proxy.Type "bungeecord" }}
 {{- template "bungeecord-binary" . }}
@@ -30,6 +30,20 @@ mkdir /minecraft
 {{- else if eq .Spec.Proxy.Type "velocity" }}
 {{- template "velocity-binary" . }}
 {{- end }}
+
+sed -i 's/#Port 22/Port {{ .Spec.Server.SSH.Port }}/g' /etc/ssh/sshd_config
+service sshd restart
+
+tee /etc/fail2ban/jail.local <<EOF
+[sshd]
+port = {{ .Spec.Server.SSH.Port }}
+enabled = true
+maxretry = {{ .Spec.Server.SSH.Fail2ban.Maxretry }}
+bantime = {{ .Spec.Server.SSH.Fail2ban.Bantime }}
+ignoreip = {{ .Spec.Server.SSH.Fail2ban.Ignoreip }}
+EOF
+systemctl restart fail2ban
+
 systemctl restart minecraft.service
 systemctl enable minecraft.service
 {{- end -}}

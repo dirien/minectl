@@ -76,7 +76,7 @@ func NewGCE(keyfile, zone string) (*GCE, error) {
 func (g *GCE) CreateServer(args automation.ServerArgs) (*automation.ResourceResults, error) {
 	imageURL := "projects/ubuntu-os-cloud/global/images/ubuntu-2004-focal-v20210720"
 
-	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSH()))
+	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSHKeyFolder()))
 	if err != nil {
 		return nil, err
 	}
@@ -356,7 +356,7 @@ func (g *GCE) UpdateServer(id string, args automation.ServerArgs) error {
 	}
 	if len(instancesListOp.Items) == 1 {
 		instance := instancesListOp.Items[0]
-		remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSH(), instance.NetworkInterfaces[0].AccessConfigs[0].NatIP, fmt.Sprintf("sa_%s", g.serviceAccountID))
+		remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSHKeyFolder(), instance.NetworkInterfaces[0].AccessConfigs[0].NatIP, fmt.Sprintf("sa_%s", g.serviceAccountID))
 		err = remoteCommand.UpdateServer(args.MinecraftResource)
 		if err != nil {
 			return err
@@ -376,12 +376,12 @@ func (g *GCE) UploadPlugin(id string, args automation.ServerArgs, plugin, destin
 	}
 	if len(instancesListOp.Items) == 1 {
 		instance := instancesListOp.Items[0]
-		remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSH(), instance.NetworkInterfaces[0].AccessConfigs[0].NatIP, fmt.Sprintf("sa_%s", g.serviceAccountID))
-		err = remoteCommand.TransferFile(plugin, filepath.Join(destination, filepath.Base(plugin)))
+		remoteCommand := update.NewRemoteServer(args.MinecraftResource.GetSSHKeyFolder(), instance.NetworkInterfaces[0].AccessConfigs[0].NatIP, fmt.Sprintf("sa_%s", g.serviceAccountID))
+		err = remoteCommand.TransferFile(plugin, filepath.Join(destination, filepath.Base(plugin)), args.MinecraftResource.GetSSHPort())
 		if err != nil {
 			return err
 		}
-		_, err = remoteCommand.ExecuteCommand("systemctl restart minecraft.service")
+		_, err = remoteCommand.ExecuteCommand("systemctl restart minecraft.service", args.MinecraftResource.GetSSHPort())
 		if err != nil {
 			return err
 		}

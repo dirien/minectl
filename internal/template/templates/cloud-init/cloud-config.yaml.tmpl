@@ -73,6 +73,14 @@ write_files:
       RestartSec=5
       [Install]
       WantedBy=multi-user.target
+  - path: /etc/fail2ban/jail.local
+    content: |
+      [sshd]
+      port = {{ .Spec.Server.SSH.Port }}
+      enabled = true
+      maxretry = {{ .Spec.Server.SSH.Fail2ban.Maxretry }}
+      bantime = {{ .Spec.Server.SSH.Fail2ban.Bantime }}
+      ignoreip = {{ .Spec.Server.SSH.Fail2ban.Ignoreip }}
 
 runcmd:
   - iptables -I INPUT -j ACCEPT
@@ -82,18 +90,9 @@ runcmd:
   {{- if not .Mount }}
   - mkdir -p /minecraft
   {{- end }}
-  - ufw allow ssh
-  - ufw allow 5201
-  {{ if and (ne .Spec.Minecraft.Edition "bedrock") (ne .Spec.Minecraft.Edition "nukkit") (ne .Spec.Minecraft.Edition "powernukkit") -}}
-  - ufw allow proto tcp to 0.0.0.0/0 port {{.Spec.Server.Port}}
-  {{ else -}}
-  - ufw allow proto udp to 0.0.0.0/0 port {{.Spec.Server.Port}}
-  {{ end -}}
-  - echo [DEFAULT] | sudo tee -a /etc/fail2ban/jail.local
-  - echo banaction = ufw | sudo tee -a /etc/fail2ban/jail.local
-  - echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
-  - echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
-  - sudo systemctl restart fail2ban
+  - sed -i 's/#Port 22/Port {{ .Spec.Server.SSH.Port }}/g' /etc/ssh/sshd_config
+  - service sshd restart
+  - systemctl restart fail2ban
   {{- if eq .Spec.Minecraft.Edition "java" }}
     {{- template "java-binary" . }}
   {{- else if eq .Spec.Minecraft.Edition "bedrock" }}
