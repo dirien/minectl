@@ -2289,7 +2289,7 @@ runcmd:
   - sed -i 's/#Port 22/Port 0/g' /etc/ssh/sshd_config
   - service sshd restart
   - systemctl restart fail2ban
-  - URL="https://maven.fabricmc.net/net/fabricmc/fabric-installer/1.17.1-138/fabric-installer-0.7.4.jar"
+  - URL="https://maven.fabricmc.net/net/fabricmc/fabric-installer/0.10.2/fabric-installer-0.10.2.jar"
   - mkdir /tmp/build
   - cd /tmp/build
   - curl -sLSf $URL > fabric-installer.jar
@@ -2464,7 +2464,7 @@ mkdir -p /minecraft
 mkfs.ext4  /dev/sda
 mount /dev/sda /minecraft
 echo "/dev/sda /minecraft ext4 defaults,noatime,nofail 0 2" >> /etc/fstab
-URL="https://maven.fabricmc.net/net/fabricmc/fabric-installer/0.7.4/fabric-installer-0.7.4.jar"
+URL="https://maven.fabricmc.net/net/fabricmc/fabric-installer/0.10.2/fabric-installer-0.10.2.jar"
 mkdir /tmp/build
 cd /tmp/build
 curl -sLSf $URL > fabric-installer.jar
@@ -3313,7 +3313,7 @@ runcmd:
   - sed -i 's/#Port 22/Port 0/g' /etc/ssh/sshd_config
   - service sshd restart
   - systemctl restart fail2ban
-  - URL="https://maven.fabricmc.net/net/fabricmc/fabric-installer/1.17.1-138/fabric-installer-0.7.4.jar"
+  - URL="https://maven.fabricmc.net/net/fabricmc/fabric-installer/0.10.2/fabric-installer-0.10.2.jar"
   - mkdir /tmp/build
   - cd /tmp/build
   - curl -sLSf $URL > fabric-installer.jar
@@ -3379,7 +3379,7 @@ mkdir -p /minecraft
 mkfs.ext4  /dev/sda
 mount /dev/sda /minecraft
 echo "/dev/sda /minecraft ext4 defaults,noatime,nofail 0 2" >> /etc/fstab
-URL="https://maven.fabricmc.net/net/fabricmc/fabric-installer/0.7.4/fabric-installer-0.7.4.jar"
+URL="https://maven.fabricmc.net/net/fabricmc/fabric-installer/0.10.2/fabric-installer-0.10.2.jar"
 mkdir /tmp/build
 cd /tmp/build
 curl -sLSf $URL > fabric-installer.jar
