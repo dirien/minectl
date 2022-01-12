@@ -38,7 +38,7 @@ require (
 	github.com/vultr/govultr/v2 v2.13.0
 	github.com/xeipuuv/gojsonschema v1.2.0
 	go.uber.org/zap v1.20.0
-	golang.org/x/crypto v0.0.0-20211215153901-e495a2d5b3d3
+	golang.org/x/crypto v0.0.0-20220112180741-5e0467b6c7ce
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8
 	google.golang.org/api v0.65.0
 	sigs.k8s.io/yaml v1.3.0
