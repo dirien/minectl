@@ -23,6 +23,7 @@
         * [Amazon AWS](#amazon-aws)
         * [VEXXHOST](#vexxhost)
         * [Multipass](#multipass)
+        * [Upcloud](#upcloud)
     - [Minecraft Server Versions 📚](#minecraft-server-versions-)
     - [Minecraft Proxy Versions 📚](#minecraft-proxy-versions-)
     - [Server Configs 📋](#server-configs-)
@@ -97,6 +98,7 @@ It is a private side project of me, to learn more about Go, CLI and multi-cloud 
 + Amazon AWS (https://aws.amazon.com/)
 + VEXXHOST (https://vexxhost.com/)
 + Multipass (https://multipass.run/)
++ Upcloud (https://upcloud.com/)
 
 ### TL;DR 🚀
 
@@ -318,6 +320,15 @@ launch.
 
 To install multipass, just follow the instructions on [multipass.run](https://multipass.run/) for your platform.
 
+#### Upcloud
+
+You need to enable API access before using minectl. Follow the instructions on [upcloud.com](https://upcloud.com/community/tutorials/getting-started-upcloud-api/)
+
+```bash
+export UPCLOUD_USERNAME=xxx
+export UPCLOUD_PASSWORD=yyy
+```
+
 #### Minecraft Server Versions 📚
 
 > ⚠️ `minectl 🗺` is not(!) providing any pre-compiled binaries of Minecraft or download a pre-compiled version.
@@ -429,7 +440,7 @@ metadata:
   name: minecraft-proxy
 spec:
   server:
-    cloud: <cloud provider name civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci|ionos|aws|vexxhost|multipass>
+    cloud: <cloud provider name civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci|ionos|aws|vexxhost|multipass|upcloud>
     region: <cloud provider region>
     size: <cloud provider plan>
     ssh:
@@ -471,7 +482,7 @@ spec:
   monitoring:
     enabled: true|false
   server:
-    cloud: "provider: civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci|ionos|aws|vexxhost|multipass"
+    cloud: "provider: civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci|ionos|aws|vexxhost|multipass|upcloud"
     region: "region see cloud provider for details eg. fra1"
     size: "see cloud provider docs for details eg. g3.large"
     volumeSize: 100

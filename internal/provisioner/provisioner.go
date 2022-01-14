@@ -21,6 +21,7 @@ import (
 	"github.com/minectl/internal/cloud/oci"
 	"github.com/minectl/internal/cloud/ovh"
 	"github.com/minectl/internal/cloud/scaleway"
+	"github.com/minectl/internal/cloud/upcloud"
 	"github.com/minectl/internal/cloud/vexxhost"
 	"github.com/minectl/internal/cloud/vultr"
 	"github.com/minectl/internal/common"
@@ -286,7 +287,12 @@ func getProvisioner(provider, region string) (automation.Automation, error) { //
 			return nil, err
 		}
 		return cloudProvider, nil
-
+	case "upcloud":
+		cloudProvider, err := upcloud.NewUpcloud(os.Getenv("UPCLOUD_USERNAME"), os.Getenv("UPCLOUD_PASSWORD"))
+		if err != nil {
+			return nil, err
+		}
+		return cloudProvider, nil
 	default:
 		return nil, errors.Errorf("Could not find provider %s", provider)
 	}
