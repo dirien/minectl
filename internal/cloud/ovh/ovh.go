@@ -37,21 +37,6 @@ func NewOVHcloud(endpoint, appKey, appSecret, consumerKey, serviceName, region s
 	}, nil
 }
 
-func createOVHID(instanceName, label string) (id string) {
-	return fmt.Sprintf("%s|%s", instanceName, label)
-}
-
-func getOVHFieldsFromID(id string) (label string, err error) {
-	fields := strings.Split(id, "|")
-	if len(fields) == 3 {
-		label = strings.Join([]string{fields[1], fields[2]}, ",")
-	} else {
-		err = fmt.Errorf("could not get fields from custom ID: fields: %v", fields)
-		return "", err
-	}
-	return label, nil
-}
-
 func (o *OVHcloud) CreateServer(args automation.ServerArgs) (*automation.ResourceResults, error) {
 	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSHKeyFolder()))
 	if err != nil {
@@ -86,7 +71,7 @@ func (o *OVHcloud) CreateServer(args automation.ServerArgs) (*automation.Resourc
 	}
 
 	instance, err := o.client.CreateInstance(context.Background(), ovhsdk.InstanceCreateOptions{
-		Name:           createOVHID(args.MinecraftResource.GetName(), strings.Join([]string{common.InstanceTag, args.MinecraftResource.GetEdition()}, "|")),
+		Name:           common.CreateServerNameWithTags(args.MinecraftResource.GetName(), strings.Join([]string{common.InstanceTag, args.MinecraftResource.GetEdition()}, "|")),
 		Region:         args.MinecraftResource.GetRegion(),
 		SSHKeyID:       key.ID,
 		FlavorID:       flavor.ID,
@@ -155,7 +140,7 @@ func (o *OVHcloud) CreateServer(args automation.ServerArgs) (*automation.Resourc
 		}
 	}
 
-	labels, err := getOVHFieldsFromID(instance.Name)
+	labels, err := common.ExtractFieldsFromServername(instance.Name)
 	if err != nil {
 		return nil, err
 	}
@@ -232,7 +217,7 @@ func (o *OVHcloud) ListServer() ([]automation.ResourceResults, error) {
 	var result []automation.ResourceResults
 	for i, instance := range instances {
 		// no error checking. could be server in the region which don't belong to minectl
-		labels, _ := getOVHFieldsFromID(instance.Name)
+		labels, _ := common.ExtractFieldsFromServername(instance.Name)
 		if strings.Contains(labels, common.InstanceTag) {
 			ip4, err := ovhsdk.IPv4(&instances[i])
 			if err != nil {
@@ -303,7 +288,7 @@ func (o *OVHcloud) GetServer(id string, args automation.ServerArgs) (*automation
 	if err != nil {
 		return nil, err
 	}
-	labels, err := getOVHFieldsFromID(instance.Name)
+	labels, err := common.ExtractFieldsFromServername(instance.Name)
 	if err != nil {
 		return nil, err
 	}

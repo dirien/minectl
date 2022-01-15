@@ -16,6 +16,7 @@ var cloudProvider = map[string]string{
 	"ionos":     "IONOS Cloud",
 	"aws":       "Amazon WebServices",
 	"vexxhost":  "VEXXHOST",
+	"exoscale":  "Exoscale",
 	"multipass": "Ubuntu Multipass",
 }
 
