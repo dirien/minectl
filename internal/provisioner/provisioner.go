@@ -13,6 +13,7 @@ import (
 	"github.com/minectl/internal/cloud/civo"
 	"github.com/minectl/internal/cloud/do"
 	"github.com/minectl/internal/cloud/equinix"
+	"github.com/minectl/internal/cloud/exoscale"
 	"github.com/minectl/internal/cloud/gce"
 	"github.com/minectl/internal/cloud/hetzner"
 	"github.com/minectl/internal/cloud/ionos"
@@ -276,6 +277,12 @@ func getProvisioner(provider, region string) (automation.Automation, error) { //
 		return cloudProvider, nil
 	case "vexxhost":
 		cloudProvider, err := vexxhost.NewVEXXHOST()
+		if err != nil {
+			return nil, err
+		}
+		return cloudProvider, nil
+	case "exoscale":
+		cloudProvider, err := exoscale.NewExoscale(os.Getenv("EXOSCALE_API_KEY"), os.Getenv("EXOSCALE_API_SECRET"))
 		if err != nil {
 			return nil, err
 		}

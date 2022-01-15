@@ -23,6 +23,7 @@
         * [Amazon AWS](#amazon-aws)
         * [VEXXHOST](#vexxhost)
         * [Multipass](#multipass)
+        * [Exoscale](#exoscale)
     - [Minecraft Server Versions 📚](#minecraft-server-versions-)
     - [Minecraft Proxy Versions 📚](#minecraft-proxy-versions-)
     - [Server Configs 📋](#server-configs-)
@@ -71,6 +72,7 @@
 ![Amazon AWS](https://img.shields.io/badge/Amazon_AWS-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white)
 ![VEXXHOST](https://img.shields.io/badge/VEXXHOST-2A1659?style=for-the-badge&logo=vexxhost&logoColor=white)
 ![Multipass](https://img.shields.io/badge/Multipass-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
+![Exoscale](https://img.shields.io/badge/Exoscale-DA291C?style=for-the-badge&logo=exoscale&logoColor=white)
 
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/dirien/minectl/Build%20Binary/main?logo=github&style=for-the-badge)
 ![GitHub](https://img.shields.io/github/license/dirien/minectl?style=for-the-badge)
@@ -97,6 +99,7 @@ It is a private side project of me, to learn more about Go, CLI and multi-cloud 
 + Amazon AWS (https://aws.amazon.com/)
 + VEXXHOST (https://vexxhost.com/)
 + Multipass (https://multipass.run/)
++ Exoscale (https://www.exoscale.com/)
 
 ### TL;DR 🚀
 
@@ -318,6 +321,16 @@ launch.
 
 To install multipass, just follow the instructions on [multipass.run](https://multipass.run/) for your platform.
 
+#### Exoscale
+
+Go to the IAM section in the Exoscale Console and create a new API key. You can restricte the key to just perform
+operations on the `compute` service.
+
+```bash
+export EXOSCALE_API_KEY=<key>
+export EXOSCALE_API_SECRET=<secret>
+```
+
 #### Minecraft Server Versions 📚
 
 > ⚠️ `minectl 🗺` is not(!) providing any pre-compiled binaries of Minecraft or download a pre-compiled version.
@@ -429,7 +442,7 @@ metadata:
   name: minecraft-proxy
 spec:
   server:
-    cloud: <cloud provider name civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci|ionos|aws|vexxhost|multipass>
+    cloud: <cloud provider name civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci|ionos|aws|vexxhost|multipass|exoscale>
     region: <cloud provider region>
     size: <cloud provider plan>
     ssh:
@@ -471,7 +484,7 @@ spec:
   monitoring:
     enabled: true|false
   server:
-    cloud: "provider: civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci|ionos|aws|vexxhost|multipass"
+    cloud: "provider: civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci|ionos|aws|vexxhost|multipass|exoscale"
     region: "region see cloud provider for details eg. fra1"
     size: "see cloud provider docs for details eg. g3.large"
     volumeSize: 100
@@ -607,7 +620,7 @@ mincetl list  \
 
 Flags:
   -h, --help              help for list
-  -p, --provider string   The cloud provider - civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci|ionos|aws|vexxhost|multipass
+  -p, --provider string   The cloud provider - civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci|ionos|aws|vexxhost|multipass|exoscale
   -r, --region string     The region for your cloud provider
 
 Global Flags:
@@ -830,7 +843,7 @@ Apache License, Version 2.0
 - [x] New cloud provider - Oracle/OCI [#107](https://github.com/dirien/minectl/issues/107)
 - [x] New cloud provider - Ionos Cloud [#218](https://github.com/dirien/minectl/issues/218)
 - [x] New cloud provider - AWS [#210](https://github.com/dirien/minectl/pull/210)
-- [ ] ...
+- [ ] Much more to come...
 
 ### Libraries & Tools 🔥
 
@@ -864,6 +877,7 @@ Apache License, Version 2.0
 - https://github.com/AlecAivazis/survey
 - https://github.com/aws/aws-sdk-go
 - https://github.com/gophercloud/gophercloud
+- https://github.com/exoscale/egoscale
 
 ### Legal Disclaimer 👮
 
