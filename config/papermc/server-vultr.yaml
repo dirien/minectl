@@ -3,6 +3,8 @@ kind: MinecraftServer
 metadata:
   name: minecraft-server
 spec:
+  monitoring:
+    enabled: true
   server:
     cloud: vultr
     region: fra
@@ -44,7 +46,7 @@ spec:
       entity-broadcast-range-percentage=100
       level-name=world
       player-idle-timeout=0
-      motd=\u00A7bDigitalOcean \u00A7rMinecraft --- \u00A76PaperMC \u00A7redition
+      motd=\u00A7bVultr \u00A7rMinecraft --- \u00A76PaperMC \u00A7redition
       query.port=25565
       force-gamemode=false
       rate-limit=0
