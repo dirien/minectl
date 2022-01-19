@@ -3,6 +3,12 @@ name: Call OSSF Scorecard Action
 on:
   workflow_call:
   workflow_dispatch:
+  branch_protection_rule:
+  schedule:
+    # Weekly on Saturdays.
+    - cron: '30 1 * * 6'
+  push:
+    branches: [ main, master ]
 
 jobs:
   call-workflow-passing-data:
