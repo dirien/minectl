@@ -13,3 +13,5 @@ on:
 jobs:
   call-workflow-passing-data:
     uses: dirien/.github/.github/workflows/ossf-scorecard-action.yaml@main
+    env:
+      GITHUB_TOKEN: ${{ secrets.SCORECARD_READ_TOKEN }}
