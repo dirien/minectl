@@ -1,0 +1,4 @@
+name: Call OSSF Scorecard Action
+jobs:
+  call-workflow-passing-data:
+    uses: dirien/.github/.github/workflows/ossf-scorecard-action.yaml@main
