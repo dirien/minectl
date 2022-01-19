@@ -2,6 +2,7 @@ name: Call OSSF Scorecard Action
 
 on:
   workflow_call:
+  workflow_dispatch:
 
 jobs:
   call-workflow-passing-data:
