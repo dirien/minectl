@@ -162,19 +162,19 @@ minectl create --filename config/server-exoscale.yaml
 
 Download a Minecraft Client (Java Edition) under https://www.minecraft.net/en-us/get-minecraft
 
-Start your Minecraft Client
+### Start your Minecraft Client
 
 ![img.png](img/multi.png)
 
-Add your server
+### Add your server
 
 ![img.png](img/exoscale_add_server.png)
 
-Join the server
+### Join the server
 
 ![img.png](img/exoscale_join.png)
 
-Play the game
+### Play the game
 
 ![img.png](img/exoscale_game.png)
 
