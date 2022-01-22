@@ -4,6 +4,7 @@
 ## Access and Secret Key
 
 Generate a new access and secret key (https://portal.exoscale.com/iam/api-keys)
+
 *Note: for a better security (and to protect your budget!), we suggest you to create a RESTRICTED key to limit the rights of minectl.*
 
 ![img.png](img/exoscale_create_API_key.png)
@@ -19,7 +20,7 @@ export EXOSCALE_API_KEY=EXO...
 export EXOSCALE_API_SECRET=...
 ```
 
-See https://community.exoscale.com/documentation/iam/quick-start// for more details on Exoscale Credentials (Identity and Access Management, Exoscale IAM).
+See https://community.exoscale.com/documentation/iam/quick-start/ for more details on Exoscale Credentials (Identity and Access Management, Exoscale IAM).
 
 ## Create SSH Keys
 
@@ -28,8 +29,8 @@ ssh-keygen -t rsa -f ./minecraft
 ```
 
 ## Create MinecraftServer config
-Create a file named exoscale-server.yaml with the example below.
-Have a look at https://minecraft.fandom.com/wiki/Server.properties// to configure your server.
+Create a file named server-exoscale.yaml with the example below.
+Have a look at https://minecraft.fandom.com/wiki/Server.properties/ to configure your server.
 
 ```bash
 apiVersion: minectl.ediri.io/v1alpha1
@@ -40,7 +41,7 @@ spec:
   server:
     cloud: exoscale
     region: ch-gva-2
-    size: small
+    size: medium
     ssh:
       port: 22
       keyfolder: "/xxx/path/to/your/private/key"
@@ -50,7 +51,7 @@ spec:
     port: 25565
   minecraft:
     java:
-      openjdk: 18
+      openjdk: 17
       xmx: 2G
       xms: 2G
       rcon:
@@ -112,6 +113,7 @@ spec:
 
 ## minectl 🗺
 Once your configuration file is created, we will use it with minectl (see below).
+
 In your Exoscale organizsation, Minectl will then:
 - create a new instance called minecraft-server and deploy all necessary components
 - add a security group (minecraft-server-sg) to allow the network traffic to your server
@@ -119,7 +121,7 @@ In your Exoscale organizsation, Minectl will then:
 
 
 ```bash
-minectl create --filename config/exoscale-server.yaml 
+minectl create --filename config/server-exoscale.yaml 
 
 🛎 Using cloud provider  Exoscale
 🗺 Minecraft  java edition
@@ -130,7 +132,7 @@ minectl create --filename config/exoscale-server.yaml
 
                    ID                  |       NAME       |  REGION  | TAGS |       IP
 ---------------------------------------+------------------+----------+------+-----------------
-  4100ce1c-e3b0-4a63-b42d-ee76c75178e4 | minecraft-server | ch-gva-2 |      | 194.182.161.49
+  4100ce1c-e3b0-4a63-b42d-ee76c75178e4 | minecraft-server | ch-gva-2 |      | 194.182.163.187
 
 🪓 To delete the server type:
 
@@ -152,7 +154,7 @@ minectl create --filename config/exoscale-server.yaml
  minectl plugins -f ./exoscale-server.yaml --id 4100ce1c-e3b0-4a63-b42d-ee76c75178e4 --plugin <folder>/x.jar --destination /minecraft/plugins
 ```
 
-![img.png](img/exoscale_isntance_details.png)
+![img.png](img/exoscale_instance_details.png)
 
 ## Minecraft Client
 
@@ -192,7 +194,7 @@ minectl delete -f ./exoscale-server.yaml --id 4100ce1c-e3b0-4a63-b42d-ee76c75178
 
 This project is not affiliated with Mojang Studios, XBox Game Studios, Double Eleven or the Minecraft brand.
 
-"Minecraft" is a trademark of Mojang Synergies AB.
-"Exoscale" is a trademark of Akenes SA, Switzerland.
+- "Minecraft" is a trademark of Mojang Synergies AB.
+- "Exoscale" is a trademark of Akenes SA, Switzerland.
 
 Other trademarks referenced herein are property of their respective owners.
