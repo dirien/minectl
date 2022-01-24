@@ -13,7 +13,7 @@ require (
 	github.com/aws/aws-sdk-go v1.42.38
 	github.com/blang/semver/v4 v4.0.0
 	github.com/c-bata/go-prompt v0.2.6
-	github.com/civo/civogo v0.2.59
+	github.com/civo/civogo v0.2.62
 	github.com/digitalocean/godo v1.74.0
 	github.com/dirien/ovh-go-sdk v0.1.1
 	github.com/exoscale/egoscale v0.84.3
