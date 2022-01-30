@@ -8,10 +8,7 @@ on:
       - '*'
   pull_request:
 
-permissions:
-  contents: read
-  id-token: write
-  packages: write
+permissions: read-all
 
 jobs:
   build:
@@ -41,6 +38,9 @@ jobs:
         run: |
           make test coverage
   release:
+    permissions:
+      id-token: write
+      packages: write
     needs: build
     env:
       DOCKER_CLI_EXPERIMENTAL: "enabled"
