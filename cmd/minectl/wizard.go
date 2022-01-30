@@ -32,7 +32,6 @@ var wizardQuestions = []*survey.Question{
 		},
 	},
 	{
-
 		Name:     "provider",
 		Validate: survey.Required,
 		Prompt: &survey.Select{

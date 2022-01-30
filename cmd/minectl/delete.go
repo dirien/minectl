@@ -26,7 +26,7 @@ var deleteCmd = &cobra.Command{
 func runDelete(cmd *cobra.Command, _ []string) error {
 	filename, err := cmd.Flags().GetString("filename")
 	if err != nil {
-		return errors.Wrap(err, "failed to get 'filename' value.")
+		return errors.Wrap(err, "failed to get 'filename' value")
 	}
 	if len(filename) == 0 {
 		return errors.New("Please provide a valid MinecraftResource manifest file via -f|--filename flag")

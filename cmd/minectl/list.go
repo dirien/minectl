@@ -29,14 +29,14 @@ var listCmd = &cobra.Command{
 func runList(cmd *cobra.Command, _ []string) error {
 	provider, err := cmd.Flags().GetString("provider")
 	if err != nil {
-		return errors.Wrap(err, "failed to get 'provider' value.")
+		return errors.Wrap(err, "failed to get 'provider' value")
 	}
 	if len(provider) == 0 {
 		return errors.New("Please provide a valid 'provider' value")
 	}
 	region, err := cmd.Flags().GetString("region")
 	if err != nil {
-		return errors.Wrap(err, "failed to get 'region' value.")
+		return errors.Wrap(err, "failed to get 'region' value")
 	}
 
 	newProvisioner, err := provisioner.ListProvisioner(&provisioner.MinectlProvisionerListOpts{
