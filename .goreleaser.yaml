@@ -52,9 +52,17 @@ dockers:
     build_flag_templates:
       - --platform=linux/amd64
       - --label=org.opencontainers.image.licenses=Apache-2.0
-      - --label=org.opencontainers.image.version={{ .Version }}
-      - --label=org.opencontainers.image.title={{ .ProjectName }}
-      - --label=org.opencontainers.image.source=https://github.com/dirien/{{ .ProjectName }}
+      - --label=org.opencontainers.image.description=minectl is a cli for creating Minecraft server on different cloud provider
+      - --label=org.opencontainers.image.created={{.Date}}
+      - --label=org.opencontainers.image.name={{.ProjectName}}
+      - --label=org.opencontainers.image.revision={{.FullCommit}}
+      - --label=org.opencontainers.image.version={{.Version}}
+      - --label=org.opencontainers.image.source={{.GitURL}}
+      - --label=io.artifacthub.package.maintainers=[{"name":"Engin Diri","email":"engin.diri@ediri.de"}]
+      - --label=io.artifacthub.package.readme-url=https://raw.githubusercontent.com/dirien/minectl/main/README.md
+      - --label=io.artifacthub.package.logo-url=https://dirien.github.io/minectl/img/minectl-logo.png
+      - --label=io.artifacthub.package.keywords=minecraft,server,cli
+      - --label=io.artifacthub.package.license=Apache-2.0
   - image_templates: [ "ghcr.io/dirien/{{ .ProjectName }}:{{ .Version }}-arm64" ]
     goarch: arm64
     dockerfile: Dockerfile
@@ -62,9 +70,28 @@ dockers:
     build_flag_templates:
       - --platform=linux/arm64/v8
       - --label=org.opencontainers.image.licenses=Apache-2.0
-      - --label=org.opencontainers.image.version={{ .Version }}
-      - --label=org.opencontainers.image.title={{ .ProjectName }}
-      - --label=org.opencontainers.image.source=https://github.com/dirien/{{ .ProjectName }}
+      - --label=org.opencontainers.image.description=minectl is a cli for creating Minecraft server on different cloud provider
+      - --label=org.opencontainers.image.created={{.Date}}
+      - --label=org.opencontainers.image.name={{.ProjectName}}
+      - --label=org.opencontainers.image.revision={{.FullCommit}}
+      - --label=org.opencontainers.image.version={{.Version}}
+      - --label=org.opencontainers.image.source={{.GitURL}}
+      - --label=io.artifacthub.package.maintainers=[{"name":"Engin Diri","email":"engin.diri@ediri.de"}]
+      - --label=io.artifacthub.package.readme-url=https://raw.githubusercontent.com/dirien/minectl/main/README.md
+      - --label=io.artifacthub.package.logo-url=https://dirien.github.io/minectl/img/minectl-logo.png
+      - --label=io.artifacthub.package.keywords=minecraft,server,cli
+      - --label=io.artifacthub.package.license=Apache-2.0
+
+docker_manifests:
+  - name_template: 'ghcr.io/dirien/{{ .ProjectName }}:{{ .Version }}'
+    image_templates:
+      - 'ghcr.io/dirien/{{ .ProjectName }}:{{ .Version }}-amd64'
+      - 'ghcr.io/dirien/{{ .ProjectName }}:{{ .Version }}-arm64'
+  - name_template: 'ghcr.io/dirien/{{ .ProjectName }}:latest'
+    image_templates:
+      - 'ghcr.io/dirien/{{ .ProjectName }}:{{ .Version }}-amd64'
+      - 'ghcr.io/dirien/{{ .ProjectName }}:{{ .Version }}-arm64'
+
 
 docker_signs:
   - cmd: cosign

@@ -53,6 +53,8 @@
 
 # `minectl 🗺`
 
+![minectl](https://dirien.github.io/minectl/img/minectl.png)
+
 ![Minecraft](https://img.shields.io/badge/Minecraft-62B47A?style=for-the-badge&logo=Minecraft&logoColor=white)
 ![Go](https://img.shields.io/badge/go-00ADD8?style=for-the-badge&logo=go&logoColor=white)
 ![Ubuntu](https://img.shields.io/badge/ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
@@ -78,6 +80,8 @@
 ![GitHub](https://img.shields.io/github/license/dirien/minectl?style=for-the-badge)
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/dirien/minectl?style=for-the-badge)
+
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/minectl&style=for-the-badge)](https://artifacthub.io/packages/search?repo=minectl)
 
 `minectl 🗺`️️ is a cli for creating Minecraft server on different cloud provider.
 
