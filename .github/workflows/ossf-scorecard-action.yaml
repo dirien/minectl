@@ -1,4 +1,4 @@
-name: Scorecards supply-chain security
+name: scorecards-supply-chain-security
 on:
   # Only the default branch is supported.
   branch_protection_rule:
@@ -22,6 +22,10 @@ jobs:
       contents: read
 
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@14dc64f30986eaa2ad2dddcec073f5aab18e5a24
+        with:
+          egress-policy: audit
       - name: "Checkout code"
         uses: actions/checkout@230611dbd0eb52da1e1f4f7bc8bb0c3a339fc8b7
         with:
