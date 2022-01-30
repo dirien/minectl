@@ -1,4 +1,4 @@
-name: Build Binary
+name: build-binary
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
   pull_request:
 
 permissions:
-  contents: write 
+  contents: read
   id-token: write
   packages: write
 
@@ -18,10 +18,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
         with:
           fetch-depth: 0
-      - uses: actions/cache@v2
+      - uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed
         with:
           path: |
             ~/.cache/go-build
@@ -30,7 +30,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
       - name: Set up Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@424fc82d43fa5a37540bae62709ddcc23d9520d4
         with:
           go-version: 1.17
       - name: Tests
@@ -45,22 +45,22 @@ jobs:
     if: success() && startsWith(github.ref, 'refs/tags/')
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
         with:
           fetch-depth: 0
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
+        uses: docker/setup-qemu-action@27d0a4f181a40b142cce983c5393082c365d1480
       - name: Docker Login
-        uses: docker/login-action@v1
+        uses: docker/login-action@42d299face0c5c43a0487c477f595ac9cf22f1a7
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GH_PAT }}
       - name: Set up Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@424fc82d43fa5a37540bae62709ddcc23d9520d4
         with:
           go-version: 1.17
-      - uses: actions/cache@v2
+      - uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed
         with:
           path: |
             ~/.cache/go-build
@@ -75,10 +75,10 @@ jobs:
           tar xvf upx-$UPX_VERSION-amd64_linux.tar.xz
           sudo mv upx-$UPX_VERSION-amd64_linux/upx /usr/local/sbin
         shell: bash
-      - uses: sigstore/cosign-installer@v1.4.1
-      - uses: anchore/sbom-action/download-syft@v0.6.0
+      - uses: sigstore/cosign-installer@116dc6872c0a067bcb78758f18955414cdbf918f
+      - uses: anchore/sbom-action/download-syft@3626d7d7b13e87ee6c6f9ded3940dea05a3967bc
       - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v2
+        uses: goreleaser/goreleaser-action@79d4afbba1b4eff8b9a98e3d2e58c4dbaf094e2b
         with:
           version: latest
           args: release --rm-dist
