@@ -138,7 +138,7 @@ func (p *MinectlProvisioner) waitForMinecraftServerReady(server *automation.Reso
 			if timeout != nil {
 				err = timeout.Close()
 				if err != nil {
-					return errors.Errorf("Timeout error: %s\n", err)
+					return errors.Errorf("timeout error: %s", err)
 				}
 				break
 			}

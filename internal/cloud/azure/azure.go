@@ -271,7 +271,6 @@ func (a *Azure) CreateServer(args automation.ServerArgs) (*automation.ResourceRe
 	}
 
 	vmOptions := compute.VirtualMachine{
-
 		Location: group.Location,
 		VirtualMachineProperties: &compute.VirtualMachineProperties{
 			Priority:       priority,

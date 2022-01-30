@@ -398,7 +398,7 @@ export ARCH=amd64
 MACHINE_TYPE=$(uname -i)
 if test "$MACHINE_TYPE" = 'aarch64'; then export ARCH=arm64; fi
 
-export PROM_VERSION=2.32.1
+export PROM_VERSION=2.33.0
 mkdir /etc/prometheus
 mkdir /var/lib/prometheus
 curl -sSL https://github.com/prometheus/prometheus/releases/download/v$PROM_VERSION/prometheus-$PROM_VERSION.linux-$ARCH.tar.gz | tar -xz
@@ -559,7 +559,7 @@ export ARCH=amd64
 MACHINE_TYPE=$(uname -i)
 if test "$MACHINE_TYPE" = 'aarch64'; then export ARCH=arm64; fi
 
-export PROM_VERSION=2.32.1
+export PROM_VERSION=2.33.0
 mkdir /etc/prometheus
 mkdir /var/lib/prometheus
 curl -sSL https://github.com/prometheus/prometheus/releases/download/v$PROM_VERSION/prometheus-$PROM_VERSION.linux-$ARCH.tar.gz | tar -xz
@@ -586,7 +586,7 @@ systemctl daemon-reload
 systemctl start node_exporter
 systemctl enable node_exporter
 
-export MINECRAFT_EXPORTER_VERSION=0.8.0
+export MINECRAFT_EXPORTER_VERSION=0.11.2
 curl -sSL https://github.com/dirien/minecraft-prometheus-exporter/releases/download/v$MINECRAFT_EXPORTER_VERSION/minecraft-exporter_$MINECRAFT_EXPORTER_VERSION.linux-$ARCH.tar.gz | tar -xz
 cp minecraft-exporter /usr/local/bin
 chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
@@ -726,7 +726,7 @@ runcmd:
   - export ARCH=amd64
   - MACHINE_TYPE=$(uname -i)
   - if test "$MACHINE_TYPE" = 'aarch64'; then export ARCH=arm64; fi
-  - export PROM_VERSION=2.32.1
+  - export PROM_VERSION=2.33.0
   - mkdir /etc/prometheus
   - mkdir /var/lib/prometheus
   - curl -sSL https://github.com/prometheus/prometheus/releases/download/v$PROM_VERSION/prometheus-$PROM_VERSION.linux-$ARCH.tar.gz | tar -xz
@@ -898,7 +898,7 @@ runcmd:
   - export ARCH=amd64
   - MACHINE_TYPE=$(uname -i)
   - if test "$MACHINE_TYPE" = 'aarch64'; then export ARCH=arm64; fi
-  - export PROM_VERSION=2.32.1
+  - export PROM_VERSION=2.33.0
   - mkdir /etc/prometheus
   - mkdir /var/lib/prometheus
   - curl -sSL https://github.com/prometheus/prometheus/releases/download/v$PROM_VERSION/prometheus-$PROM_VERSION.linux-$ARCH.tar.gz | tar -xz
@@ -924,7 +924,7 @@ runcmd:
   - systemctl daemon-reload
   - systemctl start node_exporter
   - systemctl enable node_exporter
-  - export MINECRAFT_EXPORTER_VERSION=0.8.0
+  - export MINECRAFT_EXPORTER_VERSION=0.11.2
   - curl -sSL https://github.com/dirien/minecraft-prometheus-exporter/releases/download/v$MINECRAFT_EXPORTER_VERSION/minecraft-exporter_$MINECRAFT_EXPORTER_VERSION.linux-$ARCH.tar.gz | tar -xz
   - cp minecraft-exporter /usr/local/bin
   - chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
@@ -1074,7 +1074,7 @@ runcmd:
   - export ARCH=amd64
   - MACHINE_TYPE=$(uname -i)
   - if test "$MACHINE_TYPE" = 'aarch64'; then export ARCH=arm64; fi
-  - export PROM_VERSION=2.32.1
+  - export PROM_VERSION=2.33.0
   - mkdir /etc/prometheus
   - mkdir /var/lib/prometheus
   - curl -sSL https://github.com/prometheus/prometheus/releases/download/v$PROM_VERSION/prometheus-$PROM_VERSION.linux-$ARCH.tar.gz | tar -xz
@@ -1100,7 +1100,7 @@ runcmd:
   - systemctl daemon-reload
   - systemctl start node_exporter
   - systemctl enable node_exporter
-  - export MINECRAFT_EXPORTER_VERSION=0.8.0
+  - export MINECRAFT_EXPORTER_VERSION=0.11.2
   - curl -sSL https://github.com/dirien/minecraft-prometheus-exporter/releases/download/v$MINECRAFT_EXPORTER_VERSION/minecraft-exporter_$MINECRAFT_EXPORTER_VERSION.linux-$ARCH.tar.gz | tar -xz
   - cp minecraft-exporter /usr/local/bin
   - chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
@@ -1200,7 +1200,7 @@ export ARCH=amd64
 MACHINE_TYPE=$(uname -i)
 if test "$MACHINE_TYPE" = 'aarch64'; then export ARCH=arm64; fi
 
-export PROM_VERSION=2.32.1
+export PROM_VERSION=2.33.0
 mkdir /etc/prometheus
 mkdir /var/lib/prometheus
 curl -sSL https://github.com/prometheus/prometheus/releases/download/v$PROM_VERSION/prometheus-$PROM_VERSION.linux-$ARCH.tar.gz | tar -xz
@@ -1364,7 +1364,7 @@ export ARCH=amd64
 MACHINE_TYPE=$(uname -i)
 if test "$MACHINE_TYPE" = 'aarch64'; then export ARCH=arm64; fi
 
-export PROM_VERSION=2.32.1
+export PROM_VERSION=2.33.0
 mkdir /etc/prometheus
 mkdir /var/lib/prometheus
 curl -sSL https://github.com/prometheus/prometheus/releases/download/v$PROM_VERSION/prometheus-$PROM_VERSION.linux-$ARCH.tar.gz | tar -xz
@@ -1391,7 +1391,7 @@ systemctl daemon-reload
 systemctl start node_exporter
 systemctl enable node_exporter
 
-export MINECRAFT_EXPORTER_VERSION=0.8.0
+export MINECRAFT_EXPORTER_VERSION=0.11.2
 curl -sSL https://github.com/dirien/minecraft-prometheus-exporter/releases/download/v$MINECRAFT_EXPORTER_VERSION/minecraft-exporter_$MINECRAFT_EXPORTER_VERSION.linux-$ARCH.tar.gz | tar -xz
 cp minecraft-exporter /usr/local/bin
 chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
@@ -1532,7 +1532,7 @@ export ARCH=amd64
 MACHINE_TYPE=$(uname -i)
 if test "$MACHINE_TYPE" = 'aarch64'; then export ARCH=arm64; fi
 
-export PROM_VERSION=2.32.1
+export PROM_VERSION=2.33.0
 mkdir /etc/prometheus
 mkdir /var/lib/prometheus
 curl -sSL https://github.com/prometheus/prometheus/releases/download/v$PROM_VERSION/prometheus-$PROM_VERSION.linux-$ARCH.tar.gz | tar -xz
@@ -1559,7 +1559,7 @@ systemctl daemon-reload
 systemctl start node_exporter
 systemctl enable node_exporter
 
-export MINECRAFT_EXPORTER_VERSION=0.8.0
+export MINECRAFT_EXPORTER_VERSION=0.11.2
 curl -sSL https://github.com/dirien/minecraft-prometheus-exporter/releases/download/v$MINECRAFT_EXPORTER_VERSION/minecraft-exporter_$MINECRAFT_EXPORTER_VERSION.linux-$ARCH.tar.gz | tar -xz
 cp minecraft-exporter /usr/local/bin
 chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
@@ -1700,7 +1700,7 @@ export ARCH=amd64
 MACHINE_TYPE=$(uname -i)
 if test "$MACHINE_TYPE" = 'aarch64'; then export ARCH=arm64; fi
 
-export PROM_VERSION=2.32.1
+export PROM_VERSION=2.33.0
 mkdir /etc/prometheus
 mkdir /var/lib/prometheus
 curl -sSL https://github.com/prometheus/prometheus/releases/download/v$PROM_VERSION/prometheus-$PROM_VERSION.linux-$ARCH.tar.gz | tar -xz
@@ -1727,7 +1727,7 @@ systemctl daemon-reload
 systemctl start node_exporter
 systemctl enable node_exporter
 
-export MINECRAFT_EXPORTER_VERSION=0.8.0
+export MINECRAFT_EXPORTER_VERSION=0.11.2
 curl -sSL https://github.com/dirien/minecraft-prometheus-exporter/releases/download/v$MINECRAFT_EXPORTER_VERSION/minecraft-exporter_$MINECRAFT_EXPORTER_VERSION.linux-$ARCH.tar.gz | tar -xz
 cp minecraft-exporter /usr/local/bin
 chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
@@ -1893,7 +1893,7 @@ runcmd:
   - export ARCH=amd64
   - MACHINE_TYPE=$(uname -i)
   - if test "$MACHINE_TYPE" = 'aarch64'; then export ARCH=arm64; fi
-  - export PROM_VERSION=2.32.1
+  - export PROM_VERSION=2.33.0
   - mkdir /etc/prometheus
   - mkdir /var/lib/prometheus
   - curl -sSL https://github.com/prometheus/prometheus/releases/download/v$PROM_VERSION/prometheus-$PROM_VERSION.linux-$ARCH.tar.gz | tar -xz
@@ -1919,7 +1919,7 @@ runcmd:
   - systemctl daemon-reload
   - systemctl start node_exporter
   - systemctl enable node_exporter
-  - export MINECRAFT_EXPORTER_VERSION=0.8.0
+  - export MINECRAFT_EXPORTER_VERSION=0.11.2
   - curl -sSL https://github.com/dirien/minecraft-prometheus-exporter/releases/download/v$MINECRAFT_EXPORTER_VERSION/minecraft-exporter_$MINECRAFT_EXPORTER_VERSION.linux-$ARCH.tar.gz | tar -xz
   - cp minecraft-exporter /usr/local/bin
   - chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
@@ -2054,7 +2054,7 @@ export ARCH=amd64
 MACHINE_TYPE=$(uname -i)
 if test "$MACHINE_TYPE" = 'aarch64'; then export ARCH=arm64; fi
 
-export PROM_VERSION=2.32.1
+export PROM_VERSION=2.33.0
 mkdir /etc/prometheus
 mkdir /var/lib/prometheus
 curl -sSL https://github.com/prometheus/prometheus/releases/download/v$PROM_VERSION/prometheus-$PROM_VERSION.linux-$ARCH.tar.gz | tar -xz
@@ -2081,7 +2081,7 @@ systemctl daemon-reload
 systemctl start node_exporter
 systemctl enable node_exporter
 
-export MINECRAFT_EXPORTER_VERSION=0.8.0
+export MINECRAFT_EXPORTER_VERSION=0.11.2
 curl -sSL https://github.com/dirien/minecraft-prometheus-exporter/releases/download/v$MINECRAFT_EXPORTER_VERSION/minecraft-exporter_$MINECRAFT_EXPORTER_VERSION.linux-$ARCH.tar.gz | tar -xz
 cp minecraft-exporter /usr/local/bin
 chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
@@ -2254,7 +2254,7 @@ runcmd:
   - export ARCH=amd64
   - MACHINE_TYPE=$(uname -i)
   - if test "$MACHINE_TYPE" = 'aarch64'; then export ARCH=arm64; fi
-  - export PROM_VERSION=2.32.1
+  - export PROM_VERSION=2.33.0
   - mkdir /etc/prometheus
   - mkdir /var/lib/prometheus
   - curl -sSL https://github.com/prometheus/prometheus/releases/download/v$PROM_VERSION/prometheus-$PROM_VERSION.linux-$ARCH.tar.gz | tar -xz
@@ -2280,7 +2280,7 @@ runcmd:
   - systemctl daemon-reload
   - systemctl start node_exporter
   - systemctl enable node_exporter
-  - export MINECRAFT_EXPORTER_VERSION=0.8.0
+  - export MINECRAFT_EXPORTER_VERSION=0.11.2
   - curl -sSL https://github.com/dirien/minecraft-prometheus-exporter/releases/download/v$MINECRAFT_EXPORTER_VERSION/minecraft-exporter_$MINECRAFT_EXPORTER_VERSION.linux-$ARCH.tar.gz | tar -xz
   - cp minecraft-exporter /usr/local/bin
   - chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
@@ -2412,7 +2412,7 @@ export ARCH=amd64
 MACHINE_TYPE=$(uname -i)
 if test "$MACHINE_TYPE" = 'aarch64'; then export ARCH=arm64; fi
 
-export PROM_VERSION=2.32.1
+export PROM_VERSION=2.33.0
 mkdir /etc/prometheus
 mkdir /var/lib/prometheus
 curl -sSL https://github.com/prometheus/prometheus/releases/download/v$PROM_VERSION/prometheus-$PROM_VERSION.linux-$ARCH.tar.gz | tar -xz
@@ -2439,7 +2439,7 @@ systemctl daemon-reload
 systemctl start node_exporter
 systemctl enable node_exporter
 
-export MINECRAFT_EXPORTER_VERSION=0.8.0
+export MINECRAFT_EXPORTER_VERSION=0.11.2
 curl -sSL https://github.com/dirien/minecraft-prometheus-exporter/releases/download/v$MINECRAFT_EXPORTER_VERSION/minecraft-exporter_$MINECRAFT_EXPORTER_VERSION.linux-$ARCH.tar.gz | tar -xz
 cp minecraft-exporter /usr/local/bin
 chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
@@ -2612,7 +2612,7 @@ runcmd:
   - export ARCH=amd64
   - MACHINE_TYPE=$(uname -i)
   - if test "$MACHINE_TYPE" = 'aarch64'; then export ARCH=arm64; fi
-  - export PROM_VERSION=2.32.1
+  - export PROM_VERSION=2.33.0
   - mkdir /etc/prometheus
   - mkdir /var/lib/prometheus
   - curl -sSL https://github.com/prometheus/prometheus/releases/download/v$PROM_VERSION/prometheus-$PROM_VERSION.linux-$ARCH.tar.gz | tar -xz
@@ -2638,7 +2638,7 @@ runcmd:
   - systemctl daemon-reload
   - systemctl start node_exporter
   - systemctl enable node_exporter
-  - export MINECRAFT_EXPORTER_VERSION=0.8.0
+  - export MINECRAFT_EXPORTER_VERSION=0.11.2
   - curl -sSL https://github.com/dirien/minecraft-prometheus-exporter/releases/download/v$MINECRAFT_EXPORTER_VERSION/minecraft-exporter_$MINECRAFT_EXPORTER_VERSION.linux-$ARCH.tar.gz | tar -xz
   - cp minecraft-exporter /usr/local/bin
   - chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
@@ -2769,7 +2769,7 @@ export ARCH=amd64
 MACHINE_TYPE=$(uname -i)
 if test "$MACHINE_TYPE" = 'aarch64'; then export ARCH=arm64; fi
 
-export PROM_VERSION=2.32.1
+export PROM_VERSION=2.33.0
 mkdir /etc/prometheus
 mkdir /var/lib/prometheus
 curl -sSL https://github.com/prometheus/prometheus/releases/download/v$PROM_VERSION/prometheus-$PROM_VERSION.linux-$ARCH.tar.gz | tar -xz
@@ -2796,7 +2796,7 @@ systemctl daemon-reload
 systemctl start node_exporter
 systemctl enable node_exporter
 
-export MINECRAFT_EXPORTER_VERSION=0.8.0
+export MINECRAFT_EXPORTER_VERSION=0.11.2
 curl -sSL https://github.com/dirien/minecraft-prometheus-exporter/releases/download/v$MINECRAFT_EXPORTER_VERSION/minecraft-exporter_$MINECRAFT_EXPORTER_VERSION.linux-$ARCH.tar.gz | tar -xz
 cp minecraft-exporter /usr/local/bin
 chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
@@ -2968,7 +2968,7 @@ runcmd:
   - export ARCH=amd64
   - MACHINE_TYPE=$(uname -i)
   - if test "$MACHINE_TYPE" = 'aarch64'; then export ARCH=arm64; fi
-  - export PROM_VERSION=2.32.1
+  - export PROM_VERSION=2.33.0
   - mkdir /etc/prometheus
   - mkdir /var/lib/prometheus
   - curl -sSL https://github.com/prometheus/prometheus/releases/download/v$PROM_VERSION/prometheus-$PROM_VERSION.linux-$ARCH.tar.gz | tar -xz
@@ -2994,7 +2994,7 @@ runcmd:
   - systemctl daemon-reload
   - systemctl start node_exporter
   - systemctl enable node_exporter
-  - export MINECRAFT_EXPORTER_VERSION=0.8.0
+  - export MINECRAFT_EXPORTER_VERSION=0.11.2
   - curl -sSL https://github.com/dirien/minecraft-prometheus-exporter/releases/download/v$MINECRAFT_EXPORTER_VERSION/minecraft-exporter_$MINECRAFT_EXPORTER_VERSION.linux-$ARCH.tar.gz | tar -xz
   - cp minecraft-exporter /usr/local/bin
   - chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
@@ -3129,7 +3129,7 @@ export ARCH=amd64
 MACHINE_TYPE=$(uname -i)
 if test "$MACHINE_TYPE" = 'aarch64'; then export ARCH=arm64; fi
 
-export PROM_VERSION=2.32.1
+export PROM_VERSION=2.33.0
 mkdir /etc/prometheus
 mkdir /var/lib/prometheus
 curl -sSL https://github.com/prometheus/prometheus/releases/download/v$PROM_VERSION/prometheus-$PROM_VERSION.linux-$ARCH.tar.gz | tar -xz
@@ -3156,7 +3156,7 @@ systemctl daemon-reload
 systemctl start node_exporter
 systemctl enable node_exporter
 
-export MINECRAFT_EXPORTER_VERSION=0.8.0
+export MINECRAFT_EXPORTER_VERSION=0.11.2
 curl -sSL https://github.com/dirien/minecraft-prometheus-exporter/releases/download/v$MINECRAFT_EXPORTER_VERSION/minecraft-exporter_$MINECRAFT_EXPORTER_VERSION.linux-$ARCH.tar.gz | tar -xz
 cp minecraft-exporter /usr/local/bin
 chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
