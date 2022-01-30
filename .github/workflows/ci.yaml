@@ -45,7 +45,7 @@ jobs:
     if: success() && startsWith(github.ref, 'refs/tags/')
     steps:
       - name: Checkout
-        uses: actions/checkout@c3a7ce113134d7a93b817d10a8272cb61118579
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
         with:
           fetch-depth: 0
       - name: Set up QEMU
