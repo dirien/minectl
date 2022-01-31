@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@14dc64f30986eaa2ad2dddcec073f5aab18e5a24
+        uses: step-security/harden-runner@dff5578680c72d929f7b290889ed1e3dae19336d
         with:
           egress-policy: audit
       - uses: dessant/lock-threads@e460dfeb36e731f3aeb214be6b0c9a9d9a67eda6
