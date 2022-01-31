@@ -59,7 +59,7 @@ jobs:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@27d0a4f181a40b142cce983c5393082c365d1480
       - name: Docker Login
-        uses: docker/login-action@42d299face0c5c43a0487c477f595ac9cf22f1a7
+        uses: docker/login-action@7948fffc4991dccc0bd25c3968d21aa61369a5ad
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
