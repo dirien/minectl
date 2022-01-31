@@ -83,7 +83,7 @@ jobs:
           tar xvf upx-$UPX_VERSION-amd64_linux.tar.xz
           sudo mv upx-$UPX_VERSION-amd64_linux/upx /usr/local/sbin
         shell: bash
-      - uses: sigstore/cosign-installer@116dc6872c0a067bcb78758f18955414cdbf918f
+      - uses: sigstore/cosign-installer@47b61722b2c3f34f9f15f98f28a779f13cfb59cf
       - uses: anchore/sbom-action/download-syft@3626d7d7b13e87ee6c6f9ded3940dea05a3967bc
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@79d4afbba1b4eff8b9a98e3d2e58c4dbaf094e2b
