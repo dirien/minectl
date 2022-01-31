@@ -14,7 +14,7 @@ jobs:
         uses: step-security/harden-runner@14dc64f30986eaa2ad2dddcec073f5aab18e5a24
         with:
           egress-policy: audit
-      - uses: dessant/lock-threads@e460dfeb36e731f3aeb214be6b0c9a9d9a67eda6
+      - uses: dessant/lock-threads@08e671be8ac8944d0e132aa71d0ae8ccfb347675
         with:
           github-token: ${{ github.token }}
           issue-lock-inactive-days: 30
