@@ -37,7 +37,7 @@ require (
 	github.com/spf13/cobra v1.3.0
 	github.com/stretchr/testify v1.7.0
 	github.com/tcnksm/go-latest v0.0.0-20170313132115-e3007ae9052e
-	github.com/vultr/govultr/v2 v2.14.0
+	github.com/vultr/govultr/v2 v2.14.1
 	github.com/xeipuuv/gojsonschema v1.2.0
 	go.uber.org/zap v1.20.0
 	golang.org/x/crypto v0.0.0-20220131195533-30dcbda58838
