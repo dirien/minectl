@@ -24,7 +24,7 @@ require (
 	github.com/hashicorp/go-retryablehttp v0.7.0
 	github.com/hetznercloud/hcloud-go v1.33.1
 	github.com/ionos-cloud/sdk-go/v5 v5.1.12
-	github.com/linode/linodego v1.2.1
+	github.com/linode/linodego v1.3.0
 	github.com/melbahja/goph v1.3.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/morikuni/aec v1.0.0
