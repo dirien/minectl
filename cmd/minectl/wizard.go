@@ -53,6 +53,7 @@ var wizardQuestions = []*survey.Question{
 				"VEXXHOST",
 				"Ubuntu Multipass",
 				"Exoscale",
+				"Fuga Cloud",
 			},
 			PageSize: 15,
 		},
