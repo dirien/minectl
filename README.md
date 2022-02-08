@@ -24,6 +24,7 @@
         * [VEXXHOST](#vexxhost)
         * [Multipass](#multipass)
         * [Exoscale](#exoscale)
+        * [Fuga Cloud](#fuga-cloud)
     - [Minecraft Server Versions 📚](#minecraft-server-versions-)
     - [Minecraft Proxy Versions 📚](#minecraft-proxy-versions-)
     - [Server Configs 📋](#server-configs-)
@@ -75,6 +76,8 @@
 ![VEXXHOST](https://img.shields.io/badge/VEXXHOST-2A1659?style=for-the-badge&logo=vexxhost&logoColor=white)
 ![Multipass](https://img.shields.io/badge/Multipass-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
 ![Exoscale](https://img.shields.io/badge/Exoscale-DA291C?style=for-the-badge&logo=exoscale&logoColor=white)
+![Fuga Cloud](https://img.shields.io/badge/fuga_cloud-242F4B?style=for-the-badge&logo=fugacloud&logoColor=white)
+
 
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/dirien/minectl/Build%20Binary/main?logo=github&style=for-the-badge)
 ![GitHub](https://img.shields.io/github/license/dirien/minectl?style=for-the-badge)
@@ -104,6 +107,7 @@ It is a private side project of me, to learn more about Go, CLI and multi-cloud 
 + VEXXHOST (https://vexxhost.com/)
 + Multipass (https://multipass.run/)
 + Exoscale (https://www.exoscale.com/)
++ Fuga Cloud (https://fuga.cloud/)
 
 ### TL;DR 🚀
 
@@ -334,6 +338,24 @@ operations on the `compute` service.
 export EXOSCALE_API_KEY=<key>
 export EXOSCALE_API_SECRET=<secret>
 ```
+
+#### Fuga Cloud
+
+To get the `OpenStack RC File` from the Fuga Cloud UI, follow this steps:
+
+1. Log in to the Fuga Cloud Dashboard
+2. Go to Account → Access → Credentials
+3. You can choose a user credential or team credential.
+4. If you haven’t already, you should create one of these credentials. Hold on to the password.
+5. Click on download OpenRC. This file contains all necessary configurations for the client.
+
+```bash
+source  fuga-openrc.sh
+```
+
+Enter the password which matches the username of the contents of the OpenRC file.
+
+
 
 #### Minecraft Server Versions 📚
 

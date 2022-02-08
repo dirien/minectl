@@ -14,6 +14,7 @@ import (
 	"github.com/minectl/internal/cloud/do"
 	"github.com/minectl/internal/cloud/equinix"
 	"github.com/minectl/internal/cloud/exoscale"
+	"github.com/minectl/internal/cloud/fuga"
 	"github.com/minectl/internal/cloud/gce"
 	"github.com/minectl/internal/cloud/hetzner"
 	"github.com/minectl/internal/cloud/ionos"
@@ -277,6 +278,12 @@ func getProvisioner(provider, region string) (automation.Automation, error) { //
 		return cloudProvider, nil
 	case "vexxhost":
 		cloudProvider, err := vexxhost.NewVEXXHOST()
+		if err != nil {
+			return nil, err
+		}
+		return cloudProvider, nil
+	case "fuga":
+		cloudProvider, err := fuga.NewFuga()
 		if err != nil {
 			return nil, err
 		}

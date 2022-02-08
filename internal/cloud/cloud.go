@@ -18,6 +18,7 @@ var cloudProvider = map[string]string{
 	"vexxhost":  "VEXXHOST",
 	"exoscale":  "Exoscale",
 	"multipass": "Ubuntu Multipass",
+	"fuga":      "Fuga Cloud",
 }
 
 func GetCloudProviderFullName(cloud string) string {
