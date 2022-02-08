@@ -10,7 +10,7 @@ require (
 	github.com/Azure/go-autorest/autorest/to v0.4.0
 	github.com/Masterminds/sprig/v3 v3.2.2
 	github.com/Tnze/go-mc v1.17.1
-	github.com/aws/aws-sdk-go v1.42.47
+	github.com/aws/aws-sdk-go v1.42.48
 	github.com/blang/semver/v4 v4.0.0
 	github.com/c-bata/go-prompt v0.2.6
 	github.com/civo/civogo v0.2.67
