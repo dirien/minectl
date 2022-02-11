@@ -32,7 +32,7 @@ require (
 	github.com/oracle/oci-go-sdk/v50 v50.1.0
 	github.com/packethost/packngo v0.21.0
 	github.com/pkg/errors v0.9.1
-	github.com/scaleway/scaleway-sdk-go v1.0.0-beta.7
+	github.com/scaleway/scaleway-sdk-go v1.0.0-beta.9
 	github.com/sethvargo/go-password v0.2.0
 	github.com/spf13/cobra v1.3.0
 	github.com/stretchr/testify v1.7.0
