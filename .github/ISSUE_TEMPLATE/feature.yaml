@@ -2,7 +2,7 @@ name: Feature Request
 description: Request a new feature and/or enhancement to an existing feature
 labels: [enhancement, triage]
 assignees:
-  - caarlos0
+  - dirien
 body:
   - type: markdown
     attributes:
