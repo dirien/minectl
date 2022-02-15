@@ -468,8 +468,8 @@ github.com/oracle/oci-go-sdk/v50 v50.1.0 h1:6WyLNxEmnUuc1fYYVTuIeH2iQiGVdwlE//qS
 github.com/oracle/oci-go-sdk/v50 v50.1.0/go.mod h1:5tboHcoGIrAUerGgH3Sdc6eJdhw5YyywE78g99hzHpw=
 github.com/ovh/go-ovh v1.1.0 h1:bHXZmw8nTgZin4Nv7JuaLs0KG5x54EQR7migYTd1zrk=
 github.com/ovh/go-ovh v1.1.0/go.mod h1:AxitLZ5HBRPyUd+Zl60Ajaag+rNTdVXWIkzfrVuTXWA=
-github.com/packethost/packngo v0.21.0 h1:Q9j3+/1kijXDwIg71523U6FaT/1CG90CgtVwz+15HDk=
-github.com/packethost/packngo v0.21.0/go.mod h1:/UHguFdPs6Lf6FOkkSEPnRY5tgS0fsVM+Zv/bvBrmt0=
+github.com/packethost/packngo v0.22.0 h1:7syZ1jDN5rbdkkrh9A5rA/ijXe0AHNovNqlUUf0L+uM=
+github.com/packethost/packngo v0.22.0/go.mod h1:/UHguFdPs6Lf6FOkkSEPnRY5tgS0fsVM+Zv/bvBrmt0=
 github.com/pascaldekloe/goe v0.0.0-20180627143212-57f6aae5913c/go.mod h1:lzWF7FIEvWOWxwDKqyGYQf6ZUaNfKdP144TG7ZOy1lc=
 github.com/pascaldekloe/goe v0.1.0/go.mod h1:lzWF7FIEvWOWxwDKqyGYQf6ZUaNfKdP144TG7ZOy1lc=
 github.com/pelletier/go-toml v1.9.4/go.mod h1:u1nR/EPcESfeI/szUZKdtJ0xRNbUoANCkoOuaOx1Y+c=
