@@ -85,7 +85,8 @@ func (c *Civo) CreateServer(args automation.ServerArgs) (*automation.ResourceRes
 	zap.S().Infow("Civo create instance", "instance", instance)
 
 	if args.MinecraftResource.GetEdition() == "bedrock" || args.MinecraftResource.GetEdition() == "nukkit" || args.MinecraftResource.GetEdition() == "powernukkit" {
-		firewall, err := c.client.NewFirewall(fmt.Sprintf("%s-fw", args.MinecraftResource.GetName()), network.ID)
+		createRule := true
+		firewall, err := c.client.NewFirewall(fmt.Sprintf("%s-fw", args.MinecraftResource.GetName()), network.ID, &createRule)
 		if err != nil {
 			return nil, err
 		}
