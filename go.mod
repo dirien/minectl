@@ -16,7 +16,7 @@ require (
 	github.com/civo/civogo v0.2.70
 	github.com/digitalocean/godo v1.75.0
 	github.com/dirien/ovh-go-sdk v0.1.1
-	github.com/exoscale/egoscale v0.84.3
+	github.com/exoscale/egoscale v0.85.0
 	github.com/fatih/color v1.13.0
 	github.com/google/uuid v1.3.0
 	github.com/gophercloud/gophercloud v0.24.0
@@ -60,7 +60,7 @@ require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/deepmap/oapi-codegen v1.6.1 // indirect
+	github.com/deepmap/oapi-codegen v1.9.1 // indirect
 	github.com/dimchansky/utfbom v1.1.1 // indirect
 	github.com/go-resty/resty/v2 v2.1.1-0.20191201195748-d7b97669fe48 // indirect
 	github.com/gofrs/uuid v3.2.0+incompatible // indirect
@@ -77,8 +77,6 @@ require (
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
 	github.com/kr/fs v0.1.0 // indirect
-	github.com/kr/pretty v0.2.1 // indirect
-	github.com/kr/text v0.2.0 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/mattn/go-runewidth v0.0.13 // indirect
