@@ -51,7 +51,7 @@ jobs:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@27d0a4f181a40b142cce983c5393082c365d1480 # renovate: tag=v1.2.0
       - name: Docker Login
-        uses: docker/login-action@6af3c118c8376c675363897acf1757f7a9be6583 # tag=v1.13.0
+        uses: docker/login-action@bb984efc561711aaa26e433c32c3521176eae55b # tag=v1.14.0
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
