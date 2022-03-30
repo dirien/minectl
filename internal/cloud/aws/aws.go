@@ -431,9 +431,9 @@ func (a *Aws) CreateServer(args automation.ServerArgs) (*automation.ResourceResu
 }
 
 func (a *Aws) UpdateServer(id string, args automation.ServerArgs) error {
-	ids := strings.Split(id, "#")
+	ids, _, _ := strings.Cut(id, "#")
 	i, err := a.client.DescribeInstances(&ec2.DescribeInstancesInput{
-		InstanceIds: aws.StringSlice([]string{ids[0]}),
+		InstanceIds: aws.StringSlice([]string{ids}),
 	})
 	if err != nil {
 		return err
@@ -462,18 +462,18 @@ func (a *Aws) DeleteServer(id string, args automation.ServerArgs) error {
 	if err != nil {
 		return err
 	}
-	ids := strings.Split(id, "#")
+	ids, _, _ := strings.Cut(id, "#")
 	if args.MinecraftResource.IsSpot() {
 
 		_, err := a.client.CancelSpotInstanceRequests(&ec2.CancelSpotInstanceRequestsInput{
-			SpotInstanceRequestIds: aws.StringSlice([]string{ids[1]}),
+			SpotInstanceRequestIds: aws.StringSlice([]string{ids}),
 		})
 		if err != nil {
 			return err
 		}
 	}
 	i, err := a.client.DescribeInstances(&ec2.DescribeInstancesInput{
-		InstanceIds: aws.StringSlice([]string{ids[0]}),
+		InstanceIds: aws.StringSlice([]string{ids}),
 	})
 	if err != nil {
 		return err
@@ -482,14 +482,14 @@ func (a *Aws) DeleteServer(id string, args automation.ServerArgs) error {
 	instance := i.Reservations[0].Instances[0]
 
 	_, err = a.client.TerminateInstances(&ec2.TerminateInstancesInput{
-		InstanceIds: aws.StringSlice([]string{ids[0]}),
+		InstanceIds: aws.StringSlice([]string{ids}),
 	})
 	if err != nil {
 		return err
 	}
 
 	err = a.client.WaitUntilInstanceTerminated(&ec2.DescribeInstancesInput{
-		InstanceIds: aws.StringSlice([]string{ids[0]}),
+		InstanceIds: aws.StringSlice([]string{ids}),
 	})
 	if err != nil {
 		return err
@@ -574,9 +574,9 @@ func (a *Aws) DeleteServer(id string, args automation.ServerArgs) error {
 }
 
 func (a *Aws) UploadPlugin(id string, args automation.ServerArgs, plugin, destination string) error {
-	ids := strings.Split(id, "#")
+	ids, _, _ := strings.Cut(id, "#")
 	i, err := a.client.DescribeInstances(&ec2.DescribeInstancesInput{
-		InstanceIds: aws.StringSlice([]string{ids[0]}),
+		InstanceIds: aws.StringSlice([]string{ids}),
 	})
 	if err != nil {
 		return err
@@ -598,9 +598,9 @@ func (a *Aws) UploadPlugin(id string, args automation.ServerArgs, plugin, destin
 }
 
 func (a *Aws) GetServer(id string, _ automation.ServerArgs) (*automation.ResourceResults, error) {
-	ids := strings.Split(id, "#")
+	ids, _, _ := strings.Cut(id, "#")
 	i, err := a.client.DescribeInstances(&ec2.DescribeInstancesInput{
-		InstanceIds: aws.StringSlice([]string{ids[0]}),
+		InstanceIds: aws.StringSlice([]string{ids}),
 	})
 	if err != nil {
 		return nil, err

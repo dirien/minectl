@@ -46,6 +46,8 @@ func (m *Multipass) CreateServer(args automation.ServerArgs) (*automation.Resour
 		return nil, err
 	}
 
+	k, v, _ := strings.Cut(args.MinecraftResource.GetSize(), "-")
+
 	app := multipassBinary
 	arg0 := "launch"
 	arg1 := "-n"
@@ -53,9 +55,9 @@ func (m *Multipass) CreateServer(args automation.ServerArgs) (*automation.Resour
 	arg3 := "--cloud-init"
 	arg4 := fmt.Sprintf("%s/cloud-config.yaml", os.TempDir())
 	arg5 := "-c"
-	arg6 := strings.Split(args.MinecraftResource.GetSize(), "-")[0]
+	arg6 := k
 	arg7 := "-m"
-	arg8 := strings.Split(args.MinecraftResource.GetSize(), "-")[1]
+	arg8 := v
 
 	cmd := exec.Command(app, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)
 	cmdOutput := &bytes.Buffer{}
