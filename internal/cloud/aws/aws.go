@@ -394,36 +394,38 @@ func (a *Aws) CreateServer(args automation.ServerArgs) (*automation.ResourceResu
 			case <-ctx.Done():
 				return nil, errors.New("timed out while creating the aws instance")
 			case <-time.After(10 * time.Second):
-				instanceStatus, err := a.client.DescribeInstanceStatus(&ec2.DescribeInstanceStatusInput{
+				describeInstanceStatus, err := a.client.DescribeInstanceStatus(&ec2.DescribeInstanceStatusInput{
 					InstanceIds: aws.StringSlice([]string{*result.Instances[0].InstanceId}),
 				})
 				if err != nil {
 					return nil, err
 				}
-				if *instanceStatus.InstanceStatuses[0].InstanceState.Name == "running" {
-					i, err := a.client.DescribeInstances(&ec2.DescribeInstancesInput{
-						InstanceIds: aws.StringSlice([]string{*result.Instances[0].InstanceId}),
-					})
-					if err != nil {
-						return nil, err
-					}
-					var tags []string
-					var instanceName string
-					for _, v := range i.Reservations[0].Instances[0].Tags {
-						tags = append(tags, fmt.Sprintf("%s=%s", *v.Key, *v.Value))
-
-						if *v.Key == instanceNameTag {
-							instanceName = *v.Value
+				if len(describeInstanceStatus.InstanceStatuses) > 0 {
+					if *describeInstanceStatus.InstanceStatuses[0].InstanceState.Name == "running" {
+						i, err := a.client.DescribeInstances(&ec2.DescribeInstancesInput{
+							InstanceIds: aws.StringSlice([]string{*result.Instances[0].InstanceId}),
+						})
+						if err != nil {
+							return nil, err
 						}
-					}
+						var tags []string
+						var instanceName string
+						for _, v := range i.Reservations[0].Instances[0].Tags {
+							tags = append(tags, fmt.Sprintf("%s=%s", *v.Key, *v.Value))
 
-					return &automation.ResourceResults{
-						ID:       *i.Reservations[0].Instances[0].InstanceId,
-						Name:     instanceName,
-						Region:   *a.client.Config.Region,
-						PublicIP: *i.Reservations[0].Instances[0].PublicIpAddress,
-						Tags:     strings.Join(tags, ","),
-					}, nil
+							if *v.Key == instanceNameTag {
+								instanceName = *v.Value
+							}
+						}
+
+						return &automation.ResourceResults{
+							ID:       *i.Reservations[0].Instances[0].InstanceId,
+							Name:     instanceName,
+							Region:   *a.client.Config.Region,
+							PublicIP: *i.Reservations[0].Instances[0].PublicIpAddress,
+							Tags:     strings.Join(tags, ","),
+						}, nil
+					}
 				}
 			}
 		}
