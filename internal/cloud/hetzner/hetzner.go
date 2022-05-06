@@ -71,7 +71,7 @@ func (h *Hetzner) CreateServer(args automation.ServerArgs) (*automation.Resource
 	if err != nil {
 		return nil, err
 	}
-	image, _, err := h.client.Image.GetByName(context.Background(), "ubuntu-20.04")
+	image, _, err := h.client.Image.GetByName(context.Background(), "ubuntu-22.04")
 	if err != nil {
 		return nil, err
 	}
