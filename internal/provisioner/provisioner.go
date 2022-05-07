@@ -235,7 +235,7 @@ func getProvisioner(provider, region string) (automation.Automation, error) { //
 		}
 		return cloudProvider, nil
 	case "equinix":
-		cloudProvider, err := equinix.NewEquinix(os.Getenv("PACKET_AUTH_TOKEN"), os.Getenv("EQUINIX_PROJECT"))
+		cloudProvider, err := equinix.NewEquinix(os.Getenv("METAL_AUTH_TOKEN"), os.Getenv("EQUINIX_PROJECT"))
 		if err != nil {
 			return nil, err
 		}

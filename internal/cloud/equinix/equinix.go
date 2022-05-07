@@ -57,7 +57,7 @@ func (e *Equinix) CreateServer(args automation.ServerArgs) (*automation.Resource
 	server, _, err := e.client.Devices.Create(&packngo.DeviceCreateRequest{
 		Hostname:       args.MinecraftResource.GetName(),
 		ProjectID:      e.project,
-		OS:             "ubuntu_20_04",
+		OS:             "ubuntu_22_04",
 		Plan:           args.MinecraftResource.GetSize(),
 		Tags:           []string{common.InstanceTag, args.MinecraftResource.GetEdition()},
 		ProjectSSHKeys: []string{key.ID},
