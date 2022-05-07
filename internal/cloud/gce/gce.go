@@ -74,7 +74,7 @@ func NewGCE(keyfile, zone string) (*GCE, error) {
 }
 
 func (g *GCE) CreateServer(args automation.ServerArgs) (*automation.ResourceResults, error) {
-	imageURL := "projects/ubuntu-os-cloud/global/images/ubuntu-2004-focal-v20210720"
+	imageURL := "projects/ubuntu-os-cloud/global/images/ubuntu-minimal-2204-jammy-v20220506a"
 
 	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSHKeyFolder()))
 	if err != nil {
