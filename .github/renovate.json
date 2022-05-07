@@ -22,6 +22,7 @@
   "assigneesFromCodeOwners": true,
   "assignAutomerge": true,
   "major": {
-    "enabled": false
-  }
+    "enabled": true
+  },
+  "ignoreDeps": ["github.com/exoscale/egoscale"]
 }

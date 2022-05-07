@@ -16,7 +16,7 @@ require (
 	github.com/civo/civogo v0.2.81
 	github.com/digitalocean/godo v1.79.0
 	github.com/dirien/ovh-go-sdk v0.1.1
-	github.com/exoscale/egoscale v0.86.0
+	github.com/exoscale/egoscale v0.88.0
 	github.com/fatih/color v1.13.0
 	github.com/google/uuid v1.3.0
 	github.com/gophercloud/gophercloud v0.24.0
