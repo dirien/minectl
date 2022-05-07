@@ -462,7 +462,7 @@ GPLv3 license.
 
 #### Server Configs 📋
 
-##### Spot (Preemptible) Instances
+##### Spot Instances
 
 When you want to run a Minecraft server on a spot instance, you can use the following configuration options:
 
@@ -472,8 +472,7 @@ spot: <true |false>
 ...
 ```
 
-This will enable the server to be run on a spot instance. At the moment, this is only supported by AWS, Azure. In GCP,
-this will be only a preemptible instance and will live for a maximum of 24 hours.
+This will enable the server to be run on a spot instance. At the moment, this is only supported by AWS, Azure and GCP.
 
 ##### MinecraftProxy Config 📡
 
