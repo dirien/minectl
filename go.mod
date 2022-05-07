@@ -10,7 +10,7 @@ require (
 	github.com/Azure/go-autorest/autorest/to v0.4.0
 	github.com/Masterminds/sprig/v3 v3.2.2
 	github.com/Tnze/go-mc v1.18.1
-	github.com/aws/aws-sdk-go v1.44.8
+	github.com/aws/aws-sdk-go v1.44.9
 	github.com/blang/semver/v4 v4.0.0
 	github.com/c-bata/go-prompt v0.2.6
 	github.com/civo/civogo v0.2.81
@@ -40,7 +40,7 @@ require (
 	github.com/vultr/govultr/v2 v2.16.0
 	github.com/xeipuuv/gojsonschema v1.2.0
 	go.uber.org/zap v1.21.0
-	golang.org/x/crypto v0.0.0-20220427172511-eb4f295cb31f
+	golang.org/x/crypto v0.0.0-20220507011949-2cf3adece122
 	golang.org/x/oauth2 v0.0.0-20220411215720-9780585627b5
 	google.golang.org/api v0.78.0
 	sigs.k8s.io/yaml v1.3.0
