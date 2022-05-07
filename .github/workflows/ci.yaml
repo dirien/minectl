@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
         with:
           fetch-depth: 0
-      - uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed # renovate: tag=v2.1.7
+      - uses: actions/cache@48af2dc4a9e8278b89d7fa154b955c30c6aaab09 # tag=v3.0.2
         with:
           path: |
             ~/.cache/go-build
@@ -49,9 +49,9 @@ jobs:
         with:
           fetch-depth: 0
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@27d0a4f181a40b142cce983c5393082c365d1480 # renovate: tag=v1.2.0
+        uses: docker/setup-qemu-action@8b122486cedac8393e77aa9734c3528886e4a1a8 # tag=v2.0.0
       - name: Docker Login
-        uses: docker/login-action@dd4fa0671be5250ee6f50aedf4cb05514abda2c7 # tag=v1.14.1
+        uses: docker/login-action@49ed152c8eca782a232dede0303416e8f356c37b # tag=v2.0.0
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
@@ -60,7 +60,7 @@ jobs:
         uses: actions/setup-go@f6164bd8c8acb4a71fb2791a8b6c4024ff038dab # tag=v3.0.0
         with:
           go-version: 1.18
-      - uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed # renovate: tag=v2.1.7
+      - uses: actions/cache@48af2dc4a9e8278b89d7fa154b955c30c6aaab09 # tag=v3.0.2
         with:
           path: |
             ~/.cache/go-build
