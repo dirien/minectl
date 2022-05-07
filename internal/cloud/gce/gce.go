@@ -125,11 +125,12 @@ func (g *GCE) CreateServer(args automation.ServerArgs) (*automation.ResourceResu
 
 	scheduling := &compute.Scheduling{
 		AutomaticRestart: googleapi.Bool(!args.MinecraftResource.IsSpot()),
-		Preemptible:      args.MinecraftResource.IsSpot(),
 	}
 	if args.MinecraftResource.IsSpot() {
+		scheduling.ProvisioningModel = "SPOT"
 		scheduling.OnHostMaintenance = "TERMINATE"
 	} else {
+		scheduling.ProvisioningModel = "STANDARD"
 		scheduling.OnHostMaintenance = "MIGRATE"
 	}
 
