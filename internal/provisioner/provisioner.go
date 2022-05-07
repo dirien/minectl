@@ -271,7 +271,7 @@ func getProvisioner(provider, region string) (automation.Automation, error) { //
 		}
 		return cloudProvider, nil
 	case "aws":
-		cloudProvider, err := aws.NewAWS(region, os.Getenv("AWS_ACCESS_KEY_ID"), os.Getenv("AWS_SECRET_ACCESS_KEY"), os.Getenv("AWS_SESSION_TOKEN"))
+		cloudProvider, err := aws.NewAWS(region)
 		if err != nil {
 			return nil, err
 		}

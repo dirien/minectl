@@ -164,7 +164,7 @@ make build
 
 This will output the `minectl 🗺` binary in the `bin/minectl` folder.
 
-##### GoFish
+##### GoFish (deprecated 🕸️)
 
 GoFish works across all three major operating systems (Windows, MacOS, and Linux). It installs packages into its own
 directory and symlinks their files into /usr/local (or C:\ProgramData for Windows). You can think of it as the
@@ -299,6 +299,24 @@ export IONOS_TOKEN=<optional>
 ```
 
 #### Amazon AWS
+
+`minectl 🗺` looks for credentials in the following order:
+
+- Environment variables.
+- Shared credentials file.
+
+##### Credentials file
+
+The credentials file is most often located in the `~/.aws/credentials` and contains following content:
+
+```bash
+cat ~/.aws/credentials
+[default]
+aws_access_key_id = xxxx
+aws_secret_access_key = zzzz
+```
+
+##### Environment variables can be set in the following way:
 
 ```bash
 export AWS_ACCESS_KEY_ID=<aws_access_key_id>

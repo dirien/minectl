@@ -11,7 +11,6 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
-	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/google/uuid"
@@ -32,10 +31,9 @@ type Aws struct {
 }
 
 // NewAWS creates an Aws and initialises an EC2 client
-func NewAWS(region, accessKey, secretKey, token string) (*Aws, error) {
+func NewAWS(region string) (*Aws, error) {
 	sess, err := session.NewSession(&aws.Config{
-		Region:      aws.String(region),
-		Credentials: credentials.NewStaticCredentials(accessKey, secretKey, token),
+		Region: aws.String(region),
 	})
 	if err != nil {
 		return nil, err
@@ -204,7 +202,7 @@ func addTagSpecifications(args automation.ServerArgs, resourceType string) []*ec
 func (a *Aws) CreateServer(args automation.ServerArgs) (*automation.ResourceResults, error) { // nolint: gocyclo
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Minute)
 	defer cancel()
-	image, err := a.lookupAMI("ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-20210621")
+	image, err := a.lookupAMI("ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20220420")
 	if err != nil {
 		return nil, err
 	}
