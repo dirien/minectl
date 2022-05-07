@@ -138,7 +138,7 @@ func (d *DigitalOcean) CreateServer(args automation.ServerArgs) (*automation.Res
 		Region: args.MinecraftResource.GetRegion(),
 		Size:   args.MinecraftResource.GetSize(),
 		Image: godo.DropletCreateImage{
-			Slug: "ubuntu-20-04-x64",
+			Slug: "ubuntu-22-04-x64",
 		},
 		UserData: userData,
 		Tags:     []string{common.InstanceTag, args.MinecraftResource.GetEdition()},
