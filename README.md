@@ -243,7 +243,7 @@ export SERVICENAME=<projectid>
 #### Equinix Metal
 
 ```bash
-export PACKET_AUTH_TOKEN=xxx
+export METAL_AUTH_TOKEN=xxx
 export EQUINIX_PROJECT=yyy
 ```
 
