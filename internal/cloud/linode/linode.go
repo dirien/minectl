@@ -47,7 +47,7 @@ func NewLinode(apiToken string) (*Linode, error) {
 }
 
 func (l *Linode) CreateServer(args automation.ServerArgs) (*automation.ResourceResults, error) {
-	ubuntuImage := "linode/ubuntu20.04"
+	ubuntuImage := "linode/ubuntu22.04"
 	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSHKeyFolder()))
 	if err != nil {
 		return nil, err
