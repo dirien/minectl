@@ -2,7 +2,7 @@
   - export ARCH=amd64
   - MACHINE_TYPE=$(uname -i)
   - if test "$MACHINE_TYPE" = 'aarch64'; then export ARCH=arm64; fi
-  - export PROM_VERSION=2.33.0
+  - export PROM_VERSION=2.35.0
   - mkdir /etc/prometheus
   - mkdir /var/lib/prometheus
   - curl -sSL https://github.com/prometheus/prometheus/releases/download/v$PROM_VERSION/prometheus-$PROM_VERSION.linux-$ARCH.tar.gz | tar -xz
@@ -30,7 +30,7 @@
   - systemctl enable node_exporter
 
   {{- if ne .Spec.Minecraft.Edition "bedrock" }}
-  - export MINECRAFT_EXPORTER_VERSION=0.11.2
+  - export MINECRAFT_EXPORTER_VERSION=0.13.0
   - curl -sSL https://github.com/dirien/minecraft-prometheus-exporter/releases/download/v$MINECRAFT_EXPORTER_VERSION/minecraft-exporter_$MINECRAFT_EXPORTER_VERSION.linux-$ARCH.tar.gz | tar -xz
   - cp minecraft-exporter /usr/local/bin
   - chown minecraft_exporter:minecraft_exporter /usr/local/bin/minecraft-exporter
