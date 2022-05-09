@@ -1,4 +1,4 @@
-package openshift
+package openstack
 
 import (
 	"encoding/base64"
@@ -27,7 +27,7 @@ import (
 	"go.uber.org/zap"
 )
 
-type Openshift struct {
+type OpenStack struct {
 	tmpl          *minctlTemplate.Template
 	computeClient *gophercloud.ServiceClient
 	networkClient *gophercloud.ServiceClient
@@ -50,7 +50,7 @@ func getTagKeys(tags map[string]string) []string {
 	return keys
 }
 
-func NewOpenshift(imageName string) (*Openshift, error) {
+func NewOpenStack(imageName string) (*OpenStack, error) {
 	tmpl, err := minctlTemplate.NewTemplateCloudConfig()
 	if err != nil {
 		return nil, err
@@ -92,7 +92,7 @@ func NewOpenshift(imageName string) (*Openshift, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Openshift{
+	return &OpenStack{
 		tmpl:          tmpl,
 		computeClient: computeClient,
 		networkClient: networkClient,
@@ -102,7 +102,7 @@ func NewOpenshift(imageName string) (*Openshift, error) {
 }
 
 // CreateServer TODO: https://github.com/dirien/minectl/issues/299
-func (o *Openshift) CreateServer(args automation.ServerArgs) (*automation.ResourceResults, error) { // nolint: gocyclo
+func (o *OpenStack) CreateServer(args automation.ServerArgs) (*automation.ResourceResults, error) { // nolint: gocyclo
 	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSHKeyFolder()))
 	if err != nil {
 		return nil, err
@@ -316,7 +316,7 @@ func (o *Openshift) CreateServer(args automation.ServerArgs) (*automation.Resour
 	}, err
 }
 
-func (o *Openshift) createSecurityGroup(group *secgroups.SecurityGroup, port int, protocol string) error {
+func (o *OpenStack) createSecurityGroup(group *secgroups.SecurityGroup, port int, protocol string) error {
 	ssh := secgroups.CreateRuleOpts{
 		ParentGroupID: group.ID,
 		FromPort:      port,
@@ -332,7 +332,7 @@ func (o *Openshift) createSecurityGroup(group *secgroups.SecurityGroup, port int
 	return nil
 }
 
-func (o *Openshift) DeleteServer(id string, args automation.ServerArgs) error {
+func (o *OpenStack) DeleteServer(id string, args automation.ServerArgs) error {
 	server, err := servers.Get(o.computeClient, id).Extract()
 	if err != nil {
 		return err
@@ -412,7 +412,7 @@ func (o *Openshift) DeleteServer(id string, args automation.ServerArgs) error {
 	return nil
 }
 
-func (o *Openshift) getRouterByName(args automation.ServerArgs) (*routers.Router, error) {
+func (o *OpenStack) getRouterByName(args automation.ServerArgs) (*routers.Router, error) {
 	var router *routers.Router
 	pager := routers.List(o.networkClient, routers.ListOpts{
 		Name: fmt.Sprintf("%s-router", args.MinecraftResource.GetName()),
@@ -436,7 +436,7 @@ func (o *Openshift) getRouterByName(args automation.ServerArgs) (*routers.Router
 	return router, nil
 }
 
-func (o *Openshift) getFloatingIPByInstanceID(id string) (*floatingips.FloatingIP, error) {
+func (o *OpenStack) getFloatingIPByInstanceID(id string) (*floatingips.FloatingIP, error) {
 	var floatingIP *floatingips.FloatingIP
 	pager := floatingips.List(o.computeClient)
 	err := pager.EachPage(func(page pagination.Page) (bool, error) {
@@ -458,7 +458,7 @@ func (o *Openshift) getFloatingIPByInstanceID(id string) (*floatingips.FloatingI
 	return floatingIP, nil
 }
 
-func (o *Openshift) getSecurityGroupByName(args automation.ServerArgs) (*secgroups.SecurityGroup, error) {
+func (o *OpenStack) getSecurityGroupByName(args automation.ServerArgs) (*secgroups.SecurityGroup, error) {
 	var securityGroup *secgroups.SecurityGroup
 	pager := secgroups.List(o.computeClient)
 	err := pager.EachPage(func(page pagination.Page) (bool, error) {
@@ -480,7 +480,7 @@ func (o *Openshift) getSecurityGroupByName(args automation.ServerArgs) (*secgrou
 	return securityGroup, nil
 }
 
-func (o *Openshift) getSubNetByName(args automation.ServerArgs) (*subnets.Subnet, error) {
+func (o *OpenStack) getSubNetByName(args automation.ServerArgs) (*subnets.Subnet, error) {
 	var subnet *subnets.Subnet
 	pager := subnets.List(o.networkClient, subnets.ListOpts{
 		Name: fmt.Sprintf("%s-subnet", args.MinecraftResource.GetName()),
@@ -504,7 +504,7 @@ func (o *Openshift) getSubNetByName(args automation.ServerArgs) (*subnets.Subnet
 	return subnet, nil
 }
 
-func (o *Openshift) getNetworkByName(args automation.ServerArgs) (*networks.Network, error) {
+func (o *OpenStack) getNetworkByName(args automation.ServerArgs) (*networks.Network, error) {
 	var network *networks.Network
 	pager := networks.List(o.networkClient, networks.ListOpts{
 		Name: fmt.Sprintf("%s-net", args.MinecraftResource.GetName()),
@@ -528,7 +528,7 @@ func (o *Openshift) getNetworkByName(args automation.ServerArgs) (*networks.Netw
 	return network, nil
 }
 
-func (o *Openshift) ListServer() ([]automation.ResourceResults, error) {
+func (o *OpenStack) ListServer() ([]automation.ResourceResults, error) {
 	var result []automation.ResourceResults
 	pager := servers.List(o.computeClient, servers.ListOpts{})
 	err := pager.EachPage(func(page pagination.Page) (bool, error) {
@@ -561,7 +561,7 @@ func (o *Openshift) ListServer() ([]automation.ResourceResults, error) {
 	return result, nil
 }
 
-func (o *Openshift) UpdateServer(id string, args automation.ServerArgs) error {
+func (o *OpenStack) UpdateServer(id string, args automation.ServerArgs) error {
 	server, err := o.GetServer(id, args)
 	if err != nil {
 		return err
@@ -575,7 +575,7 @@ func (o *Openshift) UpdateServer(id string, args automation.ServerArgs) error {
 	return nil
 }
 
-func (o *Openshift) UploadPlugin(id string, args automation.ServerArgs, plugin, destination string) error {
+func (o *OpenStack) UploadPlugin(id string, args automation.ServerArgs, plugin, destination string) error {
 	server, err := o.GetServer(id, args)
 	if err != nil {
 		return err
@@ -596,7 +596,7 @@ func (o *Openshift) UploadPlugin(id string, args automation.ServerArgs, plugin, 
 	return nil
 }
 
-func (o *Openshift) GetServer(id string, args automation.ServerArgs) (*automation.ResourceResults, error) {
+func (o *OpenStack) GetServer(id string, args automation.ServerArgs) (*automation.ResourceResults, error) {
 	server, err := servers.Get(o.computeClient, id).Extract()
 	if err != nil {
 		return nil, err

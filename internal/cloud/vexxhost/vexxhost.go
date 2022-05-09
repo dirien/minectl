@@ -2,17 +2,17 @@ package vexxhost
 
 import (
 	"github.com/minectl/internal/automation"
-	"github.com/minectl/internal/cloud/openshift"
+	"github.com/minectl/internal/cloud/openstack"
 )
 
 type VEXXHOST struct {
-	openshift *openshift.Openshift
+	openshift *openstack.OpenStack
 }
 
 const imageName = "Ubuntu 20.04.3 LTS"
 
 func NewVEXXHOST() (*VEXXHOST, error) {
-	client, err := openshift.NewOpenshift(imageName)
+	client, err := openstack.NewOpenStack(imageName)
 	if err != nil {
 		return nil, err
 	}
