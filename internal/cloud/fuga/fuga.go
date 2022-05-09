@@ -9,7 +9,7 @@ type Fuga struct {
 	openshift *openstack.OpenStack
 }
 
-const imageName = "Ubuntu 20.04 LTS"
+const imageName = "Ubuntu 22.04 LTS"
 
 func NewFuga() (*Fuga, error) {
 	client, err := openstack.NewOpenStack(imageName)
