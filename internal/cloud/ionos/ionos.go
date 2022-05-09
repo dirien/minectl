@@ -91,7 +91,7 @@ func (i *IONOS) CreateServer(args automation.ServerArgs) (*automation.ResourceRe
 	}
 	var ubuntuImage *string
 	for _, image := range *images.Items {
-		if *image.GetProperties().GetName() == "Ubuntu-20.04-LTS-server-cloud-init.qcow2" &&
+		if *image.GetProperties().GetName() == "Ubuntu-22.04-LTS-server-cloud-init.qcow2" &&
 			*image.GetProperties().GetLocation() == args.MinecraftResource.GetRegion() {
 			ubuntuImage = image.GetId()
 		}
