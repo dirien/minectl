@@ -176,7 +176,7 @@ func (e *Exoscale) CreateServer(args automation.ServerArgs) (*automation.Resourc
 	}
 	var templateID string
 	for _, template := range listTemplates {
-		if strings.Contains(*template.Name, "Ubuntu 20.04 LTS") {
+		if strings.Contains(*template.Name, "Ubuntu 22.04 LTS") {
 			templateID = *template.ID
 			break
 		}
