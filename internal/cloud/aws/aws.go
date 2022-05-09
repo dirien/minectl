@@ -462,11 +462,10 @@ func (a *Aws) DeleteServer(id string, args automation.ServerArgs) error {
 	if err != nil {
 		return err
 	}
-	ids, _, _ := strings.Cut(id, "#")
+	ids, spotID, _ := strings.Cut(id, "#")
 	if args.MinecraftResource.IsSpot() {
-
 		_, err := a.client.CancelSpotInstanceRequests(&ec2.CancelSpotInstanceRequestsInput{
-			SpotInstanceRequestIds: aws.StringSlice([]string{ids}),
+			SpotInstanceRequestIds: aws.StringSlice([]string{spotID}),
 		})
 		if err != nil {
 			return err
