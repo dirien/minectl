@@ -51,7 +51,7 @@ func (o *OVHcloud) CreateServer(args automation.ServerArgs) (*automation.Resourc
 		return nil, err
 	}
 
-	image, err := o.client.GetImage(context.Background(), "Ubuntu 20.04", args.MinecraftResource.GetRegion())
+	image, err := o.client.GetImage(context.Background(), "Ubuntu 22.04", args.MinecraftResource.GetRegion())
 	if err != nil {
 		return nil, err
 	}
