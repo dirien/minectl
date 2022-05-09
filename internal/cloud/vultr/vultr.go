@@ -64,7 +64,7 @@ func (v *Vultr) CreateServer(args automation.ServerArgs) (*automation.ResourceRe
 		return nil, err
 	}
 
-	ubuntu2004Id := 387
+	ubuntu2204Id := 1743
 	opts := &govultr.InstanceCreateReq{
 		SSHKeys:  []string{sshKey.ID},
 		ScriptID: startupScript.ID,
@@ -72,7 +72,7 @@ func (v *Vultr) CreateServer(args automation.ServerArgs) (*automation.ResourceRe
 		Label:    args.MinecraftResource.GetName(),
 		Region:   args.MinecraftResource.GetRegion(),
 		Plan:     args.MinecraftResource.GetSize(),
-		OsID:     ubuntu2004Id,
+		OsID:     ubuntu2204Id,
 		Tag:      fmt.Sprintf("%s,%s", common.InstanceTag, args.MinecraftResource.GetEdition()),
 	}
 
