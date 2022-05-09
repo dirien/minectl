@@ -230,7 +230,7 @@ For, example, Europe visit https://eu.api.ovh.com/createToken to create your API
 
 ![img.png](docs/img/ovh_create_token.png)
 
-For the proper `rights` choose all HTTP Verbs (GET,PUT,DELETE, POST), and we need only the `/cloud/` API.
+For the proper `rights` choose all HTTP Verbs (GET,PUT,DELETE, POST), and we need only the `/cloud/*` API.
 
 ```bash
 export OVH_ENDPOINT=ovh-eu
