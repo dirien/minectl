@@ -5,7 +5,7 @@
         * [Mac OS X](#mac-os-x)
         * [Windows](#windows)
         * [Source install](#source-install)
-        * [GoFish](#gofish)
+        * [GoFish (deprecated 🕸️)](#gofish-deprecated-)
 + [Usage ⚙](#usage-)
     - [Access Token 🔑](#access-token-)
         * [Civo](#civo)
@@ -19,7 +19,7 @@
         * [Vultr](#vultr)
         * [Azure](#azure)
         * [Oracle Cloud Infrastructure](#oracle-cloud-infrastructure)
-        * [Ionos Cloud](#ionos-cloud)
+        * [Ionos Cloud](#ionos-cloud-limited-support)
         * [Amazon AWS](#amazon-aws)
         * [VEXXHOST](#vexxhost)
         * [Multipass](#multipass)
@@ -28,7 +28,7 @@
     - [Minecraft Server Versions 📚](#minecraft-server-versions-)
     - [Minecraft Proxy Versions 📚](#minecraft-proxy-versions-)
     - [Server Configs 📋](#server-configs-)
-        * [Spot (Preemptible) Instances](#spot-preemptible-instances)
+        * [Spot Instances](#spot-instances)
         * [MinecraftProxy Config 📡](#minecraftproxy-config-)
         * [MinecraftServer Config 🕹](#mincraftserver-config-)
     - [EULA ⚖️️](#eula-)
@@ -290,7 +290,10 @@ region=<region>
 
 Please follow the instructions under -> https://docs.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm
 
-#### Ionos Cloud
+#### Ionos Cloud (limited support)
+
+> I can offer only limited support for Ionos Cloud, as I don't have access to the API anymore. Ionos Cloud is a B2B only
+> cloud service.
 
 ```bash
 export IONOS_USERNAME=xxx
