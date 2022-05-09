@@ -63,7 +63,7 @@ func (s *Scaleway) CreateServer(args automation.ServerArgs) (*automation.Resourc
 	server, err := s.instanceAPI.CreateServer(&instance.CreateServerRequest{
 		Name:              args.MinecraftResource.GetName(),
 		CommercialType:    args.MinecraftResource.GetSize(),
-		Image:             "ubuntu_focal",
+		Image:             "ubuntu_jammy",
 		Tags:              []string{"minectl"},
 		DynamicIPRequired: scw.BoolPtr(true),
 	})
