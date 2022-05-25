@@ -264,6 +264,8 @@ export VULTR_API_KEY=xxx
 
 #### Azure
 
+> Please select a Hypervisor Generation '2' VM Size. As `minectl 🗺` use only Hypervisor Generation 2 Image
+
 ```bash
 az login
 az ad sp create-for-rbac --sdk-auth --role 'Contributor' > azure.auth

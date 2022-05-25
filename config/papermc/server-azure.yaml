@@ -1,12 +1,12 @@
 apiVersion: minectl.ediri.io/v1alpha1
 kind: MinecraftServer
 metadata:
-  name: minecraft-server-do-brasil
+  name: minecraft-server
 spec:
   server:
     cloud: azure
-    region: brazilsouth
-    size: Standard_D2_v2
+    region: westeurope
+    size: Standard_D2_v4
     ssh:
       port: 2223
       keyfolder: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft"
