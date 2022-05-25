@@ -54,7 +54,7 @@ func (c *Civo) CreateServer(args automation.ServerArgs) (*automation.ResourceRes
 	}
 	zap.S().Infow("Civo get default network created", "network", network)
 
-	template, err := c.client.FindDiskImage("ubuntu-focal")
+	template, err := c.client.FindDiskImage("ubuntu-jammy")
 	if err != nil {
 		return nil, err
 	}
