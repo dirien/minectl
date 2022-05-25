@@ -73,7 +73,10 @@ func (v *Vultr) CreateServer(args automation.ServerArgs) (*automation.ResourceRe
 		Region:   args.MinecraftResource.GetRegion(),
 		Plan:     args.MinecraftResource.GetSize(),
 		OsID:     ubuntu2204Id,
-		Tag:      fmt.Sprintf("%s,%s", common.InstanceTag, args.MinecraftResource.GetEdition()),
+		Tags: []string{
+			common.InstanceTag,
+			args.MinecraftResource.GetEdition(),
+		},
 	}
 
 	instance, err := v.client.Instance.Create(context.Background(), opts)
@@ -99,7 +102,7 @@ func (v *Vultr) CreateServer(args automation.ServerArgs) (*automation.ResourceRe
 		Name:     instance.Label,
 		Region:   instance.Region,
 		PublicIP: instance.MainIP,
-		Tags:     instance.Tag,
+		Tags:     strings.Join(instance.Tags, ","),
 	}, err
 }
 
@@ -131,14 +134,16 @@ func (v *Vultr) ListServer() ([]automation.ResourceResults, error) {
 	}
 	var result []automation.ResourceResults
 	for _, instance := range instances {
-		if strings.Contains(instance.Tag, common.InstanceTag) {
-			result = append(result, automation.ResourceResults{
-				ID:       instance.ID,
-				PublicIP: instance.MainIP,
-				Name:     instance.Label,
-				Region:   instance.Region,
-				Tags:     instance.Tag,
-			})
+		for _, tag := range instance.Tags {
+			if strings.Contains(tag, common.InstanceTag) {
+				result = append(result, automation.ResourceResults{
+					ID:       instance.ID,
+					Name:     instance.Label,
+					Region:   instance.Region,
+					PublicIP: instance.MainIP,
+					Tags:     strings.Join(instance.Tags, ","),
+				})
+			}
 		}
 	}
 	return result, nil
@@ -186,6 +191,6 @@ func (v *Vultr) GetServer(id string, _ automation.ServerArgs) (*automation.Resou
 		Name:     instance.Label,
 		Region:   instance.Region,
 		PublicIP: instance.MainIP,
-		Tags:     instance.Tag,
+		Tags:     strings.Join(instance.Tags, ","),
 	}, err
 }
