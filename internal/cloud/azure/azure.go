@@ -269,6 +269,16 @@ func (a *Azure) CreateServer(args automation.ServerArgs) (*automation.ResourceRe
 		priority = compute.VirtualMachinePriorityTypesSpot
 		evictionPolicy = compute.VirtualMachineEvictionPolicyTypesDeallocate
 	}
+	image := &compute.ImageReference{
+		Publisher: to.StringPtr("Canonical"),
+		Offer:     to.StringPtr("0001-com-ubuntu-minimal-jammy-daily"),
+		Sku:       to.StringPtr("minimal-22_04-daily-lts-gen2"),
+		Version:   to.StringPtr("latest"),
+	}
+	if args.MinecraftResource.IsArm() {
+		image.Offer = to.StringPtr("0001-com-ubuntu-server-arm-preview-focal")
+		image.Sku = to.StringPtr("20_04-lts")
+	}
 
 	vmOptions := compute.VirtualMachine{
 		Location: group.Location,
@@ -279,12 +289,7 @@ func (a *Azure) CreateServer(args automation.ServerArgs) (*automation.ResourceRe
 				VMSize: compute.VirtualMachineSizeTypes(args.MinecraftResource.GetSize()),
 			},
 			StorageProfile: &compute.StorageProfile{
-				ImageReference: &compute.ImageReference{
-					Publisher: to.StringPtr("Canonical"),
-					Offer:     to.StringPtr("0001-com-ubuntu-server-jammy"),
-					Sku:       to.StringPtr("22_04-lts"),
-					Version:   to.StringPtr("latest"),
-				},
+				ImageReference: image,
 			},
 			OsProfile: &compute.OSProfile{
 				ComputerName:  to.StringPtr(args.MinecraftResource.GetName()),

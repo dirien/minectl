@@ -6,7 +6,7 @@ spec:
   server:
     cloud: azure
     region: westeurope
-    size: Standard_D2_v2
+    size: Standard_D2_v4
     ssh:
       port: 22
       keyfolder: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft"

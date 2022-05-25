@@ -168,6 +168,9 @@
         "volumeSize": {
           "type": "integer"
         },
+        "arm": {
+          "type": "boolean"
+        },
         "ssh": {
           "type": "object",
           "required": [

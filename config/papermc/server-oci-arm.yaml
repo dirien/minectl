@@ -16,6 +16,7 @@ spec:
         bantime: 1000
         maxretry: 3
     port: 25565
+    arm: true
   minecraft:
     java:
       openjdk: 17

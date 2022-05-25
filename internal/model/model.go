@@ -50,6 +50,7 @@ type Server struct {
 	Port       int    `yaml:"port"`
 	VolumeSize int    `yaml:"volumeSize"`
 	Spot       bool   `yaml:"spot"`
+	Arm        bool   `yaml:"arm"`
 }
 
 // SSH represents a SSH configuration.
@@ -191,4 +192,8 @@ func (m *MinecraftResource) IsProxyServer() bool {
 
 func (m *MinecraftResource) IsSpot() bool {
 	return m.Spec.Server.Spot
+}
+
+func (m *MinecraftResource) IsArm() bool {
+	return m.Spec.Server.Arm
 }

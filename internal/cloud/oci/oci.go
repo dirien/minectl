@@ -327,7 +327,7 @@ func (o *OCI) CreateServer(args automation.ServerArgs) (*automation.ResourceResu
 		},
 	}
 
-	if strings.Contains(args.MinecraftResource.GetSize(), "Flex") {
+	if args.MinecraftResource.IsArm() {
 		launchInstanceRequest.ShapeConfig = &core.LaunchInstanceShapeConfigDetails{
 			Ocpus:       common.Float32(1),
 			MemoryInGBs: common.Float32(6),
