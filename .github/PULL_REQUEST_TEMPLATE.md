@@ -6,4 +6,4 @@ Please reference the issue this PR is fixing.
 
 * [ ] Read the [contributions](../CONTRIBUTING.md) page.
 * [ ] Read the [DCO](../DCO), if you are a first time contributor.
-* [ ] Read the [code of conduct]([Code of Conduct](https://github.com/dirien/.github/blob/main/CODE_OF_CONDUCT.md)).
+* [ ] Read the [code of conduct](https://github.com/dirien/.github/blob/main/CODE_OF_CONDUCT.md).
