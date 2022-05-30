@@ -9,17 +9,17 @@ require (
 	github.com/Azure/go-autorest/autorest/azure/auth v0.5.11
 	github.com/Azure/go-autorest/autorest/to v0.4.0
 	github.com/Masterminds/sprig/v3 v3.2.2
-	github.com/Tnze/go-mc v1.18.1
-	github.com/aws/aws-sdk-go v1.44.23
+	github.com/Tnze/go-mc v1.18.2
+	github.com/aws/aws-sdk-go v1.44.24
 	github.com/blang/semver/v4 v4.0.0
 	github.com/c-bata/go-prompt v0.2.6
-	github.com/civo/civogo v0.2.81
+	github.com/civo/civogo v0.2.82
 	github.com/digitalocean/godo v1.80.0
 	github.com/dirien/ovh-go-sdk v0.1.1
 	github.com/exoscale/egoscale v0.88.0
 	github.com/fatih/color v1.13.0
 	github.com/google/uuid v1.3.0
-	github.com/gophercloud/gophercloud v0.24.0
+	github.com/gophercloud/gophercloud v0.25.0
 	github.com/hashicorp/go-cleanhttp v0.5.2
 	github.com/hashicorp/go-retryablehttp v0.7.1
 	github.com/hetznercloud/hcloud-go v1.33.2
