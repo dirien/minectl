@@ -17,9 +17,10 @@ builds:
     goarch:
       - amd64
       - arm64
-    hooks:
-      post:
-        - upx "{{ .Path }}"
+    mod_timestamp: '{{ .CommitTimestamp }}'
+    flags:
+      - -trimpath
+
 
 source:
   enabled: true
