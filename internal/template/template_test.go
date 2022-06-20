@@ -542,7 +542,6 @@ After=network.target
 WorkingDirectory=/minecraft
 Type=simple
 ExecStart=/usr/bin/java -Xmx2G -Xms2G -jar server.jar nogui
-
 Restart=on-failure
 RestartSec=5
 
@@ -879,7 +878,6 @@ write_files:
       WorkingDirectory=/minecraft
       Type=simple
       ExecStart=/usr/bin/java -Xmx2G -Xms2G -jar server.jar nogui
-      
       Restart=on-failure
       RestartSec=5
       [Install]
@@ -1055,7 +1053,6 @@ write_files:
       WorkingDirectory=/minecraft
       Type=simple
       ExecStart=/usr/bin/java -Xmx2G -Xms2G -jar server.jar nogui
-      
       Restart=on-failure
       RestartSec=5
       [Install]
@@ -1347,7 +1344,6 @@ After=network.target
 WorkingDirectory=/minecraft
 Type=simple
 ExecStart=/usr/bin/java -Xmx2G -Xms2G -jar server.jar nogui
-
 Restart=on-failure
 RestartSec=5
 
@@ -1515,7 +1511,6 @@ After=network.target
 WorkingDirectory=/minecraft
 Type=simple
 ExecStart=/usr/bin/java -Xmx2G -Xms2G -XX:+UseG1GC -XX:+ParallelRefProcEnabled -jar server.jar nogui
-
 Restart=on-failure
 RestartSec=5
 
@@ -1683,7 +1678,6 @@ After=network.target
 WorkingDirectory=/minecraft
 Type=simple
 ExecStart=/usr/bin/java -Xmx2G -Xms2G -jar server.jar nogui
-
 Restart=on-failure
 RestartSec=5
 
@@ -1874,7 +1868,6 @@ write_files:
       WorkingDirectory=/minecraft
       Type=simple
       ExecStart=/usr/bin/java -Xmx2G -Xms2G -jar server.jar nogui
-      
       Restart=on-failure
       RestartSec=5
       [Install]
@@ -2037,7 +2030,6 @@ After=network.target
 WorkingDirectory=/minecraft
 Type=simple
 ExecStart=/usr/bin/java -Xmx2G -Xms2G -jar server.jar nogui
-
 Restart=on-failure
 RestartSec=5
 
@@ -2235,7 +2227,6 @@ write_files:
       WorkingDirectory=/minecraft
       Type=simple
       ExecStart=/usr/bin/java -Xmx2G -Xms2G -jar server.jar nogui
-      
       Restart=on-failure
       RestartSec=5
       [Install]
@@ -2395,7 +2386,6 @@ After=network.target
 WorkingDirectory=/minecraft
 Type=simple
 ExecStart=/usr/bin/java -Xmx2G -Xms2G -jar server.jar nogui
-
 Restart=on-failure
 RestartSec=5
 
@@ -2592,8 +2582,7 @@ write_files:
       [Service]
       WorkingDirectory=/minecraft
       Type=simple
-      ExecStart=/usr/bin/java -Xmx2G -Xms2G -jar server.jar nogui
-      
+      ExecStart=/bin/sh -c "./run.sh"
       Restart=on-failure
       RestartSec=5
       [Install]
@@ -2653,7 +2642,6 @@ runcmd:
   - mkdir minecraft
   - curl -sLSf $URL > forge-installer.jar
   - java -jar forge-installer.jar --installServer /minecraft
-  - cp /minecraft/forge-1.17.1-138.jar /minecraft/server.jar
   - rm -rf /tmp/build
   - echo "eula=true" > /minecraft/eula.txt
   - mv /tmp/server.properties /minecraft/server.properties
@@ -2751,8 +2739,7 @@ After=network.target
 [Service]
 WorkingDirectory=/minecraft
 Type=simple
-ExecStart=/usr/bin/java -Xmx2G -Xms2G -jar server.jar nogui
-
+ExecStart=/bin/sh -c "./run.sh"
 Restart=on-failure
 RestartSec=5
 
@@ -2827,7 +2814,6 @@ cd /tmp/build
 mkdir minecraft
 curl -sLSf $URL > forge-installer.jar
 java -jar forge-installer.jar --installServer /minecraft
-cp /minecraft/forge-1.17.1-138.jar /minecraft/server.jar
 rm -rf /tmp/build
 echo "eula=true" > /minecraft/eula.txt
 mv /tmp/server.properties /minecraft/server.properties
@@ -2949,7 +2935,6 @@ write_files:
       WorkingDirectory=/minecraft
       Type=simple
       ExecStart=/usr/bin/java -Xmx2G -Xms2G -jar server.jar nogui
-      
       Restart=on-failure
       RestartSec=5
       [Install]
@@ -3112,7 +3097,6 @@ After=network.target
 WorkingDirectory=/minecraft
 Type=simple
 ExecStart=/usr/bin/java -Xmx2G -Xms2G -jar server.jar nogui
-
 Restart=on-failure
 RestartSec=5
 
@@ -3294,7 +3278,6 @@ write_files:
       WorkingDirectory=/minecraft
       Type=simple
       ExecStart=/usr/bin/java -Xmx2G -Xms2G -jar server.jar nogui
-      
       Restart=on-failure
       RestartSec=5
       [Install]
@@ -3352,7 +3335,6 @@ After=network.target
 WorkingDirectory=/minecraft
 Type=simple
 ExecStart=/usr/bin/java -Xmx2G -Xms2G -jar server.jar nogui
-
 Restart=on-failure
 RestartSec=5
 
@@ -3418,7 +3400,6 @@ After=network.target
 WorkingDirectory=/minecraft
 Type=simple
 ExecStart=/usr/bin/java -Xmx2G -Xms2G -jar server.jar nogui --language eng
-
 Restart=on-failure
 RestartSec=5
 
@@ -3498,7 +3479,6 @@ write_files:
       WorkingDirectory=/minecraft
       Type=simple
       ExecStart=/usr/bin/java -Xmx2G -Xms2G -jar server.jar nogui --language eng
-      
       Restart=on-failure
       RestartSec=5
       [Install]
@@ -3549,7 +3529,6 @@ After=network.target
 WorkingDirectory=/minecraft
 Type=simple
 ExecStart=/usr/bin/java -Xmx2G -Xms2G -jar server.jar nogui --language eng
-
 Restart=on-failure
 RestartSec=5
 
@@ -3629,7 +3608,6 @@ write_files:
       WorkingDirectory=/minecraft
       Type=simple
       ExecStart=/usr/bin/java -Xmx2G -Xms2G -jar server.jar nogui --language eng
-      
       Restart=on-failure
       RestartSec=5
       [Install]
