@@ -66,9 +66,9 @@ write_files:
       Type=simple
       {{- if and (ne .Spec.Minecraft.Edition "bedrock") (ne .Spec.Minecraft.Edition "forge") }}
       ExecStart=/usr/bin/java -Xmx{{.Spec.Minecraft.Java.Xmx}} -Xms{{.Spec.Minecraft.Java.Xms}}{{range .Spec.Minecraft.Java.Options }} {{.}}{{end}} -jar server.jar nogui {{- if or (eq .Spec.Minecraft.Edition "nukkit") (eq .Spec.Minecraft.Edition "powernukkit") }} --language eng {{- end }}
-      {{ else if eq .Spec.Minecraft.Edition "bedrock" }}
+      {{- else if eq .Spec.Minecraft.Edition "bedrock" }}
       ExecStart=/bin/sh -c "LD_LIBRARY_PATH=. ./bedrock_server"
-      {{ else if eq .Spec.Minecraft.Edition "forge" }}
+      {{- else if eq .Spec.Minecraft.Edition "forge" }}
       ExecStart=/bin/sh -c "./run.sh"
       {{- end }}
       Restart=on-failure
