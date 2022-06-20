@@ -1,3 +1,9 @@
+## New - 1.19 support
+
+`minectl 🗺`️️ supports the `Minecraft 1.19` version
+
+<img alt="logo" src="docs/img/1_19_logo.png" width="40%"/> 
+
 + [Supported cloud provider ☁](#supported-cloud-provider-)
 + [TL;DR 🚀](#tldr-)
     - [Installing `minectl 🗺`](#installing-minectl-)
