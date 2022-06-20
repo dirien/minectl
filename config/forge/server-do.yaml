@@ -18,7 +18,7 @@ spec:
     port: 25565
   minecraft:
     java:
-      openjdk: 8
+      openjdk: 17
       xmx: 2G
       xms: 2G
       rcon:
@@ -27,7 +27,7 @@ spec:
         enabled: true
         broadcast: true
     edition: forge
-    version: 1.18.1-39.0.10
+    version: 1.19-41.0.38
     eula: true
     properties: |
       level-seed=stackitminecraftrocks
