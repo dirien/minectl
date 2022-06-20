@@ -10,10 +10,10 @@ require (
 	github.com/Azure/go-autorest/autorest/to v0.4.0
 	github.com/Masterminds/sprig/v3 v3.2.2
 	github.com/Tnze/go-mc v1.18.2
-	github.com/aws/aws-sdk-go v1.44.37
+	github.com/aws/aws-sdk-go v1.44.38
 	github.com/blang/semver/v4 v4.0.0
 	github.com/c-bata/go-prompt v0.2.6
-	github.com/civo/civogo v0.2.83
+	github.com/civo/civogo v0.2.84
 	github.com/digitalocean/godo v1.81.0
 	github.com/dirien/ovh-go-sdk v0.1.1
 	github.com/exoscale/egoscale v0.88.0
@@ -35,7 +35,7 @@ require (
 	github.com/scaleway/scaleway-sdk-go v1.0.0-beta.9
 	github.com/sethvargo/go-password v0.2.0
 	github.com/spf13/cobra v1.4.0
-	github.com/stretchr/testify v1.7.2
+	github.com/stretchr/testify v1.7.3
 	github.com/tcnksm/go-latest v0.0.0-20170313132115-e3007ae9052e
 	github.com/vultr/govultr/v2 v2.17.2
 	github.com/xeipuuv/gojsonschema v1.2.0
@@ -99,7 +99,7 @@ require (
 	github.com/sony/gobreaker v0.4.2-0.20210216022020-dd874f9dd33b // indirect
 	github.com/spf13/cast v1.4.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/stretchr/objx v0.3.0 // indirect
+	github.com/stretchr/objx v0.4.0 // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
 	github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415 // indirect
 	go.opencensus.io v0.23.0 // indirect
