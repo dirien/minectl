@@ -17,7 +17,7 @@ spec:
     port: 25565
   minecraft:
     java:
-      openjdk: 16
+      openjdk: 17
       xmx: 2G
       xms: 2G
       rcon:
@@ -26,7 +26,7 @@ spec:
         enabled: true
         broadcast: true
     edition: spigot
-    version: 1.18.1
+    version: "1.19"
     eula: true
     properties: |
       level-seed=stackitminecraftrocks
