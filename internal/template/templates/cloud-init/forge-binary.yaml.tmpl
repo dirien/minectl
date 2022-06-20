@@ -5,6 +5,5 @@
   - mkdir minecraft
   - curl -sLSf $URL > forge-installer.jar
   - java -jar forge-installer.jar --installServer /minecraft
-  - cp /minecraft/forge-{{ .Spec.Minecraft.Version }}.jar /minecraft/server.jar
   - rm -rf /tmp/build
 {{- end }}
