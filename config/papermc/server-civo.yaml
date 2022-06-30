@@ -35,7 +35,7 @@ spec:
       enable-jmx-monitoring=false
       server-ip=
       resource-pack-prompt=
-      gamemode=survival25565
+      gamemode=survival
       allow-nether=true
       enable-command-block=false
       sync-chunk-writes=true
