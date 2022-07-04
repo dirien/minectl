@@ -22,7 +22,7 @@ require (
 	github.com/gophercloud/gophercloud v0.25.0
 	github.com/hashicorp/go-cleanhttp v0.5.2
 	github.com/hashicorp/go-retryablehttp v0.7.1
-	github.com/hetznercloud/hcloud-go v1.35.0
+	github.com/hetznercloud/hcloud-go v1.35.1
 	github.com/ionos-cloud/sdk-go/v5 v5.1.12
 	github.com/linode/linodego v1.8.0
 	github.com/melbahja/goph v1.3.0
