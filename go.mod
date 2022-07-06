@@ -10,10 +10,10 @@ require (
 	github.com/Azure/go-autorest/autorest/to v0.4.0
 	github.com/Masterminds/sprig/v3 v3.2.2
 	github.com/Tnze/go-mc v1.18.2
-	github.com/aws/aws-sdk-go v1.44.48
+	github.com/aws/aws-sdk-go v1.44.49
 	github.com/blang/semver/v4 v4.0.0
 	github.com/c-bata/go-prompt v0.2.6
-	github.com/civo/civogo v0.2.90
+	github.com/civo/civogo v0.2.91
 	github.com/digitalocean/godo v1.81.0
 	github.com/dirien/ovh-go-sdk v0.1.1
 	github.com/exoscale/egoscale v0.88.0
@@ -24,7 +24,7 @@ require (
 	github.com/hashicorp/go-retryablehttp v0.7.1
 	github.com/hetznercloud/hcloud-go v1.35.1
 	github.com/ionos-cloud/sdk-go/v5 v5.1.12
-	github.com/linode/linodego v1.8.0
+	github.com/linode/linodego v1.8.1
 	github.com/melbahja/goph v1.3.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/morikuni/aec v1.0.0
@@ -113,7 +113,7 @@ require (
 	google.golang.org/genproto v0.0.0-20220624142145-8cd45d7dbd1f // indirect
 	google.golang.org/grpc v1.47.0 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
-	gopkg.in/ini.v1 v1.66.4 // indirect
+	gopkg.in/ini.v1 v1.66.6 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
