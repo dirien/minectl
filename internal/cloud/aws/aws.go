@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 	"time"
 
@@ -202,14 +203,22 @@ func addTagSpecifications(args automation.ServerArgs, resourceType string) []*ec
 func (a *Aws) CreateServer(args automation.ServerArgs) (*automation.ResourceResults, error) { // nolint: gocyclo
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Minute)
 	defer cancel()
-	image, err := a.lookupAMI("ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20220420")
+	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSHKeyFolder()))
 	if err != nil {
 		return nil, err
 	}
 
-	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSHKeyFolder()))
-	if err != nil {
-		return nil, err
+	var imageAMI *string
+	if args.MinecraftResource.IsArm() {
+		imageAMI, err = a.lookupAMI("ubuntu-minimal/images/hvm-ssd/ubuntu-jammy-22.04*", "arm64")
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		imageAMI, err = a.lookupAMI("ubuntu-minimal/images/hvm-ssd/ubuntu-jammy-22.04*", "x86_64")
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	key, err := a.client.ImportKeyPair(&ec2.ImportKeyPairInput{
@@ -280,7 +289,7 @@ func (a *Aws) CreateServer(args automation.ServerArgs) (*automation.ResourceResu
 		spotInstance := ec2.RequestSpotInstancesInput{
 			InstanceCount: aws.Int64(1),
 			LaunchSpecification: &ec2.RequestSpotLaunchSpecification{
-				ImageId:             image,
+				ImageId:             imageAMI,
 				KeyName:             key.KeyName,
 				InstanceType:        aws.String(args.MinecraftResource.GetSize()),
 				BlockDeviceMappings: addBlockDevice(args.MinecraftResource.GetVolumeSize()),
@@ -361,7 +370,7 @@ func (a *Aws) CreateServer(args automation.ServerArgs) (*automation.ResourceResu
 	} else {
 		zap.S().Infow("Creating instance", "name", args.MinecraftResource.GetName())
 		instanceInput := &ec2.RunInstancesInput{
-			ImageId:             image,
+			ImageId:             imageAMI,
 			KeyName:             key.KeyName,
 			InstanceType:        aws.String(args.MinecraftResource.GetSize()),
 			MinCount:            aws.Int64(1),
@@ -664,7 +673,7 @@ func (a *Aws) createEC2SecurityGroupRule(groupID, protocol string, fromPort, toP
 }
 
 // lookupAMI gets the AMI ID that the exit node will use
-func (a *Aws) lookupAMI(name string) (*string, error) {
+func (a *Aws) lookupAMI(name, architecture string) (*string, error) {
 	images, err := a.client.DescribeImages(&ec2.DescribeImagesInput{
 		Filters: []*ec2.Filter{
 			{
@@ -673,15 +682,32 @@ func (a *Aws) lookupAMI(name string) (*string, error) {
 					aws.String(name),
 				},
 			},
+			{
+				Name: aws.String("architecture"),
+				Values: []*string{
+					aws.String(architecture),
+				},
+			},
+			{
+				Name: aws.String("owner-id"),
+				Values: []*string{
+					aws.String("099720109477"),
+				},
+			},
 		},
 	})
 	if err != nil {
 		return nil, err
 	}
-
 	if len(images.Images) == 0 {
 		return nil, fmt.Errorf("image not found")
 	}
-
+	sort.SliceStable(images.Images, func(i, j int) bool {
+		before := *images.Images[i].CreationDate
+		after := *images.Images[j].CreationDate
+		beforeTime, _ := time.Parse(time.RFC3339, before)
+		afterTime, _ := time.Parse(time.RFC3339, after)
+		return beforeTime.After(afterTime)
+	})
 	return images.Images[0].ImageId, nil
 }
