@@ -12,7 +12,7 @@ var (
 		Spec: model.Spec{
 			Minecraft: model.Minecraft{
 				Edition:    "bedrock",
-				Properties: "level-seed=stackitminecraftrocks\nview-distance=10\nenable-jmx-monitoring=false\n",
+				Properties: "level-seed=minectlrocks\nview-distance=10\nenable-jmx-monitoring=false\n",
 				Version:    "1.17.10.04",
 				Eula:       false,
 			},
@@ -28,7 +28,7 @@ var (
 		Spec: model.Spec{
 			Minecraft: model.Minecraft{
 				Edition:    "bedrock",
-				Properties: "level-seed=stackitminecraftrocks\nview-distance=10\nenable-jmx-monitoring=false\n",
+				Properties: "level-seed=minectlrocks\nview-distance=10\nenable-jmx-monitoring=false\n",
 				Version:    "1.17.10.04",
 				Eula:       false,
 			},
@@ -55,7 +55,7 @@ var (
 					},
 				},
 				Edition:    "java",
-				Properties: "level-seed=stackitminecraftrocks\nview-distance=10\nenable-jmx-monitoring=false\n",
+				Properties: "level-seed=minectlrocks\nview-distance=10\nenable-jmx-monitoring=false\n",
 				Version:    "1.17",
 				Eula:       true,
 			},
@@ -86,7 +86,7 @@ var (
 					},
 				},
 				Edition:    "java",
-				Properties: "level-seed=stackitminecraftrocks\nview-distance=10\nenable-jmx-monitoring=false\n",
+				Properties: "level-seed=minectlrocks\nview-distance=10\nenable-jmx-monitoring=false\n",
 				Version:    "1.17",
 				Eula:       true,
 			},
@@ -113,7 +113,7 @@ var (
 					},
 				},
 				Edition:    "papermc",
-				Properties: "level-seed=stackitminecraftrocks\nview-distance=10\nenable-jmx-monitoring=false\n",
+				Properties: "level-seed=minectlrocks\nview-distance=10\nenable-jmx-monitoring=false\n",
 				Version:    "1.17.1-157",
 				Eula:       true,
 			},
@@ -140,7 +140,7 @@ var (
 					},
 				},
 				Edition:    "craftbukkit",
-				Properties: "level-seed=stackitminecraftrocks\nview-distance=10\nenable-jmx-monitoring=false\n",
+				Properties: "level-seed=minectlrocks\nview-distance=10\nenable-jmx-monitoring=false\n",
 				Version:    "1.17.1-138",
 				Eula:       true,
 			},
@@ -167,7 +167,7 @@ var (
 					},
 				},
 				Edition:    "fabric",
-				Properties: "level-seed=stackitminecraftrocks\nview-distance=10\nenable-jmx-monitoring=false\n",
+				Properties: "level-seed=minectlrocks\nview-distance=10\nenable-jmx-monitoring=false\n",
 				Version:    "1.17.1-138",
 				Eula:       true,
 			},
@@ -194,7 +194,7 @@ var (
 					},
 				},
 				Edition:    "forge",
-				Properties: "level-seed=stackitminecraftrocks\nview-distance=10\nenable-jmx-monitoring=false\n",
+				Properties: "level-seed=minectlrocks\nview-distance=10\nenable-jmx-monitoring=false\n",
 				Version:    "1.17.1-138",
 				Eula:       true,
 			},
@@ -221,7 +221,7 @@ var (
 					},
 				},
 				Edition:    "spigot",
-				Properties: "level-seed=stackitminecraftrocks\nview-distance=10\nenable-jmx-monitoring=false\n",
+				Properties: "level-seed=minectlrocks\nview-distance=10\nenable-jmx-monitoring=false\n",
 				Version:    "1.17.1-138",
 				Eula:       true,
 			},
@@ -249,7 +249,7 @@ var (
 					},
 				},
 				Edition:    "nukkit",
-				Properties: "level-seed=stackitminecraftrocks\nview-distance=10\nenable-jmx-monitoring=false\n",
+				Properties: "level-seed=minectlrocks\nview-distance=10\nenable-jmx-monitoring=false\n",
 				Version:    "1.0-SNAPSHOT",
 				Eula:       true,
 			},
@@ -277,7 +277,7 @@ var (
 					},
 				},
 				Edition:    "fabric",
-				Properties: "level-seed=stackitminecraftrocks\nview-distance=10\nenable-jmx-monitoring=false\n",
+				Properties: "level-seed=minectlrocks\nview-distance=10\nenable-jmx-monitoring=false\n",
 				Version:    "1.17.1-138",
 				Eula:       true,
 			},
@@ -305,7 +305,7 @@ var (
 					},
 				},
 				Edition:    "powernukkit",
-				Properties: "level-seed=stackitminecraftrocks\nview-distance=10\nenable-jmx-monitoring=false\n",
+				Properties: "level-seed=minectlrocks\nview-distance=10\nenable-jmx-monitoring=false\n",
 				Version:    "1.5.1.0-PN",
 				Eula:       true,
 			},
@@ -319,7 +319,7 @@ var (
 iptables -I INPUT -j ACCEPT
 tee /tmp/server.properties <<EOF
 server-port=19132
-level-seed=stackitminecraftrocks
+level-seed=minectlrocks
 view-distance=10
 enable-jmx-monitoring=false
 
@@ -457,7 +457,7 @@ systemctl enable minecraft.service`
 iptables -I INPUT -j ACCEPT
 tee /tmp/server.properties <<EOF
 server-port=25565
-level-seed=stackitminecraftrocks
+level-seed=minectlrocks
 view-distance=10
 enable-jmx-monitoring=false
 
@@ -648,7 +648,7 @@ write_files:
       net.ipv4.conf.all.forwarding=1
   - path: /tmp/server.properties
     content: |
-       level-seed=stackitminecraftrocks
+       level-seed=minectlrocks
        view-distance=10
        enable-jmx-monitoring=false
        
@@ -800,7 +800,7 @@ write_files:
       net.ipv4.conf.all.forwarding=1
   - path: /tmp/server.properties
     content: |
-       level-seed=stackitminecraftrocks
+       level-seed=minectlrocks
        view-distance=10
        enable-jmx-monitoring=false
        broadcast-rcon-to-ops=true
@@ -975,7 +975,7 @@ write_files:
       net.ipv4.conf.all.forwarding=1
   - path: /tmp/server.properties
     content: |
-       level-seed=stackitminecraftrocks
+       level-seed=minectlrocks
        view-distance=10
        enable-jmx-monitoring=false
        broadcast-rcon-to-ops=true
@@ -1122,7 +1122,7 @@ runcmd:
 iptables -I INPUT -j ACCEPT
 tee /tmp/server.properties <<EOF
 server-port=19132
-level-seed=stackitminecraftrocks
+level-seed=minectlrocks
 view-distance=10
 enable-jmx-monitoring=false
 
@@ -1263,7 +1263,7 @@ systemctl enable minecraft.service`
 iptables -I INPUT -j ACCEPT
 tee /tmp/server.properties <<EOF
 server-port=25565
-level-seed=stackitminecraftrocks
+level-seed=minectlrocks
 view-distance=10
 enable-jmx-monitoring=false
 
@@ -1430,7 +1430,7 @@ systemctl enable minecraft.service`
 iptables -I INPUT -j ACCEPT
 tee /tmp/server.properties <<EOF
 server-port=25565
-level-seed=stackitminecraftrocks
+level-seed=minectlrocks
 view-distance=10
 enable-jmx-monitoring=false
 
@@ -1597,7 +1597,7 @@ systemctl enable minecraft.service`
 iptables -I INPUT -j ACCEPT
 tee /tmp/server.properties <<EOF
 server-port=25565
-level-seed=stackitminecraftrocks
+level-seed=minectlrocks
 view-distance=10
 enable-jmx-monitoring=false
 
@@ -1792,7 +1792,7 @@ write_files:
       net.ipv4.conf.all.forwarding=1
   - path: /tmp/server.properties
     content: |
-       level-seed=stackitminecraftrocks
+       level-seed=minectlrocks
        view-distance=10
        enable-jmx-monitoring=false
        broadcast-rcon-to-ops=true
@@ -1949,7 +1949,7 @@ runcmd:
 iptables -I INPUT -j ACCEPT
 tee /tmp/server.properties <<EOF
 server-port=25565
-level-seed=stackitminecraftrocks
+level-seed=minectlrocks
 view-distance=10
 enable-jmx-monitoring=false
 
@@ -2151,7 +2151,7 @@ write_files:
       net.ipv4.conf.all.forwarding=1
   - path: /tmp/server.properties
     content: |
-       level-seed=stackitminecraftrocks
+       level-seed=minectlrocks
        view-distance=10
        enable-jmx-monitoring=false
        broadcast-rcon-to-ops=true
@@ -2305,7 +2305,7 @@ runcmd:
 iptables -I INPUT -j ACCEPT
 tee /tmp/server.properties <<EOF
 server-port=25565
-level-seed=stackitminecraftrocks
+level-seed=minectlrocks
 view-distance=10
 enable-jmx-monitoring=false
 
@@ -2507,7 +2507,7 @@ write_files:
       net.ipv4.conf.all.forwarding=1
   - path: /tmp/server.properties
     content: |
-       level-seed=stackitminecraftrocks
+       level-seed=minectlrocks
        view-distance=10
        enable-jmx-monitoring=false
        broadcast-rcon-to-ops=true
@@ -2659,7 +2659,7 @@ runcmd:
 iptables -I INPUT -j ACCEPT
 tee /tmp/server.properties <<EOF
 server-port=25565
-level-seed=stackitminecraftrocks
+level-seed=minectlrocks
 view-distance=10
 enable-jmx-monitoring=false
 
@@ -2859,7 +2859,7 @@ write_files:
       net.ipv4.conf.all.forwarding=1
   - path: /tmp/server.properties
     content: |
-       level-seed=stackitminecraftrocks
+       level-seed=minectlrocks
        view-distance=10
        enable-jmx-monitoring=false
        broadcast-rcon-to-ops=true
@@ -3016,7 +3016,7 @@ runcmd:
 iptables -I INPUT -j ACCEPT
 tee /tmp/server.properties <<EOF
 server-port=25565
-level-seed=stackitminecraftrocks
+level-seed=minectlrocks
 view-distance=10
 enable-jmx-monitoring=false
 
@@ -3190,7 +3190,7 @@ systemctl enable minecraft.service`
 iptables -I INPUT -j ACCEPT
 tee /tmp/server.properties <<EOF
 server-port=19132
-level-seed=stackitminecraftrocks
+level-seed=minectlrocks
 view-distance=10
 enable-jmx-monitoring=false
 
@@ -3267,7 +3267,7 @@ write_files:
       net.ipv4.conf.all.forwarding=1
   - path: /tmp/server.properties
     content: |
-       level-seed=stackitminecraftrocks
+       level-seed=minectlrocks
        view-distance=10
        enable-jmx-monitoring=false
        broadcast-rcon-to-ops=true
@@ -3323,7 +3323,7 @@ runcmd:
 iptables -I INPUT -j ACCEPT
 tee /tmp/server.properties <<EOF
 server-port=25565
-level-seed=stackitminecraftrocks
+level-seed=minectlrocks
 view-distance=10
 enable-jmx-monitoring=false
 
@@ -3388,7 +3388,7 @@ systemctl enable minecraft.service`
 iptables -I INPUT -j ACCEPT
 tee /tmp/server.properties <<EOF
 server-port=19132
-level-seed=stackitminecraftrocks
+level-seed=minectlrocks
 view-distance=10
 enable-jmx-monitoring=false
 
@@ -3468,7 +3468,7 @@ write_files:
       net.ipv4.conf.all.forwarding=1
   - path: /tmp/server.properties
     content: |
-       level-seed=stackitminecraftrocks
+       level-seed=minectlrocks
        view-distance=10
        enable-jmx-monitoring=false
        broadcast-rcon-to-ops=true
@@ -3517,7 +3517,7 @@ runcmd:
 iptables -I INPUT -j ACCEPT
 tee /tmp/server.properties <<EOF
 server-port=19132
-level-seed=stackitminecraftrocks
+level-seed=minectlrocks
 view-distance=10
 enable-jmx-monitoring=false
 
@@ -3597,7 +3597,7 @@ write_files:
       net.ipv4.conf.all.forwarding=1
   - path: /tmp/server.properties
     content: |
-       level-seed=stackitminecraftrocks
+       level-seed=minectlrocks
        view-distance=10
        enable-jmx-monitoring=false
        broadcast-rcon-to-ops=true
@@ -4035,7 +4035,7 @@ spec:
     version: xx
     eula: true
     properties: |
-      level-seed=stackitminecraftrocks
+      level-seed=minectlrocks
       view-distance=10
       enable-jmx-monitoring=false`
 
@@ -4066,7 +4066,7 @@ spec:
     version: xx
     eula: true
     properties: |
-      level-seed=stackitminecraftrocks
+      level-seed=minectlrocks
       view-distance=10
       enable-jmx-monitoring=false`
 
@@ -4095,7 +4095,7 @@ spec:
     version: xx
     eula: true
     properties: |
-      level-seed=stackitminecraftrocks
+      level-seed=minectlrocks
       view-distance=10
       enable-jmx-monitoring=false`
 
@@ -4120,7 +4120,7 @@ spec:
     version: xx
     eula: true
     properties: |
-      level-seed=stackitminecraftrocks
+      level-seed=minectlrocks
       view-distance=10
       enable-jmx-monitoring=false`
 
@@ -4156,7 +4156,7 @@ spec:
     version: xx
     eula: true
     properties: |
-      level-seed=stackitminecraftrocks
+      level-seed=minectlrocks
       view-distance=10
       enable-jmx-monitoring=false`
 )
@@ -4174,7 +4174,7 @@ func crateWizardMock() model.Wizard {
 		RconPw:     "xxx",
 		Edition:    "java",
 		Version:    "xx",
-		Properties: "level-seed=stackitminecraftrocks\nview-distance=10\nenable-jmx-monitoring=false",
+		Properties: "level-seed=minectlrocks\nview-distance=10\nenable-jmx-monitoring=false",
 	}
 }
 

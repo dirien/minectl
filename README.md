@@ -568,7 +568,7 @@ spec:
     version: "<version>"
     eula: true
     properties: |
-      level-seed=stackitminecraftrocks
+      level-seed=minectlrocks
       broadcast-rcon-to-ops=true
       ...
 ```

@@ -89,7 +89,7 @@ spec:
     eula: true
     properties: |
       motd=\u00A75Scalway \u00A7lSTARDUST \u00A7rMinecraft -- \u00A76Forge \u00A7redition with \u00A7eLucky Block
-      level-seed=stackitminecraftrocks
+      level-seed=minectlrocks
       level-name=world
 ```
 
