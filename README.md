@@ -84,7 +84,6 @@
 ![Exoscale](https://img.shields.io/badge/Exoscale-DA291C?style=for-the-badge&logo=exoscale&logoColor=white)
 ![Fuga Cloud](https://img.shields.io/badge/fuga_cloud-242F4B?style=for-the-badge&logo=fugacloud&logoColor=white)
 
-
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/dirien/minectl/Build%20Binary/main?logo=github&style=for-the-badge)
 ![GitHub](https://img.shields.io/github/license/dirien/minectl?style=for-the-badge)
 
@@ -379,12 +378,10 @@ To get the `OpenStack RC File` from the Fuga Cloud UI, follow this steps:
 5. Click on download OpenRC. This file contains all necessary configurations for the client.
 
 ```bash
-source  fuga-openrc.sh
+source fuga-openrc.sh
 ```
 
 Enter the password which matches the username of the contents of the OpenRC file.
-
-
 
 #### Minecraft Server Versions 📚
 
@@ -507,6 +504,7 @@ spec:
         maxretry: "<max retry>"
     port: <server port>
     spot: <true |false>
+    arm: <true |false>
   proxy:
     java:
       openjdk: <jdk version>
@@ -550,6 +548,7 @@ spec:
         maxretry: "<max retry>"
     port: "25565|19132 are the defaults for tcp/udp"
     spot: <true |false>
+    arm: <true |false>
   minecraft:
     java:
       openjdk: "8|16 use jdk 8 for <1.17 java server version"
@@ -572,6 +571,8 @@ spec:
       broadcast-rcon-to-ops=true
       ...
 ```
+
+> Attention: Please lookup the correct service size if you are setting the `arm` attribute to `true`
 
 I created some example configs in the [config](config) folder for currently supported cloud provider and Minecraft
 editions.
