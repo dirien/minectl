@@ -74,7 +74,15 @@ func NewGCE(keyfile, zone string) (*GCE, error) {
 }
 
 func (g *GCE) CreateServer(args automation.ServerArgs) (*automation.ResourceResults, error) {
-	imageURL := "projects/ubuntu-os-cloud/global/images/ubuntu-minimal-2204-jammy-v20220506a"
+	imageFamily := "ubuntu-2204-lts"
+
+	if args.MinecraftResource.IsArm() {
+		imageFamily = "ubuntu-minimal-2204-lts-arm64"
+	}
+	image, err := g.client.Images.GetFromFamily("ubuntu-os-cloud", imageFamily).Context(context.Background()).Do()
+	if err != nil {
+		return nil, err
+	}
 
 	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSHKeyFolder()))
 	if err != nil {
@@ -144,7 +152,7 @@ func (g *GCE) CreateServer(args automation.ServerArgs) (*automation.ResourceResu
 				Type:       "PERSISTENT",
 				DiskSizeGb: 10,
 				InitializeParams: &compute.AttachedDiskInitializeParams{
-					SourceImage: imageURL,
+					SourceImage: fmt.Sprintf("projects/ubuntu-os-cloud/global/images/%s", image.Name),
 				},
 			},
 		},
