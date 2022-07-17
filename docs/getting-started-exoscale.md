@@ -63,7 +63,7 @@ spec:
     version: 1.18.1
     eula: true
     properties: |
-      level-seed=stackitminecraftrocks
+      level-seed=minectlrocks
       view-distance=10
       enable-jmx-monitoring=false
       server-ip=

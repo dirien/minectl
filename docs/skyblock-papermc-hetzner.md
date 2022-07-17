@@ -70,7 +70,7 @@ spec:
     eula: true
     properties: |
       motd=\u00A7cHetzner \u00A7rMinecraft -- \u00A76PaperMC \u00A7redition with \u00A7eBSkyBlock
-      level-seed=stackitminecraftrocks
+      level-seed=minectlrocks
       level-name=world
 ```
 
