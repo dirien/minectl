@@ -52,6 +52,8 @@ func (r *RemoteServer) UpdateServer(args *model.MinecraftResource) error {
 		update, err = tmpl.DoUpdate(args, &minctlTemplate.CreateUpdateTemplateArgs{Name: minctlTemplate.TemplateForgeBinary})
 	case "papermc":
 		update, err = tmpl.DoUpdate(args, &minctlTemplate.CreateUpdateTemplateArgs{Name: minctlTemplate.TemplatePaperMCBinary})
+	case "purpur":
+		update, err = tmpl.DoUpdate(args, &minctlTemplate.CreateUpdateTemplateArgs{Name: minctlTemplate.TemplatePurpurBinary})
 	case "bungeecord":
 		update, err = tmpl.DoUpdate(args, &minctlTemplate.CreateUpdateTemplateArgs{Name: minctlTemplate.TemplateBungeeCordBinary})
 	case "waterfall":

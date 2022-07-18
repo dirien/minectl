@@ -70,6 +70,8 @@ echo "/dev/{{ .Mount }} /minecraft ext4 defaults,noatime,nofail 0 2" >> /etc/fst
 {{- template "bedrock-binary" . }}
 {{- else if eq .Spec.Minecraft.Edition "papermc" }}
 {{- template "papermc-binary" . }}
+{{- else if eq .Spec.Minecraft.Edition "purpur" }}
+{{- template "purpur-binary" . }}
 {{- else if or (eq .Spec.Minecraft.Edition "spigot") (eq .Spec.Minecraft.Edition "craftbukkit") }}
 {{- template "spigotbukkit-binary" . }}
 {{- else if eq .Spec.Minecraft.Edition "fabric" }}

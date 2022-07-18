@@ -36,6 +36,7 @@ const (
 	TemplateFabricBinary       TemplateName = "fabric-binary"
 	TemplateForgeBinary        TemplateName = "forge-binary"
 	TemplatePaperMCBinary      TemplateName = "papermc-binary"
+	TemplatePurpurBinary       TemplateName = "purpur-binary"
 	TemplateProxyCloudConfig   TemplateName = "proxy-cloud-config"
 	TemplateProxyBash          TemplateName = "proxy-bash"
 	TemplateBungeeCordBinary   TemplateName = "bungeecord-binary"

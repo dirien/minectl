@@ -410,6 +410,10 @@ hundreds of improvements and optimizations that can only make CraftBukkit shrink
 Paper (formerly known as PaperSpigot, distributed via the Paperclip patch utility) is a high performance fork* of
 Spigot.
 
+##### Purpur
+
+Purpur is a drop-in replacement for Paper servers designed for configurability and new, fun, exciting gameplay features.
+
 ##### Forge
 
 Forge is well known for being able to use Forge Mods which are direct modifications to the Minecraft program code. In
@@ -563,7 +567,7 @@ spec:
         port: 25575
         enabled: true
         broadcast: true
-    edition: "java|bedrock|craftbukkit|fabric|forge|papermc|spigot"
+    edition: "java|bedrock|craftbukkit|fabric|forge|papermc|spigot|purpur"
     version: "<version>"
     eula: true
     properties: |

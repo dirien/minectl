@@ -147,7 +147,7 @@ var wizardQuestions = []*survey.Question{
 		Name: "edition",
 		Prompt: &survey.Select{
 			Message:  "Select a Minecraft edition:",
-			Options:  []string{"bedrock", "nukkit", "powernukkit", "craftbukkit", "fabric", "forge", "java", "papermc", "spigot"},
+			Options:  []string{"bedrock", "nukkit", "powernukkit", "craftbukkit", "fabric", "forge", "java", "papermc", "spigot", "purpur"},
 			Default:  "java",
 			PageSize: 10,
 		},
