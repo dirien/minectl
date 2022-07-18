@@ -314,6 +314,33 @@ var (
 			},
 		},
 	}
+	purpur = model.MinecraftResource{
+		Spec: model.Spec{
+			Server: model.Server{
+				Port: 25565,
+			},
+			Minecraft: model.Minecraft{
+				Java: model.Java{
+					Xms:     "2G",
+					Xmx:     "2G",
+					OpenJDK: 16,
+					Rcon: model.Rcon{
+						Port:      2,
+						Password:  "test",
+						Enabled:   true,
+						Broadcast: true,
+					},
+				},
+				Edition:    "purpur",
+				Properties: "level-seed=minectlrocks\nview-distance=10\nenable-jmx-monitoring=false\n",
+				Version:    "1.19",
+				Eula:       true,
+			},
+			Monitoring: model.Monitoring{
+				Enabled: false,
+			},
+		},
+	}
 
 	bedrockBashWant = `#!/bin/bash
 iptables -I INPUT -j ACCEPT
@@ -3442,6 +3469,77 @@ chmod a+rwx /minecraft
 systemctl restart minecraft.service
 systemctl enable minecraft.service`
 
+	purpurCloudInitWant = `#cloud-config
+users:
+  - default
+package_update: true
+
+packages:
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - openjdk-16-jre-headless
+  - fail2ban
+fs_setup:
+  - label: minecraft
+    device: /dev/sda
+    filesystem: xfs
+    overwrite: false
+
+mounts:
+  - [/dev/sda, /minecraft]
+# Enable ipv4 forwarding, required on CIS hardened machines
+write_files:
+  - path: /etc/sysctl.d/enabled_ipv4_forwarding.conf
+    content: |
+      net.ipv4.conf.all.forwarding=1
+  - path: /tmp/server.properties
+    content: |
+       level-seed=minectlrocks
+       view-distance=10
+       enable-jmx-monitoring=false
+       broadcast-rcon-to-ops=true
+       rcon.port=2
+       enable-rcon=true
+       rcon.password=test
+       server-port=25565
+  - path: /etc/systemd/system/minecraft.service
+    content: |
+      [Unit]
+      Description=Minecraft Server
+      Documentation=https://www.minecraft.net/en-us/download/server
+      DefaultDependencies=no
+      After=network.target
+      [Service]
+      WorkingDirectory=/minecraft
+      Type=simple
+      ExecStart=/usr/bin/java -Xmx2G -Xms2G -jar server.jar nogui
+      Restart=on-failure
+      RestartSec=5
+      [Install]
+      WantedBy=multi-user.target
+  - path: /etc/fail2ban/jail.local
+    content: |
+      [sshd]
+      port = 0
+      enabled = true
+      maxretry = 0
+      bantime = 0
+      ignoreip = 
+
+runcmd:
+  - iptables -I INPUT -j ACCEPT
+  - sed -i 's/#Port 22/Port 0/g' /etc/ssh/sshd_config
+  - service sshd restart
+  - systemctl restart fail2ban
+  - URL="https://api.purpurmc.org/v2/purpur/1.19/latest/download"
+  - curl -sLSf $URL > /minecraft/server.jar
+  - echo "eula=true" > /minecraft/eula.txt
+  - mv /tmp/server.properties /minecraft/server.properties
+  - chmod a+rwx /minecraft
+  - systemctl restart minecraft.service
+  - systemctl enable minecraft.service`
+
 	nukkitCloudInitWant = `#cloud-config
 users:
   - default
@@ -3512,6 +3610,64 @@ runcmd:
   - chmod a+rwx /minecraft
   - systemctl restart minecraft.service
   - systemctl enable minecraft.service`
+
+	purpurBashWant = `#!/bin/bash
+iptables -I INPUT -j ACCEPT
+tee /tmp/server.properties <<EOF
+server-port=25565
+level-seed=minectlrocks
+view-distance=10
+enable-jmx-monitoring=false
+
+broadcast-rcon-to-ops=true
+rcon.port=2
+enable-rcon=true
+rcon.password=test
+EOF
+tee /etc/systemd/system/minecraft.service <<EOF
+[Unit]
+Description=Minecraft Server
+Documentation=https://www.minecraft.net/en-us/download/server
+DefaultDependencies=no
+After=network.target
+
+[Service]
+WorkingDirectory=/minecraft
+Type=simple
+ExecStart=/usr/bin/java -Xmx2G -Xms2G -jar server.jar nogui
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+apt update
+apt-get install -y apt-transport-https ca-certificates curl openjdk-16-jre-headless fail2ban
+
+sed -i 's/#Port 22/Port 0/g' /etc/ssh/sshd_config
+service sshd restart
+
+tee /etc/fail2ban/jail.local <<EOF
+[sshd]
+port = 0
+enabled = true
+maxretry = 0
+bantime = 0
+ignoreip = 
+EOF
+
+systemctl restart fail2ban
+mkdir -p /minecraft
+mkfs.ext4  /dev/sda
+mount /dev/sda /minecraft
+echo "/dev/sda /minecraft ext4 defaults,noatime,nofail 0 2" >> /etc/fstab
+URL="https://api.purpurmc.org/v2/purpur/1.19/latest/download"
+curl -sLSf $URL > /minecraft/server.jar
+echo "eula=true" > /minecraft/eula.txt
+mv /tmp/server.properties /minecraft/server.properties
+chmod a+rwx /minecraft
+systemctl restart minecraft.service
+systemctl enable minecraft.service`
 
 	powerNukkitBashWant = `#!/bin/bash
 iptables -I INPUT -j ACCEPT
@@ -3999,6 +4155,36 @@ func TestCloudInitPowerNukkitTemplate(t *testing.T) {
 		}
 
 		assert.Equal(t, powerNukkitCloudInitWant, got)
+	})
+}
+
+func TestCloudInitPurpurTemplate(t *testing.T) {
+	t.Run("Test Template purpur for Cloud Config", func(t *testing.T) {
+		cloudConfig, err := NewTemplateCloudConfig()
+		if err != nil {
+			t.Fatal(err)
+		}
+		got, err := cloudConfig.GetTemplate(&purpur, &CreateUpdateTemplateArgs{Mount: "sda", Name: TemplateCloudConfig})
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		assert.Equal(t, purpurCloudInitWant, got)
+	})
+}
+
+func TestBashPowerPurpurTemplate(t *testing.T) {
+	t.Run("Test Template purpur for Bash", func(t *testing.T) {
+		bash, err := NewTemplateBash()
+		if err != nil {
+			t.Fatal(err)
+		}
+		got, err := bash.GetTemplate(&purpur, &CreateUpdateTemplateArgs{Mount: "sda", Name: TemplateBash})
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		assert.Equal(t, purpurBashWant, got)
 	})
 }
 

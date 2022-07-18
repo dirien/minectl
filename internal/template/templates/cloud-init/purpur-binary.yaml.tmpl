@@ -1,0 +1,4 @@
+{{- define "purpur-binary" }}
+  - URL="https://api.purpurmc.org/v2/purpur/{{ .Spec.Minecraft.Version }}/latest/download"
+  - curl -sLSf $URL > /minecraft/server.jar
+{{- end }}
