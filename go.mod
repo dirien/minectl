@@ -5,12 +5,12 @@ go 1.18
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.5
 	github.com/Azure/azure-sdk-for-go v59.0.0+incompatible
-	github.com/Azure/go-autorest/autorest v0.11.27
+	github.com/Azure/go-autorest/autorest v0.11.28
 	github.com/Azure/go-autorest/autorest/azure/auth v0.5.11
 	github.com/Azure/go-autorest/autorest/to v0.4.0
 	github.com/Masterminds/sprig/v3 v3.2.2
 	github.com/Tnze/go-mc v1.18.2
-	github.com/aws/aws-sdk-go v1.44.62
+	github.com/aws/aws-sdk-go v1.44.66
 	github.com/blang/semver/v4 v4.0.0
 	github.com/c-bata/go-prompt v0.2.6
 	github.com/civo/civogo v0.2.99
@@ -22,7 +22,7 @@ require (
 	github.com/gophercloud/gophercloud v0.25.0
 	github.com/hashicorp/go-cleanhttp v0.5.2
 	github.com/hashicorp/go-retryablehttp v0.7.1
-	github.com/hetznercloud/hcloud-go v1.35.1
+	github.com/hetznercloud/hcloud-go v1.35.2
 	github.com/ionos-cloud/sdk-go/v5 v5.1.12
 	github.com/linode/linodego v1.8.1
 	github.com/melbahja/goph v1.3.0
@@ -42,7 +42,7 @@ require (
 	go.uber.org/zap v1.21.0
 	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa
 	golang.org/x/oauth2 v0.0.0-20220722155238-128564f6959c
-	google.golang.org/api v0.88.0
+	google.golang.org/api v0.90.0
 	sigs.k8s.io/yaml v1.3.0
 )
 
