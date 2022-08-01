@@ -28,7 +28,7 @@ spec:
         enabled: true
         broadcast: true
     edition: java
-    version: "1.19"
+    version: 1.19.1
     eula: true
     properties: |
       level-seed=minectlrocks
