@@ -16,7 +16,7 @@ spec:
     port: 19132
   minecraft:
     edition: bedrock
-    version: 1.18.12.01
+    version: 1.19.11.01
     eula: true
     properties: |
       server-name=Exoscale Minecraft
