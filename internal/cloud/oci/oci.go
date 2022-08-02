@@ -107,7 +107,7 @@ func (o *OCI) CreateServer(args automation.ServerArgs) (*automation.ResourceResu
 	imagesRequest := core.ListImagesRequest{
 		CompartmentId:          compartment.Id,
 		OperatingSystem:        common.String("Canonical Ubuntu"),
-		OperatingSystemVersion: common.String("20.04"),
+		OperatingSystemVersion: common.String("22.04"),
 		SortBy:                 core.ListImagesSortByTimecreated,
 		SortOrder:              core.ListImagesSortOrderDesc,
 		Shape:                  common.String(args.MinecraftResource.GetSize()),
