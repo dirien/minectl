@@ -472,8 +472,8 @@ URL=$(curl -s https://bedrock-version.minectl.ediri.online/binary/1.17.10.04)
 curl -sLSf $URL > /tmp/bedrock-server.zip
 unzip -o /tmp/bedrock-server.zip -d /minecraft
 chmod +x /minecraft/bedrock_server
-wget http://security.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1l-1ubuntu1.3_amd64.deb
-dpkg -i libssl1.1_1.1.1l-1ubuntu1.3_amd64.deb
+wget http://security.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1-1ubuntu2.1~18.04.20_amd64.deb
+dpkg -i libssl1.1_1.1.1-1ubuntu2.1~18.04.20_amd64.deb
 echo "eula=false" > /minecraft/eula.txt
 mv /tmp/server.properties /minecraft/server.properties
 chmod a+rwx /minecraft
@@ -787,8 +787,8 @@ runcmd:
   - curl -sLSf $URL > /tmp/bedrock-server.zip
   - unzip -o /tmp/bedrock-server.zip -d /minecraft
   - chmod +x /minecraft/bedrock_server
-  - wget http://security.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1l-1ubuntu1.3_amd64.deb
-  - dpkg -i libssl1.1_1.1.1l-1ubuntu1.3_amd64.deb
+  - wget http://security.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1-1ubuntu2.1~18.04.20_amd64.deb
+  - dpkg -i libssl1.1_1.1.1-1ubuntu2.1~18.04.20_amd64.deb
   - echo "eula=false" > /minecraft/eula.txt
   - mv /tmp/server.properties /minecraft/server.properties
   - chmod a+rwx /minecraft
@@ -1278,8 +1278,8 @@ URL=$(curl -s https://bedrock-version.minectl.ediri.online/binary/1.17.10.04)
 curl -sLSf $URL > /tmp/bedrock-server.zip
 unzip -o /tmp/bedrock-server.zip -d /minecraft
 chmod +x /minecraft/bedrock_server
-wget http://security.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1l-1ubuntu1.3_amd64.deb
-dpkg -i libssl1.1_1.1.1l-1ubuntu1.3_amd64.deb
+wget http://security.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1-1ubuntu2.1~18.04.20_amd64.deb
+dpkg -i libssl1.1_1.1.1-1ubuntu2.1~18.04.20_amd64.deb
 echo "eula=false" > /minecraft/eula.txt
 mv /tmp/server.properties /minecraft/server.properties
 chmod a+rwx /minecraft
@@ -3260,8 +3260,8 @@ URL=$(curl -s https://bedrock-version.minectl.ediri.online/binary/1.17.10.04)
 curl -sLSf $URL > /tmp/bedrock-server.zip
 unzip -o /tmp/bedrock-server.zip -d /minecraft
 chmod +x /minecraft/bedrock_server
-wget http://security.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1l-1ubuntu1.3_amd64.deb
-dpkg -i libssl1.1_1.1.1l-1ubuntu1.3_amd64.deb
+wget http://security.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1-1ubuntu2.1~18.04.20_amd64.deb
+dpkg -i libssl1.1_1.1.1-1ubuntu2.1~18.04.20_amd64.deb
 echo "eula=false" > /minecraft/eula.txt
 mv /tmp/server.properties /minecraft/server.properties
 chmod a+rwx /minecraft
