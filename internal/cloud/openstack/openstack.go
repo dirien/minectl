@@ -102,7 +102,7 @@ func NewOpenStack(imageName string) (*OpenStack, error) {
 }
 
 // CreateServer TODO: https://github.com/dirien/minectl/issues/299
-func (o *OpenStack) CreateServer(args automation.ServerArgs) (*automation.ResourceResults, error) { // nolint: gocyclo
+func (o *OpenStack) CreateServer(args automation.ServerArgs) (*automation.ResourceResults, error) { //nolint: gocyclo
 	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSHKeyFolder()))
 	if err != nil {
 		return nil, err

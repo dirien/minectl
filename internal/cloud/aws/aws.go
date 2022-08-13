@@ -200,7 +200,7 @@ func addTagSpecifications(args automation.ServerArgs, resourceType string) []*ec
 }
 
 // CreateServer TODO: https://github.com/dirien/minectl/issues/298
-func (a *Aws) CreateServer(args automation.ServerArgs) (*automation.ResourceResults, error) { // nolint: gocyclo
+func (a *Aws) CreateServer(args automation.ServerArgs) (*automation.ResourceResults, error) { //nolint: gocyclo
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Minute)
 	defer cancel()
 	pubKeyFile, err := os.ReadFile(fmt.Sprintf("%s.pub", args.MinecraftResource.GetSSHKeyFolder()))
