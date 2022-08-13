@@ -2319,8 +2319,8 @@ runcmd:
   - curl -sLSf $URL > fabric-installer.jar
   - java -jar fabric-installer.jar server -downloadMinecraft
   - echo "serverJar=minecraft-server.jar" > /minecraft/fabric-server-launcher.properties
-  - cp /tmp/build/fabric-server-launch.jar /minecraft/server.jar
-  - cp /tmp/build/server.jar /minecraft/minecraft-server.jar
+  - cp /tmp/build/fabric-server-launch.jar /minecraft/minecraft-server.jar
+  - cp /tmp/build/server.jar /minecraft/server.jar
   - rm -rf /tmp/build
   - echo "eula=true" > /minecraft/eula.txt
   - mv /tmp/server.properties /minecraft/server.properties
@@ -2493,8 +2493,8 @@ cd /tmp/build
 curl -sLSf $URL > fabric-installer.jar
 java -jar fabric-installer.jar server -downloadMinecraft -mcversion 1.17.1-138
 echo "serverJar=minecraft-server.jar" > /minecraft/fabric-server-launcher.properties
-cp /tmp/build/fabric-server-launch.jar /minecraft/server.jar
-cp /tmp/build/server.jar /minecraft/minecraft-server.jar
+cp /tmp/build/fabric-server-launch.jar /minecraft/minecraft-server.jar
+cp /tmp/build/server.jar /minecraft/server.jar
 rm -rf /tmp/build
 echo "eula=true" > /minecraft/eula.txt
 mv /tmp/server.properties /minecraft/server.properties
@@ -3337,8 +3337,8 @@ runcmd:
   - curl -sLSf $URL > fabric-installer.jar
   - java -jar fabric-installer.jar server -downloadMinecraft
   - echo "serverJar=minecraft-server.jar" > /minecraft/fabric-server-launcher.properties
-  - cp /tmp/build/fabric-server-launch.jar /minecraft/server.jar
-  - cp /tmp/build/server.jar /minecraft/minecraft-server.jar
+  - cp /tmp/build/fabric-server-launch.jar /minecraft/minecraft-server.jar
+  - cp /tmp/build/server.jar /minecraft/server.jar
   - rm -rf /tmp/build
   - echo "eula=true" > /minecraft/eula.txt
   - mv /tmp/server.properties /minecraft/server.properties
@@ -3402,8 +3402,8 @@ cd /tmp/build
 curl -sLSf $URL > fabric-installer.jar
 java -jar fabric-installer.jar server -downloadMinecraft -mcversion 1.17.1-138
 echo "serverJar=minecraft-server.jar" > /minecraft/fabric-server-launcher.properties
-cp /tmp/build/fabric-server-launch.jar /minecraft/server.jar
-cp /tmp/build/server.jar /minecraft/minecraft-server.jar
+cp /tmp/build/fabric-server-launch.jar /minecraft/minecraft-server.jar
+cp /tmp/build/server.jar /minecraft/server.jar
 rm -rf /tmp/build
 echo "eula=true" > /minecraft/eula.txt
 mv /tmp/server.properties /minecraft/server.properties
