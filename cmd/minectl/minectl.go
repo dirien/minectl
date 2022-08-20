@@ -10,14 +10,14 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/mitchellh/go-homedir"
-
-	"github.com/Azure/go-autorest/autorest/to"
 	"go.uber.org/zap"
 
-	"github.com/minectl/internal/logging"
+	cobracompletefig "github.com/withfig/autocomplete-tools/integrations/cobra"
 
+	"github.com/Azure/go-autorest/autorest/to"
 	"github.com/blang/semver/v4"
+	"github.com/minectl/internal/logging"
+	"github.com/mitchellh/go-homedir"
 	"github.com/morikuni/aec"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -294,6 +294,7 @@ func init() {
 	minectlCmd.AddCommand(pluginCmd)
 	minectlCmd.AddCommand(rconCmd)
 	minectlCmd.AddCommand(updateCmd)
+	minectlCmd.AddCommand(cobracompletefig.CreateCompletionSpecCommand())
 }
 
 func Execute(version, gitCommit, date string) error {
