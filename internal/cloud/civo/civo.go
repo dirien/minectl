@@ -86,20 +86,29 @@ func (c *Civo) CreateServer(args automation.ServerArgs) (*automation.ResourceRes
 
 	if args.MinecraftResource.GetEdition() == "bedrock" || args.MinecraftResource.GetEdition() == "nukkit" || args.MinecraftResource.GetEdition() == "powernukkit" {
 		createRule := true
-		firewall, err := c.client.NewFirewall(fmt.Sprintf("%s-fw", args.MinecraftResource.GetName()), network.ID, &createRule)
+
+		firewallConfig := civogo.FirewallConfig{
+			Name:        fmt.Sprintf("%s-fw", args.MinecraftResource.GetName()),
+			Region:      c.client.Region,
+			NetworkID:   network.ID,
+			CreateRules: &createRule,
+			Rules: []civogo.FirewallRule{
+				{
+					Protocol:  "udp",
+					StartPort: "19132",
+					EndPort:   "19133",
+					Cidr: []string{
+						"0.0.0.0/0",
+					},
+					Label: "Minecraft Bedrock UDP",
+				},
+			},
+		}
+
+		firewall, err := c.client.NewFirewall(&firewallConfig)
 		if err != nil {
 			return nil, err
 		}
-		_, err = c.client.NewFirewallRule(&civogo.FirewallRuleConfig{
-			FirewallID: firewall.ID,
-			Protocol:   "udp",
-			StartPort:  "19132",
-			EndPort:    "19133",
-			Cidr: []string{
-				"0.0.0.0/0",
-			},
-			Label: "Minecraft Bedrock UDP",
-		})
 		zap.S().Infow("Civo create firewall", "firewall", firewall)
 		if err != nil {
 			return nil, err
