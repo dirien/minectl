@@ -23,12 +23,12 @@ jobs:
             ${{ runner.os }}-go-
 
       - name: Generate the spec
-        run: go mod tidy && go run . generateFigSpec > mineclt.ts
+        run: go mod tidy && go run . generateFigSpec > minectl.ts
 
       - name: Create Autocomplete PR ## Create the autocomplete PR using this action
         uses: withfig/push-to-fig-autocomplete-action@74f26098865d70a99aaf2a449c705d7f9bec5ba3 # tag=v1.1.2
         with:
           token: ${{ secrets.GH_PAT }}
           autocomplete-spec-name: minectl
-          spec-path: mineclt.ts
+          spec-path: minectl.ts
           integration: cobra
