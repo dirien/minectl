@@ -1,9 +1,0 @@
-{{- define "forge-binary" }}
-URL="https://maven.minecraftforge.net/net/minecraftforge/forge/{{ .Spec.Minecraft.Version }}/forge-{{ .Spec.Minecraft.Version }}-installer.jar"
-mkdir /tmp/build
-cd /tmp/build
-mkdir minecraft
-curl -sLSf $URL > forge-installer.jar
-java -jar forge-installer.jar --installServer /minecraft
-rm -rf /tmp/build
-{{- end }}

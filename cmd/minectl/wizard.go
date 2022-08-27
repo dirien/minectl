@@ -7,11 +7,10 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/minectl/internal/common"
-
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/minectl/internal/model"
-	"github.com/minectl/internal/template"
+	"github.com/dirien/minectl-sdk/common"
+	"github.com/dirien/minectl-sdk/model"
+	"github.com/dirien/minectl-sdk/template"
 	"github.com/spf13/cobra"
 )
 
