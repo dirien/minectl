@@ -12,7 +12,8 @@ import (
 )
 
 func init() {
-	createCmd.Flags().StringP("filename", "f", "", "Contains the configuration for minectl")
+	createCmd.Flags().StringP("filename", "f", "", "Location of the manifest file")
+	createCmd.Flags().SetAnnotation("filename", cobra.BashCompFilenameExt, []string{"yaml"}) //nolint:errcheck
 	createCmd.Flags().BoolP("wait", "w", true, "Wait for Minecraft Server is started")
 }
 
@@ -29,10 +30,10 @@ var createCmd = &cobra.Command{
 func runCreate(cmd *cobra.Command, _ []string) error {
 	filename, err := cmd.Flags().GetString("filename")
 	if len(filename) == 0 {
-		return errors.New("Please provide a valid MinecraftResource manifest file via -f|--filename flag")
+		return errors.New("Please provide a valid manifest file via -f|--filename flag")
 	}
 	if err != nil {
-		return errors.Wrap(err, "Please provide a valid MinecraftResource manifest file")
+		return errors.Wrap(err, "Please provide a valid manifest file")
 	}
 	p, err := provisioner.NewProvisioner(&provisioner.MinectlProvisionerOpts{
 		ManifestPath: filename,

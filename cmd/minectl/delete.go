@@ -7,7 +7,8 @@ import (
 )
 
 func init() {
-	deleteCmd.Flags().StringP("filename", "f", "", "that contains the configuration for minectl")
+	deleteCmd.Flags().StringP("filename", "f", "", "Location of the manifest file")
+	deleteCmd.Flags().SetAnnotation("filename", cobra.BashCompFilenameExt, []string{"yaml"}) //nolint:errcheck
 	deleteCmd.Flags().String("id", "", "contains the server id")
 }
 
@@ -29,7 +30,7 @@ func runDelete(cmd *cobra.Command, _ []string) error {
 		return errors.Wrap(err, "failed to get 'filename' value")
 	}
 	if len(filename) == 0 {
-		return errors.New("Please provide a valid MinecraftResource manifest file via -f|--filename flag")
+		return errors.New("Please provide a valid manifest file via -f|--filename flag")
 	}
 	id, err := cmd.Flags().GetString("id")
 	if err != nil {
