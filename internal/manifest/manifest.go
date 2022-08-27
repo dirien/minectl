@@ -8,9 +8,9 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/minectl/internal/common"
+	"github.com/dirien/minectl-sdk/common"
 
-	"github.com/minectl/internal/model"
+	"github.com/dirien/minectl-sdk/model"
 	"github.com/xeipuuv/gojsonschema"
 	"sigs.k8s.io/yaml"
 )
