@@ -7,10 +7,13 @@ import (
 )
 
 func init() {
-	pluginCmd.Flags().StringP("filename", "f", "", "Contains the configuration for minectl")
+	pluginCmd.Flags().StringP("filename", "f", "", "Location of the manifest file")
+	pluginCmd.Flags().SetAnnotation("filename", cobra.BashCompFilenameExt, []string{"yaml"}) //nolint:errcheck
 	pluginCmd.Flags().String("id", "", "contains the server id")
-	pluginCmd.Flags().StringP("plugin", "p", "", "Local plugin file location")
-	pluginCmd.Flags().StringP("destination", "d", "", "Plugin destination location")
+	pluginCmd.Flags().StringP("plugin", "p", "", "Location of the plugin")
+	pluginCmd.Flags().SetAnnotation("plugin", cobra.BashCompFilenameExt, []string{"jar"}) //nolint:errcheck
+	pluginCmd.Flags().StringP("destination", "d", "", "Plugin destination folder")
+	pluginCmd.Flags().SetAnnotation("destination", cobra.BashCompSubdirsInDir, []string{}) //nolint:errcheck
 }
 
 type ModType string
@@ -54,10 +57,10 @@ var _ = []Plugin{
 func runPlugin(cmd *cobra.Command, _ []string) error {
 	filename, err := cmd.Flags().GetString("filename")
 	if err != nil {
-		return errors.Wrap(err, "Please provide a valid MinecraftResource manifest file")
+		return errors.Wrap(err, "Please provide a valid manifest file")
 	}
 	if len(filename) == 0 {
-		return errors.New("Please provide a valid MinecraftResource manifest file via -f|--filename flag")
+		return errors.New("Please provide a valid manifest file via -f|--filename flag")
 	}
 	id, err := cmd.Flags().GetString("id")
 	if err != nil {

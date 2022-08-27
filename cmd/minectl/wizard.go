@@ -179,8 +179,8 @@ var wizardCmd = &cobra.Command{
 }
 
 func init() {
-	usage := fmt.Sprintf("output folder for the configuration file for minectl 🗺 (default: %s)", GetHomeFolder())
-	wizardCmd.Flags().StringP("output", "o", "", usage)
+	wizardCmd.Flags().StringP("output", "o", "", "output folder for the configuration file for minectl 🗺 (default: ~/.minectl)")
+	wizardCmd.Flags().SetAnnotation("output", cobra.BashCompSubdirsInDir, []string{}) //nolint:errcheck
 }
 
 func runWizard(cmd *cobra.Command, _ []string) error {

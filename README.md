@@ -625,7 +625,7 @@ mincetl create  \
     --filename server-do.yaml
 
 Flags:
-  -f, --filename string   Contains the configuration for minectl
+  -f, --filename string   Location of the manifest file
   -h, --help              help for create
   -w, --wait              Wait for Minecraft Server is started (default true)
 
@@ -652,7 +652,7 @@ mincetl delete  \
 
 
 Flags:
-  -f, --filename string   that contains the configuration for minectl
+  -f, --filename string   Location of the manifest file
   -h, --help              help for delete
       --id string         contains the server id
 
@@ -705,7 +705,7 @@ mincetl update  \
     --id xxx-xxx-xxx-xxx
 
 Flags:
-  -f, --filename string   Contains the configuration for minectl
+  -f, --filename string   Location of the manifest file
   -h, --help              help for update
       --id string         contains the server id
 
@@ -733,7 +733,7 @@ mincetl rcon  \
     --id xxxx
 
 Flags:
-  -f, --filename string   Contains the configuration for minectl
+  -f, --filename string   Location of the manifest file
   -h, --help              help for rcon
       --id string         contains the server id
 ```
@@ -759,11 +759,11 @@ mincetl plugins  \
     --destination /minecraft/mods
 
 Flags:
-  -d, --destination string   Plugin destination location
-  -f, --filename string      Contains the configuration for minectl
+  -d, --destination string   Plugin destination folder
+  -f, --filename string      Location of the manifest file
   -h, --help                 help for plugins
       --id string            contains the server id
-  -p, --plugin string        Local plugin file location
+  -p, --plugin string        Location of the plugin
 
 Global Flags:
       --headless              Set this value to if mincetl is called by a CI system. Enables logging and disables human-readable output rendering (default: false)

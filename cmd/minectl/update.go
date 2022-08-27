@@ -7,7 +7,8 @@ import (
 )
 
 func init() {
-	updateCmd.Flags().StringP("filename", "f", "", "Contains the configuration for minectl")
+	updateCmd.Flags().StringP("filename", "f", "", "Location of the manifest file")
+	updateCmd.Flags().SetAnnotation("filename", cobra.BashCompFilenameExt, []string{"yaml"}) //nolint:errcheck
 	updateCmd.Flags().String("id", "", "contains the server id")
 }
 
@@ -25,10 +26,10 @@ var updateCmd = &cobra.Command{
 func runUpdate(cmd *cobra.Command, _ []string) error {
 	filename, err := cmd.Flags().GetString("filename")
 	if len(filename) == 0 {
-		return errors.New("Please provide a valid MinecraftResource manifest file")
+		return errors.New("Please provide a valid manifest file")
 	}
 	if err != nil {
-		return errors.Wrap(err, "Please provide a valid MinecraftResource manifest file via -f|--filename flag")
+		return errors.Wrap(err, "Please provide a valid manifest file via -f|--filename flag")
 	}
 	id, err := cmd.Flags().GetString("id")
 	if err != nil {

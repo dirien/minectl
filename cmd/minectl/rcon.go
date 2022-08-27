@@ -7,7 +7,8 @@ import (
 )
 
 func init() {
-	rconCmd.Flags().StringP("filename", "f", "", "Contains the configuration for minectl")
+	rconCmd.Flags().StringP("filename", "f", "", "Location of the manifest file")
+	rconCmd.Flags().SetAnnotation("filename", cobra.BashCompFilenameExt, []string{"yaml"}) //nolint:errcheck
 	rconCmd.Flags().String("id", "", "contains the server id")
 }
 
@@ -25,10 +26,10 @@ var rconCmd = &cobra.Command{
 func runRCON(cmd *cobra.Command, _ []string) error {
 	filename, err := cmd.Flags().GetString("filename")
 	if len(filename) == 0 {
-		return errors.New("Please provide a valid MinecraftResource manifest file via -f|--filename flag")
+		return errors.New("Please provide a valid manifest file via -f|--filename flag")
 	}
 	if err != nil {
-		return errors.Wrap(err, "Please provide a valid MinecraftResource manifest file")
+		return errors.Wrap(err, "Please provide a valid manifest file")
 	}
 	id, err := cmd.Flags().GetString("id")
 	if err != nil {
