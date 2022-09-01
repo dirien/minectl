@@ -1,5 +1,5 @@
 # Dockerfile
-FROM ghcr.io/distroless/static@sha256:a438a0a33b67a4d6348457d8b57e7e547a894b5d1d0dae133666e27d92a1fa14
+FROM ghcr.io/distroless/static@sha256:50c3d52ecfaed0112b6743df9dde26aaaf61a4d0b89ca167ade636678c793eb2
 COPY minectl \
 	/usr/bin/minectl
 ENTRYPOINT ["/usr/bin/minectl"]
