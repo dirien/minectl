@@ -20,7 +20,7 @@ func init() {
 var createCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create an Minecraft Server.",
-	Example: `mincetl create  \
+	Example: `minectl create  \
     --filename server-do.yaml`,
 	RunE:          RunFunc(runCreate),
 	SilenceUsage:  true,
