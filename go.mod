@@ -3,7 +3,7 @@ module github.com/minectl
 go 1.19
 
 require (
-	github.com/AlecAivazis/survey/v2 v2.3.5
+	github.com/AlecAivazis/survey/v2 v2.3.6
 	github.com/Azure/go-autorest/autorest/to v0.4.0
 	github.com/Tnze/go-mc v1.18.2
 	github.com/blang/semver/v4 v4.0.0
