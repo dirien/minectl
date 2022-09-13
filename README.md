@@ -86,6 +86,7 @@
 
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/dirien/minectl/Build%20Binary/main?logo=github&style=for-the-badge)
 ![GitHub](https://img.shields.io/github/license/dirien/minectl?style=for-the-badge)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/dirien/minectl/badge)](https://api.securityscorecards.dev/projects/github.com/dirien/minectl)
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/dirien/minectl?style=for-the-badge)
 

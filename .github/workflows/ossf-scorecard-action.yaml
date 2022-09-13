@@ -17,6 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       # Needed to upload the results to code-scanning dashboard.
+      id-token: write
       security-events: write
       actions: read
       contents: read
@@ -28,7 +29,7 @@ jobs:
           persist-credentials: false
 
       - name: "Run analysis"
-        uses: ossf/scorecard-action@865b4092859256271290c77adbd10a43f4779972 # tag=v1.1.2
+        uses: ossf/scorecard-action@865b4092859256271290c77adbd10a43f4779972 # tag=v2.0.3
         with:
           results_file: results.sarif
           results_format: sarif
