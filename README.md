@@ -86,7 +86,7 @@
 
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/dirien/minectl/Build%20Binary/main?logo=github&style=for-the-badge)
 ![GitHub](https://img.shields.io/github/license/dirien/minectl?style=for-the-badge)
-[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/summary/new_code?id=dirien_minectl)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=dirien_minectl&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=dirien_minectl)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/dirien/minectl/badge?style=for-the-badge)](https://api.securityscorecards.dev/projects/github.com/dirien/minectl)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/5238/badge)](https://bestpractices.coreinfrastructure.org/projects/5238)
 
@@ -274,12 +274,40 @@ export VULTR_API_KEY=xxx
 
 > Please select a Hypervisor Generation '2' VM Size. As `minectl 🗺` use only Hypervisor Generation 2 Image
 
+##### Option 1: Define environment variables
+
+###### Service principal with a secret
+```bash
+export AZURE_TENANT_ID="<active_directory_tenant_id"
+export AZURE_CLIENT_ID="<service_principal_appid>"
+export AZURE_CLIENT_SECRET="<service_principal_password>"
+```
+###### Service principal with certificate
+```bash
+export AZURE_TENANT_ID="<active_directory_tenant_id>"
+export AZURE_CLIENT_ID="<service_principal_appid>"
+export AZURE_CLIENT_CERTIFICATE_PATH="<azure_client_certificate_path>"
+```
+###### Username and password
+```bash
+export AZURE_CLIENT_ID="<service_principal_appid>"
+export AZURE_USERNAME="<azure_username>"
+export AZURE_PASSWORD="<azure_user_password>"
+```
+
+##### Option 2: Use a managed identity
+
+```bash
+export AZURE_CLIENT_ID="<user_assigned_managed_identity_client_id>"
+```
+
+##### Option 3: Sign in with Azure CLI
+
 ```bash
 az login
-az ad sp create-for-rbac --sdk-auth --role 'Contributor' > azure.auth
-
-export AZURE_AUTH_LOCATION=azure.auth
 ```
+
+See [Azure authentication with the Azure SDK for Go](https://docs.microsoft.com/en-us/azure/developer/go/azure-sdk-authentication) for details
 
 #### Oracle Cloud Infrastructure
 
