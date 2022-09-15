@@ -86,7 +86,9 @@
 
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/dirien/minectl/Build%20Binary/main?logo=github&style=for-the-badge)
 ![GitHub](https://img.shields.io/github/license/dirien/minectl?style=for-the-badge)
+[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/summary/new_code?id=dirien_minectl)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/dirien/minectl/badge?style=for-the-badge)](https://api.securityscorecards.dev/projects/github.com/dirien/minectl)
+[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/5238/badge)](https://bestpractices.coreinfrastructure.org/projects/5238)
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/dirien/minectl?style=for-the-badge)
 
