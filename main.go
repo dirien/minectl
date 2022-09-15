@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/minectl/cmd/minectl"
+	"github.com/dirien/minectl/cmd/minectl"
 )
 
 var (
