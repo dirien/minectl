@@ -26,10 +26,10 @@ import (
 	"github.com/dirien/minectl-sdk/cloud/vexxhost"
 	"github.com/dirien/minectl-sdk/cloud/vultr"
 	"github.com/dirien/minectl-sdk/common"
-	"github.com/minectl/internal/logging"
-	"github.com/minectl/internal/manifest"
-	"github.com/minectl/internal/progress"
-	"github.com/minectl/internal/rcon"
+	"github.com/dirien/minectl/internal/logging"
+	"github.com/dirien/minectl/internal/manifest"
+	"github.com/dirien/minectl/internal/progress"
+	"github.com/dirien/minectl/internal/rcon"
 	"github.com/pkg/errors"
 )
 

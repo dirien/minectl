@@ -4,7 +4,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/minectl/internal/logging"
+	"github.com/dirien/minectl/internal/logging"
 )
 
 type Indicator struct {

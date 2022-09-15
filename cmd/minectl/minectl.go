@@ -14,9 +14,8 @@ import (
 
 	cobracompletefig "github.com/withfig/autocomplete-tools/integrations/cobra"
 
-	"github.com/Azure/go-autorest/autorest/to"
 	"github.com/blang/semver/v4"
-	"github.com/minectl/internal/logging"
+	"github.com/dirien/minectl/internal/logging"
 	"github.com/mitchellh/go-homedir"
 	"github.com/morikuni/aec"
 	"github.com/pkg/errors"
@@ -249,7 +248,7 @@ var minectlCmd = &cobra.Command{
 		if ok && checkVersionMsg != nil {
 			zap.S().Infof("Warning(%v)", checkVersionMsg)
 			fmt.Println()
-			fmt.Println(to.String(checkVersionMsg))
+			fmt.Println(*checkVersionMsg)
 		}
 		return nil
 	},
