@@ -84,6 +84,8 @@
 ![Exoscale](https://img.shields.io/badge/Exoscale-DA291C?style=for-the-badge&logo=exoscale&logoColor=white)
 ![Fuga Cloud](https://img.shields.io/badge/fuga_cloud-242F4B?style=for-the-badge&logo=fugacloud&logoColor=white)
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/dirien/minectl.svg)](https://pkg.go.dev/github.com/dirien/minectl)
+
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/dirien/minectl/Build%20Binary/main?logo=github&style=for-the-badge)
 ![GitHub](https://img.shields.io/github/license/dirien/minectl?style=for-the-badge)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=dirien_minectl&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=dirien_minectl)
