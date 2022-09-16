@@ -85,6 +85,7 @@
 ![Fuga Cloud](https://img.shields.io/badge/fuga_cloud-242F4B?style=for-the-badge&logo=fugacloud&logoColor=white)
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/dirien/minectl.svg)](https://pkg.go.dev/github.com/dirien/minectl)
+[![Go Report Card](https://goreportcard.com/badge/github.com/dirien/minectl)](https://goreportcard.com/report/github.com/dirien/minectl)
 
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/dirien/minectl/Build%20Binary/main?logo=github&style=for-the-badge)
 ![GitHub](https://img.shields.io/github/license/dirien/minectl?style=for-the-badge)
