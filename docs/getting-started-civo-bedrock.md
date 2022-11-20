@@ -20,7 +20,7 @@ spec:
     cloud: civo
     region: LON1
     size: g3.large
-    ssh: "xxx/ssh/minecraft"
+    ssh: "xxx/ssh/minecraft.pub"
     port: 19132
   minecraft:
     edition: bedrock

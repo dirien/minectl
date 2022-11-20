@@ -9,7 +9,7 @@ spec:
     size: Standard_D2_v4
     ssh:
       port: 22
-      keyFolder: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft"
+      publickeyfile: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft.pub"
       security: true
     port: 25577
   proxy:

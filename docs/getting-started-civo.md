@@ -31,7 +31,7 @@ spec:
     cloud: civo
     region: LON1
     size: g3.large
-    ssh: "xxx/ssh/minecraft"
+    ssh: "xxx/ssh/minecraft.pub"
     port: 25565
   minecraft:
     java:

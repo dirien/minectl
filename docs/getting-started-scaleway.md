@@ -39,7 +39,7 @@ spec:
     cloud: scaleway
     region: fr-par-1
     size: GP1-XS
-    ssh: "xxx/ssh/minecraft"
+    ssh: "xxx/ssh/minecraft.pub"
     port: 25565
   minecraft:
     java:

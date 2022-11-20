@@ -11,7 +11,7 @@ spec:
     size: t3.xlarge
     ssh:
       port: 22
-      keyfolder: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft"
+      publickeyfile: "/root/.ssh/id_rsa.pub"
       fail2ban:
         bantime: 1000
         maxretry: 3

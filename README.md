@@ -536,7 +536,7 @@ spec:
     size: <cloud provider plan>
     ssh:
       port: 22 | or your custom port
-      keyfolder: "<path to ssh public and private key>/ssh"
+      publickeyfile: "<path to ssh public key>.pub"
       fail2ban:
         bantime: "<ban time in seconds>"
         maxretry: "<max retry>"
@@ -580,7 +580,7 @@ spec:
     volumeSize: 100
     ssh:
       port: 22 | or your custom port
-      keyfolder: "<path to ssh public and private key>/ssh"
+      publickeyfile: "<path to ssh public key>.pub"
       fail2ban:
         bantime: "<ban time in seconds>"
         maxretry: "<max retry>"
@@ -742,6 +742,7 @@ Flags:
   -f, --filename string   Location of the manifest file
   -h, --help              help for update
       --id string         contains the server id
+  -k, --ssh-key string    specify a specific path for the SSH key    
 
 Global Flags:
       --headless              Set this value to if mincetl is called by a CI system. Enables logging and disables human-readable output rendering (default: false)
@@ -798,6 +799,7 @@ Flags:
   -h, --help                 help for plugins
       --id string            contains the server id
   -p, --plugin string        Location of the plugin
+  -k, --ssh-key string       specify a specific path for the SSH key
 
 Global Flags:
       --headless              Set this value to if mincetl is called by a CI system. Enables logging and disables human-readable output rendering (default: false)
@@ -860,7 +862,7 @@ spec:
     volumeSize: 100
     ssh:
       port: 22 | or your custom port
-      keyfolder: "<path to ssh public and private key>/ssh"
+      publickeyfile: "<path to ssh public and private key>/ssh"
       fail2ban:
         bantime: "<ban time in seconds>"
         maxretry: "<max retry>"
@@ -886,7 +888,17 @@ port is 22. This helps a lot, to avoid hackers to bruteforce your server.
 
 ##### SSH Key
 
-With the `keyfolder` property, you can define the location of your SSH public and private key on your local machine.
+With the `publickeyfile` property, you can define the location of your SSH public key on your local machine.
+
+With the `publickey` property, you can define the content of your SSH public key.
+
+```yaml
+...
+publickey: "ssh-rsa AAAAB3 ... xxx"
+```
+
+If you need to update or upload a plugin to your server, you need to provide the SSH private key in the command with the
+new flag `--ssh-key`.
 
 ##### Fail2Ban
 
