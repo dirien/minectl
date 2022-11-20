@@ -59,8 +59,9 @@ const (
 )
 
 type MinectlProvisionerOpts struct {
-	ManifestPath string
-	ID           string
+	ManifestPath      string
+	ID                string
+	SSHPrivateKeyPath string
 }
 
 type MinectlProvisionerListOpts struct {
@@ -316,6 +317,7 @@ func NewProvisioner(options *MinectlProvisionerOpts, logging ...*logging.Minectl
 	args := automation.ServerArgs{
 		MinecraftResource: minecraftResource,
 		ID:                options.ID,
+		SSHPrivateKeyPath: options.SSHPrivateKeyPath,
 	}
 	cloudProvider, err = getProvisioner(args.MinecraftResource.GetCloud(), args.MinecraftResource.GetRegion())
 	if err != nil {

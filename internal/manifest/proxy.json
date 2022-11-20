@@ -147,14 +147,28 @@
           "type": "object",
           "required": [
             "port",
-            "keyfolder",
             "fail2ban"
+          ],
+          "oneOf": [
+            {
+              "required": [
+                "publickeyfile"
+              ]
+            },
+            {
+              "required": [
+                "publickey"
+              ]
+            }
           ],
           "properties": {
             "port": {
               "type": "integer"
             },
-            "keyfolder": {
+            "publickeyfile": {
+              "type": "string"
+            },
+            "publickey": {
               "type": "string"
             },
             "fail2ban": {

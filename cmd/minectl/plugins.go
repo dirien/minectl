@@ -1,8 +1,6 @@
 package minectl
 
 import (
-	"github.com/dirien/minectl/internal/provisioner"
-	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
@@ -14,6 +12,7 @@ func init() {
 	pluginCmd.Flags().SetAnnotation("plugin", cobra.BashCompFilenameExt, []string{"jar"}) //nolint:errcheck
 	pluginCmd.Flags().StringP("destination", "d", "", "Plugin destination folder")
 	pluginCmd.Flags().SetAnnotation("destination", cobra.BashCompSubdirsInDir, []string{}) //nolint:errcheck
+	pluginCmd.Flags().StringP("ssh-key", "k", "", "specify a specific path for the SSH key")
 }
 
 type ModType string
@@ -55,24 +54,7 @@ var _ = []Plugin{
 }
 
 func runPlugin(cmd *cobra.Command, _ []string) error {
-	filename, err := cmd.Flags().GetString("filename")
-	if err != nil {
-		return errors.Wrap(err, "Please provide a valid manifest file")
-	}
-	if len(filename) == 0 {
-		return errors.New("Please provide a valid manifest file via -f|--filename flag")
-	}
-	id, err := cmd.Flags().GetString("id")
-	if err != nil {
-		return err
-	}
-	if len(id) == 0 {
-		return errors.New("Please provide a valid id")
-	}
-	p, err := provisioner.NewProvisioner(&provisioner.MinectlProvisionerOpts{
-		ManifestPath: filename,
-		ID:           id,
-	}, minectlLog)
+	p, err := createUpdatePluginProvisioner(cmd)
 	if err != nil {
 		return err
 	}

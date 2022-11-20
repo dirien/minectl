@@ -77,8 +77,8 @@ var wizardQuestions = []*survey.Question{
 		Name:     "ssh",
 		Validate: survey.Required,
 		Prompt: &survey.Input{
-			Message: "Enter a full path to ssh private key (like /f/a/key):",
-			Help:    "Please enter the full path to ssh private key like this -> /Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft-be",
+			Message: "Enter a full path to ssh private public key (like /f/a/key.pub):",
+			Help:    "Please enter the full path to ssh public key like this -> /Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft-be.pub",
 		},
 	},
 	{

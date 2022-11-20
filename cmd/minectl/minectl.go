@@ -16,6 +16,7 @@ import (
 
 	"github.com/blang/semver/v4"
 	"github.com/dirien/minectl/internal/logging"
+	"github.com/dirien/minectl/internal/provisioner"
 	"github.com/mitchellh/go-homedir"
 	"github.com/morikuni/aec"
 	"github.com/pkg/errors"
@@ -28,6 +29,39 @@ var (
 	GitCommit string
 	Date      string
 )
+
+func createUpdatePluginProvisioner(cmd *cobra.Command) (provisioner.Provisioner, error) {
+	filename, err := cmd.Flags().GetString("filename")
+	if err != nil {
+		return nil, errors.Wrap(err, "Please provide a valid manifest file")
+	}
+	if len(filename) == 0 {
+		return nil, errors.New("Please provide a valid manifest file via -f|--filename flag")
+	}
+	id, err := cmd.Flags().GetString("id")
+	if err != nil {
+		return nil, err
+	}
+	if len(id) == 0 {
+		return nil, errors.New("Please provide a valid id")
+	}
+	sshKey, err := cmd.Flags().GetString("ssh-key")
+	if err != nil {
+		return nil, err
+	}
+	if len(sshKey) == 0 {
+		return nil, errors.New("Please provide a valid ssh key path")
+	}
+	p, err := provisioner.NewProvisioner(&provisioner.MinectlProvisionerOpts{
+		ManifestPath:      filename,
+		ID:                id,
+		SSHPrivateKeyPath: sshKey,
+	}, minectlLog)
+	if err != nil {
+		return nil, err
+	}
+	return p, nil
+}
 
 func isDevVersion(s semver.Version) bool {
 	if len(s.Pre) == 0 {

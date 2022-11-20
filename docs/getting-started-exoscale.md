@@ -44,7 +44,7 @@ spec:
     size: medium
     ssh:
       port: 22
-      keyfolder: "/xxx/path/to/your/private/key"
+      publickeyfile: "/xxx/path/to/your/private/key"
       fail2ban:
         bantime: 1000
         maxretry: 3
