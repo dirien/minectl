@@ -689,6 +689,7 @@ Flags:
   -f, --filename string   Location of the manifest file
   -h, --help              help for delete
       --id string         contains the server id
+  -y, --yes               Automatically delete the server    
 
 Global Flags:
       --headless              Set this value to if mincetl is called by a CI system. Enables logging and disables human-readable output rendering (default: false)
