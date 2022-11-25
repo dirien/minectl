@@ -7,7 +7,7 @@ require (
 	github.com/Tnze/go-mc v1.18.2
 	github.com/blang/semver/v4 v4.0.0
 	github.com/c-bata/go-prompt v0.2.6
-	github.com/dirien/minectl-sdk v0.4.1
+	github.com/dirien/minectl-sdk v0.5.0
 	github.com/fatih/color v1.13.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/morikuni/aec v1.0.0
@@ -34,13 +34,13 @@ require (
 	github.com/Masterminds/goutils v1.1.1 // indirect
 	github.com/Masterminds/semver/v3 v3.1.1 // indirect
 	github.com/Masterminds/sprig/v3 v3.2.2 // indirect
-	github.com/aws/aws-sdk-go v1.44.142 // indirect
+	github.com/aws/aws-sdk-go v1.44.145 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/civo/civogo v0.3.17 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/deepmap/oapi-codegen v1.9.1 // indirect
-	github.com/digitalocean/godo v1.90.0 // indirect
+	github.com/digitalocean/godo v1.91.1 // indirect
 	github.com/dirien/ovh-go-sdk v0.2.0 // indirect
 	github.com/exoscale/egoscale v0.88.0 // indirect
 	github.com/go-resty/resty/v2 v2.1.1-0.20191201195748-d7b97669fe48 // indirect
