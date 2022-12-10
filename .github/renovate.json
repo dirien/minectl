@@ -23,12 +23,5 @@
   "assignAutomerge": true,
   "major": {
     "enabled": true
-  },
-  "packageRules": [
-    {
-      "matchPackageNames": ["ghcr.io/distroless/static"],
-      "schedule": ["every 3 day of the week"]
-    }
-  ],
-  "ignoreDeps": ["github.com/exoscale/egoscale"]
+  }
 }
