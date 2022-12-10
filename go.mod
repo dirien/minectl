@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.6
-	github.com/Tnze/go-mc v1.18.2
+	github.com/Tnze/go-mc v1.19.2
 	github.com/blang/semver/v4 v4.0.0
 	github.com/c-bata/go-prompt v0.2.6
 	github.com/dirien/minectl-sdk v0.5.1
@@ -13,11 +13,11 @@ require (
 	github.com/morikuni/aec v1.0.0
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/pkg/errors v0.9.1
-	github.com/spf13/cobra v1.5.0
+	github.com/spf13/cobra v1.6.1
 	github.com/tcnksm/go-latest v0.0.0-20170313132115-e3007ae9052e
 	github.com/withfig/autocomplete-tools/integrations/cobra v1.2.1
 	github.com/xeipuuv/gojsonschema v1.2.0
-	go.uber.org/zap v1.23.0
+	go.uber.org/zap v1.24.0
 	sigs.k8s.io/yaml v1.3.0
 )
 
@@ -60,7 +60,7 @@ require (
 	github.com/hetznercloud/hcloud-go v1.37.0 // indirect
 	github.com/huandu/xstrings v1.3.2 // indirect
 	github.com/imdario/mergo v0.3.12 // indirect
-	github.com/inconshreveable/mousetrap v1.0.0 // indirect
+	github.com/inconshreveable/mousetrap v1.0.1 // indirect
 	github.com/ionos-cloud/sdk-go/v5 v5.1.12 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
