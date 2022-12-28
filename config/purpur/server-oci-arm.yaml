@@ -28,7 +28,7 @@ spec:
         enabled: true
         broadcast: true
     edition: purpur
-    version: 1.19.2
+    version: 1.19.3
     eula: true
     properties: |
       level-seed=minectlrocks
