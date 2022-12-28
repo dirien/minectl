@@ -25,7 +25,7 @@ spec:
         enabled: true
         broadcast: true
     edition: forge
-    version: 1.19.2-43.0.8
+    version: 1.19.3-44.0.41
     eula: true
     properties: |
       level-seed=minectlrocks

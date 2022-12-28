@@ -25,7 +25,7 @@ spec:
         enabled: true
         broadcast: true
     edition: powernukkit
-    version: 1.5.1.0-PN
+    version: 1.6.0.1-PN
     eula: true
     properties: |
       motd=Azure Minecraft --- Nukkitx edition
