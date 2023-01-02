@@ -1,7 +1,7 @@
 apiVersion: minectl.ediri.io/v1alpha1
 kind: MinecraftServer
 metadata:
-  name: minecraft-server
+  name: minecraft-server-arm
 spec:
   monitoring:
     enabled: false
@@ -11,7 +11,7 @@ spec:
     size: c6g.xlarge
     ssh:
       port: 22
-      publickeyfile: "/root/.ssh/id_rsa.pub"
+      publickeyfile: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft.pub"
       fail2ban:
         bantime: 1000
         maxretry: 3
@@ -47,7 +47,7 @@ spec:
       entity-broadcast-range-percentage=100
       level-name=world
       player-idle-timeout=0
-      motd=\u00A76AWS \u00A7rMinecraft --- \u00A76Java \u00A7redition
+      motd=\u00A76AWS Arm \u00A7rMinecraft --- \u00A76Java \u00A7redition
       query.port=25565
       force-gamemode=false
       rate-limit=0
