@@ -48,7 +48,7 @@ var wizardQuestions = []*survey.Question{
 				"Azure",
 				"Oracle Cloud Infrastructure",
 				"IONOS Cloud",
-				"Amazon WebServices",
+				"Amazon Web Services",
 				"VEXXHOST",
 				"Ubuntu Multipass",
 				"Exoscale",
