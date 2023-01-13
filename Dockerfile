@@ -1,5 +1,5 @@
 # Dockerfile
-FROM cgr.dev/chainguard/static@sha256:8cfb0c91e14dc9a1859ba6c30eaeee0a6f5bec8d0a332fd6657760493d3165bd
+FROM cgr.dev/chainguard/static@sha256:d4765ca6ad72ee2fdc0af4be576e333cfcdee14da886b6e6f9df45f74eb4d90f
 COPY minectl \
 	/usr/bin/minectl
 ENTRYPOINT ["/usr/bin/minectl"]
