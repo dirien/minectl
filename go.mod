@@ -21,10 +21,6 @@ require (
 	sigs.k8s.io/yaml v1.3.0
 )
 
-replace (
-	github.com/dirien/minectl-sdk => /Users/dirien/Tools/repos/minectl-sdk
-)
-
 require (
 	cloud.google.com/go/compute v1.18.0 // indirect
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
