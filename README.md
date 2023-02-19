@@ -18,7 +18,7 @@
         * [Digital Ocean](#digital-ocean)
         * [Scaleway](#scaleway)
         * [Hetzner](#hetzner)
-        * [Linode](#linode)
+        * [Akamai Connected Cloud](#akamai-connected-cloud)
         * [OVHCloud](#ovhcloud)
         * [Equinix Metal](#equinix-metal)
         * [Google Compute Engine (GCE)](#google-compute-engine-gce)
@@ -70,7 +70,7 @@
 ![Scaleway](https://img.shields.io/badge/scaleway-4F0599?style=for-the-badge&logo=scaleway&logoColor=white)
 ![DigitalOcean](https://img.shields.io/badge/DigitalOcean-0080FF?style=for-the-badge&logo=DigitalOcean&logoColor=white)
 ![Civo](https://img.shields.io/badge/Civo-239DFF?style=for-the-badge&logo=Civo&logoColor=white)
-![Linode](https://img.shields.io/badge/linode-00A95C?style=for-the-badge&logo=linode&logoColor=white)
+![Akamai Connected Cloud](https://img.shields.io/badge/akamai_connected_cloud-00A95C?style=for-the-badge&logo=linode&logoColor=white)
 ![Hetzner](https://img.shields.io/badge/hetzner-d50c2d?style=for-the-badge&logo=hetzner&logoColor=white)
 ![OVH](https://img.shields.io/badge/ovh-123F6D?style=for-the-badge&logo=ovh&logoColor=white)
 ![Equinix Metal](https://img.shields.io/badge/equinix_metal-d10810?style=for-the-badge&logo=equinixmetal&logoColor=white)
@@ -108,7 +108,7 @@ It is a private side project of me, to learn more about Go, CLI and multi-cloud 
 + Scaleway (https://www.scaleway.com)
 + DigitalOcean (https://www.digitalocean.com/)
 + Hetzner (https://www.hetzner.com/)
-+ Linode (https://www.linode.com/)
++ Akamai Connected Cloud (https://www.linode.com/)
 + OVHCloud (https://www.ovh.com/)
 + Equinix Metal (https://metal.equinix.com/)
 + Google Compute Engine (GCE) (https://cloud.google.com/compute)
@@ -227,7 +227,7 @@ export ORGANISATION_ID=zzz
 export HCLOUD_TOKEN=yyyy
 ```
 
-##### Linode
+##### Akamai Connected Cloud
 
 ```bash
 export LINODE_TOKEN=xxxx
@@ -532,7 +532,7 @@ metadata:
   name: minecraft-proxy
 spec:
   server:
-    cloud: <cloud provider name civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci|ionos|aws|vexxhost|multipass|exoscale>
+    cloud: <cloud provider name civo|scaleway|do|hetzner|akamai|ovh|equinix|gce|vultr|azure|oci|ionos|aws|vexxhost|multipass|exoscale>
     region: <cloud provider region>
     size: <cloud provider plan>
     ssh:
@@ -575,7 +575,7 @@ spec:
   monitoring:
     enabled: true|false
   server:
-    cloud: "provider: civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci|ionos|aws|vexxhost|multipass|exoscale"
+    cloud: "provider: civo|scaleway|do|hetzner|akamai|ovh|equinix|gce|vultr|azure|oci|ionos|aws|vexxhost|multipass|exoscale"
     region: "region see cloud provider for details eg. fra1"
     size: "see cloud provider docs for details eg. g3.large"
     volumeSize: 100
@@ -715,7 +715,7 @@ mincetl list  \
 
 Flags:
   -h, --help              help for list
-  -p, --provider string   The cloud provider - civo|scaleway|do|hetzner|linode|ovh|equinix|gce|vultr|azure|oci|ionos|aws|vexxhost|multipass|exoscale
+  -p, --provider string   The cloud provider - civo|scaleway|do|hetzner|akamai|ovh|equinix|gce|vultr|azure|oci|ionos|aws|vexxhost|multipass|exoscale
   -r, --region string     The region for your cloud provider
 
 Global Flags:
@@ -858,7 +858,7 @@ metadata:
   name: minecraft-server
 spec:
   server:
-    cloud: linode
+    cloud: akamai
     region: eu-central
     size: g6-standard-4
     volumeSize: 100

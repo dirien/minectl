@@ -8,6 +8,7 @@ import (
 
 	"github.com/dirien/minectl-sdk/automation"
 	"github.com/dirien/minectl-sdk/cloud"
+	"github.com/dirien/minectl-sdk/cloud/akamai"
 	"github.com/dirien/minectl-sdk/cloud/aws"
 	"github.com/dirien/minectl-sdk/cloud/azure"
 	"github.com/dirien/minectl-sdk/cloud/civo"
@@ -18,7 +19,6 @@ import (
 	"github.com/dirien/minectl-sdk/cloud/gce"
 	"github.com/dirien/minectl-sdk/cloud/hetzner"
 	"github.com/dirien/minectl-sdk/cloud/ionos"
-	"github.com/dirien/minectl-sdk/cloud/linode"
 	"github.com/dirien/minectl-sdk/cloud/multipass"
 	"github.com/dirien/minectl-sdk/cloud/oci"
 	"github.com/dirien/minectl-sdk/cloud/ovh"
@@ -223,8 +223,8 @@ func getProvisioner(provider, region string) (automation.Automation, error) { //
 			return nil, err
 		}
 		return cloudProvider, nil
-	case "linode":
-		cloudProvider, err := linode.NewLinode(os.Getenv("LINODE_TOKEN"))
+	case "akamai":
+		cloudProvider, err := akamai.NewAkamai(os.Getenv("LINODE_TOKEN"))
 		if err != nil {
 			return nil, err
 		}

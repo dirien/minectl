@@ -60,7 +60,7 @@ func runDelete(cmd *cobra.Command, _ []string) error {
 			return err
 		}
 	} else {
-		fmt.Print("Do you want to delete the Minecraft server? [y/N]: ")
+		fmt.Print("🗑️Do you want to delete the Minecraft server? [y/N]: ")
 		reader := bufio.NewReader(os.Stdin)
 		text, _ := reader.ReadString('\n')
 		text = strings.ReplaceAll(text, "\n", "")
