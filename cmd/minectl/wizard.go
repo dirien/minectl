@@ -40,7 +40,7 @@ var wizardQuestions = []*survey.Question{
 				"Civo",
 				"Scaleway",
 				"Hetzner",
-				"Linode",
+				"Akamai Connected Cloud",
 				"OVHcloud",
 				"Equinix Metal",
 				"Google Compute Engine",

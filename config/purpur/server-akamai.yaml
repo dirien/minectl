@@ -4,11 +4,11 @@ metadata:
   name: minecraft-server
 spec:
   server:
-    cloud: linode
+    cloud: akamai
     region: eu-central
     size: g6-standard-4
     ssh:
-      port: 2223
+      port: 22
       publickeyfile: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft.pub"
       fail2ban:
         bantime: 1000
@@ -24,7 +24,7 @@ spec:
         port: 25575
         enabled: true
         broadcast: true
-    edition: java
+    edition: purpur
     version: 1.19.3
     eula: true
     properties: |
@@ -44,7 +44,7 @@ spec:
       entity-broadcast-range-percentage=100
       level-name=world
       player-idle-timeout=0
-      motd=\u00A7aLinode \u00A7rMinecraft --- \u00A76Java \u00A7redition
+      motd=\u00A7aAkamai Connected Cloud \u00A7rMinecraft --- \u00A76Purpur \u00A7redition
       query.port=25565
       force-gamemode=false
       rate-limit=0

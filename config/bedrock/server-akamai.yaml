@@ -4,7 +4,7 @@ metadata:
   name: minecraft-server-be
 spec:
   server:
-    cloud: linode
+    cloud: akamai
     region: eu-central
     size: g6-standard-4
     ssh:
@@ -19,7 +19,7 @@ spec:
     version: 1.19.51.01
     eula: true
     properties: |
-      server-name=Linode Minecraft
+      server-name=Akamai Connected Cloud Minecraft
       gamemode=survival
       force-gamemode=false
       difficulty=normal
