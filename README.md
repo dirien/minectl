@@ -88,7 +88,7 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/dirien/minectl.svg)](https://pkg.go.dev/github.com/dirien/minectl)
 [![Go Report Card](https://goreportcard.com/badge/github.com/dirien/minectl)](https://goreportcard.com/report/github.com/dirien/minectl)
 
-![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/dirien/minectl/Build%20Binary/main?logo=github&style=for-the-badge)
+![GitHub Workflow Status (main)](https://img.shields.io/github/actions/workflow/status/dirien/minectl/ci.yaml?branch=main&logo=github&style=for-the-badge)
 ![GitHub](https://img.shields.io/github/license/dirien/minectl?style=for-the-badge)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=dirien_minectl&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=dirien_minectl)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/dirien/minectl/badge?style=for-the-badge)](https://api.securityscorecards.dev/projects/github.com/dirien/minectl)
