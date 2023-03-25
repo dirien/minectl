@@ -7,8 +7,8 @@ require (
 	github.com/Tnze/go-mc v1.19.2
 	github.com/blang/semver/v4 v4.0.0
 	github.com/c-bata/go-prompt v0.2.6
-	github.com/dirien/minectl-sdk v0.8.0
-	github.com/fatih/color v1.14.1
+	github.com/dirien/minectl-sdk v0.9.0
+	github.com/fatih/color v1.15.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/morikuni/aec v1.0.0
 	github.com/olekukonko/tablewriter v0.0.5
