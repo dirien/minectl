@@ -34,18 +34,18 @@ require (
 	github.com/Masterminds/goutils v1.1.1 // indirect
 	github.com/Masterminds/semver/v3 v3.2.0 // indirect
 	github.com/Masterminds/sprig/v3 v3.2.3 // indirect
-	github.com/aws/aws-sdk-go-v2 v1.17.4 // indirect
-	github.com/aws/aws-sdk-go-v2/config v1.18.13 // indirect
-	github.com/aws/aws-sdk-go-v2/credentials v1.13.13 // indirect
-	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.12.22 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/configsources v1.1.28 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.4.22 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/ini v1.3.29 // indirect
-	github.com/aws/aws-sdk-go-v2/service/ec2 v1.86.0 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.22 // indirect
-	github.com/aws/aws-sdk-go-v2/service/sso v1.12.2 // indirect
-	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.14.2 // indirect
-	github.com/aws/aws-sdk-go-v2/service/sts v1.18.3 // indirect
+	github.com/aws/aws-sdk-go-v2 v1.17.5 // indirect
+	github.com/aws/aws-sdk-go-v2/config v1.18.15 // indirect
+	github.com/aws/aws-sdk-go-v2/credentials v1.13.15 // indirect
+	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.12.23 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/configsources v1.1.29 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.4.23 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/ini v1.3.30 // indirect
+	github.com/aws/aws-sdk-go-v2/service/ec2 v1.87.0 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.23 // indirect
+	github.com/aws/aws-sdk-go-v2/service/sso v1.12.4 // indirect
+	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.14.4 // indirect
+	github.com/aws/aws-sdk-go-v2/service/sts v1.18.5 // indirect
 	github.com/aws/smithy-go v1.13.5 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
@@ -85,15 +85,15 @@ require (
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/mattn/go-tty v0.0.3 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
-	github.com/melbahja/goph v1.3.0 // indirect
+	github.com/melbahja/goph v1.3.1 // indirect
 	github.com/mgutz/ansi v0.0.0-20170206155736-9520e82c474b // indirect
 	github.com/mitchellh/copystructure v1.2.0 // indirect
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
-	github.com/oracle/oci-go-sdk/v65 v65.30.0 // indirect
+	github.com/oracle/oci-go-sdk/v65 v65.31.1 // indirect
 	github.com/ovh/go-ovh v1.3.0 // indirect
 	github.com/packethost/packngo v0.29.0 // indirect
 	github.com/pkg/browser v0.0.0-20210115035449-ce105d075bb4 // indirect
-	github.com/pkg/sftp v1.13.4 // indirect
+	github.com/pkg/sftp v1.13.5 // indirect
 	github.com/pkg/term v1.2.0-beta.2 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/prometheus/client_golang v1.11.0 // indirect
@@ -108,7 +108,7 @@ require (
 	github.com/spf13/cast v1.3.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/stretchr/objx v0.5.0 // indirect
-	github.com/stretchr/testify v1.8.1 // indirect
+	github.com/stretchr/testify v1.8.2 // indirect
 	github.com/vultr/govultr/v2 v2.17.2 // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
 	github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415 // indirect
@@ -116,15 +116,15 @@ require (
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	golang.org/x/crypto v0.6.0 // indirect
-	golang.org/x/net v0.6.0 // indirect
+	golang.org/x/net v0.7.0 // indirect
 	golang.org/x/oauth2 v0.5.0 // indirect
-	golang.org/x/sys v0.5.0 // indirect
+	golang.org/x/sys v0.6.0 // indirect
 	golang.org/x/term v0.5.0 // indirect
 	golang.org/x/text v0.7.0 // indirect
 	golang.org/x/time v0.0.0-20220922220347-f3bd1da661af // indirect
-	google.golang.org/api v0.110.0 // indirect
+	google.golang.org/api v0.111.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
-	google.golang.org/genproto v0.0.0-20230209215440-0dfe4f8abfcc // indirect
+	google.golang.org/genproto v0.0.0-20230223222841-637eb2293923 // indirect
 	google.golang.org/grpc v1.53.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/ini.v1 v1.66.6 // indirect
