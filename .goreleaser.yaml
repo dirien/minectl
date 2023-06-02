@@ -103,6 +103,7 @@ docker_signs:
     output: true
     args:
       - 'sign'
+      - '-y'
       - '${artifact}'
 
 brews:
