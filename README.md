@@ -1,8 +1,8 @@
 ## New - 1.19 support
 
-`minectl 🗺`️️ supports the `Minecraft 1.19` version
+`minectl 🗺`️️ supports the `Minecraft 1.20` version
 
-<img alt="logo" src="docs/img/1_19_logo.png" width="40%"/> 
+<img alt="logo" src="docs/img/1_20_logo.png" width="40%"/> 
 
 + [Supported cloud provider ☁](#supported-cloud-provider-)
 + [TL;DR 🚀](#tldr-)
@@ -11,7 +11,6 @@
         * [Mac OS X](#mac-os-x)
         * [Windows](#windows)
         * [Source install](#source-install)
-        * [GoFish (deprecated 🕸️)](#gofish-deprecated-)
 + [Usage ⚙](#usage-)
     - [Access Token 🔑](#access-token-)
         * [Civo](#civo)
@@ -176,20 +175,6 @@ make build
 
 This will output the `minectl 🗺` binary in the `bin/minectl` folder.
 
-##### GoFish (deprecated 🕸️)
-
-GoFish works across all three major operating systems (Windows, MacOS, and Linux). It installs packages into its own
-directory and symlinks their files into /usr/local (or C:\ProgramData for Windows). You can think of it as the
-cross-platform Homebrew.
-
-To install `minectl 🗺` just type
-
-```
-gofish install minectl
-```
-
-As `minectl 🗺` is already in the main [rig](https://github.com/fishworks/fish-food) of Gofish.
-
 ### Architectural overview
 
 You can find a high level architectural overview [here](docs/architecture.md)
@@ -277,6 +262,12 @@ export VULTR_API_KEY=xxx
 #### Azure
 
 > Please select a Hypervisor Generation '2' VM Size. As `minectl 🗺` use only Hypervisor Generation 2 Image
+
+You need to set the subscription Id via the `AZURE_SUBSCRIPTION_ID` environment variable.
+
+```bash
+AZURE_SUBSCRIPTION_ID=xxx
+```
 
 ##### Option 1: Define environment variables
 
