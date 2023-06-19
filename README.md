@@ -1,4 +1,4 @@
-## New - 1.19 support
+## New - 1.20 support
 
 `minectl 🗺`️️ supports the `Minecraft 1.20` version
 
