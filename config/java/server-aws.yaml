@@ -27,7 +27,7 @@ spec:
         enabled: true
         broadcast: true
     edition: java
-    version: "1.20"
+    version: 1.20.2
     eula: true
     properties: |
       allow-flight=false
