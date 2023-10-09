@@ -30,7 +30,7 @@ ssh-keygen -t rsa -f ./minecraft
 
 ## Create MinecraftServer config
 Create a file named server-exoscale.yaml with the example below.
-Have a look at https://minecraft.fandom.com/wiki/Server.properties/ to configure your server.
+Have a look at https://minecraft.wiki/w/Server.properties to configure your server.
 
 ```bash
 apiVersion: minectl.ediri.io/v1alpha1
