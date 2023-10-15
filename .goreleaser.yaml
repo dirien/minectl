@@ -107,7 +107,7 @@ docker_signs:
       - '${artifact}'
 
 brews:
-  - tap:
+  - repository:
       owner: dirien
       name: homebrew-dirien
 
@@ -126,7 +126,13 @@ archives:
         format: zip
 
 nfpms:
-  - file_name_template: "minectl-{{.Version}}_{{.Os}}-{{.Arch}}"
+  - file_name_template: >-
+      {{- .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end -}}
     homepage: https://github.com/dirien/minectl
     description: "minectl️️ 🗺️ is a cli for creating Minecraft (java or bedrock) server on different cloud provider."
     maintainer: "Engin Diri engin.diri@mail.schwarz"
@@ -137,14 +143,6 @@ nfpms:
       - deb
       - apk
     bindir: /usr/bin
-    replacements:
-      amd64: 64bit
-      386: 32bit
-      arm: ARM
-      arm64: ARM64
-      darwin: macOS
-      linux: Linux
-      windows: Windows
 
 changelog:
   sort: asc
