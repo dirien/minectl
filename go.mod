@@ -18,7 +18,7 @@ require (
 	github.com/withfig/autocomplete-tools/integrations/cobra v1.2.1
 	github.com/xeipuuv/gojsonschema v1.2.0
 	go.uber.org/zap v1.26.0
-	sigs.k8s.io/yaml v1.3.0
+	sigs.k8s.io/yaml v1.4.0
 )
 
 // replace github.com/dirien/minectl-sdk => ../minectl-sdk
