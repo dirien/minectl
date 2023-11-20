@@ -4,7 +4,7 @@ go 1.21
 
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.7
-	github.com/Tnze/go-mc v1.19.4
+	github.com/Tnze/go-mc v1.20.1
 	github.com/blang/semver/v4 v4.0.0
 	github.com/c-bata/go-prompt v0.2.6
 	github.com/dirien/minectl-sdk v0.15.0
