@@ -25,7 +25,7 @@ spec:
         enabled: true
         broadcast: true
     edition: java
-    version: 1.20.2
+    version: 1.20.4
     eula: true
     properties: |
       level-seed=minectlrocks
