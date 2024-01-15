@@ -69,7 +69,7 @@
 ![Scaleway](https://img.shields.io/badge/scaleway-4F0599?style=for-the-badge&logo=scaleway&logoColor=white)
 ![DigitalOcean](https://img.shields.io/badge/DigitalOcean-0080FF?style=for-the-badge&logo=DigitalOcean&logoColor=white)
 ![Civo](https://img.shields.io/badge/Civo-239DFF?style=for-the-badge&logo=Civo&logoColor=white)
-![Akamai Connected Cloud](https://img.shields.io/badge/akamai_connected_cloud-00A95C?style=for-the-badge&logo=linode&logoColor=white)
+![Akamai Connected Cloud](https://img.shields.io/badge/akamai_connected_cloud-0096D6?style=for-the-badge&logo=akamai&logoColor=white)
 ![Hetzner](https://img.shields.io/badge/hetzner-d50c2d?style=for-the-badge&logo=hetzner&logoColor=white)
 ![OVH](https://img.shields.io/badge/ovh-123F6D?style=for-the-badge&logo=ovh&logoColor=white)
 ![Equinix Metal](https://img.shields.io/badge/equinix_metal-d10810?style=for-the-badge&logo=equinixmetal&logoColor=white)
