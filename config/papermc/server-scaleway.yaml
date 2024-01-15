@@ -27,7 +27,7 @@ spec:
         enabled: true
         broadcast: true
     edition: papermc
-    version: 1.20.1-20
+    version: 1.20.4-388
     eula: true
     properties: |
       level-seed=minectlrocks

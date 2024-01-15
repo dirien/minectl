@@ -16,7 +16,7 @@ spec:
     port: 19132
   minecraft:
     edition: bedrock
-    version: 1.20.0.01
+    version: 1.20.51.01
     eula: true
     properties: |
       server-name=Civo Minecraft
