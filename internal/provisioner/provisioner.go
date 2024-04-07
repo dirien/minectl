@@ -26,6 +26,7 @@ import (
 	"github.com/dirien/minectl-sdk/cloud/vexxhost"
 	"github.com/dirien/minectl-sdk/cloud/vultr"
 	"github.com/dirien/minectl-sdk/common"
+	"github.com/dirien/minectl-sdk/model"
 	"github.com/dirien/minectl/internal/logging"
 	"github.com/dirien/minectl/internal/manifest"
 	"github.com/dirien/minectl/internal/progress"
@@ -199,103 +200,103 @@ func ListProvisioner(options *MinectlProvisionerListOpts, logging ...*logging.Mi
 
 func getProvisioner(provider, region string) (automation.Automation, error) { //nolint: gocyclo
 	switch provider {
-	case "hetzner":
+	case model.PROVIDER_HETZNER:
 		cloudProvider, err := hetzner.NewHetzner(os.Getenv("HCLOUD_TOKEN"))
 		if err != nil {
 			return nil, err
 		}
 		return cloudProvider, nil
-	case "do":
+	case model.PROVIDER_DIGITALOCEAN:
 		cloudProvider, err := do.NewDigitalOcean(os.Getenv("DIGITALOCEAN_TOKEN"))
 		if err != nil {
 			return nil, err
 		}
 		return cloudProvider, nil
-	case "civo":
+	case model.PROVIDER_CIVO:
 		cloudProvider, err := civo.NewCivo(os.Getenv("CIVO_TOKEN"), region)
 		if err != nil {
 			return nil, err
 		}
 		return cloudProvider, nil
-	case "scaleway":
+	case model.PROVIDER_SCALEWAY:
 		cloudProvider, err := scaleway.NewScaleway(os.Getenv("ACCESS_KEY"), os.Getenv("SECRET_KEY"), os.Getenv("ORGANISATION_ID"), region)
 		if err != nil {
 			return nil, err
 		}
 		return cloudProvider, nil
-	case "akamai":
+	case model.PROVIDER_AKAMAI:
 		cloudProvider, err := akamai.NewAkamai(os.Getenv("LINODE_TOKEN"))
 		if err != nil {
 			return nil, err
 		}
 		return cloudProvider, nil
-	case "ovh":
+	case model.PROVIDER_OVH:
 		cloudProvider, err := ovh.NewOVHcloud(os.Getenv("OVH_ENDPOINT"), os.Getenv("APPLICATION_KEY"), os.Getenv("APPLICATION_SECRET"), os.Getenv("CONSUMER_KEY"), os.Getenv("SERVICENAME"), region)
 		if err != nil {
 			return nil, err
 		}
 		return cloudProvider, nil
-	case "equinix":
+	case model.PROVIDER_EQUINIX:
 		cloudProvider, err := equinix.NewEquinix(os.Getenv("METAL_AUTH_TOKEN"), os.Getenv("EQUINIX_PROJECT"))
 		if err != nil {
 			return nil, err
 		}
 		return cloudProvider, nil
-	case "gce":
+	case model.PROVIDER_GCE:
 		cloudProvider, err := gce.NewGCE(os.Getenv("GCE_KEY"), region)
 		if err != nil {
 			return nil, err
 		}
 		return cloudProvider, nil
-	case "vultr":
+	case model.PROVIDER_VULTR:
 		cloudProvider, err := vultr.NewVultr(os.Getenv("VULTR_API_KEY"))
 		if err != nil {
 			return nil, err
 		}
 		return cloudProvider, nil
-	case "azure":
+	case model.PROVIDER_AZURE:
 		cloudProvider, err := azure.NewAzure(os.Getenv("AZURE_AUTH_LOCATION"))
 		if err != nil {
 			return nil, err
 		}
 		return cloudProvider, nil
-	case "oci":
+	case model.PROVIDER_OCI:
 		cloudProvider, err := oci.NewOCI()
 		if err != nil {
 			return nil, err
 		}
 		return cloudProvider, nil
-	case "ionos":
+	case model.PROVIDER_IONOS:
 		cloudProvider, err := ionos.NewIONOS(os.Getenv("IONOS_USERNAME"), os.Getenv("IONOS_PASSWORD"), os.Getenv("IONOS_TOKEN"))
 		if err != nil {
 			return nil, err
 		}
 		return cloudProvider, nil
-	case "aws":
+	case model.PROVIDER_AWS:
 		cloudProvider, err := aws.NewAWS(region)
 		if err != nil {
 			return nil, err
 		}
 		return cloudProvider, nil
-	case "vexxhost":
+	case model.PROVIDER_VEXXHOST:
 		cloudProvider, err := vexxhost.NewVEXXHOST()
 		if err != nil {
 			return nil, err
 		}
 		return cloudProvider, nil
-	case "fuga":
+	case model.PROVIDER_FUGA:
 		cloudProvider, err := fuga.NewFuga()
 		if err != nil {
 			return nil, err
 		}
 		return cloudProvider, nil
-	case "exoscale":
+	case model.PROVIDER_EXOSCALE:
 		cloudProvider, err := exoscale.NewExoscale(os.Getenv("EXOSCALE_API_KEY"), os.Getenv("EXOSCALE_API_SECRET"))
 		if err != nil {
 			return nil, err
 		}
 		return cloudProvider, nil
-	case "multipass":
+	case model.PROVIDER_MULTIPASS:
 		cloudProvider, err := multipass.NewMultipass()
 		if err != nil {
 			return nil, err
