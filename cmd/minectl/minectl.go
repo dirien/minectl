@@ -250,7 +250,7 @@ var minectlCmd = &cobra.Command{
 	CompletionOptions: cobra.CompletionOptions{
 		DisableDefaultCmd: false,
 	},
-	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+	PersistentPreRunE: func(cmd *cobra.Command, _ []string) error {
 		headless, _ = cmd.Flags().GetBool("headless")
 		verbose, _ := cmd.Flags().GetString("verbose")
 		logEncoding, _ := cmd.Flags().GetString("log-encoding")
@@ -277,7 +277,7 @@ var minectlCmd = &cobra.Command{
 		}()
 		return nil
 	},
-	PersistentPostRunE: func(cmd *cobra.Command, args []string) error {
+	PersistentPostRunE: func(_ *cobra.Command, _ []string) error {
 		checkVersionMsg, ok := <-updateCheckResult
 		if ok && checkVersionMsg != nil {
 			zap.S().Infof("Warning(%v)", checkVersionMsg)
@@ -338,7 +338,7 @@ func Execute(version, gitCommit, date string) error {
 	return minectlCmd.Execute()
 }
 
-func runMineCtl(cmd *cobra.Command, args []string) {
+func runMineCtl(cmd *cobra.Command, _ []string) {
 	printLogo()
 	err := cmd.Help()
 	if err != nil {
