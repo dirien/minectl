@@ -1,8 +1,8 @@
-## New - 1.20 support
+## New - 1.21 support
 
-`minectl 🗺`️️ supports the `Minecraft 1.20` version
+`minectl 🗺`️️ supports the `Minecraft 1.21` version
 
-<img alt="logo" src="docs/img/1_20_logo.png" width="40%"/> 
+<img alt="logo" src="docs/img/1_21_logo.png" width="40%"/> 
 
 + [Supported cloud provider ☁](#supported-cloud-provider-)
 + [TL;DR 🚀](#tldr-)

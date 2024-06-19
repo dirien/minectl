@@ -16,7 +16,7 @@ spec:
     port: 19132
   minecraft:
     edition: bedrock
-    version: 1.20.51.01
+    version: 1.21.0.03
     eula: true
     properties: |
       server-name=Equinix Minecraft

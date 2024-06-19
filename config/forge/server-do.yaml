@@ -18,7 +18,7 @@ spec:
     port: 25565
   minecraft:
     java:
-      openjdk: 17
+      openjdk: 21
       xmx: 2G
       xms: 2G
       rcon:
@@ -27,7 +27,7 @@ spec:
         enabled: true
         broadcast: true
     edition: forge
-    version: 1.20.4-49.0.19
+    version: 1.21-51.0.13
     eula: true
     properties: |
       level-seed=minectlrocks
