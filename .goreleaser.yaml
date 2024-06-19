@@ -116,7 +116,7 @@ brews:
       name: dirien
       email: engin.diri@mail.schwarz
 
-    folder: Formula
+    directory: Formula
     homepage: "https://github.com/dirien/minectl"
     description: "minectl️️ 🗺️ is a cli for creating Minecraft (java or bedrock) server on different cloud provider."
     license: "Apache License 2.0"
