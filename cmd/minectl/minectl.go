@@ -12,8 +12,6 @@ import (
 
 	"go.uber.org/zap"
 
-	cobracompletefig "github.com/withfig/autocomplete-tools/integrations/cobra"
-
 	"github.com/blang/semver/v4"
 	"github.com/dirien/minectl/internal/logging"
 	"github.com/dirien/minectl/internal/provisioner"
@@ -327,7 +325,6 @@ func init() {
 	minectlCmd.AddCommand(pluginCmd)
 	minectlCmd.AddCommand(rconCmd)
 	minectlCmd.AddCommand(updateCmd)
-	minectlCmd.AddCommand(cobracompletefig.CreateCompletionSpecCommand())
 }
 
 func Execute(version, gitCommit, date string) error {
