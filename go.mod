@@ -2,7 +2,7 @@ module github.com/dirien/minectl
 
 go 1.22
 
-toolchain go1.24.0
+toolchain go1.24.1
 
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.7
