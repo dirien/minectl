@@ -36,15 +36,12 @@ checksum:
 
 signs:
   - cmd: cosign
-    env:
-      - COSIGN_EXPERIMENTAL=1
-    certificate: '${artifact}.pem'
+    signature: '${artifact}.sigstore.json'
     args:
       - sign-blob
-      - '-y'
-      - '--output-certificate=${certificate}'
       - '--bundle=${signature}'
       - '${artifact}'
+      - '-y'
     artifacts: all
     output: true
 
@@ -98,14 +95,12 @@ docker_manifests:
 
 docker_signs:
   - cmd: cosign
-    env:
-      - COSIGN_EXPERIMENTAL=1
     artifacts: manifests
     output: true
     args:
       - 'sign'
-      - '-y'
       - '${artifact}'
+      - '-y'
 
 brews:
   - repository:
