@@ -1,6 +1,6 @@
-## New - 1.21 support
+## New - 1.21.11 support
 
-`minectl 🗺`️️ supports the `Minecraft 1.21` version
+`minectl 🗺`️️ supports the `Minecraft 1.21.11` version
 
 <img alt="logo" src="docs/img/1_21_logo.png" width="40%"/> 
 
@@ -19,12 +19,10 @@
         * [Hetzner](#hetzner)
         * [Akamai Connected Cloud](#akamai-connected-cloud)
         * [OVHCloud](#ovhcloud)
-        * [Equinix Metal](#equinix-metal)
         * [Google Compute Engine (GCE)](#google-compute-engine-gce)
         * [Vultr](#vultr)
         * [Azure](#azure)
         * [Oracle Cloud Infrastructure](#oracle-cloud-infrastructure)
-        * [Ionos Cloud](#ionos-cloud-limited-support)
         * [Amazon AWS](#amazon-aws)
         * [VEXXHOST](#vexxhost)
         * [Multipass](#multipass)
@@ -72,12 +70,10 @@
 ![Akamai Connected Cloud](https://img.shields.io/badge/akamai_connected_cloud-0096D6?style=for-the-badge&logo=akamai&logoColor=white)
 ![Hetzner](https://img.shields.io/badge/hetzner-d50c2d?style=for-the-badge&logo=hetzner&logoColor=white)
 ![OVH](https://img.shields.io/badge/ovh-123F6D?style=for-the-badge&logo=ovh&logoColor=white)
-![Equinix Metal](https://img.shields.io/badge/equinix_metal-d10810?style=for-the-badge&logo=equinixmetal&logoColor=white)
 ![Google Cloud](https://img.shields.io/badge/google_cloud-4285F4?style=for-the-badge&logo=google-cloud&logoColor=white)
 ![Vultr](https://img.shields.io/badge/vultr-007BFC?style=for-the-badge&logo=vultr&logoColor=white)
 ![Microsoft Azure](https://img.shields.io/badge/Microsoft_Azure-0078D4?style=for-the-badge&logo=microsoft-azure&logoColor=white)
 ![Oracle Cloud Infrastructure](https://img.shields.io/badge/Oracle_Cloud_Infrastructure-F80000?style=for-the-badge&logo=oracle&logoColor=white)
-![Ionos Cloud](https://img.shields.io/badge/ionos--cloud-003D8F?style=for-the-badge&logo=ionos&logoColor=white)
 ![Amazon AWS](https://img.shields.io/badge/Amazon_AWS-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white)
 ![VEXXHOST](https://img.shields.io/badge/VEXXHOST-2A1659?style=for-the-badge&logo=vexxhost&logoColor=white)
 ![Multipass](https://img.shields.io/badge/Multipass-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
@@ -109,11 +105,9 @@ It is a private side project of me, to learn more about Go, CLI and multi-cloud 
 + Hetzner (https://www.hetzner.com/)
 + Akamai Connected Cloud (https://www.linode.com/)
 + OVHCloud (https://www.ovh.com/)
-+ Equinix Metal (https://metal.equinix.com/)
 + Google Compute Engine (GCE) (https://cloud.google.com/compute)
 + Azure (https://azure.microsoft.com/en-us/)
 + Oracle Cloud Infrastructure (https://www.oracle.com/cloud/)
-+ Ionos Cloud (https://cloud.ionos.de/)
 + Amazon AWS (https://aws.amazon.com/)
 + VEXXHOST (https://vexxhost.com/)
 + Multipass (https://multipass.run/)
@@ -237,13 +231,6 @@ export CONSUMER_KEY=zzz
 export SERVICENAME=<projectid>
 ```
 
-#### Equinix Metal
-
-```bash
-export METAL_AUTH_TOKEN=xxx
-export EQUINIX_PROJECT=yyy
-```
-
 #### Google Compute Engine (GCE)
 
 ```bash
@@ -322,17 +309,6 @@ region=<region>
 ```
 
 Please follow the instructions under -> https://docs.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm
-
-#### Ionos Cloud (limited support)
-
-> I can offer only limited support for Ionos Cloud, as I don't have access to the API anymore. Ionos Cloud is a B2B only
-> cloud service.
-
-```bash
-export IONOS_USERNAME=xxx
-export IONOS_PASSWORD=yyy
-export IONOS_TOKEN=<optional>
-```
 
 #### Amazon AWS
 
@@ -523,7 +499,7 @@ metadata:
   name: minecraft-proxy
 spec:
   server:
-    cloud: <cloud provider name civo|scaleway|do|hetzner|akamai|ovh|equinix|gce|vultr|azure|oci|ionos|aws|vexxhost|multipass|exoscale>
+    cloud: <cloud provider name civo|scaleway|do|hetzner|akamai|ovh|gce|vultr|azure|oci|aws|vexxhost|multipass|exoscale>
     region: <cloud provider region>
     size: <cloud provider plan>
     ssh:
@@ -566,7 +542,7 @@ spec:
   monitoring:
     enabled: true|false
   server:
-    cloud: "provider: civo|scaleway|do|hetzner|akamai|ovh|equinix|gce|vultr|azure|oci|ionos|aws|vexxhost|multipass|exoscale"
+    cloud: "provider: civo|scaleway|do|hetzner|akamai|ovh|gce|vultr|azure|oci|aws|vexxhost|multipass|exoscale"
     region: "region see cloud provider for details eg. fra1"
     size: "see cloud provider docs for details eg. g3.large"
     volumeSize: 100
@@ -706,7 +682,7 @@ mincetl list  \
 
 Flags:
   -h, --help              help for list
-  -p, --provider string   The cloud provider - civo|scaleway|do|hetzner|akamai|ovh|equinix|gce|vultr|azure|oci|ionos|aws|vexxhost|multipass|exoscale
+  -p, --provider string   The cloud provider - civo|scaleway|do|hetzner|akamai|ovh|gce|vultr|azure|oci|aws|vexxhost|multipass|exoscale
   -r, --region string     The region for your cloud provider
 
 Global Flags:
@@ -932,14 +908,12 @@ Apache License, Version 2.0
 - [x] New cloud provider - Hetzner [#26](https://github.com/dirien/minectl/issues/26)
 - [x] New cloud provider - Linode [#31](https://github.com/dirien/minectl/issues/31)
 - [x] New cloud provider - OVHCloud [#43](https://github.com/dirien/minectl/issues/43)
-- [x] New Cloud Provider Equinix Metal [#49](https://github.com/dirien/minectl/issues/49)
 - [x] New cloud provider - GCE [#55](https://github.com/dirien/minectl/issues/55)
 - [x] Add modded versions as new edition [#20](https://github.com/dirien/minectl/issues/20)
 - [x] New cloud provider - Vultr [#90](https://github.com/dirien/minectl/issues/90)
 - [x] Add Suport for Proxy Server - bungeecord and waterfall [#95](https://github.com/dirien/minectl/issues/95)
 - [x] New cloud provider - Azure [#56](https://github.com/dirien/minectl/issues/56)
 - [x] New cloud provider - Oracle/OCI [#107](https://github.com/dirien/minectl/issues/107)
-- [x] New cloud provider - Ionos Cloud [#218](https://github.com/dirien/minectl/issues/218)
 - [x] New cloud provider - AWS [#210](https://github.com/dirien/minectl/pull/210)
 - [ ] Much more to come...
 
@@ -958,7 +932,6 @@ Apache License, Version 2.0
 - https://github.com/sethvargo/go-password
 - https://github.com/ovh/go-ovh
 - https://github.com/dirien/ovh-go-sdk
-- https://github.com/packethost/packngo
 - https://github.com/hashicorp/go-retryablehttp
 - https://github.com/melbahja/goph
 - https://github.com/googleapis/google-api-go-client
@@ -971,7 +944,6 @@ Apache License, Version 2.0
 - https://github.com/tcnksm/go-latest
 - https://github.com/uber-go/zap
 - https://github.com/oracle/oci-go-sdk
-- https://github.com/ionos-cloud/sdk-go
 - https://github.com/AlecAivazis/survey
 - https://github.com/aws/aws-sdk-go
 - https://github.com/gophercloud/gophercloud

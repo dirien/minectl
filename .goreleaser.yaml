@@ -114,7 +114,7 @@ brews:
 
     commit_author:
       name: dirien
-      email: engin.diri@mail.schwarz
+      email: info@ediri.de
 
     directory: Formula
     homepage: "https://github.com/dirien/minectl"
@@ -136,7 +136,7 @@ nfpms:
       {{- if .Arm }}v{{ .Arm }}{{ end -}}
     homepage: https://github.com/dirien/minectl
     description: "minectl️️ 🗺️ is a cli for creating Minecraft (java or bedrock) server on different cloud provider."
-    maintainer: "Engin Diri engin.diri@mail.schwarz"
+    maintainer: "Engin Diri info@ediri.de"
     license: "Apache License 2.0"
     vendor: minectl️️ Developers
     formats:

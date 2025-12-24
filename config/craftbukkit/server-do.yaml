@@ -25,7 +25,7 @@ spec:
         enabled: true
         broadcast: true
     edition: craftbukkit
-    version: 1.20.4
+    version: 1.21.11
     eula: true
     properties: |
       level-seed=minectlrocks

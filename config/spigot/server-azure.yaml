@@ -25,7 +25,7 @@ spec:
         enabled: true
         broadcast: true
     edition: spigot
-    version: "1.21"
+    version: "1.21.11"
     eula: true
     properties: |
       level-seed=minectlrocks

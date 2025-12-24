@@ -13,12 +13,10 @@ import (
 	"github.com/dirien/minectl-sdk/cloud/azure"
 	"github.com/dirien/minectl-sdk/cloud/civo"
 	"github.com/dirien/minectl-sdk/cloud/do"
-	"github.com/dirien/minectl-sdk/cloud/equinix"
 	"github.com/dirien/minectl-sdk/cloud/exoscale"
 	"github.com/dirien/minectl-sdk/cloud/fuga"
 	"github.com/dirien/minectl-sdk/cloud/gce"
 	"github.com/dirien/minectl-sdk/cloud/hetzner"
-	"github.com/dirien/minectl-sdk/cloud/ionos"
 	"github.com/dirien/minectl-sdk/cloud/multipass"
 	"github.com/dirien/minectl-sdk/cloud/oci"
 	"github.com/dirien/minectl-sdk/cloud/ovh"
@@ -236,12 +234,6 @@ func getProvisioner(provider, region string) (automation.Automation, error) { //
 			return nil, err
 		}
 		return cloudProvider, nil
-	case model.PROVIDER_EQUINIX:
-		cloudProvider, err := equinix.NewEquinix(os.Getenv("METAL_AUTH_TOKEN"), os.Getenv("EQUINIX_PROJECT"))
-		if err != nil {
-			return nil, err
-		}
-		return cloudProvider, nil
 	case model.PROVIDER_GCE:
 		cloudProvider, err := gce.NewGCE(os.Getenv("GCE_KEY"), region)
 		if err != nil {
@@ -262,12 +254,6 @@ func getProvisioner(provider, region string) (automation.Automation, error) { //
 		return cloudProvider, nil
 	case model.PROVIDER_OCI:
 		cloudProvider, err := oci.NewOCI()
-		if err != nil {
-			return nil, err
-		}
-		return cloudProvider, nil
-	case model.PROVIDER_IONOS:
-		cloudProvider, err := ionos.NewIONOS(os.Getenv("IONOS_USERNAME"), os.Getenv("IONOS_PASSWORD"), os.Getenv("IONOS_TOKEN"))
 		if err != nil {
 			return nil, err
 		}
