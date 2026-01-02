@@ -56,9 +56,31 @@ export SERVICENAME=<projectid>
 
 ### Google Compute Engine (GCE)
 
+`minectl` uses Google Cloud's Application Default Credentials (ADC) for authentication. This supports multiple authentication methods:
+
+#### Option 1: Sign in with gcloud CLI (Recommended)
+
 ```bash
-export GCE_KEY=<pathto>/key.json
+gcloud auth application-default login
+export GOOGLE_PROJECT=<your-project-id>
+export GOOGLE_SERVICE_ACCOUNT_EMAIL=<your-service-account>@<project>.iam.gserviceaccount.com
 ```
+
+#### Option 2: Service account JSON file
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS=<path-to>/service-account.json
+export GOOGLE_PROJECT=<your-project-id>
+export GOOGLE_SERVICE_ACCOUNT_EMAIL=<your-service-account>@<project>.iam.gserviceaccount.com
+```
+
+#### Required Environment Variables
+
+| Variable | Description |
+|----------|-------------|
+| `GOOGLE_PROJECT` | Your GCP project ID |
+| `GOOGLE_SERVICE_ACCOUNT_EMAIL` | Service account email (required for OS Login SSH access) |
+| `GOOGLE_APPLICATION_CREDENTIALS` | (Optional) Path to service account JSON file |
 
 See [Getting Started - GCE edition](getting-started-gce.md) for details on how to create a GCP service account for `minectl`.
 
@@ -72,48 +94,53 @@ export VULTR_API_KEY=xxx
 
 > Please select a Hypervisor Generation '2' VM Size. As `minectl` uses only Hypervisor Generation 2 Images.
 
-You need to set the subscription ID via the `AZURE_SUBSCRIPTION_ID` environment variable.
+`minectl` uses Azure's DefaultAzureCredential for authentication, which supports multiple authentication methods automatically.
+
+#### Required Environment Variable
 
 ```bash
 export AZURE_SUBSCRIPTION_ID=xxx
 ```
 
-#### Option 1: Define environment variables
-
-##### Service principal with a secret
+#### Option 1: Sign in with Azure CLI (Recommended)
 
 ```bash
+az login
+export AZURE_SUBSCRIPTION_ID=<your-subscription-id>
+```
+
+#### Option 2: Service principal with a secret
+
+```bash
+export AZURE_SUBSCRIPTION_ID="<subscription_id>"
 export AZURE_TENANT_ID="<active_directory_tenant_id>"
 export AZURE_CLIENT_ID="<service_principal_appid>"
 export AZURE_CLIENT_SECRET="<service_principal_password>"
 ```
 
-##### Service principal with certificate
+#### Option 3: Service principal with certificate
 
 ```bash
+export AZURE_SUBSCRIPTION_ID="<subscription_id>"
 export AZURE_TENANT_ID="<active_directory_tenant_id>"
 export AZURE_CLIENT_ID="<service_principal_appid>"
 export AZURE_CLIENT_CERTIFICATE_PATH="<azure_client_certificate_path>"
 ```
 
-##### Username and password
+#### Option 4: Username and password
 
 ```bash
+export AZURE_SUBSCRIPTION_ID="<subscription_id>"
 export AZURE_CLIENT_ID="<service_principal_appid>"
 export AZURE_USERNAME="<azure_username>"
 export AZURE_PASSWORD="<azure_user_password>"
 ```
 
-#### Option 2: Use a managed identity
+#### Option 5: Managed identity (when running on Azure)
 
 ```bash
+export AZURE_SUBSCRIPTION_ID="<subscription_id>"
 export AZURE_CLIENT_ID="<user_assigned_managed_identity_client_id>"
-```
-
-#### Option 3: Sign in with Azure CLI
-
-```bash
-az login
 ```
 
 See [Azure authentication with the Azure SDK for Go](https://docs.microsoft.com/en-us/azure/developer/go/azure-sdk-authentication) for details.
@@ -139,14 +166,19 @@ Please follow the instructions at https://docs.oracle.com/en-us/iaas/Content/API
 
 ### Amazon AWS
 
-`minectl` looks for credentials in the following order:
+`minectl` uses the standard AWS credential chain, which supports multiple authentication methods automatically.
 
-1. Environment variables
-2. Shared credentials file
+#### Option 1: Sign in with AWS CLI (Recommended)
 
-#### Credentials file
+```bash
+aws configure
+```
 
-The credentials file is most often located in `~/.aws/credentials` and contains:
+This creates credentials in `~/.aws/credentials` and config in `~/.aws/config`.
+
+#### Option 2: Shared credentials file
+
+The credentials file is located in `~/.aws/credentials`:
 
 ```bash
 cat ~/.aws/credentials
@@ -155,13 +187,26 @@ aws_access_key_id = xxxx
 aws_secret_access_key = zzzz
 ```
 
-#### Environment variables
+#### Option 3: Environment variables
 
 ```bash
 export AWS_ACCESS_KEY_ID=<aws_access_key_id>
 export AWS_SECRET_ACCESS_KEY=<aws_secret_access_key>
 export AWS_REGION=<aws_region>
 ```
+
+#### Option 4: IAM instance profile (when running on EC2)
+
+When running on EC2, credentials are automatically retrieved from the instance metadata service.
+
+#### Credential Chain Order
+
+`minectl` looks for credentials in the following order:
+1. Environment variables
+2. Shared credentials file (`~/.aws/credentials`)
+3. Shared config file (`~/.aws/config`)
+4. IAM instance profile (EC2)
+5. Container credentials (ECS/Fargate)
 
 ### VEXXHOST
 

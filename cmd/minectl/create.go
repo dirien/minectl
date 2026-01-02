@@ -50,12 +50,11 @@ func runCreate(cmd *cobra.Command, _ []string) error {
 		return err
 	}
 	if !headless {
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetHeader([]string{"ID", "NAME", "REGION", "TAGS", "IP"})
-
+		table := tablewriter.NewTable(os.Stdout,
+			tablewriter.WithHeader([]string{"ID", "NAME", "REGION", "TAGS", "IP"}),
+		)
 		table.Append([]string{res.ID, res.Name, res.Region, res.Tags, res.PublicIP})
 
-		table.SetBorder(false)
 		fmt.Println("")
 		table.Render()
 
