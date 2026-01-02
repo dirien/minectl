@@ -235,7 +235,7 @@ func getProvisioner(provider, region string) (automation.Automation, error) { //
 		}
 		return cloudProvider, nil
 	case model.PROVIDER_GCE:
-		cloudProvider, err := gce.NewGCE(os.Getenv("GCE_KEY"), region)
+		cloudProvider, err := gce.NewGCE(region)
 		if err != nil {
 			return nil, err
 		}
@@ -247,7 +247,7 @@ func getProvisioner(provider, region string) (automation.Automation, error) { //
 		}
 		return cloudProvider, nil
 	case model.PROVIDER_AZURE:
-		cloudProvider, err := azure.NewAzure(os.Getenv("AZURE_AUTH_LOCATION"))
+		cloudProvider, err := azure.NewAzure()
 		if err != nil {
 			return nil, err
 		}

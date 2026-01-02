@@ -54,13 +54,12 @@ func runList(cmd *cobra.Command, _ []string) error {
 	if !headless {
 		if len(servers) > 0 {
 			fmt.Println("")
-			table := tablewriter.NewWriter(os.Stdout)
-			table.SetHeader([]string{"ID", "NAME", "REGION", "TAGS", "IP"})
-
+			table := tablewriter.NewTable(os.Stdout,
+				tablewriter.WithHeader([]string{"ID", "NAME", "REGION", "TAGS", "IP"}),
+			)
 			for _, server := range servers {
 				table.Append([]string{server.ID, server.Name, server.Region, server.Tags, server.PublicIP})
 			}
-			table.SetBorder(false)
 			table.Render()
 		} else {
 			return errors.New("🤷 No server found")
