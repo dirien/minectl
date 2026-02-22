@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/fatih/color"
+	"github.com/charmbracelet/lipgloss"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -37,7 +37,7 @@ func NewLogging(verbose, logEncoding string, headless bool) (*MinectlLogging, er
 		},
 	}
 
-	if len(verbose) > 0 {
+	if verbose != "" {
 		cfg.OutputPaths = []string{"stdout"}
 		cfg.ErrorOutputPaths = []string{"stderr"}
 	}
@@ -65,11 +65,16 @@ func (l *MinectlLogging) RawMessage(msg string) {
 	}
 }
 
-func (l *MinectlLogging) PrintMixedGreen(format string, value string) {
+func (l *MinectlLogging) PrintMixedGreen(format, value string) {
 	if l.headless {
 		zap.S().Infow(strings.ReplaceAll(fmt.Sprintf(format, value), "\n", ""))
 	} else {
-		green := color.New(color.FgGreen).SprintFunc()
-		fmt.Println(fmt.Sprintf(format, green(value)))
+		greenStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("10"))
+		fmt.Printf(format+"\n", greenStyle.Render(value))
 	}
+}
+
+// IsHeadless returns true if the logging instance is running in headless mode.
+func (l *MinectlLogging) IsHeadless() bool {
+	return l.headless
 }

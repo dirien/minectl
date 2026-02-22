@@ -2,10 +2,9 @@ package minectl
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/dirien/minectl/internal/provisioner"
-	"github.com/olekukonko/tablewriter"
+	"github.com/dirien/minectl/internal/ui"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
@@ -31,7 +30,7 @@ func runList(cmd *cobra.Command, _ []string) error {
 	if err != nil {
 		return errors.Wrap(err, "failed to get 'provider' value")
 	}
-	if len(provider) == 0 {
+	if provider == "" {
 		return errors.New("Please provide a valid 'provider' value")
 	}
 	region, err := cmd.Flags().GetString("region")
@@ -42,7 +41,7 @@ func runList(cmd *cobra.Command, _ []string) error {
 	newProvisioner, err := provisioner.ListProvisioner(&provisioner.MinectlProvisionerListOpts{
 		Provider: provider,
 		Region:   region,
-	}, minectlLog)
+	}, minectlUI)
 	if err != nil {
 		return err
 	}
@@ -51,19 +50,18 @@ func runList(cmd *cobra.Command, _ []string) error {
 		return err
 	}
 
+	if len(servers) == 0 {
+		minectlUI.Info("No servers found")
+		return nil
+	}
+
 	if !headless {
-		if len(servers) > 0 {
-			fmt.Println("")
-			table := tablewriter.NewTable(os.Stdout,
-				tablewriter.WithHeader([]string{"ID", "NAME", "REGION", "TAGS", "IP"}),
-			)
-			for _, server := range servers {
-				table.Append([]string{server.ID, server.Name, server.Region, server.Tags, server.PublicIP})
-			}
-			table.Render()
-		} else {
-			return errors.New("🤷 No server found")
+		fmt.Println("")
+		table := ui.NewTable(minectlUI, "ID", "NAME", "REGION", "TAGS", "IP")
+		for _, server := range servers {
+			table.Append([]string{server.ID, server.Name, server.Region, server.Tags, server.PublicIP})
 		}
+		table.Render()
 	}
 	return nil
 }
