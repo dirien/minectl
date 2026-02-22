@@ -193,7 +193,10 @@ Feel free to join! See our [contribution guidelines](CONTRIBUTING.md).
 <details>
 <summary>Click to expand</summary>
 
-- https://github.com/fatih/color
+- https://github.com/charmbracelet/bubbletea
+- https://github.com/charmbracelet/lipgloss
+- https://github.com/charmbracelet/huh
+- https://github.com/charmbracelet/bubbles
 - https://github.com/melbahja/goph
 - https://github.com/spf13/cobra
 - https://github.com/goreleaser
@@ -202,7 +205,6 @@ Feel free to join! See our [contribution guidelines](CONTRIBUTING.md).
 - https://github.com/scaleway/scaleway-sdk-go
 - https://github.com/linode/linodego
 - https://github.com/hetznercloud/hcloud-go
-- https://github.com/olekukonko/tablewriter
 - https://github.com/sethvargo/go-password
 - https://github.com/ovh/go-ovh
 - https://github.com/dirien/ovh-go-sdk
@@ -217,8 +219,7 @@ Feel free to join! See our [contribution guidelines](CONTRIBUTING.md).
 - https://github.com/tcnksm/go-latest
 - https://github.com/uber-go/zap
 - https://github.com/oracle/oci-go-sdk
-- https://github.com/AlecAivazis/survey
-- https://github.com/aws/aws-sdk-go
+- https://github.com/aws/aws-sdk-go-v2
 - https://github.com/gophercloud/gophercloud
 - https://github.com/exoscale/egoscale
 

@@ -8,7 +8,7 @@ import (
 
 func init() {
 	rconCmd.Flags().StringP("filename", "f", "", "Location of the manifest file")
-	rconCmd.Flags().SetAnnotation("filename", cobra.BashCompFilenameExt, []string{"yaml"}) //nolint:errcheck
+	_ = rconCmd.Flags().SetAnnotation("filename", cobra.BashCompFilenameExt, []string{"yaml"})
 	rconCmd.Flags().String("id", "", "contains the server id")
 }
 
@@ -25,7 +25,7 @@ var rconCmd = &cobra.Command{
 
 func runRCON(cmd *cobra.Command, _ []string) error {
 	filename, err := cmd.Flags().GetString("filename")
-	if len(filename) == 0 {
+	if filename == "" {
 		return errors.New("Please provide a valid manifest file via -f|--filename flag")
 	}
 	if err != nil {
@@ -35,13 +35,13 @@ func runRCON(cmd *cobra.Command, _ []string) error {
 	if err != nil {
 		return err
 	}
-	if len(id) == 0 {
+	if id == "" {
 		return errors.New("Please provide a valid id")
 	}
 	p, err := provisioner.NewProvisioner(&provisioner.MinectlProvisionerOpts{
 		ManifestPath: filename,
 		ID:           id,
-	}, minectlLog)
+	}, minectlUI)
 	if err != nil {
 		return err
 	}

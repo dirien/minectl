@@ -19,7 +19,7 @@ type RCONer interface {
 }
 
 func (r *RCON) RunPrompt() {
-	fmt.Println("🔌 Connected to RCON (control-D to exit)\n🆘 Type help for list of commands")
+	fmt.Println("Connected to RCON (control-D to exit)\nType 'help' for list of commands")
 	r.prompt.Run()
 }
 
@@ -62,7 +62,7 @@ func NewRCON(server, passwort string, port int) *RCON {
 		r.executor,
 		completer,
 		prompt.OptionPrefix(">>> "),
-		prompt.OptionTitle("minectl🗺 RCON"),
+		prompt.OptionTitle("minectl RCON"),
 	)
 	r.prompt = p
 	return r

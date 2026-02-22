@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/dirien/minectl-sdk/automation"
@@ -25,34 +26,33 @@ import (
 	"github.com/dirien/minectl-sdk/cloud/vultr"
 	"github.com/dirien/minectl-sdk/common"
 	"github.com/dirien/minectl-sdk/model"
-	"github.com/dirien/minectl/internal/logging"
 	"github.com/dirien/minectl/internal/manifest"
-	"github.com/dirien/minectl/internal/progress"
 	"github.com/dirien/minectl/internal/rcon"
+	"github.com/dirien/minectl/internal/ui"
 	"github.com/pkg/errors"
 )
 
 const (
-	minecraftProxyTitle                 = "📡 Minecraft %s Proxy"
-	minecraftServerTitle                = "🗺 Minecraft %s edition"
-	minecraftSelectedCloudProviderTitle = "🛎 Using cloud provider %s"
-	minecraftListServersTitle           = "📒 List all server"
+	minecraftProxyTitle                 = "Minecraft %s Proxy"
+	minecraftServerTitle                = "Minecraft %s edition"
+	minecraftSelectedCloudProviderTitle = "Using cloud provider %s"
+	minecraftListServersTitle           = "Listing all servers"
 
-	minecraftServerDeletingTitle  = "🪓 Deleting server (%s)..."
-	minecraftServerDeleteTitle    = "🗑 Server (%s) deleted."
-	minecraftServerNotDeleteTitle = "❌ Server (%s) not deleted."
+	minecraftServerDeletingTitle  = "Deleting server (%s)..."
+	minecraftServerDeleteTitle    = "Server (%s) deleted."
+	minecraftServerNotDeleteTitle = "Server (%s) not deleted."
 
-	minecraftServerCreatingTitle  = "🏗 Creating server (%s)..."
-	minecraftServerCreateTitle    = "✅ Server (%s) created."
-	minecraftServerNotCreateTitle = "❌ Server (%s) not created."
+	minecraftServerCreatingTitle  = "Creating server (%s)..."
+	minecraftServerCreateTitle    = "Server (%s) created."
+	minecraftServerNotCreateTitle = "Server (%s) not created."
 
-	minecraftServerStartingTitle = "🎬 Starting server..."
-	minecraftServerStartTitle    = "✅ Server successfully started."
-	minecraftServerNotStartTitle = "❌ Server failed starting."
+	minecraftServerStartingTitle = "Starting server..."
+	minecraftServerStartTitle    = "Server successfully started."
+	minecraftServerNotStartTitle = "Server failed to start."
 
-	minecraftServerUpdatingTitle  = "🆙 Update server (%s)..."
-	minecraftServerUpdateTitle    = "✅ Server (%s) updated."
-	minecraftServerNotUpdateTitle = "❌ Server (%s) update failed."
+	minecraftServerUpdatingTitle  = "Updating server (%s)..."
+	minecraftServerUpdateTitle    = "Server (%s) updated."
+	minecraftServerNotUpdateTitle = "Server (%s) update failed."
 
 	startCheckCount = 50
 )
@@ -69,9 +69,9 @@ type MinectlProvisionerListOpts struct {
 }
 
 type MinectlProvisioner struct {
-	auto    automation.Automation
-	args    automation.ServerArgs
-	logging *logging.MinectlLogging
+	auto automation.Automation
+	args automation.ServerArgs
+	ui   *ui.UI
 }
 
 type Provisioner interface {
@@ -99,39 +99,40 @@ func (p *MinectlProvisioner) DoRCON() error {
 }
 
 func (p *MinectlProvisioner) UploadPlugin(plugin, destination string) error {
-	p.logging.RawMessage("🚧 Plugins feature is still in beta...")
-	indicator := progress.NewIndicator(fmt.Sprintf("⤴️ Upload plugin to server (%s)...", common.Green(p.args.MinecraftResource.GetName())), p.logging)
-	indicator.FinalMessage = fmt.Sprintf("✅ Plugin (%s) uploaded.", common.Green(p.args.MinecraftResource.GetName()))
-	indicator.ErrorMessage = fmt.Sprintf("❌ Plugin (%s) not uploaded.", common.Green(p.args.MinecraftResource.GetName()))
-	indicator.Start()
+	p.ui.Warn("Note: Plugins feature is still in beta.")
+	spinner := ui.NewSpinner(fmt.Sprintf("Uploading plugin to server (%s)...", common.Green(p.args.MinecraftResource.GetName())), p.ui)
+	spinner.FinalMessage = fmt.Sprintf("Plugin (%s) uploaded.", common.Green(p.args.MinecraftResource.GetName()))
+	spinner.ErrorMessage = fmt.Sprintf("Plugin (%s) not uploaded.", common.Green(p.args.MinecraftResource.GetName()))
+	spinner.Start()
 	err := p.auto.UploadPlugin(p.args.ID, p.args, plugin, destination)
-	indicator.StopE(err)
+	spinner.Stop(err)
 	return err
 }
 
 func (p *MinectlProvisioner) UpdateServer() error {
-	indicator := progress.NewIndicator(fmt.Sprintf(minecraftServerUpdatingTitle, common.Green(p.args.MinecraftResource.GetName())), p.logging)
-	indicator.FinalMessage = fmt.Sprintf(minecraftServerUpdateTitle, common.Green(p.args.MinecraftResource.GetName()))
-	indicator.ErrorMessage = fmt.Sprintf(minecraftServerNotUpdateTitle, common.Green(p.args.MinecraftResource.GetName()))
-	indicator.Start()
+	spinner := ui.NewSpinner(fmt.Sprintf(minecraftServerUpdatingTitle, common.Green(p.args.MinecraftResource.GetName())), p.ui)
+	spinner.FinalMessage = fmt.Sprintf(minecraftServerUpdateTitle, common.Green(p.args.MinecraftResource.GetName()))
+	spinner.ErrorMessage = fmt.Sprintf(minecraftServerNotUpdateTitle, common.Green(p.args.MinecraftResource.GetName()))
+	spinner.Start()
 	err := p.auto.UpdateServer(p.args.ID, p.args)
-	indicator.StopE(err)
+	spinner.Stop(err)
 	return err
 }
 
-// wait that server is ready... Currently, on for Java based Editions (TCP), as Bedrock is UDP
+// wait that server is ready... Currently, only for Java based Editions (TCP), as Bedrock is UDP
 func (p *MinectlProvisioner) waitForMinecraftServerReady(server *automation.ResourceResults) error {
 	if p.args.MinecraftResource.GetEdition() != "bedrock" && p.args.MinecraftResource.GetEdition() != "nukkit" && p.args.MinecraftResource.GetEdition() != "powernukkit" {
-		indicator := progress.NewIndicator(minecraftServerStartingTitle, p.logging)
-		defer indicator.StopE(nil)
-		indicator.FinalMessage = minecraftServerStartTitle
-		indicator.ErrorMessage = minecraftServerNotStartTitle
-		indicator.Start()
-		check := fmt.Sprintf("%s:%d", server.PublicIP, p.args.MinecraftResource.GetPort())
+		spinner := ui.NewSpinner(minecraftServerStartingTitle, p.ui)
+		defer spinner.Stop(nil)
+		spinner.FinalMessage = minecraftServerStartTitle
+		spinner.ErrorMessage = minecraftServerNotStartTitle
+		spinner.Start()
+		check := net.JoinHostPort(server.PublicIP, strconv.Itoa(p.args.MinecraftResource.GetPort()))
 		checkCounter := 0
+		dialer := net.Dialer{Timeout: 15 * time.Second}
 
 		for checkCounter < startCheckCount {
-			timeout, err := net.DialTimeout("tcp", check, 15*time.Second)
+			timeout, err := dialer.Dial("tcp", check)
 			if err != nil {
 				time.Sleep(15 * time.Second)
 				checkCounter++
@@ -149,12 +150,12 @@ func (p *MinectlProvisioner) waitForMinecraftServerReady(server *automation.Reso
 }
 
 func (p *MinectlProvisioner) CreateServer(wait bool) (*automation.ResourceResults, error) {
-	indicator := progress.NewIndicator(fmt.Sprintf(minecraftServerCreatingTitle, common.Green(p.args.MinecraftResource.GetName())), p.logging)
-	indicator.FinalMessage = fmt.Sprintf(minecraftServerCreateTitle, common.Green(p.args.MinecraftResource.GetName()))
-	indicator.ErrorMessage = fmt.Sprintf(minecraftServerNotCreateTitle, common.Green(p.args.MinecraftResource.GetName()))
-	indicator.Start()
+	spinner := ui.NewSpinner(fmt.Sprintf(minecraftServerCreatingTitle, common.Green(p.args.MinecraftResource.GetName())), p.ui)
+	spinner.FinalMessage = fmt.Sprintf(minecraftServerCreateTitle, common.Green(p.args.MinecraftResource.GetName()))
+	spinner.ErrorMessage = fmt.Sprintf(minecraftServerNotCreateTitle, common.Green(p.args.MinecraftResource.GetName()))
+	spinner.Start()
 	server, err := p.auto.CreateServer(p.args)
-	indicator.StopE(err)
+	spinner.Stop(err)
 	if err != nil {
 		return nil, err
 	}
@@ -173,30 +174,30 @@ func (p *MinectlProvisioner) ListServer() ([]automation.ResourceResults, error) 
 }
 
 func (p *MinectlProvisioner) DeleteServer() error {
-	indicator := progress.NewIndicator(fmt.Sprintf(minecraftServerDeletingTitle, common.Green(p.args.MinecraftResource.GetName())), p.logging)
-	indicator.FinalMessage = fmt.Sprintf(minecraftServerDeleteTitle, common.Green(p.args.MinecraftResource.GetName()))
-	indicator.ErrorMessage = fmt.Sprintf(minecraftServerNotDeleteTitle, common.Green(p.args.MinecraftResource.GetName()))
-	indicator.Start()
+	spinner := ui.NewSpinner(fmt.Sprintf(minecraftServerDeletingTitle, common.Green(p.args.MinecraftResource.GetName())), p.ui)
+	spinner.FinalMessage = fmt.Sprintf(minecraftServerDeleteTitle, common.Green(p.args.MinecraftResource.GetName()))
+	spinner.ErrorMessage = fmt.Sprintf(minecraftServerNotDeleteTitle, common.Green(p.args.MinecraftResource.GetName()))
+	spinner.Start()
 	err := p.auto.DeleteServer(p.args.ID, p.args)
-	indicator.StopE(err)
+	spinner.Stop(err)
 	return err
 }
 
-func ListProvisioner(options *MinectlProvisionerListOpts, logging ...*logging.MinectlLogging) (*MinectlProvisioner, error) {
-	logging[0].RawMessage(minecraftListServersTitle)
+func ListProvisioner(options *MinectlProvisionerListOpts, u *ui.UI) (*MinectlProvisioner, error) {
+	u.Info(minecraftListServersTitle)
 	cloudProvider, err := getProvisioner(options.Provider, options.Region)
-	logging[0].PrintMixedGreen(minecraftSelectedCloudProviderTitle, cloud.GetCloudProviderFullName(options.Provider))
+	u.Info(fmt.Sprintf(minecraftSelectedCloudProviderTitle, cloud.GetCloudProviderFullName(options.Provider)))
 	if err != nil {
 		return nil, err
 	}
 	p := &MinectlProvisioner{
-		auto:    cloudProvider,
-		logging: logging[0],
+		auto: cloudProvider,
+		ui:   u,
 	}
 	return p, nil
 }
 
-func getProvisioner(provider, region string) (automation.Automation, error) { //nolint: gocyclo
+func getProvisioner(provider, region string) (automation.Automation, error) { //nolint:gocyclo // large switch is inherent to provider selection
 	switch provider {
 	case model.PROVIDER_HETZNER:
 		cloudProvider, err := hetzner.NewHetzner(os.Getenv("HCLOUD_TOKEN"))
@@ -294,7 +295,7 @@ func getProvisioner(provider, region string) (automation.Automation, error) { //
 	}
 }
 
-func NewProvisioner(options *MinectlProvisionerOpts, logging ...*logging.MinectlLogging) (*MinectlProvisioner, error) {
+func NewProvisioner(options *MinectlProvisionerOpts, u *ui.UI) (*MinectlProvisioner, error) {
 	var cloudProvider automation.Automation
 
 	minecraftResource, err := manifest.NewMinecraftResource(options.ManifestPath)
@@ -311,18 +312,18 @@ func NewProvisioner(options *MinectlProvisionerOpts, logging ...*logging.Minectl
 		return nil, err
 	}
 
-	logging[0].PrintMixedGreen(minecraftSelectedCloudProviderTitle, cloud.GetCloudProviderFullName(args.MinecraftResource.GetCloud()))
+	u.Info(fmt.Sprintf(minecraftSelectedCloudProviderTitle, cloud.GetCloudProviderFullName(args.MinecraftResource.GetCloud())))
 
 	if args.MinecraftResource.IsProxyServer() {
-		logging[0].PrintMixedGreen(minecraftProxyTitle, args.MinecraftResource.GetEdition())
+		u.Info(fmt.Sprintf(minecraftProxyTitle, args.MinecraftResource.GetEdition()))
 	} else {
-		logging[0].PrintMixedGreen(minecraftServerTitle, args.MinecraftResource.GetEdition())
+		u.Info(fmt.Sprintf(minecraftServerTitle, args.MinecraftResource.GetEdition()))
 	}
 
 	p := &MinectlProvisioner{
-		auto:    cloudProvider,
-		args:    args,
-		logging: logging[0],
+		auto: cloudProvider,
+		args: args,
+		ui:   u,
 	}
 	return p, nil
 }

@@ -6,12 +6,12 @@ import (
 
 func init() {
 	pluginCmd.Flags().StringP("filename", "f", "", "Location of the manifest file")
-	pluginCmd.Flags().SetAnnotation("filename", cobra.BashCompFilenameExt, []string{"yaml"}) //nolint:errcheck
+	_ = pluginCmd.Flags().SetAnnotation("filename", cobra.BashCompFilenameExt, []string{"yaml"})
 	pluginCmd.Flags().String("id", "", "contains the server id")
 	pluginCmd.Flags().StringP("plugin", "p", "", "Location of the plugin")
-	pluginCmd.Flags().SetAnnotation("plugin", cobra.BashCompFilenameExt, []string{"jar"}) //nolint:errcheck
+	_ = pluginCmd.Flags().SetAnnotation("plugin", cobra.BashCompFilenameExt, []string{"jar"})
 	pluginCmd.Flags().StringP("destination", "d", "", "Plugin destination folder")
-	pluginCmd.Flags().SetAnnotation("destination", cobra.BashCompSubdirsInDir, []string{}) //nolint:errcheck
+	_ = pluginCmd.Flags().SetAnnotation("destination", cobra.BashCompSubdirsInDir, []string{})
 	pluginCmd.Flags().StringP("ssh-key", "k", "", "specify a specific path for the SSH key")
 }
 

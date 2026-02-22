@@ -2,6 +2,8 @@ package minectl
 
 import (
 	"bytes"
+	"context"
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -15,9 +17,10 @@ import (
 	"github.com/blang/semver/v4"
 	"github.com/dirien/minectl/internal/logging"
 	"github.com/dirien/minectl/internal/provisioner"
+	"github.com/dirien/minectl/internal/ui"
 	"github.com/mitchellh/go-homedir"
 	"github.com/morikuni/aec"
-	"github.com/pkg/errors"
+	pkgerrors "github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"github.com/tcnksm/go-latest"
 )
@@ -31,30 +34,30 @@ var (
 func createUpdatePluginProvisioner(cmd *cobra.Command) (provisioner.Provisioner, error) {
 	filename, err := cmd.Flags().GetString("filename")
 	if err != nil {
-		return nil, errors.Wrap(err, "Please provide a valid manifest file")
+		return nil, pkgerrors.Wrap(err, "Please provide a valid manifest file")
 	}
-	if len(filename) == 0 {
-		return nil, errors.New("Please provide a valid manifest file via -f|--filename flag")
+	if filename == "" {
+		return nil, pkgerrors.New("Please provide a valid manifest file via -f|--filename flag")
 	}
 	id, err := cmd.Flags().GetString("id")
 	if err != nil {
 		return nil, err
 	}
-	if len(id) == 0 {
-		return nil, errors.New("Please provide a valid id")
+	if id == "" {
+		return nil, pkgerrors.New("Please provide a valid id")
 	}
 	sshKey, err := cmd.Flags().GetString("ssh-key")
 	if err != nil {
 		return nil, err
 	}
-	if len(sshKey) == 0 {
-		return nil, errors.New("Please provide a valid ssh key path")
+	if sshKey == "" {
+		return nil, pkgerrors.New("Please provide a valid ssh key path")
 	}
 	p, err := provisioner.NewProvisioner(&provisioner.MinectlProvisionerOpts{
 		ManifestPath:      filename,
 		ID:                id,
 		SSHPrivateKeyPath: sshKey,
-	}, minectlLog)
+	}, minectlUI)
 	if err != nil {
 		return nil, err
 	}
@@ -85,22 +88,23 @@ func isBrewInstall(exe string) (bool, error) {
 		return false, err
 	}
 
-	brewPrefixCmd := exec.Command(brewBin, "--prefix", "minectl")
+	brewPrefixCmd := exec.CommandContext(context.Background(), brewBin, "--prefix", "minectl")
 
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer
 	brewPrefixCmd.Stdout = &stdout
 	brewPrefixCmd.Stderr = &stderr
 	if err = brewPrefixCmd.Run(); err != nil {
-		if ee, ok := err.(*exec.ExitError); ok {
+		var ee *exec.ExitError
+		if errors.As(err, &ee) {
 			ee.Stderr = stderr.Bytes()
 		}
-		return false, errors.Wrapf(err, "'brew --prefix minectl' failed")
+		return false, pkgerrors.Wrapf(err, "'brew --prefix minectl' failed")
 	}
 
 	brewPrefixCmdOutput := strings.TrimSpace(stdout.String())
 	if brewPrefixCmdOutput == "" {
-		return false, errors.New("trimmed output from 'brew --prefix minectl' is empty")
+		return false, pkgerrors.New("trimmed output from 'brew --prefix minectl' is empty")
 	}
 
 	brewPrefixPath, err := filepath.EvalSymlinks(brewPrefixCmdOutput)
@@ -137,9 +141,9 @@ func runPostCommandHooks(c *cobra.Command, args []string) error {
 func RunFunc(run func(cmd *cobra.Command, args []string) error) func(*cobra.Command, []string) error {
 	return func(cmd *cobra.Command, args []string) error {
 		if res := run(cmd, args); res != nil {
-			minectlLog.Error(res)
+			minectlUI.ErrorMsg(res)
 			if postRunErr := runPostCommandHooks(cmd, args); postRunErr != nil {
-				minectlLog.Error(postRunErr)
+				minectlUI.ErrorMsg(postRunErr)
 			}
 			os.Exit(1)
 		}
@@ -168,9 +172,9 @@ func getUpgradeCommand() string {
 	return ""
 }
 
-func getUpgradeMessage(latest *semver.Version, current *semver.Version) *string {
+func getUpgradeMessage(latestVer, current *semver.Version) *string {
 	cmd := getUpgradeCommand()
-	msg := fmt.Sprintf("A new version of minectl is available. To upgrade from version '%s' to '%s', ", current, latest)
+	msg := fmt.Sprintf("A new version of minectl is available. To upgrade from version '%s' to '%s', ", current, latestVer)
 	if cmd != "" {
 		msg += "run \n   " + cmd + "\n\nor "
 	}
@@ -222,7 +226,7 @@ var versionCmd = &cobra.Command{
 }
 
 func getVersion() string {
-	if len(Version) != 0 {
+	if Version != "" {
 		return Version
 	}
 	return "0.1.0-dev"
@@ -238,6 +242,7 @@ func parseBaseCommand(_ *cobra.Command, _ []string) {
 var (
 	headless          bool
 	minectlLog        *logging.MinectlLogging
+	minectlUI         *ui.UI
 	updateCheckResult chan *string
 )
 
@@ -252,7 +257,7 @@ var minectlCmd = &cobra.Command{
 		headless, _ = cmd.Flags().GetBool("headless")
 		verbose, _ := cmd.Flags().GetString("verbose")
 		logEncoding, _ := cmd.Flags().GetString("log-encoding")
-		if headless && len(verbose) == 0 {
+		if headless && verbose == "" {
 			verbose = "info"
 		}
 		var err error
@@ -260,6 +265,7 @@ var minectlCmd = &cobra.Command{
 		if err != nil {
 			os.Exit(0)
 		}
+		minectlUI = ui.NewUI(headless, minectlLog)
 		var waitForUpdateCheck bool
 		defer func() {
 			if !waitForUpdateCheck {
@@ -291,7 +297,7 @@ func makeAppDirectoryIfNotExists() {
 	if err != nil {
 		fmt.Printf("error determining the home directory: %s", err)
 	}
-	path := fmt.Sprintf("%s/.minectl", dir)
+	path := dir + "/.minectl"
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		err := os.Mkdir(path, os.ModeDir|0o755)
 		if err != nil {
@@ -305,8 +311,7 @@ func GetHomeFolder() string {
 	if err != nil {
 		fmt.Printf("error determining the home directory: %s", err)
 	}
-	path := fmt.Sprintf("%s/.minectl", dir)
-	return path
+	return dir + "/.minectl"
 }
 
 func init() {

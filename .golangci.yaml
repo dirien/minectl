@@ -1,31 +1,121 @@
+version: "2"
+
+formatters:
+  enable:
+    - gofumpt
+    - goimports
+
 linters:
   enable:
-    - thelper
-    - gofumpt
-    - tparallel
-    - unconvert
-    - unparam
-    - wastedassign
-    - revive
+    # bugs
+    - bodyclose
+    - durationcheck
+    - errcheck
+    - errorlint
+    - gosec
+    - govet
+    - loggercheck
+    - nilerr
+    - noctx
+    - recvcheck
+    - sqlclosecheck
+
+    # performance
+    - copyloopvar
+    - intrange
+    - mirror
+    - perfsprint
+    - prealloc
+    - usestdlibvars
+
+    # style & conventions
+    - asciicheck
+    - bidichk
+    - dupword
+    - errname
     - forbidigo
-    - tagliatelle
-    - typecheck
     - goconst
     - gocritic
     - gocyclo
-    - govet
-    - errcheck
-    - gosec
-    - goimports
+    - goprintffuncname
+    - misspell
+    - modernize
     - nolintlint
+    - nosprintfhostport
+    - predeclared
+    - revive
+    - tagliatelle
+    - unconvert
+    - unparam
+    - wastedassign
+    - whitespace
 
-linters-settings:
-  forbidigo:
-    forbid:
-      - 'ioutil\.*'
-  tagliatelle:
-    case:
-      use-field-name: false
+    # testing
+    - thelper
+    - tparallel
+    - usetesting
+
+    # unused / dead code
+    - fatcontext
+    - reassign
+
+  settings:
+    forbidigo:
+      forbid:
+        - pattern: 'ioutil\.*'
+          msg: "use os and io packages instead of ioutil"
+      exclude-godoc-examples: true
+      analyze-types: true
+    tagliatelle:
+      case:
+        use-field-name: false
+        rules:
+          yaml: goCamel
+          json: snake
+    errorlint:
+      asserts: true
+      comparison: true
+      errorf: true
+    gocritic:
+      enabled-tags:
+        - diagnostic
+        - style
+        - performance
+      disabled-checks:
+        - hugeParam
+        - importShadow
+    revive:
       rules:
-        yaml: goCamel
-        json: snake
+        - name: blank-imports
+        - name: context-as-argument
+        - name: dot-imports
+        - name: error-naming
+        - name: error-return
+        - name: error-strings
+        - name: exported
+          disabled: true
+        - name: increment-decrement
+        - name: indent-error-flow
+        - name: package-comments
+          disabled: true
+        - name: range
+        - name: receiver-naming
+        - name: redefines-builtin-id
+        - name: superfluous-else
+        - name: unreachable-code
+        - name: var-naming
+    misspell:
+      locale: US
+      ignore-rules:
+        - organisation
+    gocyclo:
+      min-complexity: 15
+    perfsprint:
+      err-error: true
+      errorf: true
+      sprintf1: true
+    gosec:
+      excludes:
+        - G104
+        - G204
+        - G304
