@@ -20,4 +20,4 @@ spec:
       xmx: 512M
       xms: 512M
     type: velocity
-    version: 3.1.1-98
+    version: 3.5.0-SNAPSHOT-576
