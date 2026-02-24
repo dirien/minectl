@@ -1,7 +1,7 @@
 version: 2
 project_name: minectl
 snapshot:
-  name_template: '{{ .Tag }}-SNAPSHOT'
+  version_template: '{{ .Version }}-SNAPSHOT'
 before:
   hooks:
     - go mod tidy
@@ -119,7 +119,7 @@ brews:
 archives:
   - format_overrides:
       - goos: windows
-        format: zip
+        formats: ["zip"]
 
 nfpms:
   - file_name_template: >-
