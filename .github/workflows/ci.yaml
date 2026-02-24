@@ -41,7 +41,8 @@ jobs:
     needs: build
     env:
       DOCKER_CLI_EXPERIMENTAL: "enabled"
-      GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+      GITHUB_TOKEN: ${{ github.token }}
+      HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.GH_PAT }}
     runs-on: ubuntu-latest
     if: success() && startsWith(github.ref, 'refs/tags/')
     steps:
