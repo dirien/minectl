@@ -25,4 +25,4 @@ spec:
         enabled: true
         broadcast: true
     type: bungeecord
-    version: "1.17"
+    version: "1.21"

@@ -16,7 +16,7 @@ spec:
     port: 19132
   minecraft:
     edition: bedrock
-    version: 1.21.0.03
+    version: 1.26.0.2
     eula: true
     properties: |
       server-name=DigitalOcean Minecraft
