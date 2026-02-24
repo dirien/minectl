@@ -106,6 +106,7 @@ brews:
   - repository:
       owner: dirien
       name: homebrew-dirien
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
 
     commit_author:
       name: dirien
