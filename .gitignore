@@ -13,3 +13,5 @@ revive.log
 **/ssh/
 **/oracleidentitycloudservice_*.pem
 **/*-openrc.sh
+.claude/
+.mcp.json
