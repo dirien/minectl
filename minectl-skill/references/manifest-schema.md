@@ -11,7 +11,7 @@ spec:
   monitoring:
     enabled: <bool>         # optional, enables Prometheus + Node Exporter
   server:
-    cloud: <provider>       # required: civo|do|hetzner|aws|gce|azure|scaleway|akamai|ovh|vultr|oci|ionos|vexxhost|exoscale|fuga|multipass
+    cloud: <provider>       # required: civo|do|hetzner|aws|gce|azure|scaleway|akamai|ovh|vultr|oci|vexxhost|exoscale|fuga|multipass
     region: <region>        # provider-specific region/zone
     size: <instance-type>   # provider-specific instance size
     volumeSize: <int>       # optional, additional volume in GB

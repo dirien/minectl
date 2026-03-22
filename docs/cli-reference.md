@@ -82,7 +82,7 @@ minectl list [flags]
 
 **Flags:**
 - `-h, --help` - Help for list
-- `-p, --provider string` - The cloud provider (civo|scaleway|do|hetzner|akamai|ovh|gce|vultr|azure|oci|aws|vexxhost|multipass|exoscale)
+- `-p, --provider string` - The cloud provider (civo|scaleway|do|hetzner|akamai|ovh|gce|vultr|azure|oci|aws|vexxhost|fuga|multipass|exoscale)
 - `-r, --region string` - The region for your cloud provider
 
 **Example:**

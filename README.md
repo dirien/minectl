@@ -68,6 +68,7 @@ It is a private side project of me, to learn more about Go, CLI and multi-cloud 
 | Akamai Connected Cloud | https://www.linode.com/ |
 | OVHCloud | https://www.ovh.com/ |
 | Google Compute Engine (GCE) | https://cloud.google.com/compute |
+| Vultr | https://www.vultr.com/ |
 | Azure | https://azure.microsoft.com/en-us/ |
 | Oracle Cloud Infrastructure | https://www.oracle.com/cloud/ |
 | Amazon AWS | https://aws.amazon.com/ |

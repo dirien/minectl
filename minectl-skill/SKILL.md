@@ -1,11 +1,11 @@
 ---
 name: minectl
-description: "Deploy and manage Minecraft servers across 16 cloud providers using the minectl CLI. Use when the user wants to create, delete, update, or list Minecraft servers, write minectl YAML manifests, connect via RCON, upload plugins, or choose cloud providers and server editions for Minecraft hosting. Triggers on: Minecraft server deployment, minectl commands, Minecraft manifest files, cloud-hosted game servers, or Minecraft edition selection."
+description: "Use this skill for every message containing the word \"minectl\". Claude has zero built-in knowledge of minectl — it is an obscure, third-party CLI for deploying Minecraft servers to cloud providers. Without this skill, any response about minectl will be fabricated. This covers all minectl topics: manifests, create/delete/update commands, RCON troubleshooting, authentication errors, cloud provider selection, instance sizing, budget optimization, TPS tuning, plugin uploads, and edition choice. Do NOT trigger for Minecraft servers managed via Docker, Kubernetes, Ansible, Terraform, or Pulumi — only for minectl-based workflows."
 ---
 
 # minectl
 
-minectl creates and manages Minecraft servers on 16 cloud providers via declarative YAML manifests.
+minectl creates and manages Minecraft servers on 15 cloud providers via declarative YAML manifests.
 
 ## Creating a Manifest
 
@@ -62,6 +62,51 @@ spec:
 | `powernukkit` | Extended Nukkit |
 
 For proxy setups, use `kind: MinecraftProxy` with editions: `bungeecord`, `waterfall`, or `velocity`.
+
+### Edition-Specific Tuning
+
+Different editions need different server.properties and resource allocations. Getting these wrong causes crashes, kicks, or poor performance — this is where most new server admins struggle.
+
+**Forge / Fabric (modded servers):**
+- Set `max-tick-time=90000` (or `-1` to disable). Modded servers regularly exceed the default 60s watchdog, especially during chunk generation or mod initialization. Leaving the default causes the server to kill itself under normal modded load.
+- Set `allow-flight=true`. Many mods (Botania, Mekanism jetpacks, Elytra mods, etc.) trigger the vanilla flight detection. Without this, modded players get kicked constantly.
+- Allocate generous heap: 8G minimum for light mods, 12G+ for heavy packs (100+ mods). Set `xms` equal to `xmx` to avoid expensive heap resizing under load.
+- Always add `volumeSize: 50` (or more). Mod packs, world data with modded chunks, and backups consume significant disk. Running out of disk silently corrupts worlds.
+- Upload mods to `/minecraft/mods` (not `/minecraft/plugins`).
+- Enable monitoring (`monitoring.enabled: true`) — modded servers are resource-hungry and benefit from Prometheus metrics to catch memory/CPU issues early.
+
+**PaperMC / Spigot / CraftBukkit / Purpur (plugin servers):**
+- Default `max-tick-time=60000` is usually fine.
+- Keep `allow-flight=false` unless a specific plugin requires it.
+- 2-4G heap is sufficient for up to 20 players with typical plugins.
+- Upload plugins to `/minecraft/plugins`.
+- PaperMC is the recommended default — it's the most performant fork and supports all Bukkit/Spigot plugins.
+
+**Bedrock / Nukkit / PowerNukkit:**
+- No `java` block needed in the manifest (Bedrock is a native binary, not Java-based).
+- Default port is `19132` (UDP), not `25565`.
+- RCON is not available for Bedrock edition.
+- Lower resource requirements: 1-2G RAM is typically sufficient.
+
+### Instance Sizing Guide
+
+| Use case | Players | Recommended RAM | Example sizes |
+|----------|---------|----------------|---------------|
+| Vanilla / Paper (casual) | 1-10 | 2-4 GB | Hetzner cx21, DO s-2vcpu-4gb |
+| Paper with plugins | 10-20 | 4-8 GB | Hetzner cpx31, DO s-4vcpu-8gb, AWS t3.large |
+| Forge/Fabric (light mods) | 1-10 | 8 GB | AWS t3.xlarge, Hetzner cpx41 |
+| Forge/Fabric (heavy mods) | 5-15 | 16 GB+ | AWS m5.xlarge, Hetzner cpx51 |
+| Proxy (BungeeCord/Velocity) | N/A | 1-2 GB | Smallest available |
+
+When using spot instances (`spot: true`), prefer regions with large capacity pools (e.g., `us-east-1` for AWS) to minimize interruption risk. Always warn users that spot instances can be terminated with 2 minutes notice — world backups are essential.
+
+### Security Recommendations
+
+Always include these in every manifest:
+- `fail2ban` block under SSH config (prevents brute-force attacks)
+- Strong RCON password (never deploy with "changeme")
+- Consider `white-list=true` and `enforce-whitelist=true` for private servers
+- `online-mode=true` to verify player accounts (prevents unauthorized access)
 
 ### Optional Features
 
