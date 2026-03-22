@@ -10,11 +10,10 @@
 | Hetzner | `hetzner` | `HCLOUD_TOKEN` |
 | Akamai (Linode) | `akamai` | `LINODE_TOKEN` |
 | OVHcloud | `ovh` | `OVH_ENDPOINT`, `APPLICATION_KEY`, `APPLICATION_SECRET`, `CONSUMER_KEY`, `SERVICENAME` |
-| Google Compute Engine | `gce` | `GCE_KEY` |
+| Google Compute Engine | `gce` | `GOOGLE_PROJECT`, `GOOGLE_SERVICE_ACCOUNT_EMAIL`, `GOOGLE_APPLICATION_CREDENTIALS` (optional, uses ADC) |
 | Vultr | `vultr` | `VULTR_API_KEY` |
-| Azure | `azure` | `AZURE_AUTH_LOCATION` |
+| Azure | `azure` | `AZURE_SUBSCRIPTION_ID` (uses DefaultAzureCredential) |
 | Oracle Cloud (OCI) | `oci` | OCI SDK config (default) |
-| IONOS Cloud | `ionos` | `IONOS_USERNAME`, `IONOS_PASSWORD`, `IONOS_TOKEN` |
 | AWS | `aws` | Standard AWS SDK credentials |
 | VEXXHOST | `vexxhost` | OpenStack env vars |
 | Exoscale | `exoscale` | `EXOSCALE_API_KEY`, `EXOSCALE_API_SECRET` |

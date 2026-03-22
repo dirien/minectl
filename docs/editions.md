@@ -34,6 +34,14 @@ Forge is well known for being able to use Forge Mods which are direct modificati
 
 Fabric is also a mod loader like Forge with some improvements. It's lightweight and faster and it may be the best mod loader in the future because it's doing very well.
 
+### Nukkit
+
+Nukkit is a nuclear-powered server software for Minecraft: Bedrock Edition, written in Java. It offers better performance and a plugin API for Bedrock servers.
+
+### PowerNukkit
+
+PowerNukkit is a modified version of Nukkit with additional features and bug fixes. It adds support for new blocks, items, and other features from recent Minecraft updates.
+
 ## Proxy Editions
 
 Network proxy server is what you set up and use as the controller of a network of servers - this is the server that connects all of your playable servers together so people can log in through one server IP, and then teleport between the separate servers in-game rather than having to log out and into each different one.

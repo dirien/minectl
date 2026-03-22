@@ -25,7 +25,7 @@ spec:
   monitoring:
     enabled: true|false
   server:
-    cloud: "civo|scaleway|do|hetzner|akamai|ovh|gce|vultr|azure|oci|aws|vexxhost|multipass|exoscale"
+    cloud: "civo|scaleway|do|hetzner|akamai|ovh|gce|vultr|azure|oci|aws|vexxhost|fuga|multipass|exoscale"
     region: "region see cloud provider for details eg. fra1"
     size: "see cloud provider docs for details eg. g3.large"
     volumeSize: 100
@@ -52,7 +52,7 @@ spec:
         port: 25575
         enabled: true
         broadcast: true
-    edition: "java|bedrock|craftbukkit|fabric|forge|papermc|spigot|purpur"
+    edition: "java|bedrock|nukkit|powernukkit|craftbukkit|fabric|forge|papermc|spigot|purpur"
     version: "<version>"
     eula: true
     properties: |
@@ -76,7 +76,7 @@ metadata:
   name: minecraft-proxy
 spec:
   server:
-    cloud: civo|scaleway|do|hetzner|akamai|ovh|gce|vultr|azure|oci|aws|vexxhost|multipass|exoscale
+    cloud: civo|scaleway|do|hetzner|akamai|ovh|gce|vultr|azure|oci|aws|vexxhost|fuga|multipass|exoscale
     region: <cloud provider region>
     size: <cloud provider plan>
     ssh:

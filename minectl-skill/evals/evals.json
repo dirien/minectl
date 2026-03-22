@@ -1,0 +1,68 @@
+{
+  "skill_name": "minectl",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I want to set up a Minecraft server for my kids on Hetzner. We need PaperMC because they want to install some plugins, maybe 10 players max. We're in Europe so something close would be nice. Can you write me the manifest yaml file? Also make sure RCON is enabled so I can manage it remotely. Budget is tight so keep the instance small.",
+      "expected_output": "A valid minectl YAML manifest with: kind MinecraftServer, cloud hetzner, a European region, edition papermc, RCON enabled, appropriate instance size, eula true, security hardening, and server.properties with max-players=10",
+      "files": [],
+      "expectations": [
+        "Output contains a valid YAML manifest with apiVersion: minectl.ediri.io/v1alpha1",
+        "The manifest uses kind: MinecraftServer",
+        "The cloud provider is set to hetzner",
+        "The region is a European Hetzner region (fsn1, nbg1, or hel1)",
+        "The edition is set to papermc",
+        "RCON is enabled with rcon.enabled: true under the java section",
+        "An rcon.password is set to a non-empty value",
+        "An rcon.port is specified (typically 25575)",
+        "The eula field is set to true",
+        "The server.properties includes max-players=10 or a small player count",
+        "An SSH public key path is included in the manifest",
+        "The instance size is a smaller Hetzner size (cx21, cx22, cpx11, or similar)",
+        "A fail2ban block is included under the ssh section for security",
+        "The response mentions white-list=true or recommends whitelisting for a kids server",
+        "The response mentions the plugin upload path is /minecraft/plugins for PaperMC"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I'm running a modded Minecraft server for my friends using Forge and I want to move it to AWS. We're in the US, about 8 players but heavy mods so we need decent resources. I also want to use spot instances to save money. Can you generate the minectl manifest and tell me what commands I need to run to get it deployed?",
+      "expected_output": "A manifest with cloud aws, US region, edition forge, spot true, Forge-specific tuning (max-tick-time raised, allow-flight true), generous heap, volumeSize, and correct CLI commands",
+      "files": [],
+      "expectations": [
+        "Output contains a valid YAML manifest with apiVersion: minectl.ediri.io/v1alpha1",
+        "The cloud provider is set to aws",
+        "The region is a US-based AWS region (e.g., us-east-1, us-west-2)",
+        "The edition is set to forge",
+        "spot: true is included in the server spec",
+        "The instance size is adequate for modded play (not t2.micro/t3.micro/t3.small)",
+        "Java heap settings xmx and xms are set to at least 8G for heavy modded play",
+        "The output includes the minectl create command with -f flag",
+        "The output mentions AWS credentials or environment variables needed",
+        "The eula field is set to true",
+        "max-tick-time is raised above the default 60000 (e.g., 90000 or -1) to prevent watchdog kills with mods",
+        "allow-flight is set to true to prevent modded players from being kicked",
+        "volumeSize is included in the server spec for mod pack storage",
+        "The response mentions uploading mods to /minecraft/mods (not /minecraft/plugins)",
+        "The response warns about spot instance interruption risk and recommends backups"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I created a Minecraft server with minectl but I can't connect via RCON. The server is running on DigitalOcean and I used the java edition. What could be wrong and how do I fix it? Here's my manifest:\n\napiVersion: minectl.ediri.io/v1alpha1\nkind: MinecraftServer\nmetadata:\n  name: my-server\nspec:\n  server:\n    cloud: do\n    region: fra1\n    size: s-4vcpu-8gb\n    ssh:\n      port: 22\n      publickeyfile: ~/.ssh/id_rsa.pub\n    port: 25565\n  minecraft:\n    java:\n      openjdk: 21\n      xmx: 2G\n      xms: 2G\n    edition: java\n    version: \"1.21\"\n    eula: true",
+      "expected_output": "Diagnosis that RCON is not enabled in the manifest, with a corrected manifest and instructions to update the server",
+      "files": [],
+      "expectations": [
+        "The response correctly identifies that RCON is not enabled/configured in the manifest",
+        "The response explains that an rcon block is needed under spec.minecraft.java",
+        "A corrected manifest is provided with rcon.enabled: true",
+        "The corrected manifest includes an rcon.password field with a value",
+        "The corrected manifest includes rcon.port (typically 25575)",
+        "The response mentions using minectl update or minectl delete + create to apply changes",
+        "The response references the minectl rcon command for connecting after the fix",
+        "The corrected manifest includes a fail2ban block under ssh (missing from original)",
+        "The response warns to change the RCON password from the placeholder before deploying"
+      ]
+    }
+  ]
+}
