@@ -131,17 +131,26 @@ func TestSpinnerModelUpdate(t *testing.T) {
 			if got.quitting != tt.wantQuitting {
 				t.Errorf("got quitting=%v, want %v", got.quitting, tt.wantQuitting)
 			}
-			if tt.wantQuit {
-				if cmd == nil {
-					t.Fatal("expected a quit command, got nil")
-				}
-				if _, isQuit := cmd().(tea.QuitMsg); !isQuit {
-					t.Error("expected command to produce tea.QuitMsg")
-				}
-			} else if cmd != nil {
-				t.Error("expected no command")
-			}
+			assertQuitCmd(t, cmd, tt.wantQuit)
 		})
+	}
+}
+
+// assertQuitCmd checks that cmd produces tea.QuitMsg when wantQuit is true,
+// and that cmd is nil otherwise.
+func assertQuitCmd(t *testing.T, cmd tea.Cmd, wantQuit bool) {
+	t.Helper()
+	if !wantQuit {
+		if cmd != nil {
+			t.Error("expected no command")
+		}
+		return
+	}
+	if cmd == nil {
+		t.Fatal("expected a quit command, got nil")
+	}
+	if _, isQuit := cmd().(tea.QuitMsg); !isQuit {
+		t.Error("expected command to produce tea.QuitMsg")
 	}
 }
 
