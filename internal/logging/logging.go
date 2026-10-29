@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/lipgloss/v2"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -70,7 +70,7 @@ func (l *MinectlLogging) PrintMixedGreen(format, value string) {
 		zap.S().Infow(strings.ReplaceAll(fmt.Sprintf(format, value), "\n", ""))
 	} else {
 		greenStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("10"))
-		fmt.Printf(format+"\n", greenStyle.Render(value))
+		_, _ = lipgloss.Printf(format+"\n", greenStyle.Render(value))
 	}
 }
 
