@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/charmbracelet/huh"
+	"charm.land/huh/v2"
 	"github.com/dirien/minectl-sdk/common"
 	"github.com/dirien/minectl-sdk/model"
 	"github.com/dirien/minectl-sdk/template"

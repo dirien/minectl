@@ -4,13 +4,19 @@ package ui
 import (
 	"errors"
 
-	"github.com/charmbracelet/huh"
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/huh/v2"
+	"charm.land/lipgloss/v2"
 )
 
 // FormTheme returns a consistent theme for Huh forms.
-func FormTheme() *huh.Theme {
-	t := huh.ThemeBase()
+func FormTheme() huh.Theme {
+	return huh.ThemeFunc(formStyles)
+}
+
+// formStyles builds the minectl form styles. The palette is the same on
+// light and dark backgrounds, so isDark is only forwarded to the base theme.
+func formStyles(isDark bool) *huh.Styles {
+	t := huh.ThemeBase(isDark)
 
 	t.Focused.Title = lipgloss.NewStyle().
 		Foreground(lipgloss.Color("229")).
@@ -31,7 +37,10 @@ func FormTheme() *huh.Theme {
 // In headless mode, it will use accessible mode for better CI/CD compatibility.
 func RunForm(form *huh.Form, headless bool) error {
 	if headless {
-		form = form.WithAccessible(true)
+		// Accessible mode writes styled text directly instead of through
+		// Bubble Tea, so route it through the lipgloss stdout writer to strip
+		// or downsample colors for pipes, CI logs and NO_COLOR.
+		form = form.WithAccessible(true).WithOutput(lipgloss.Writer)
 	}
 	return form.WithTheme(FormTheme()).Run()
 }

@@ -1,9 +1,7 @@
 package ui
 
 import (
-	"fmt"
-
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/lipgloss/v2"
 	"github.com/dirien/minectl/internal/logging"
 	"go.uber.org/zap"
 )
@@ -47,7 +45,7 @@ func (u *UI) Info(msg string) {
 		zap.S().Infow(msg)
 		return
 	}
-	fmt.Println(infoStyle.Render("ℹ " + msg))
+	_, _ = lipgloss.Println(infoStyle.Render("ℹ " + msg))
 }
 
 // Success prints a success message with a green checkmark prefix.
@@ -56,7 +54,7 @@ func (u *UI) Success(msg string) {
 		zap.S().Infow(msg)
 		return
 	}
-	fmt.Println(successStyle.Render("✓ " + msg))
+	_, _ = lipgloss.Println(successStyle.Render("✓ " + msg))
 }
 
 // ErrorMsg prints an error message with a red cross prefix.
@@ -65,7 +63,7 @@ func (u *UI) ErrorMsg(err error) {
 		zap.S().Errorw(err.Error())
 		return
 	}
-	fmt.Println(errorStyle.Render("✗ " + err.Error()))
+	_, _ = lipgloss.Println(errorStyle.Render("✗ " + err.Error()))
 }
 
 // Warn prints a warning message with a yellow warning prefix.
@@ -74,5 +72,5 @@ func (u *UI) Warn(msg string) {
 		zap.S().Warnw(msg)
 		return
 	}
-	fmt.Println(warnStyle.Render("⚠ " + msg))
+	_, _ = lipgloss.Println(warnStyle.Render("⚠ " + msg))
 }
