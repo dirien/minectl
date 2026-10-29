@@ -9,7 +9,7 @@ import (
 
 func init() {
 	deleteCmd.Flags().StringP("filename", "f", "", "Location of the manifest file")
-	_ = deleteCmd.Flags().SetAnnotation("filename", cobra.BashCompFilenameExt, []string{"yaml"})
+	_ = deleteCmd.Flags().SetAnnotation("filename", cobra.BashCompFilenameExt, manifestFileExtensions)
 	deleteCmd.Flags().String("id", "", "Contains the server id")
 	deleteCmd.Flags().BoolP("yes", "y", false, "Automatically delete the server")
 }

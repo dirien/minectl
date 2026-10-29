@@ -25,6 +25,10 @@ import (
 	"github.com/tcnksm/go-latest"
 )
 
+// manifestFileExtensions are the file extensions offered by shell completion
+// for the --filename manifest flag.
+var manifestFileExtensions = []string{"yaml"}
+
 var (
 	Version   string
 	GitCommit string
@@ -95,8 +99,7 @@ func isBrewInstall(exe string) (bool, error) {
 	brewPrefixCmd.Stdout = &stdout
 	brewPrefixCmd.Stderr = &stderr
 	if err = brewPrefixCmd.Run(); err != nil {
-		var ee *exec.ExitError
-		if errors.As(err, &ee) {
+		if ee, ok := errors.AsType[*exec.ExitError](err); ok {
 			ee.Stderr = stderr.Bytes()
 		}
 		return false, pkgerrors.Wrapf(err, "'brew --prefix minectl' failed")

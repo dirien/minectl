@@ -6,9 +6,14 @@ import (
 	"testing"
 )
 
+const (
+	colName = "NAME"
+	rowName = "test"
+)
+
 func TestTableAppend(t *testing.T) {
 	u := newTestUI(t, true)
-	tbl := NewTable(u, "ID", "NAME")
+	tbl := NewTable(u, "ID", colName)
 	tbl.Append([]string{"1", "test-server"})
 	tbl.Append([]string{"2", "other-server"})
 
@@ -28,7 +33,7 @@ func TestTableString(t *testing.T) {
 		{
 			name:     "headless tab-separated output",
 			headless: true,
-			headers:  []string{"ID", "NAME", "REGION"},
+			headers:  []string{"ID", colName, "REGION"},
 			rows: [][]string{
 				{"abc-123", "my-server", "fra1"},
 				{"def-456", "other-server", "lon1"},
@@ -42,14 +47,14 @@ func TestTableString(t *testing.T) {
 		{
 			name:     "interactive styled output",
 			headless: false,
-			headers:  []string{"ID", "NAME"},
-			rows:     [][]string{{"1", "test"}},
-			wantAll:  []string{"ID", "NAME", "test"},
+			headers:  []string{"ID", colName},
+			rows:     [][]string{{"1", rowName}},
+			wantAll:  []string{"ID", colName, rowName},
 		},
 		{
 			name:     "empty table with headers only",
 			headless: true,
-			headers:  []string{"ID", "NAME"},
+			headers:  []string{"ID", colName},
 			rows:     nil,
 			wantAll:  []string{"ID\tNAME"},
 		},
@@ -75,8 +80,8 @@ func TestTableString(t *testing.T) {
 
 func TestTableRenderToWriter(t *testing.T) {
 	u := newTestUI(t, true)
-	tbl := NewTable(u, "ID", "NAME")
-	tbl.Append([]string{"1", "test"})
+	tbl := NewTable(u, "ID", colName)
+	tbl.Append([]string{"1", rowName})
 
 	var buf bytes.Buffer
 	tbl.RenderToWriter(&buf)
