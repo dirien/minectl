@@ -2,10 +2,16 @@ package ui
 
 import (
 	"errors"
+	"strings"
 	"testing"
 
+	"charm.land/bubbles/v2/spinner"
+	tea "charm.land/bubbletea/v2"
 	"github.com/dirien/minectl/internal/logging"
 )
+
+// testSpinnerMessage is the spinner message used across spinner tests.
+const testSpinnerMessage = "creating server..."
 
 func newTestUI(t *testing.T, headless bool) *UI {
 	t.Helper()
@@ -22,8 +28,8 @@ func TestNewSpinner(t *testing.T) {
 		message  string
 		headless bool
 	}{
-		{"headless spinner", "creating server...", true},
-		{"interactive spinner", "creating server...", false},
+		{"headless spinner", testSpinnerMessage, true},
+		{"interactive spinner", testSpinnerMessage, false},
 	}
 
 	for _, tt := range tests {
@@ -58,7 +64,7 @@ func TestSpinnerHeadlessStartStop(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			u := newTestUI(t, true)
-			s := NewSpinner("creating server...", u)
+			s := NewSpinner(testSpinnerMessage, u)
 			s.FinalMessage = "server created"
 			s.ErrorMessage = "server failed"
 
@@ -95,6 +101,79 @@ func TestSpinnerStopWithoutStart(t *testing.T) {
 
 			if s.started {
 				t.Error("expected started to be false")
+			}
+		})
+	}
+}
+
+func TestSpinnerModelUpdate(t *testing.T) {
+	tests := []struct {
+		name         string
+		msg          tea.Msg
+		wantQuitting bool
+		wantQuit     bool
+	}{
+		{"ctrl+c quits", tea.KeyPressMsg{Code: 'c', Mod: tea.ModCtrl}, true, true},
+		{"quit message quits", quitMsg{}, true, true},
+		{"other key is ignored", tea.KeyPressMsg{Code: 'q', Text: "q"}, false, false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			m := spinnerModel{spinner: spinner.New(), message: testSpinnerMessage}
+
+			updated, cmd := m.Update(tt.msg)
+
+			got, ok := updated.(spinnerModel)
+			if !ok {
+				t.Fatalf("Update returned %T, want spinnerModel", updated)
+			}
+			if got.quitting != tt.wantQuitting {
+				t.Errorf("got quitting=%v, want %v", got.quitting, tt.wantQuitting)
+			}
+			assertQuitCmd(t, cmd, tt.wantQuit)
+		})
+	}
+}
+
+// assertQuitCmd checks that cmd produces tea.QuitMsg when wantQuit is true,
+// and that cmd is nil otherwise.
+func assertQuitCmd(t *testing.T, cmd tea.Cmd, wantQuit bool) {
+	t.Helper()
+	if !wantQuit {
+		if cmd != nil {
+			t.Error("expected no command")
+		}
+		return
+	}
+	if cmd == nil {
+		t.Fatal("expected a quit command, got nil")
+	}
+	if _, isQuit := cmd().(tea.QuitMsg); !isQuit {
+		t.Error("expected command to produce tea.QuitMsg")
+	}
+}
+
+func TestSpinnerModelView(t *testing.T) {
+	tests := []struct {
+		name     string
+		quitting bool
+		want     string
+	}{
+		{"running shows message", false, testSpinnerMessage},
+		{"quitting clears output", true, ""},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			m := spinnerModel{spinner: spinner.New(), message: testSpinnerMessage, quitting: tt.quitting}
+
+			content := m.View().Content
+			if tt.want == "" && content != "" {
+				t.Errorf("expected empty view, got %q", content)
+			}
+			if !strings.Contains(content, tt.want) {
+				t.Errorf("view %q does not contain %q", content, tt.want)
 			}
 		})
 	}

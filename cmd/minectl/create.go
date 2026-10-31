@@ -12,7 +12,7 @@ import (
 
 func init() {
 	createCmd.Flags().StringP("filename", "f", "", "Location of the manifest file")
-	_ = createCmd.Flags().SetAnnotation("filename", cobra.BashCompFilenameExt, []string{"yaml"})
+	_ = createCmd.Flags().SetAnnotation("filename", cobra.BashCompFilenameExt, manifestFileExtensions)
 	createCmd.Flags().BoolP("wait", "w", true, "Wait for Minecraft Server is started")
 }
 

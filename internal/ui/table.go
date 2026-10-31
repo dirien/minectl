@@ -5,8 +5,8 @@ import (
 	"io"
 	"strings"
 
-	"github.com/charmbracelet/lipgloss"
-	"github.com/charmbracelet/lipgloss/table"
+	"charm.land/lipgloss/v2"
+	"charm.land/lipgloss/v2/table"
 )
 
 // TableStyle defines the visual style for tables.
@@ -72,13 +72,14 @@ func (t *Table) buildTable() *table.Table {
 		})
 }
 
-// Render prints the table to stdout.
+// Render prints the table to stdout, downsampling colors to what the
+// terminal supports.
 func (t *Table) Render() {
 	if t.headless {
 		t.renderPlain()
 		return
 	}
-	fmt.Println(t.buildTable())
+	_, _ = lipgloss.Println(t.buildTable())
 }
 
 // renderPlain outputs a simple text table for headless mode.
@@ -101,7 +102,9 @@ func (t *Table) String() string {
 		}
 		return sb.String()
 	}
-	return t.buildTable().String()
+	// Downsample colors to the stdout color profile, as lipgloss v1 did
+	// implicitly when rendering.
+	return lipgloss.Sprint(t.buildTable())
 }
 
 // RenderToWriter writes the table to the given writer.

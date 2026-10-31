@@ -8,7 +8,7 @@ import (
 
 func init() {
 	rconCmd.Flags().StringP("filename", "f", "", "Location of the manifest file")
-	_ = rconCmd.Flags().SetAnnotation("filename", cobra.BashCompFilenameExt, []string{"yaml"})
+	_ = rconCmd.Flags().SetAnnotation("filename", cobra.BashCompFilenameExt, manifestFileExtensions)
 	rconCmd.Flags().String("id", "", "contains the server id")
 }
 

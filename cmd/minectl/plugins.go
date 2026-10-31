@@ -6,7 +6,7 @@ import (
 
 func init() {
 	pluginCmd.Flags().StringP("filename", "f", "", "Location of the manifest file")
-	_ = pluginCmd.Flags().SetAnnotation("filename", cobra.BashCompFilenameExt, []string{"yaml"})
+	_ = pluginCmd.Flags().SetAnnotation("filename", cobra.BashCompFilenameExt, manifestFileExtensions)
 	pluginCmd.Flags().String("id", "", "contains the server id")
 	pluginCmd.Flags().StringP("plugin", "p", "", "Location of the plugin")
 	_ = pluginCmd.Flags().SetAnnotation("plugin", cobra.BashCompFilenameExt, []string{"jar"})

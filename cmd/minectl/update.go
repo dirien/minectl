@@ -7,7 +7,7 @@ import (
 func init() {
 	updateCmd.Flags().StringP("filename", "f", "", "Location of the manifest file")
 	updateCmd.Flags().StringP("ssh-key", "k", "", "specify a specific path for the SSH key")
-	_ = updateCmd.Flags().SetAnnotation("filename", cobra.BashCompFilenameExt, []string{"yaml"})
+	_ = updateCmd.Flags().SetAnnotation("filename", cobra.BashCompFilenameExt, manifestFileExtensions)
 	updateCmd.Flags().String("id", "", "contains the server id")
 }
 
