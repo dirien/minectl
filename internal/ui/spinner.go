@@ -5,9 +5,9 @@ import (
 	"os"
 	"sync"
 
-	"github.com/charmbracelet/bubbles/spinner"
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/bubbles/v2/spinner"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 	"go.uber.org/zap"
 )
 
@@ -37,7 +37,7 @@ func (m spinnerModel) Init() tea.Cmd {
 
 func (m spinnerModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
-	case tea.KeyMsg:
+	case tea.KeyPressMsg:
 		if msg.String() == "ctrl+c" {
 			m.quitting = true
 			return m, tea.Quit
@@ -53,11 +53,11 @@ func (m spinnerModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
-func (m spinnerModel) View() string {
+func (m spinnerModel) View() tea.View {
 	if m.quitting {
-		return ""
+		return tea.NewView("")
 	}
-	return fmt.Sprintf("%s %s", m.spinner.View(), m.message)
+	return tea.NewView(fmt.Sprintf("%s %s", m.spinner.View(), m.message))
 }
 
 // quitMsg is sent to stop the spinner.
@@ -82,9 +82,10 @@ func (s *Spinner) Start() {
 		return
 	}
 
-	sp := spinner.New()
-	sp.Spinner = spinner.Dot
-	sp.Style = lipgloss.NewStyle().Foreground(lipgloss.Color("205"))
+	sp := spinner.New(
+		spinner.WithSpinner(spinner.Dot),
+		spinner.WithStyle(lipgloss.NewStyle().Foreground(lipgloss.Color("205"))),
+	)
 
 	model := spinnerModel{
 		spinner: sp,
@@ -136,9 +137,9 @@ func (s *Spinner) Stop(err error) {
 
 	if message != "" {
 		if err != nil {
-			fmt.Fprintln(os.Stderr, errorStyle.Render("✗ "+message))
+			_, _ = lipgloss.Fprintln(os.Stderr, errorStyle.Render("✗ "+message))
 		} else {
-			fmt.Fprintln(os.Stderr, successStyle.Render("✓ "+message))
+			_, _ = lipgloss.Fprintln(os.Stderr, successStyle.Render("✓ "+message))
 		}
 	}
 }
